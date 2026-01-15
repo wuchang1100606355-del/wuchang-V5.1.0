@@ -108,6 +108,34 @@
 - **來源（可稽核）**：
   - `C:\Users\o0930\Dropbox\公司資料室\五常社區服務系統\行政\商業法人組織\智財\專利\877-24-0046.UTW_證書.PDF`
 
+#### F1.2 新型技術文件（中文本 / 摘要 / 說明書 / 請求項 / 圖式）
+> 用途：把「專利權利範圍」落到「系統模組/資料/介面」的可追溯對照（避免只剩宣稱、無法驗收）。
+
+- **來源（可稽核）**：
+  - `C:\Users\o0930\OneDrive\文件\Downloads\877-24-0046.UTW-中文本.pdf`
+  - `J:\我的雲端硬碟\Bound\Downloads\877-24-0046.UTW-核准處分書.pdf`
+- **文件要點（節錄）**：
+  - **安全管理系統**：控制模組 + 臉部辨識門禁；無人保全（攝影機/感測器/資料處理）；依警告派遣「菁英保全網路」並透過行動 App 協調。
+  - **社區支援與電商**：中央資料庫（居民/商家）、社區參與介面（行動裝置）、交易子系統；並描述「基於區塊鏈的貨幣模組」以確保交易安全/透明（依場景可公/私鏈）。
+  - **整合營運/物業管理**：中央管理子系統 + 資料分析元件（含追蹤節省成本、優化資源配置）；商業整合與本地供應商網路支援線上訂購/配送；溝通介面提供即時資料。
+  - **附加整合**：郵件接收註冊通知（包裹收發/通知/住戶確認）；線上會議（行事曆/通知/會議協作/文件共享等）。
+  - **圖式**：圖 1～圖 4（整體/安全管理/社區+電商/商業營運+物業整合）。
+
+#### F1.3 專利技術 vs 現行系統（證據對照）
+> 對照範圍：以你目前在 Z 槽的 `wuchang_os`（Odoo 模組 + 前端資源）與其 Docker 服務為主。
+
+| 專利子系統 / 元件 | 現行系統狀態 | 證據（檔案/模組） |
+| --- | --- | --- |
+| **控制模組 + 臉部辨識門禁**（112） | **部分**：現有「生物特徵/影像辨識」用於「最高權限身份驗證」，但**未見**對接「門禁設備/出入口」的控制模組與白名單資料庫（偏向管理者驗證，不是物業門禁） | `Z:\wuchang_os\addons\wuchang_core\models\ai_guard.py`（`verify_brother_access()` / `analyze_image()`） |
+| **無人保全子系統**（攝影機/感測器/資料處理） | **未見完整落地**：有設備納管/監控框架（device/iot/heartbeat/狀態檢查），但未見「影像串流 + AI 異常偵測/模式識別 + 自動警告」的資料管線 | `Z:\wuchang_os\addons\wuchang_core\models\infrastructure.py`、`Z:\wuchang_os\addons\wuchang_core\models\device_control_plan.py` |
+| **菁英保全網路 + 行動 App**（132） | **部分**：有「社區 Super App」雛形（住戶/志工/市集/基金/錢包等 UI），可作為承載「緊急通報/派遣/導航」的介面基礎，但未見「保全派遣/巡邏」專用流程與權限模型 | `Z:\wuchang_os\addons\wuchang_core\static\src\js\community_super_app.jsx` |
+| **社區支援 + 電商平台**（200） | **已落地/部分**：存在社區/棟別/戶號/住戶反映、包裹收發、公告；亦有外送訂單/商家/券與「許願額度」等模型；前端有市集/基金/錢包 UI | `Z:\wuchang_os\addons\wuchang_core\models\property_management.py`、`Z:\wuchang_os\addons\wuchang_core\models\delivery.py`、`Z:\wuchang_os\addons\wuchang_core\static\src\js\community_super_app.jsx` |
+| **交易子系統 + 區塊鏈貨幣模組**（232） | **部分**：有「幸福幣交易紀錄（Blockchain-like Ledger）」與雜湊欄位，提供不可篡改軌跡的資料結構；但未見接上真正鏈（公/私鏈節點、共識、鏈上驗證） | `Z:\wuchang_os\addons\wuchang_core\models\finance.py`（`wuchang.coin.transaction.hash_signature`）、`Z:\wuchang_os\addons\wuchang_core\models\delivery.py`（`wuchang.community.coin`） |
+| **中央管理子系統 + 資料分析元件**（312） | **部分/待補證據**：目前看到的是資料模型與 UI 看板雛形，尚未看到專利描述的「預測/規範分析、風險評估模型、成本節省追蹤」等專用分析元件 | `Z:\wuchang_os\addons\wuchang_core\models\property_management.py`（資料模型）、`Z:\wuchang_os\addons\wuchang_core\static\src\js\community_super_app.jsx`（看板雛形） |
+| **溝通介面/通知**（330） | **部分**：有通知 API 入口（broadcast），亦有 Google Meet 整合模型/視圖（但 Calendar API 仍標示 TODO） | `Z:\wuchang_os\addons\wuchang_core\controllers\notification_controller.py`、`Z:\wuchang_os\addons\wuchang_google_integration\models\google_meet.py` |
+| **郵件/包裹註冊通知系統** | **部分**：已有包裹資料模型與「領取確認」動作；未見自動通知到住戶（可用 Odoo chatter/email 或你現有的 notification broadcast 串接） | `Z:\wuchang_os\addons\wuchang_core\models\property_management.py`（`community.package`）、`Z:\wuchang_os\addons\wuchang_core\controllers\notification_controller.py` |
+| **線上會議系統** | **部分**：有三方協作/AI 會議資料模型與預設資料；Google Meet 介面已建但 API 連線仍待補 | `Z:\wuchang_os\addons\wuchang_core\models\collab_meeting.py`、`Z:\wuchang_os\addons\wuchang_core\data\meeting_setup.xml`、`Z:\wuchang_os\addons\wuchang_google_integration\models\google_meet.py` |
+
 ### F2. SBIR 補助（可申請資源池）
 - 資產型態：外部補助（鉅額補助，依國別/主管機關制度）
 - 依你用語「SBIR」：可能對應
@@ -127,5 +155,7 @@
 - `SYSTEM_INVENTORY.md`：系統/網路/本機入口層盤點（含 hosts 覆寫與 listener 證據）
 - `dns_records.json` / `dns_audit_report.json`：DNS 資產與稽核摘要
 - `C:\Users\o0930\Dropbox\公司資料室\五常社區服務系統\行政\商業法人組織\智財\專利\877-24-0046.UTW_證書.PDF`：新型專利證書（`M663678`）
+- `C:\Users\o0930\OneDrive\文件\Downloads\877-24-0046.UTW-中文本.pdf`：新型技術文件（摘要/說明書/請求項/圖式）
+- `J:\我的雲端硬碟\Bound\Downloads\877-24-0046.UTW-核准處分書.pdf`：核准處分書（官方文書）
 - `C:\Users\o0930\Dropbox\SBIR\江政隆_資料彙編_最終版.txt`：SBIR 申請材料彙編（含智財與計畫摘要）
 
