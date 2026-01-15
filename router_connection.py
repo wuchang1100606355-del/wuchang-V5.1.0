@@ -22,7 +22,7 @@ if sys.platform == 'win32':
 urllib3.disable_warnings(InsecureRequestWarning)
 
 class AsusRouterConnection:
-    def __init__(self, hostname="coffeeLofe.asuscomm.com", port=8443, use_https=True):
+    def __init__(self, hostname="coffeeLofe.asuscomm.com", port=8443, use_https=True, cert_path=None, key_path=None):
         """
         初始化路由器連接
         
@@ -30,6 +30,8 @@ class AsusRouterConnection:
             hostname: 路由器 DDNS 主機名
             port: 連接端口（8443 為 HTTPS，8080 為 HTTP）
             use_https: 是否使用 HTTPS
+            cert_path: SSL 證書文件路徑（可選）
+            key_path: SSL 私鑰文件路徑（可選）
         """
         self.hostname = hostname
         self.port = port
@@ -39,12 +41,71 @@ class AsusRouterConnection:
         self.session = requests.Session()
         self.logged_in = False
         
+        # 設置證書路徑
+        if cert_path and key_path:
+            self.cert = (cert_path, key_path)
+        elif cert_path:
+            self.cert = cert_path
+        else:
+            # 嘗試使用默認證書路徑
+            default_cert = os.path.join(os.path.dirname(__file__), "certs", "cert.pem")
+            default_key = os.path.join(os.path.dirname(__file__), "certs", "key.pem")
+            if os.path.exists(default_cert) and os.path.exists(default_key):
+                self.cert = (default_cert, default_key)
+                print(f"[INFO] 使用默認證書: {default_cert}")
+            else:
+                self.cert = None
+    
+    def _prepare_request_kwargs(self, verify_cert=True):
+        """
+        準備請求參數，包括證書和驗證設置
+        
+        Args:
+            verify_cert: 是否驗證 SSL 證書
+        
+        Returns:
+            dict: 請求參數字典
+        """
+        kwargs = {
+            "timeout": 10,
+            "allow_redirects": True
+        }
+        
+        # 如果提供了證書，使用證書進行客戶端認證
+        if self.cert:
+            kwargs["cert"] = self.cert
+        
+        # 設置證書驗證
+        if isinstance(verify_cert, str):
+            # 如果 verify_cert 是字符串，視為證書路徑
+            kwargs["verify"] = verify_cert
+        else:
+            kwargs["verify"] = verify_cert
+        
+        return kwargs
+        
+        # 設置證書路徑
+        if cert_path and key_path:
+            self.cert = (cert_path, key_path)
+        elif cert_path:
+            self.cert = cert_path
+        else:
+            # 嘗試使用默認證書路徑
+            default_cert = os.path.join(os.path.dirname(__file__), "certs", "cert.pem")
+            default_key = os.path.join(os.path.dirname(__file__), "certs", "key.pem")
+            if os.path.exists(default_cert) and os.path.exists(default_key):
+                self.cert = (default_cert, default_key)
+                print(f"[INFO] 使用默認證書: {default_cert}")
+            else:
+                self.cert = None
+        
     def test_connection(self, verify_cert=True):
         """
         測試連接到路由器
         
         Args:
             verify_cert: 是否驗證 SSL 證書（如果本機已安裝證書，設為 True）
+                       如果提供了證書文件，將使用證書進行客戶端認證
         
         Returns:
             bool: 連接是否成功
@@ -54,14 +115,16 @@ class AsusRouterConnection:
             url = f"{self.base_url}/"
             print(f"正在連接到: {url}")
             
-            # 如果使用 IP 地址連接，證書驗證可能會失敗（因為證書是為域名簽發的）
-            # 如果本機已安裝證書，verify 設為 True
-            # 如果證書路徑已知，可以指定: verify='/path/to/certificate.pem'
+            # 準備請求參數
+            request_kwargs = self._prepare_request_kwargs(verify_cert)
+            
+            # 如果使用證書，顯示信息
+            if self.cert:
+                print(f"[INFO] 使用客戶端證書進行認證")
+            
             response = self.session.get(
                 url,
-                verify=verify_cert,
-                timeout=10,
-                allow_redirects=True
+                **request_kwargs
             )
             
             print(f"連接成功！狀態碼: {response.status_code}")
@@ -120,10 +183,10 @@ class AsusRouterConnection:
             
             # 先獲取登錄頁面以建立 session
             print("獲取登錄頁面...")
+            request_kwargs = self._prepare_request_kwargs(verify_cert)
             response = self.session.get(
                 f"{self.base_url}/",
-                verify=verify_cert,
-                timeout=10
+                **request_kwargs
             )
             
             # 華碩路由器有多種登錄方式，嘗試常見的端點
@@ -151,12 +214,11 @@ class AsusRouterConnection:
                     }
                     
                     print(f"嘗試登錄端點: {endpoint}")
+                    request_kwargs = self._prepare_request_kwargs(verify_cert)
                     response = self.session.post(
                         login_url,
                         data=login_data,
-                        verify=verify_cert,
-                        timeout=10,
-                        allow_redirects=True
+                        **request_kwargs
                     )
                     
                     # 檢查登錄是否成功
@@ -179,11 +241,10 @@ class AsusRouterConnection:
                     # 方式2: GET 請求（某些路由器使用）
                     if "?" in endpoint:
                         get_url = f"{self.base_url}{endpoint}{auth_encoded}"
+                        request_kwargs = self._prepare_request_kwargs(verify_cert)
                         response = self.session.get(
                             get_url,
-                            verify=verify_cert,
-                            timeout=10,
-                            allow_redirects=True
+                            **request_kwargs
                         )
                         
                         if response.status_code == 200:
@@ -207,10 +268,10 @@ class AsusRouterConnection:
             
             for test_url in test_urls:
                 try:
+                    request_kwargs = self._prepare_request_kwargs(verify_cert)
                     response = self.session.get(
                         test_url,
-                        verify=verify_cert,
-                        timeout=10
+                        **request_kwargs
                     )
                     
                     # 如果沒有重定向到登錄頁面，可能已經登錄
@@ -248,11 +309,11 @@ class AsusRouterConnection:
                 "hook": "get_wireless_client()"
             }
             
+            request_kwargs = self._prepare_request_kwargs(verify_cert)
+            request_kwargs["params"] = params
             response = self.session.get(
                 url,
-                params=params,
-                verify=verify_cert,
-                timeout=10
+                **request_kwargs
             )
             
             if response.status_code == 200:

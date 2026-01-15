@@ -40,3 +40,11 @@ Thumbs.db
 # Project specific
 *.log
 *.tmp
+
+# Certificates (sensitive - do not commit)
+certs/
+*.pem
+*.key
+*.crt
+*.cert
+cert_key.tar
