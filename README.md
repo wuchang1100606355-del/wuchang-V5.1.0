@@ -1,6 +1,6 @@
 # 華碩路由器 DDNS 連接工具
 
-這個工具用於連接到華碩路由器的 DDNS 地址 `coffeeLofe.asuscomm.com` 或直接使用 IP 地址連接。
+這個工具用於連接到華碩路由器的 DDNS 地址 `CoffeeLoge.asuscomm.com` 或直接使用 IP 地址連接。
 
 ## 功能
 
@@ -66,13 +66,13 @@ info = router.get_router_info(verify_cert=False)
 ## 連接信息
 
 - **IP 地址**: `220.135.21.74`
-- **域名**: `coffeeLofe.asuscomm.com` (DDNS，目前無法解析)
+- **域名**: `CoffeeLoge.asuscomm.com` (DDNS)
 - **端口**: `8443` (HTTPS)
 - **協議**: HTTPS
 
 ## 注意事項
 
-1. **域名修正**: 原輸入為 `coffeeLofe.asuscomm.comm`，已修正為 `coffeeLofe.asuscomm.com`
+1. **域名**: 以路由器遠端存取頁面顯示為準（例如 `CoffeeLoge.asuscomm.com`）
 2. **證書**: 使用 IP 地址連接時，SSL 證書驗證會失敗（因為證書是為域名簽發的），這是正常現象
 3. **端口**: 默認使用 8443（HTTPS），如果路由器使用其他端口，請修改 `port` 參數
 4. **防火牆**: 確保防火牆允許連接到路由器端口

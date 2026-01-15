@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系統架構圖 - wuchang.life</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .ip-group {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .ip-header {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .service-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .service-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .service-url {
+            font-size: 0.9em;
+            opacity: 0.9;
+            word-break: break-all;
+        }
+        
+        .service-desc {
+            font-size: 0.85em;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        .architecture-diagram {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .diagram-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 2px solid #667eea;
+        }
+        
+        .diagram-arrow {
+            text-align: center;
+            font-size: 2em;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .quick-link {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        
+        .quick-link:hover {
+            transform: scale(1.05);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 系統架構圖</h1>
+        <p class="subtitle">wuchang.life - 完整服務列表與連結</p>
+        
+        <div class="section">
+            <h2>📊 系統統計</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">16</div>
+                    <div class="stat-label">總服務數</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">IP 地址</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">172.20.0.10</div>
+                    <div class="stat-label">容器靜態 IP</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🚀 快速訪問</h2>
+            <div class="quick-links">
+                <a href="http://localhost:5000" class="quick-link" target="_blank">Web UI 本地</a>
+                <a href="http://172.20.0.10:5000" class="quick-link" target="_blank">Web UI 容器</a>
+                <a href="http://220.135.21.74:5000" class="quick-link" target="_blank">Web UI 公網</a>
+                <a href="https://220.135.21.74:8443" class="quick-link" target="_blank">路由器管理</a>
+                <a href="http://www.wuchang.life" class="quick-link" target="_blank">主網站</a>
+                <a href="http://shop.wuchang.life" class="quick-link" target="_blank">商店</a>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🏠 路由器服務 (220.135.21.74)</h2>
+            <div class="service-grid">
+
+                <a href="http://wuchang.life" class="service-card" target="_blank">
+                    <div class="service-name">根域名</div>
+                    <div class="service-url">http://wuchang.life</div>
+                    <div class="service-desc">根域名</div>
+                </a>
+
+                <a href="http://shop.wuchang.life" class="service-card" target="_blank">
+                    <div class="service-name">shop</div>
+                    <div class="service-url">http://shop.wuchang.life</div>
+                    <div class="service-desc">商店</div>
+                </a>
+
+                <a href="http://www.wuchang.life" class="service-card" target="_blank">
+                    <div class="service-name">www</div>
+                    <div class="service-url">http://www.wuchang.life</div>
+                    <div class="service-desc">WWW 子域名</div>
+                </a>
+
+                <a href="http://220.135.21.74:5000" class="service-card" target="_blank">
+                    <div class="service-name">ui</div>
+                    <div class="service-url">http://220.135.21.74:5000</div>
+                    <div class="service-desc">Web UI 管理界面（靜態 IP）</div>
+                </a>
+
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>☁️ Google Cloud 服務</h2>
+
+            <div class="ip-group">
+                <div class="ip-header">Google Cloud 1 (35.185.167.23)</div>
+                <div class="service-grid">
+
+                    <a href="http://wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">根域名</div>
+                        <div class="service-url">http://wuchang.life</div>
+                        <div class="service-desc">根域名</div>
+                    </a>
+
+                    <a href="http://odoo.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">odoo</div>
+                        <div class="service-url">http://odoo.wuchang.life</div>
+                        <div class="service-desc">Odoo 系統</div>
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="ip-group">
+                <div class="ip-header">Google Cloud 2 (35.201.170.114)</div>
+                <div class="service-grid">
+
+                    <a href="http://verify.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">verify</div>
+                        <div class="service-url">http://verify.wuchang.life</div>
+                        <div class="service-desc">驗證服務</div>
+                    </a>
+
+                    <a href="http://admin.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">admin</div>
+                        <div class="service-url">http://admin.wuchang.life</div>
+                        <div class="service-desc">管理後台</div>
+                    </a>
+
+                    <a href="http://butler.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">butler</div>
+                        <div class="service-url">http://butler.wuchang.life</div>
+                        <div class="service-desc">Butler 服務</div>
+                    </a>
+
+                    <a href="http://ft.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">ft</div>
+                        <div class="service-url">http://ft.wuchang.life</div>
+                        <div class="service-desc">FT 服務</div>
+                    </a>
+
+                    <a href="http://core.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">core</div>
+                        <div class="service-url">http://core.wuchang.life</div>
+                        <div class="service-desc">核心服務</div>
+                    </a>
+
+                    <a href="http://vs.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">vs</div>
+                        <div class="service-url">http://vs.wuchang.life</div>
+                        <div class="service-desc">VS 服務</div>
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="ip-group">
+                <div class="ip-header">Google Cloud 3 (104.199.144.93)</div>
+                <div class="service-grid">
+
+                    <a href="http://pm.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">pm</div>
+                        <div class="service-url">http://pm.wuchang.life</div>
+                        <div class="service-desc">項目管理</div>
+                    </a>
+
+                    <a href="http://hj.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">hj</div>
+                        <div class="service-url">http://hj.wuchang.life</div>
+                        <div class="service-desc">HJ 服務</div>
+                    </a>
+
+                    <a href="http://pos.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">pos</div>
+                        <div class="service-url">http://pos.wuchang.life</div>
+                        <div class="service-desc">POS 系統</div>
+                    </a>
+
+                    <a href="http://housing.wuchang.life" class="service-card" target="_blank">
+                        <div class="service-name">housing</div>
+                        <div class="service-url">http://housing.wuchang.life</div>
+                        <div class="service-desc">Housing 服務</div>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="section">
+            <h2>📋 系統架構流程</h2>
+            <div class="architecture-diagram">
+                <div class="diagram-box">
+                    <strong>👤 使用者</strong><br>
+                    瀏覽器訪問
+                </div>
+                <div class="diagram-arrow">↓</div>
+                <div class="diagram-box">
+                    <strong>🌐 DNS 解析</strong><br>
+                    wuchang.life 域名解析
+                </div>
+                <div class="diagram-arrow">↓</div>
+                <div class="diagram-box">
+                    <strong>🖥️ IP 地址</strong><br>
+                    220.135.21.74 或其他 IP
+                </div>
+                <div class="diagram-arrow">↓</div>
+                <div class="diagram-box">
+                    <strong>🐳 Docker 容器</strong><br>
+                    172.20.0.10:5000 (靜態 IP)
+                </div>
+                <div class="diagram-arrow">↓</div>
+                <div class="diagram-box">
+                    <strong>🔌 路由器 VM</strong><br>
+                    220.135.21.74:8443
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📝 配置信息</h2>
+            <p><strong>域名:</strong> wuchang.life</p>
+            <p><strong>容器靜態 IP:</strong> 172.20.0.10</p>
+            <p><strong>主要端口:</strong> 5000 (Web UI), 8443 (路由器), 80/443 (HTTP/HTTPS)</p>
+            <p><strong>DNS TTL:</strong> 300 秒（5 分鐘）</p>
+            <p><strong>最後更新:</strong> 2026-01-15 15:29:57</p>
+        </div>
+    </div>
+</body>
+</html>

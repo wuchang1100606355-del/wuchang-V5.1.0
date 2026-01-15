@@ -1,0 +1,269 @@
+{
+  "community_name": "五常生活圈",
+  "location": {
+    "city": "新北市",
+    "district": "三重區",
+    "villages": ["五常里", "五順里", "仁忠里"],
+    "boundaries": {
+      "north": 25.10,
+      "south": 25.08,
+      "east": 121.45,
+      "west": 121.43,
+      "center": {
+        "lat": 25.09,
+        "lng": 121.44
+      }
+    },
+    "main_streets": [
+      {
+        "name": "五華街",
+        "type": "商業大動脈",
+        "description": "貫穿本區的商業大動脈，系統「商家入口」的主要流量來源"
+      },
+      {
+        "name": "仁愛街",
+        "type": "核心軸線",
+        "description": "高密度的居住與小型商業網絡"
+      },
+      {
+        "name": "正義北路",
+        "type": "商業輻射",
+        "description": "強大的商業輻射力，影響本區居民消費習慣"
+      },
+      {
+        "name": "仁忠街",
+        "type": "微血管",
+        "description": "社區的微血管，隱藏著許多在地服務型商業"
+      },
+      {
+        "name": "仁義街",
+        "type": "微血管",
+        "description": "社區的微血管，隱藏著許多在地服務型商業"
+      }
+    ]
+  },
+  "demographics": {
+    "total_population": {
+      "estimated": "9,000-10,000",
+      "renzhong_village": 3254,
+      "households": {
+        "estimated": "3,800-4,000",
+        "renzhong_village": 1279,
+        "average_per_household": 2.54
+      }
+    },
+    "age_structure": {
+      "elderly_65_plus": {
+        "percentage": 19.3,
+        "description": "接近超高齡社會（20%）門檻",
+        "impact": "系統應支援「在地安養」與「社區互助」"
+      },
+      "children_0_14": {
+        "percentage": 11.8,
+        "description": "幼年人口"
+      },
+      "working_age_25_64": {
+        "percentage": 68.9,
+        "description": "工作人口，解決晚餐剛需"
+      },
+      "aging_index": 163.12,
+      "description": "極高數值，老年人口數量遠超幼年人口"
+    },
+    "education": {
+      "higher_education": {
+        "percentage": 35.5,
+        "description": "大專以上"
+      },
+      "graduate_degree": {
+        "percentage": 13.4,
+        "description": "碩博士"
+      },
+      "impact": "具備足夠數位素養，對生活品質有要求"
+    }
+  },
+  "housing": {
+    "average_age": 34,
+    "age_distribution": {
+      "over_41_years": {
+        "percentage": 42.5,
+        "description": "老舊公寓為主"
+      },
+      "21_40_years": {
+        "percentage": 39.2
+      },
+      "under_5_years": {
+        "percentage": 4.9,
+        "description": "新屋極少"
+      }
+    },
+    "building_type": {
+      "4_5_floors_apartments": {
+        "percentage": 24.9,
+        "description": "可能缺乏電梯設施",
+        "impact": "為「便當君」配送服務提供剛性需求"
+      }
+    },
+    "vertical_settlement": {
+      "ground_floor": "高能見度的餐飲與零售業",
+      "upper_floors": "居住單元與小型辦公室、家庭代工廠",
+      "description": "垂直聚落特徵，2樓以上住戶更依賴數位平台"
+    }
+  },
+  "commercial_ecosystem": {
+    "visible_commerce": {
+      "description": "街邊美食與零售",
+      "main_streets": ["五華街", "仁愛街", "正義北路"],
+      "business_types": [
+        {
+          "category": "餐飲",
+          "density": "高",
+          "examples": ["龍門胡椒餅", "萬粒肉圓", "五燈獎豬腳飯"]
+        },
+        {
+          "category": "零售",
+          "density": "中高"
+        },
+        {
+          "category": "服務業",
+          "density": "中"
+        }
+      ]
+    },
+    "hidden_commerce": {
+      "description": "巷弄內的B2B網絡",
+      "business_types": [
+        {
+          "category": "工程與建設",
+          "examples": ["常鑫建設", "建韋工程行", "晟鐿掛具"],
+          "location": "2樓以上或巷弄深處",
+          "employee_range": "3-10人",
+          "opportunity": "便當君企業訂餐功能"
+        },
+        {
+          "category": "科技與貿易",
+          "examples": ["虹億科技行", "億睿榛實業社", "崇歆商行"]
+        }
+      ],
+      "strategy": "開發「企業訂餐功能」，提供「滿5個便當免運」或「企業幸福幣回饋」"
+    },
+    "price_ranges": {
+      "mainstream": "NT$45 - NT$120",
+      "description": "對價格極度敏感的區間",
+      "impact": "幸福幣混合支付對促銷效果顯著"
+    }
+  },
+  "transportation": {
+    "motorcycles": {
+      "estimated_range": "4,200 - 5,800",
+      "calculation_methods": {
+        "household_model": "3,900戶 × 1.1 ≈ 4,290輛",
+        "per_capita_model": "9,800人 × 0.6 ≈ 5,880輛"
+      },
+      "impact": {
+        "parking_pressure": "路邊暫停取餐空間極度受限",
+        "logistics_opportunity": "機車族群作為潛在配送動能"
+      }
+    },
+    "logistics_recommendations": {
+      "curbside_pickup": {
+        "description": "免下車取餐功能",
+        "reason": "停車困難，避免尋找停車位困擾"
+      },
+      "walking_delivery": {
+        "description": "步行配送",
+        "radius": "500公尺內",
+        "reason": "巷弄狹窄且單行道多，社區半徑不大"
+      }
+    }
+  },
+  "happiness_coin": {
+    "social_welfare_integration": {
+      "target_group": "19.3% 老年人口",
+      "mechanism": "純幸福幣購買（現金價0元）",
+      "benefit": "創造「尊嚴救助」模式",
+      "activities": ["擔任志工", "協助巡守", "參與社區活動"]
+    },
+    "time_complement": {
+      "idle_period": "下午2點至4點",
+      "target": "退休長者活動時間",
+      "product": "下午茶套餐（燒餅、豆漿）",
+      "benefit": "解決庫存又活絡社區"
+    },
+    "database_support": {
+      "table": "food_treasure_items",
+      "field": "purchase_price_cash",
+      "value": 0,
+      "description": "支援純幸福幣購買"
+    }
+  },
+  "system_optimization": {
+    "dual_entry_mode": {
+      "entry_a_merchant": {
+        "target": "60% 居住在無電梯公寓的長者",
+        "features": [
+          "大字體模式",
+          "優先顯示外送或一樓面交服務",
+          "地圖標示步行距離"
+        ]
+      },
+      "entry_b_category": {
+        "target": "35.5% 高學歷族群 + 11.8% 青少年",
+        "features": [
+          "強調視覺體驗",
+          "探索樂趣",
+          "AI生成精美圖片",
+          "獵奇心理滿足"
+        ]
+      }
+    },
+    "food_dollars_strategy": {
+      "bento_kun": {
+        "role": "辦公室守護者",
+        "target": "巷弄內數百家小型公司",
+        "feature": "企業訂閱制"
+      },
+      "shao_bing_tuan_zi": {
+        "role": "社區活力大使",
+        "integration": "結合宮廟與社區活動",
+        "mechanism": "發放實體或虛擬的「團子幣」"
+      },
+      "coffee_elf": {
+        "role": "巷弄探險家",
+        "feature": "打卡賺幣機制",
+        "target": "挖掘隱藏版咖啡或茶飲店"
+      }
+    }
+  },
+  "implementation_roadmap": {
+    "phase_1": {
+      "target": "仁忠里",
+      "reason": "完整的數據基礎與高齡化特徵",
+      "test": "幸福幣換惜食的社會福利模式"
+    },
+    "phase_2": {
+      "expansion": ["五常里", "五順里"],
+      "goal": "完成整個生活圈的數位覆蓋"
+    }
+  },
+  "key_insights": [
+    "成熟型高密度住商混合區",
+    "超高齡社會挑戰（19.3% 65歲以上）",
+    "垂直聚落特徵（2樓以上住戶依賴數位平台）",
+    "雙層商業結構（顯性零售 + 隱性B2B）",
+    "機車物流壓力與機會（4,200-5,800輛）",
+    "高教育程度（35.5%大專以上）",
+    "價格敏感市場（NT$45-120主流）"
+  ],
+  "report_metadata": {
+    "title": "新北市五常社區發展協會範圍系統整合與深度城市分析報告",
+    "scope": "五常里、五順里、仁忠里",
+    "word_count": "20,000+",
+    "analysis_dimensions": [
+      "地理空間",
+      "人口社會學",
+      "商業經濟學",
+      "交通物流學"
+    ],
+    "created_date": "2026-01-15"
+  }
+}

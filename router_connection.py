@@ -1,6 +1,6 @@
 """
 華碩路由器 DDNS 連接工具
-連接到 coffeeLofe.asuscomm.com (注意：原輸入為 .comm，已修正為 .com)
+連接到 CoffeeLoge.asuscomm.com（以路由器遠端存取頁面顯示為準）
 """
 
 import requests
@@ -22,7 +22,7 @@ if sys.platform == 'win32':
 urllib3.disable_warnings(InsecureRequestWarning)
 
 class AsusRouterConnection:
-    def __init__(self, hostname="coffeeLofe.asuscomm.com", port=8443, use_https=True, cert_path=None, key_path=None):
+    def __init__(self, hostname="CoffeeLoge.asuscomm.com", port=8443, use_https=True, cert_path=None, key_path=None):
         """
         初始化路由器連接
         
@@ -333,7 +333,7 @@ def main():
     print("=" * 50)
     
     # 使用提供的 IP 地址或嘗試 DNS 解析
-    hostname = "coffeeLofe.asuscomm.com"
+    hostname = "CoffeeLoge.asuscomm.com"
     router_ip = "220.135.21.74"  # 用戶提供的路由器公網 IP
     
     print(f"\n使用路由器 IP 地址: {router_ip}")
@@ -352,8 +352,8 @@ def main():
         print("[OK] 連接成功！")
         success = True
         print("\n提示: 使用 IP 地址連接時，SSL 證書驗證會失敗是正常的")
-        print("      因為證書是為域名 'coffeeLofe.asuscomm.com' 簽發的，而不是 IP 地址")
-        print("      如果需要使用證書驗證，請使用域名連接（需要 DDNS 正常工作）")
+        print("      因為證書通常是為域名（例如 'www.asusrouter.com' 或 DDNS 域名）簽發的，而不是 IP 地址")
+        print("      如果需要 hostname 匹配與信任，請使用域名連接（需 DDNS 正常工作，或在本地用 www.asusrouter.com）")
     else:
         print("\n嘗試使用證書驗證...")
         if router.test_connection(verify_cert=True):

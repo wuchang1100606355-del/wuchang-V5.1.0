@@ -1,0 +1,39 @@
+{
+  "audit_time": "2026-01-15T15:02:13.726715",
+  "domain": "wuchang.life",
+  "statistics": {
+    "total_records": 14,
+    "verified": 13,
+    "mismatched": 1,
+    "unresolvable": 0,
+    "http_accessible": 0,
+    "http_inaccessible": 14
+  },
+  "ip_services": {
+    "35.201.170.114": [
+      "verify.wuchang.life",
+      "admin.wuchang.life",
+      "butler.wuchang.life",
+      "ft.wuchang.life",
+      "core.wuchang.life",
+      "vs.wuchang.life"
+    ],
+    "104.199.144.93": [
+      "pm.wuchang.life",
+      "hj.wuchang.life",
+      "pos.wuchang.life",
+      "housing.wuchang.life"
+    ],
+    "220.135.21.74": [
+      "shop.wuchang.life",
+      "www.wuchang.life"
+    ],
+    "35.185.167.23": [
+      "odoo.wuchang.life"
+    ]
+  },
+  "issues": [
+    "有 1 個 DNS 記錄不匹配",
+    "大部分服務 HTTP 無法訪問"
+  ]
+}
