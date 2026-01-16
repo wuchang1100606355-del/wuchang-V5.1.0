@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "note": "Google Workspace 高度媒合設定（範例）。主鍵一律用編號（account_id / org_id / device_id / node_id / function_id）。正式檔建議放到 Google Drive 同步資料夾並命名 workspace_matching.json。",
+  "workspace": {
+    "domain": "example.org",
+    "drive_root_rel": "wuchang_workspace",
+    "customer_id_optional": ""
+  },
+  "accounts": [
+    {
+      "account_id": "1001",
+      "label": "維運管理",
+      "workspace_principal": {
+        "user_email_optional": "ops@example.org",
+        "user_id_optional": "",
+        "groups_optional": ["ops@example.org"]
+      },
+      "ui_profile_id": "ops_admin",
+      "permissions": ["read", "job_read", "job_create", "job_manage", "device_request", "pii_read", "pii_write", "workspace_write", "agent_config"]
+    }
+  ],
+  "orgs": [
+    {
+      "org_id": "ORG-001",
+      "label": "協會",
+      "workspace": {
+        "group_email_optional": "org-association@example.org",
+        "drive_folder_rel_optional": "orgs/ORG-001"
+      }
+    }
+  ],
+  "devices": [
+    {
+      "device_id": "DEV-001",
+      "label": "iPhone（乙太網路熱點）",
+      "owner_account_id": "1001",
+      "workspace_managed_optional": false,
+      "notes_non_identifiable_optional": "連線提供者；不記序號/電話。"
+    }
+  ],
+  "node_ai_agents": [
+    {
+      "node_id": "platform",
+      "agent_id": "AGENT-platform",
+      "admin_account_ids": ["1001"],
+      "allowed_function_ids": ["dns_check", "net_snapshot", "job_create_sync_push"]
+    }
+  ],
+  "system_functions": [
+    {
+      "function_id": "dns_check",
+      "label": "DNS 傳播檢查",
+      "risk_level": "low",
+      "requires_consent_scope_optional": ""
+    },
+    {
+      "function_id": "job_create_sync_push",
+      "label": "建立推送命令單（不直接執行）",
+      "risk_level": "high",
+      "requires_consent_scope_optional": ""
+    },
+    {
+      "function_id": "account_nonid_profile",
+      "label": "不可識別使用者習慣資料（性別/年齡區間/摘要）",
+      "risk_level": "medium",
+      "requires_consent_scope_optional": "account_non_identifiable_profile"
+    },
+    {
+      "function_id": "voucher_discount_code",
+      "label": "折扣碼（建立/驗證/兌換）",
+      "risk_level": "medium",
+      "requires_consent_scope_optional": ""
+    },
+    {
+      "function_id": "voucher_coupon_ticket",
+      "label": "會員折扣票券（建立/驗證/兌換）",
+      "risk_level": "medium",
+      "requires_consent_scope_optional": ""
+    },
+    {
+      "function_id": "voucher_product_voucher",
+      "label": "商品券（建立/驗證/兌換）",
+      "risk_level": "medium",
+      "requires_consent_scope_optional": ""
+    }
+  ]
+}
+

@@ -24,6 +24,7 @@ import subprocess
 import sys
 import time
 import uuid
+import hashlib
 from dataclasses import asdict
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -48,8 +49,14 @@ JOB_OUTBOX = JOB_DIR / "outbox"
 JOB_SENT = JOB_DIR / "sent"
 JOB_ARCHIVE = JOB_DIR / "archive"
 JOB_AUDIT_JSONL = JOB_DIR / "job_audit.jsonl"
+UI_PROFILES_PATH = BASE_DIR / "ui_profiles.json"
 AGENT_CONFIG_PATH = BASE_DIR / "agent_config.json"
 AGENT_AUDIT_JSONL = BASE_DIR / "agent_audit.jsonl"
+PII_AUDIT_JSONL = BASE_DIR / "pii_audit.jsonl"
+AUTH_AUDIT_JSONL = BASE_DIR / "auth_audit.jsonl"
+DEVICE_AUDIT_JSONL = BASE_DIR / "device_audit.jsonl"
+CONSENT_AUDIT_JSONL = BASE_DIR / "consent_audit.jsonl"
+VOUCHER_AUDIT_JSONL = BASE_DIR / "voucher_audit.jsonl"
 
 # 小J 自然語言代理：高風險動作兩段式確認（記憶僅在本程序生命週期內）
 PENDING_CONFIRM: Dict[str, Dict[str, Any]] = {}
@@ -311,9 +318,588 @@ def _append_jsonl(path: Path, record: Dict[str, Any]) -> None:
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
+def _sha256_text(s: str) -> str:
+    h = hashlib.sha256()
+    h.update((s or "").encode("utf-8", errors="replace"))
+    return h.hexdigest()
+
+
+def _now_epoch() -> int:
+    return int(time.time())
+
+
+def _session_account_id(handler: BaseHTTPRequestHandler) -> str:
+    sess = _get_session(handler)
+    return str((sess or {}).get("account_id") or "").strip()
+
+
+# ===== 帳號（號碼）→權限 =====
+SESSIONS: Dict[str, Dict[str, Any]] = {}
+
+
+def _accounts_policy_path() -> Optional[Path]:
+    """
+    建議放在 Google Drive 同步資料夾（Workspace 私密區）：
+    - WUCHANG_ACCOUNTS_PATH（優先）
+    - 或 <WUCHANG_WORKSPACE_OUTDIR>/accounts_policy.json
+    """
+    p = (os.getenv("WUCHANG_ACCOUNTS_PATH") or "").strip()
+    if p:
+        return Path(p).expanduser().resolve()
+    d = _pii_vault_dir()  # 同樣依賴 Workspace outdir
+    if not d:
+        return None
+    return (d / "accounts_policy.json").resolve()
+
+
+def _workspace_matching_path() -> Optional[Path]:
+    """
+    Google Workspace（Drive 同步）高度媒合設定檔：
+    - WUCHANG_WORKSPACE_MATCHING_PATH（優先）
+    - 或 <WUCHANG_WORKSPACE_OUTDIR>/workspace_matching.json
+    """
+    p = (os.getenv("WUCHANG_WORKSPACE_MATCHING_PATH") or "").strip()
+    if p:
+        return Path(p).expanduser().resolve()
+    d = _workspace_outdir()
+    if not d:
+        return None
+    return (d / "workspace_matching.json").resolve()
+
+
+def _read_workspace_matching() -> Dict[str, Any]:
+    p = _workspace_matching_path()
+    if not p or not p.exists():
+        return {"version": 1, "note": "workspace_matching.json not found", "accounts": [], "orgs": [], "devices": [], "node_ai_agents": [], "system_functions": []}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {"version": 1, "accounts": []}
+    except Exception as e:
+        return {"version": 1, "error": f"invalid_json: {e}", "accounts": []}
+
+
+def _load_accounts_policy() -> Dict[str, Any]:
+    p = _accounts_policy_path()
+    if not p or not p.exists():
+        return {"version": 1, "accounts": []}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {"version": 1, "accounts": []}
+    except Exception:
+        return {"version": 1, "accounts": []}
+
+
+def _find_account(account_id: str) -> Optional[Dict[str, Any]]:
+    aid = str(account_id or "").strip()
+    if not aid:
+        return None
+    pol = _load_accounts_policy()
+    accs = pol.get("accounts") if isinstance(pol.get("accounts"), list) else []
+    for a in accs:
+        if not isinstance(a, dict):
+            continue
+        if str(a.get("account_id") or "").strip() == aid:
+            return a
+    return None
+
+
+def _new_session(account: Dict[str, Any]) -> str:
+    sid = uuid.uuid4().hex
+    perms = account.get("permissions") if isinstance(account.get("permissions"), list) else []
+    SESSIONS[sid] = {
+        "created_at": _job_now_iso(),
+        "expires_at": time.time() + 8 * 3600,  # 8 小時
+        "account_id": str(account.get("account_id") or ""),
+        "label": str(account.get("label") or ""),
+        "profile_id": str(account.get("profile_id") or "ops_admin"),
+        "permissions": [str(x) for x in perms if str(x).strip()],
+    }
+    return sid
+
+
+def _get_session(handler: BaseHTTPRequestHandler) -> Optional[Dict[str, Any]]:
+    sid = str(handler.headers.get("X-Wuchang-Session") or "").strip()
+    if not sid:
+        return None
+    s = SESSIONS.get(sid)
+    if not s:
+        return None
+    if float(s.get("expires_at") or 0) < time.time():
+        SESSIONS.pop(sid, None)
+        return None
+    return s
+
+
+def _has_perm(sess: Optional[Dict[str, Any]], perm: str) -> bool:
+    # 若未啟用帳號政策：視為單機模式，允許 read，其他按最小權限拒絕
+    pol = _load_accounts_policy()
+    enabled = bool((pol.get("accounts") or []))
+    if not enabled:
+        return perm == "read"
+    if not sess:
+        return False
+    perms = sess.get("permissions") or []
+    return perm in perms or "admin_all" in perms
+
+
+def _require_perm(handler: BaseHTTPRequestHandler, perm: str) -> Optional[Dict[str, Any]]:
+    sess = _get_session(handler)
+    if not _has_perm(sess, perm):
+        _json(handler, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": perm})
+        return None
+    return sess
+
+
+def _require_any_perm(handler: BaseHTTPRequestHandler, perms: List[str]) -> Optional[Dict[str, Any]]:
+    """
+    允許多個權限其一通過（用於相容：pii_read vs pii_read_identifiable 等）。
+    """
+    sess = _get_session(handler)
+    for p in perms:
+        if _has_perm(sess, p):
+            return sess
+    _json(handler, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required_any": perms})
+    return None
+
+
+def _pii_vault_dir() -> Optional[Path]:
+    """
+    個資保管：靠 Google Workspace（Drive 同步資料夾）落地。
+    - 優先：WUCHANG_PII_OUTDIR（可指定更私密的子資料夾）
+    - 其次：WUCHANG_WORKSPACE_OUTDIR
+    """
+    outdir = (os.getenv("WUCHANG_PII_OUTDIR") or os.getenv("WUCHANG_WORKSPACE_OUTDIR") or "").strip()
+    if not outdir:
+        return None
+    return Path(outdir).expanduser().resolve()
+
+
+def _vault_dir_general() -> Optional[Path]:
+    """
+    一般私密落地區（可用於票券/折扣碼等營運資料）：
+    - 優先：WUCHANG_PII_OUTDIR
+    - 其次：WUCHANG_WORKSPACE_OUTDIR
+    """
+    return _pii_vault_dir()
+
+
+def _vault_safe_path(*parts: str) -> Path:
+    root = _vault_dir_general()
+    if not root:
+        raise ValueError("missing_vault_outdir")
+    p = (root / Path(*parts)).resolve()
+    if root.resolve() not in p.parents and p != root.resolve():
+        raise ValueError("invalid_vault_path")
+    return p
+
+
+def _workspace_outdir() -> Optional[Path]:
+    """
+    一般輸出/交換區：靠 Google Drive 同步資料夾落地。
+    （用於「設備任務/回覆」等，不放 repo）
+    """
+    outdir = (os.getenv("WUCHANG_WORKSPACE_OUTDIR") or "").strip()
+    if not outdir:
+        return None
+    return Path(outdir).expanduser().resolve()
+
+
+def _workspace_safe_path(*parts: str) -> Path:
+    """
+    把檔案限制在 Workspace outdir 內，避免路徑穿越。
+    """
+    root = _workspace_outdir()
+    if not root:
+        raise ValueError("missing_workspace_outdir")
+    p = (root / Path(*parts)).resolve()
+    if root.resolve() not in p.parents and p != root.resolve():
+        raise ValueError("invalid_workspace_path")
+    return p
+
+
+def _write_workspace_json(*, rel_dir: str, filename: str, payload: Dict[str, Any]) -> Path:
+    p = _workspace_safe_path(rel_dir, filename)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return p
+
+
+def _list_workspace_json_files(*, rel_dir: str, limit: int = 200) -> List[Path]:
+    root = _workspace_outdir()
+    if not root:
+        return []
+    base = _workspace_safe_path(rel_dir)
+    if not base.exists():
+        return []
+    files = sorted(base.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=False)
+    return files[: max(1, min(int(limit), 2000))]
+
+
+def _normalize_pii_class(v: str) -> str:
+    """
+    個資分類：
+    - identifiable：可識別（姓名/電話/Email 等）
+    - non_identifiable：不可識別（角色/值班方式/非特定個人聯繫方式等）
+    """
+    t = (v or "").strip().lower().replace("-", "_")
+    if t in ("non_identifiable", "nonidentifiable", "public", "anon", "anonymized"):
+        return "non_identifiable"
+    return "identifiable"
+
+
+def _pii_vault_path(pii_class: str = "identifiable") -> Optional[Path]:
+    d = _pii_vault_dir()
+    if not d:
+        return None
+    c = _normalize_pii_class(pii_class)
+    # 相容：原本的 pii_contacts.json 視為 identifiable
+    fname = "pii_contacts.json" if c == "identifiable" else "pii_contacts_non_identifiable.json"
+    return (d / fname).resolve()
+
+
+def _read_pii_vault(pii_class: str = "identifiable") -> Dict[str, Any]:
+    p = _pii_vault_path(pii_class)
+    if not p or not p.exists():
+        return {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _write_pii_vault(pii_class: str, vault: Dict[str, Any]) -> Optional[Path]:
+    p = _pii_vault_path(pii_class)
+    if not p:
+        return None
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(vault, ensure_ascii=False, indent=2), encoding="utf-8")
+    return p
+
+
+def _digits_only(s: str) -> str:
+    return "".join(ch for ch in (s or "") if ch.isdigit())
+
+
+def _phone_last4(s: str) -> str:
+    d = _digits_only(s)
+    return d[-4:] if len(d) >= 4 else d
+
+
+def _mask_phone_keep_last4(s: str) -> str:
+    last4 = _phone_last4(s)
+    if not last4:
+        return ""
+    return f"****{last4}"
+
+
+def _mask_name(s: str) -> str:
+    t = (s or "").strip()
+    if not t:
+        return ""
+    if len(t) == 1:
+        return t + "＊"
+    return t[0] + ("＊" * (len(t) - 1))
+
+
+def _match_name_mask(mask: str, name: str) -> bool:
+    """
+    姓名遮罩比對：
+    - mask 可含 '*' 或 '＊' 當萬用字元
+    - 逐字比對（mask 比 name 短也可，只比對 mask 長度）
+    """
+    m = (mask or "").strip()
+    n = (name or "").strip()
+    if not m:
+        return True
+    if not n:
+        return False
+    wild = {"*", "＊", "x", "X"}
+    for i, ch in enumerate(m):
+        if i >= len(n):
+            return False
+        if ch in wild:
+            continue
+        if ch != n[i]:
+            return False
+    return True
+
+
+# ===== 會員折扣票券 / 商品券 / 折扣碼（預留模組） =====
+def _voucher_store_path() -> Optional[Path]:
+    try:
+        return _vault_safe_path("commerce", "vouchers.json")
+    except Exception:
+        return None
+
+
+def _read_voucher_store() -> Dict[str, Any]:
+    p = _voucher_store_path()
+    if not p or not p.exists():
+        return {"version": 1, "vouchers": {}}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        if isinstance(data, dict):
+            data.setdefault("version", 1)
+            data.setdefault("vouchers", {})
+            if not isinstance(data.get("vouchers"), dict):
+                data["vouchers"] = {}
+            return data
+        return {"version": 1, "vouchers": {}}
+    except Exception:
+        return {"version": 1, "vouchers": {}}
+
+
+def _write_voucher_store(store: Dict[str, Any]) -> Optional[Path]:
+    p = _voucher_store_path()
+    if not p:
+        return None
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(store, ensure_ascii=False, indent=2), encoding="utf-8")
+    return p
+
+
+def _voucher_code_hash(code_plain: str) -> str:
+    c = (code_plain or "").strip()
+    return _sha256_text(c)
+
+
+def _voucher_code_mask(code_plain: str) -> str:
+    c = (code_plain or "").strip()
+    if not c:
+        return ""
+    tail = c[-4:] if len(c) >= 4 else c
+    return "****" + tail
+
+
+def _voucher_is_valid_now(v: Dict[str, Any]) -> bool:
+    if not isinstance(v, dict):
+        return False
+    st = str(v.get("status") or "active").strip().lower()
+    if st != "active":
+        return False
+    now = _now_epoch()
+    vf = int(v.get("valid_from_epoch") or 0)
+    vu = int(v.get("valid_until_epoch") or 0)
+    if vf and now < vf:
+        return False
+    if vu and now > vu:
+        return False
+    return True
+
 
 def _job_now_iso() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%S%z")
+
+
+# ===== 不可識別個資（帳號編號 account_id 為主鍵，用於習慣分析/系統改版參考） =====
+def _account_nonid_profile_path() -> Optional[Path]:
+    d = _pii_vault_dir()
+    if not d:
+        return None
+    return (d / "account_profiles_non_identifiable.json").resolve()
+
+
+def _age_to_band(age_years: int) -> str:
+    a = int(age_years)
+    if a < 0:
+        return ""
+    if a <= 12:
+        return "0-12"
+    if a <= 17:
+        return "13-17"
+    if a <= 24:
+        return "18-24"
+    if a <= 34:
+        return "25-34"
+    if a <= 44:
+        return "35-44"
+    if a <= 54:
+        return "45-54"
+    if a <= 64:
+        return "55-64"
+    return "65+"
+
+
+def _sanitize_account_nonid_profile(profile: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    僅允許「不可識別」欄位；拒絕姓名/電話/Email/生日等。
+    - gender: unknown|male|female|non_binary|other
+    - age_band: 0-12|13-17|18-24|25-34|35-44|45-54|55-64|65+（或用 age_years 自動轉）
+    - habits: 文字摘要（不要包含個資）
+    - tags: 字串陣列（不要包含個資）
+    """
+    if not isinstance(profile, dict):
+        return {}
+
+    # block obvious identifiable keys
+    for k in ("name", "phone", "email", "birthday", "birth", "dob", "address", "id_number", "ssn"):
+        if k in profile:
+            profile.pop(k, None)
+
+    gender = str(profile.get("gender") or "").strip().lower()
+    if gender not in ("unknown", "male", "female", "non_binary", "other"):
+        gender = "unknown" if gender else ""
+
+    age_band = str(profile.get("age_band") or profile.get("age_range") or "").strip()
+    age_years_raw = profile.get("age_years") if "age_years" in profile else profile.get("age")
+    if age_years_raw is not None and str(age_years_raw).strip() != "":
+        try:
+            age_band2 = _age_to_band(int(age_years_raw))
+            if age_band2:
+                age_band = age_band2
+        except Exception:
+            pass
+    if age_band not in ("0-12", "13-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"):
+        age_band = ""
+
+    habits = str(profile.get("habits") or profile.get("note") or "").strip()
+    if len(habits) > 2000:
+        habits = habits[:2000]
+
+    tags_in = profile.get("tags") if isinstance(profile.get("tags"), list) else []
+    tags: List[str] = []
+    for t in tags_in[:30]:
+        s = str(t).strip()
+        if not s:
+            continue
+        if len(s) > 40:
+            s = s[:40]
+        tags.append(s)
+
+    out: Dict[str, Any] = {}
+    if gender:
+        out["gender"] = gender
+    if age_band:
+        out["age_band"] = age_band
+    if habits:
+        out["habits"] = habits
+    if tags:
+        out["tags"] = tags
+    return out
+
+
+def _read_account_nonid_profiles() -> Dict[str, Any]:
+    p = _account_nonid_profile_path()
+    if not p or not p.exists():
+        return {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _write_account_nonid_profiles(vault: Dict[str, Any]) -> Optional[Path]:
+    p = _account_nonid_profile_path()
+    if not p:
+        return None
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(vault, ensure_ascii=False, indent=2), encoding="utf-8")
+    return p
+
+
+# ===== 同意（Consent）：告知範圍/用途 → 徵求同意 → 才能使用 =====
+CONSENT_POLICY_VERSION = 1
+DEFAULT_CONSENT_POLICY: Dict[str, Any] = {
+    "policy_version": CONSENT_POLICY_VERSION,
+    "scope": "account_non_identifiable_profile",
+    "purposes": [
+        "usage_analytics",  # 使用習慣分析（系統改版參考）
+        "system_improvement",  # 系統升級/調整
+    ],
+    "data_fields": [
+        "gender",  # 性別
+        "age_band",  # 年齡區間（非生日）
+        "habits",  # 習慣摘要
+        "tags",  # 非識別標籤
+    ],
+    "not_collect": [
+        "birthday", "birth_date", "dob",  # 出生年月日
+        "name", "phone", "email", "address",  # 可識別資料
+    ],
+    "storage": "Google Drive synced folder (WUCHANG_WORKSPACE_OUTDIR or WUCHANG_PII_OUTDIR)",
+    "sharing": "none_by_default",
+    "retention_days": 365,
+    "rights": [
+        "可隨時撤回同意（撤回後停止使用）",
+        "可要求刪除（清除）不可識別個資檔內該帳號資料",
+        "可查詢目前保存的不可識別個資內容",
+    ],
+}
+
+
+def _consent_vault_path() -> Optional[Path]:
+    d = _pii_vault_dir()
+    if not d:
+        return None
+    return (d / "consent_receipts.json").resolve()
+
+
+def _read_consent_vault() -> Dict[str, Any]:
+    p = _consent_vault_path()
+    if not p or not p.exists():
+        return {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _write_consent_vault(vault: Dict[str, Any]) -> Optional[Path]:
+    p = _consent_vault_path()
+    if not p:
+        return None
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(vault, ensure_ascii=False, indent=2), encoding="utf-8")
+    return p
+
+
+def _consent_is_effective(rec: Dict[str, Any]) -> bool:
+    if not isinstance(rec, dict):
+        return False
+    if rec.get("revoked_at"):
+        return False
+    exp = rec.get("expires_at_epoch")
+    try:
+        if exp and time.time() > float(exp):
+            return False
+    except Exception:
+        pass
+    if int(rec.get("policy_version") or 0) != CONSENT_POLICY_VERSION:
+        return False
+    if rec.get("scope") != DEFAULT_CONSENT_POLICY.get("scope"):
+        return False
+    return rec.get("granted") is True
+
+
+def _get_consent_for_account(account_id: str) -> Dict[str, Any]:
+    vault = _read_consent_vault()
+    rec = vault.get(account_id) if isinstance(vault.get(account_id), dict) else {}
+    return rec or {}
+
+
+def _require_consent(handler: BaseHTTPRequestHandler, *, account_id: str, scope: str) -> bool:
+    """
+    硬閘門：未同意 → 不允許使用「不可識別個資」功能。
+    """
+    rec = _get_consent_for_account(account_id)
+    ok = _consent_is_effective(rec) and rec.get("scope") == scope
+    if ok:
+        return True
+    _json(
+        handler,
+        HTTPStatus.FORBIDDEN,
+        {
+            "ok": False,
+            "error": "consent_required",
+            "scope": scope,
+            "policy": DEFAULT_CONSENT_POLICY,
+            "current_consent": {"exists": bool(rec), "revoked": bool(rec.get("revoked_at")), "policy_version": rec.get("policy_version")},
+        },
+    )
+    return False
 
 
 def _ensure_job_dirs() -> None:
@@ -554,10 +1140,14 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/local/health":
+            if not _require_perm(self, "read"):
+                return
             _json(self, HTTPStatus.OK, {"ok": True})
             return
 
         if parsed.path == "/api/net/snapshot":
+            if not _require_perm(self, "read"):
+                return
             qs = parse_qs(parsed.query)
             # 允許沿用 UI 內填寫的 healthUrl；若未提供就只做本機網路/DNS/閘道探測
             health_url = (qs.get("health_url") or [""])[0].strip()
@@ -591,6 +1181,8 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/server/health":
+            if not _require_perm(self, "read"):
+                return
             qs = parse_qs(parsed.query)
             url = (qs.get("url") or [""])[0].strip()
             if not url:
@@ -601,18 +1193,24 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/dns/expected":
+            if not _require_perm(self, "read"):
+                return
             qs = parse_qs(parsed.query)
             domain = (qs.get("domain") or ["wuchang.life"])[0].strip()
             _json(self, HTTPStatus.OK, {"ok": True, "expected": _get_expected_acme(domain)})
             return
 
         if parsed.path == "/api/dns/acme_status":
+            if not _require_perm(self, "read"):
+                return
             qs = parse_qs(parsed.query)
             domain = (qs.get("domain") or ["wuchang.life"])[0].strip()
             _json(self, HTTPStatus.OK, {"ok": True, "status": _check_acme_propagation(domain)})
             return
 
         if parsed.path == "/api/audit/tail":
+            if not _require_perm(self, "read"):
+                return
             qs = parse_qs(parsed.query)
             name = (qs.get("file") or ["risk_action_audit.jsonl"])[0].strip()
             limit = int((qs.get("limit") or ["50"])[0])
@@ -626,6 +1224,8 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/docs":
+            if not _require_perm(self, "read"):
+                return
             qs = parse_qs(parsed.query)
             which = (qs.get("name") or ["RISK_ACTION_SOP.md"])[0].strip()
             p = (BASE_DIR / which).resolve()
@@ -636,7 +1236,131 @@ class Handler(BaseHTTPRequestHandler):
             _json(self, HTTPStatus.OK, {"ok": True, "name": which, "text": text})
             return
 
+        if parsed.path == "/api/ui/profiles":
+            if not _require_perm(self, "read"):
+                return
+            if not UI_PROFILES_PATH.exists():
+                _json(self, HTTPStatus.OK, {"ok": True, "version": 1, "profiles": []})
+                return
+            try:
+                data = json.loads(UI_PROFILES_PATH.read_text(encoding="utf-8"))
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": f"invalid_ui_profiles_json: {e}"})
+                return
+            _json(self, HTTPStatus.OK, {"ok": True, **(data if isinstance(data, dict) else {"profiles": []})})
+            return
+
+        if parsed.path == "/api/pii/get":
+            # 可識別/不可識別分層（相容舊權限：pii_read）
+            qs = parse_qs(parsed.query)
+            pii_class = _normalize_pii_class((qs.get("class") or ["identifiable"])[0])
+            if not _require_any_perm(self, [f"pii_read_{pii_class}", "pii_read"]):
+                return
+            node_id = (qs.get("node_id") or [""])[0].strip()
+            if not node_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_node_id"})
+                return
+            vault_path = _pii_vault_path(pii_class)
+            if not vault_path:
+                _json(
+                    self,
+                    HTTPStatus.BAD_REQUEST,
+                    {
+                        "ok": False,
+                        "error": "missing_workspace_outdir",
+                        "hint": "set WUCHANG_WORKSPACE_OUTDIR (Google Drive synced folder) or WUCHANG_PII_OUTDIR",
+                    },
+                )
+                return
+            vault = _read_pii_vault(pii_class)
+            contact = vault.get(node_id) if isinstance(vault.get(node_id), dict) else None
+            _json(
+                self,
+                HTTPStatus.OK,
+                {"ok": True, "node_id": node_id, "pii_class": pii_class, "contact": contact or {}, "vault_path": str(vault_path)},
+            )
+            return
+
+        if parsed.path == "/api/profile/nonid/get":
+            # 帳號層級不可識別個資：以登入帳號編號 account_id 為主鍵
+            sess = _require_any_perm(self, ["pii_read_non_identifiable", "pii_read"])
+            if not sess:
+                return
+            account_id = str((sess or {}).get("account_id") or "").strip()
+            if not account_id:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            if not _require_consent(self, account_id=account_id, scope="account_non_identifiable_profile"):
+                return
+            vault_path = _account_nonid_profile_path()
+            if not vault_path:
+                _json(
+                    self,
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": "missing_workspace_outdir", "hint": "set WUCHANG_WORKSPACE_OUTDIR or WUCHANG_PII_OUTDIR"},
+                )
+                return
+            vault = _read_account_nonid_profiles()
+            profile = vault.get(account_id) if isinstance(vault.get(account_id), dict) else {}
+            _json(self, HTTPStatus.OK, {"ok": True, "account_id": account_id, "profile": profile or {}, "vault_path": str(vault_path)})
+            return
+
+        if parsed.path == "/api/consent/policy":
+            if not _require_perm(self, "read"):
+                return
+            _json(self, HTTPStatus.OK, {"ok": True, "policy": DEFAULT_CONSENT_POLICY})
+            return
+
+        if parsed.path == "/api/consent/status":
+            sess = _get_session(self)
+            if not sess:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            account_id = str((sess or {}).get("account_id") or "").strip()
+            if not account_id:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            rec = _get_consent_for_account(account_id)
+            _json(
+                self,
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "account_id": account_id,
+                    "effective": _consent_is_effective(rec),
+                    "scope": DEFAULT_CONSENT_POLICY.get("scope"),
+                    "consent": {
+                        "granted": bool(rec.get("granted")),
+                        "granted_at": rec.get("granted_at"),
+                        "revoked_at": rec.get("revoked_at"),
+                        "expires_at_epoch": rec.get("expires_at_epoch"),
+                        "source": rec.get("source"),
+                        "policy_version": rec.get("policy_version"),
+                    },
+                    "vault_path": str(_consent_vault_path() or ""),
+                },
+            )
+            return
+
+        if parsed.path == "/api/auth/status":
+            pol = _load_accounts_policy()
+            enabled = bool((pol.get("accounts") or []))
+            sess = _get_session(self)
+            _json(
+                self,
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "accounts_enabled": enabled,
+                    "session": sess or {},
+                    "policy_path": str(_accounts_policy_path() or ""),
+                },
+            )
+            return
+
         if parsed.path == "/api/agent/models":
+            if not _require_perm(self, "read"):
+                return
             env = _llm_env()
             _json(
                 self,
@@ -652,10 +1376,49 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/agent/config":
+            if not _require_perm(self, "read"):
+                return
             _json(self, HTTPStatus.OK, {"ok": True, "config": dict(AGENT_CONFIG)})
             return
 
+        if parsed.path == "/api/workspace/matching":
+            if not _require_perm(self, "read"):
+                return
+            p = _workspace_matching_path()
+            _json(self, HTTPStatus.OK, {"ok": True, "path": str(p or ""), "data": _read_workspace_matching()})
+            return
+
+        if parsed.path == "/api/vouchers/list":
+            # 預留：票券/折扣碼清單（不回傳明文折扣碼）
+            if not _require_any_perm(self, ["voucher_read", "voucher_manage", "read"]):
+                return
+            qs = parse_qs(parsed.query)
+            owner = (qs.get("owner_account_id") or [""])[0].strip()
+            sess_aid = _session_account_id(self)
+            # 若指定查詢他人 owner：必須 voucher_manage
+            if owner and sess_aid and owner != sess_aid:
+                if not _require_any_perm(self, ["voucher_manage"]):
+                    return
+            store = _read_voucher_store()
+            vouchers = store.get("vouchers") if isinstance(store.get("vouchers"), dict) else {}
+            items: List[Dict[str, Any]] = []
+            for vid, v in vouchers.items():
+                if not isinstance(v, dict):
+                    continue
+                if owner and str(v.get("owner_account_id") or "").strip() != owner:
+                    continue
+                # 永遠不回傳 code_hash
+                safe = dict(v)
+                safe.pop("code_hash", None)
+                safe["voucher_id"] = str(vid)
+                safe["valid_now"] = _voucher_is_valid_now(v)
+                items.append(safe)
+            _json(self, HTTPStatus.OK, {"ok": True, "count": len(items), "items": items, "store_path": str(_voucher_store_path() or "")})
+            return
+
         if parsed.path == "/api/jobs/list":
+            if not _require_any_perm(self, ["job_read", "read"]):
+                return
             qs = parse_qs(parsed.query)
             state = (qs.get("state") or ["outbox"])[0].strip()
             limit = int((qs.get("limit") or ["50"])[0])
@@ -667,6 +1430,8 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/jobs/get":
+            if not _require_any_perm(self, ["job_read", "read"]):
+                return
             qs = parse_qs(parsed.query)
             job_id = (qs.get("id") or [""])[0].strip()
             if not job_id:
@@ -689,7 +1454,227 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path == "/api/device/request":
+            # 建立「請使用者設備/帳號自行完成」的任務：靠 Drive 同步交付/回收（合規：最小資料）
+            if not _require_perm(self, "device_request"):
+                return
+            data = _read_json(self)
+            device_id = str(data.get("device_id") or "").strip() or "user_device"
+            action = str(data.get("action") or "").strip() or "device_ai_task"
+            prompt = str(data.get("prompt") or "").strip()
+            actor = str(data.get("actor") or "ops").strip() or "ops"
+            domain = str(data.get("domain") or "wuchang.life").strip() or "wuchang.life"
+            node = data.get("node") if isinstance(data.get("node"), dict) else {}
+            sess = _get_session(self)
+            account_id = str((sess or {}).get("account_id") or "").strip()
+            actor = f"acct:{account_id}" if account_id else actor
+
+            outdir = _workspace_outdir()
+            if not outdir:
+                _json(
+                    self,
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": "missing_workspace_outdir", "hint": "set WUCHANG_WORKSPACE_OUTDIR (Google Drive synced folder)"},
+                )
+                return
+
+            job_id = _new_job_id()
+            token = uuid.uuid4().hex  # 一次性回覆憑證（只寫入任務檔，回收後可撤回）
+            token_sha = _sha256_text(token)
+            expires_at = time.time() + 24 * 3600  # 24 小時（可調）
+
+            task = {
+                "kind": "wuchang_device_task",
+                "job_id": job_id,
+                "device_id": device_id,
+                "action": action,
+                "prompt": prompt,
+                "requester_account_id": account_id,
+                "consent": {
+                    "required": True,
+                    "scope": DEFAULT_CONSENT_POLICY.get("scope"),
+                    "policy": DEFAULT_CONSENT_POLICY,
+                    "how_to": "設備端應顯示 policy（用途/範圍/使用權利/保存期限），取得使用者明確同意後再執行；並將同意結果回寫到回覆檔。",
+                },
+                "constraints": {
+                    "compliance": [
+                        "最小資料（不要包含個資/憑證/金鑰）",
+                        "若涉及個資：請只寫入 PII Vault（由本機 UI 另外輸入），不要放在回覆檔",
+                        "若需雲端 AI：使用設備端的官方 App/帳號完成（例如手機 Gemini），本系統不代管該帳號 token",
+                    ],
+                    "redact_required": True,
+                },
+                "deliver": {
+                    "result_dir": "device_results",
+                    "expected_format": "json",
+                },
+                "reply_token": token,
+                "expires_at_epoch": int(expires_at),
+                "created_at": _job_now_iso(),
+            }
+
+            # 任務檔寫入 Drive 同步夾：手機/設備可直接看到並處理
+            task_path = _write_workspace_json(rel_dir="device_tasks", filename=f"{job_id}.json", payload=task)
+
+            job = {
+                "id": job_id,
+                "created_at": _job_now_iso(),
+                "type": "device_request",
+                "requested_by": actor,
+                "requester_account_id": account_id,
+                "domain": domain,
+                "node": node,
+                "params": {
+                    "device_id": device_id,
+                    "action": action,
+                    "task_relpath": str(Path("device_tasks") / f"{job_id}.json"),
+                    "result_rel_dir": "device_results",
+                    "token_sha256": token_sha,
+                    "token_expires_at_epoch": int(expires_at),
+                },
+                "policy": {
+                    "no_response_no_high_risk_action": True,
+                    "requires_confirmation": False,  # 這裡是「委派請求」，非直接高風險執行
+                    "pii_must_stay_local_or_vault": True,
+                },
+                "status": {"state": "outbox", "device_task_written": True, "device_done": False},
+            }
+            p = _write_job("outbox", job)
+            _append_jsonl(JOB_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "job_created", "job_id": job_id, "type": "device_request", "actor": actor})
+            _append_jsonl(DEVICE_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "device_task_written", "job_id": job_id, "device_id": device_id, "task_relpath": str(task_path)})
+
+            # 注意：回覆 token 需要交付給設備（此回應會顯示在 UI）；請勿貼到雲端聊天。
+            _json(
+                self,
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "job_id": job_id,
+                    "job_path": str(p),
+                    "task_path": str(task_path),
+                    "device_reply_token": token,
+                    "hint": "把任務檔交給設備（Drive 同步），設備完成後把回覆 json 放到 device_results/<job_id>.json，並包含 reply_token。",
+                    "job": job,
+                },
+            )
+            return
+
+        if parsed.path == "/api/device/import_results":
+            # 從 Drive 同步夾匯入設備回覆（只存摘要/雜湊，避免把敏感內容寫進 repo）
+            if not _require_perm(self, "job_manage"):
+                return
+            data = _read_json(self)
+            limit = int(data.get("limit") or 200)
+
+            outdir = _workspace_outdir()
+            if not outdir:
+                _json(
+                    self,
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": "missing_workspace_outdir", "hint": "set WUCHANG_WORKSPACE_OUTDIR (Google Drive synced folder)"},
+                )
+                return
+
+            files = _list_workspace_json_files(rel_dir="device_results", limit=limit)
+            imported: List[Dict[str, Any]] = []
+            skipped: List[Dict[str, Any]] = []
+            for fp in files:
+                try:
+                    raw = fp.read_text(encoding="utf-8")
+                    obj = json.loads(raw)
+                except Exception as e:
+                    skipped.append({"file": str(fp), "error": f"invalid_json: {e}"})
+                    continue
+
+                job_id = str(obj.get("job_id") or fp.stem).strip()
+                token = str(obj.get("reply_token") or "").strip()
+                artifact = obj.get("artifact") if isinstance(obj.get("artifact"), dict) else {}
+                note = str(obj.get("note") or "").strip()
+
+                jp = _find_job(job_id)
+                if not jp:
+                    skipped.append({"file": str(fp), "job_id": job_id, "error": "job_not_found"})
+                    continue
+
+                try:
+                    job = json.loads(jp.read_text(encoding="utf-8"))
+                except Exception:
+                    skipped.append({"file": str(fp), "job_id": job_id, "error": "job_invalid_json"})
+                    continue
+
+                expected_sha = str(((job.get("params") or {}).get("token_sha256")) or "").strip().lower()
+                exp_until = int(((job.get("params") or {}).get("token_expires_at_epoch")) or 0)
+                if exp_until and time.time() > exp_until:
+                    skipped.append({"file": str(fp), "job_id": job_id, "error": "token_expired"})
+                    continue
+                if expected_sha:
+                    if not token or _sha256_text(token).lower() != expected_sha:
+                        skipped.append({"file": str(fp), "job_id": job_id, "error": "bad_token"})
+                        continue
+
+                digest = _sha256_text(raw)
+                job.setdefault("status", {})
+                job["status"]["device_done"] = True
+                job["status"]["device_result_received_at"] = _job_now_iso()
+                job["status"]["device_result_sha256"] = digest
+                # 只存 artifact 的參考資訊（不要存全文結果）
+                job["device_result"] = {
+                    "artifact": {
+                        "kind": str(artifact.get("kind") or "workspace_file"),
+                        "path": str(artifact.get("path") or ""),
+                        "sha256": str(artifact.get("sha256") or ""),
+                    },
+                    "note": note[:400],
+                }
+                jp.write_text(json.dumps(job, ensure_ascii=False, indent=2), encoding="utf-8")
+
+                # 搬移回覆檔，避免重複匯入
+                try:
+                    dst = _workspace_safe_path("device_results_imported", fp.name)
+                    dst.parent.mkdir(parents=True, exist_ok=True)
+                    fp.replace(dst)
+                    moved_to = str(dst)
+                except Exception:
+                    moved_to = ""
+
+                _append_jsonl(DEVICE_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "device_result_imported", "job_id": job_id, "sha256": digest, "moved_to": moved_to})
+                imported.append({"job_id": job_id, "file": str(fp), "sha256": digest, "moved_to": moved_to})
+
+            _json(self, HTTPStatus.OK, {"ok": True, "imported": imported, "skipped": skipped, "count": {"imported": len(imported), "skipped": len(skipped)}})
+            return
+
+        if parsed.path == "/api/auth/login":
+            data = _read_json(self)
+            account_id = str(data.get("account_id") or "").strip()
+            pin = str(data.get("pin") or "").strip()
+            acc = _find_account(account_id)
+            if not acc:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "invalid_account"})
+                return
+            pin_sha = str(acc.get("pin_sha256") or "").strip().lower()
+            if pin_sha:
+                if _sha256_text(pin).lower() != pin_sha:
+                    _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "invalid_pin"})
+                    return
+            sid = _new_session(acc)
+            _append_jsonl(
+                AUTH_AUDIT_JSONL,
+                {"timestamp": _job_now_iso(), "kind": "login", "account_id": account_id, "profile_id": str(acc.get("profile_id") or ""), "session": sid[:8]},
+            )
+            _json(self, HTTPStatus.OK, {"ok": True, "session_id": sid, "profile_id": str(acc.get("profile_id") or "ops_admin"), "label": str(acc.get("label") or "")})
+            return
+
+        if parsed.path == "/api/auth/logout":
+            sess = _get_session(self)
+            sid = str(self.headers.get("X-Wuchang-Session") or "").strip()
+            if sid:
+                SESSIONS.pop(sid, None)
+            _append_jsonl(AUTH_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "logout", "account_id": (sess or {}).get("account_id") if sess else ""})
+            _json(self, HTTPStatus.OK, {"ok": True})
+            return
         if parsed.path == "/api/agent/config":
+            if not _require_perm(self, "agent_config"):
+                return
             data = _read_json(self)
             mode = str(data.get("mode") or "").strip()
             model = str(data.get("model") or "").strip()
@@ -725,9 +1710,14 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/jobs/create":
+            if not _require_perm(self, "job_create"):
+                return
             data = _read_json(self)
             job_type = str(data.get("type") or "").strip()
+            sess = _get_session(self)
+            account_id = str((sess or {}).get("account_id") or "").strip()
             actor = str(data.get("actor") or "ops").strip() or "ops"
+            actor = f"acct:{account_id}" if account_id else actor
             domain = str(data.get("domain") or "wuchang.life").strip() or "wuchang.life"
             node = data.get("node") if isinstance(data.get("node"), dict) else {}
             params = data.get("params") if isinstance(data.get("params"), dict) else {}
@@ -741,6 +1731,7 @@ class Handler(BaseHTTPRequestHandler):
                 "created_at": _job_now_iso(),
                 "type": job_type,
                 "requested_by": actor,
+                "requester_account_id": account_id,
                 "domain": domain,
                 "node": node,
                 "params": params,
@@ -751,11 +1742,16 @@ class Handler(BaseHTTPRequestHandler):
                 "status": {"state": "outbox"},
             }
             p = _write_job("outbox", job)
-            _append_jsonl(JOB_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "job_created", "job_id": job_id, "type": job_type, "actor": actor})
+            _append_jsonl(
+                JOB_AUDIT_JSONL,
+                {"timestamp": _job_now_iso(), "kind": "job_created", "job_id": job_id, "type": job_type, "actor": actor, "account_id": account_id},
+            )
             _json(self, HTTPStatus.OK, {"ok": True, "job_id": job_id, "path": str(p), "job": job})
             return
 
         if parsed.path == "/api/jobs/move":
+            if not _require_perm(self, "job_manage"):
+                return
             data = _read_json(self)
             job_id = str(data.get("id") or "").strip()
             to_state = str(data.get("to") or "").strip()
@@ -772,6 +1768,402 @@ class Handler(BaseHTTPRequestHandler):
             _json(self, HTTPStatus.OK, {"ok": True, "id": job_id, "to": to_state, "path": str(p)})
             return
 
+        if parsed.path == "/api/pii/set":
+            data = _read_json(self)
+            pii_class = _normalize_pii_class(str(data.get("pii_class") or data.get("class") or "identifiable"))
+            if not _require_any_perm(self, [f"pii_write_{pii_class}", "pii_write"]):
+                return
+            node_id = str(data.get("node_id") or "").strip()
+            actor = str(data.get("actor") or "ops").strip() or "ops"
+            contact = data.get("contact") if isinstance(data.get("contact"), dict) else None
+            if not node_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_node_id"})
+                return
+            vault_path = _pii_vault_path(pii_class)
+            if not vault_path:
+                _json(
+                    self,
+                    HTTPStatus.BAD_REQUEST,
+                    {
+                        "ok": False,
+                        "error": "missing_workspace_outdir",
+                        "hint": "set WUCHANG_WORKSPACE_OUTDIR (Google Drive synced folder) or WUCHANG_PII_OUTDIR",
+                    },
+                )
+                return
+
+            # 寫入 vault（僅存必要欄位）
+            vault = _read_pii_vault(pii_class)
+            if contact is None:
+                vault.pop(node_id, None)
+                action = "deleted"
+                digest = ""
+            else:
+                if pii_class == "identifiable":
+                    safe = {
+                        "name": str(contact.get("name") or "").strip(),
+                        "phone": str(contact.get("phone") or "").strip(),
+                        "email": str(contact.get("email") or "").strip(),
+                    }
+                else:
+                    safe = {
+                        "role": str(contact.get("role") or "").strip(),
+                        "note": str(contact.get("note") or "").strip(),
+                    }
+                vault[node_id] = safe
+                action = "upserted"
+                digest = _sha256_text(json.dumps(safe, ensure_ascii=False, sort_keys=True))
+
+            p = _write_pii_vault(pii_class, vault)
+            # 稽核不寫入明文個資，只寫 node_id + digest
+            _append_jsonl(
+                PII_AUDIT_JSONL,
+                {
+                    "timestamp": _job_now_iso(),
+                    "kind": "pii_vault_update",
+                    "actor": actor,
+                    "node_id": node_id,
+                    "pii_class": pii_class,
+                    "action": action,
+                    "sha256": digest,
+                },
+            )
+            _json(
+                self,
+                HTTPStatus.OK,
+                {"ok": True, "node_id": node_id, "pii_class": pii_class, "action": action, "vault_path": str(p) if p else str(vault_path)},
+            )
+            return
+
+        if parsed.path == "/api/pii/match":
+            # 部分個資比對（不回傳明文姓名/電話）
+            # 例：手機後四碼 + 姓名遮罩（張＊）
+            if not _require_any_perm(self, ["pii_read_identifiable", "pii_read"]):
+                return
+            data = _read_json(self)
+            node_id = str(data.get("node_id") or "").strip()
+            if not node_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_node_id"})
+                return
+            phone_last4 = _digits_only(str(data.get("phone_last4") or "")).strip()
+            name_mask = str(data.get("name_mask") or "").strip()
+
+            vault_path = _pii_vault_path("identifiable")
+            if not vault_path:
+                _json(
+                    self,
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": "missing_workspace_outdir", "hint": "set WUCHANG_WORKSPACE_OUTDIR or WUCHANG_PII_OUTDIR"},
+                )
+                return
+            vault = _read_pii_vault("identifiable")
+            contact = vault.get(node_id) if isinstance(vault.get(node_id), dict) else {}
+            name = str((contact or {}).get("name") or "").strip()
+            phone = str((contact or {}).get("phone") or "").strip()
+
+            stored_last4 = _phone_last4(phone)
+            phone_ok = True
+            if phone_last4:
+                phone_ok = stored_last4 == phone_last4[-4:]
+            name_ok = _match_name_mask(name_mask, name)
+            overall = bool(phone_ok and name_ok)
+
+            # 稽核不存明文
+            digest = _sha256_text(json.dumps({"node_id": node_id, "phone_last4": phone_last4[-4:], "name_mask": name_mask}, ensure_ascii=False, sort_keys=True))
+            _append_jsonl(
+                PII_AUDIT_JSONL,
+                {"timestamp": _job_now_iso(), "kind": "pii_partial_match", "node_id": node_id, "sha256": digest, "result": overall},
+            )
+
+            _json(
+                self,
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "node_id": node_id,
+                    "match": overall,
+                    "checks": {"phone_last4": phone_ok, "name_mask": name_ok},
+                    "preview": {"name_masked": _mask_name(name), "phone_masked": _mask_phone_keep_last4(phone)},
+                },
+            )
+            return
+
+        if parsed.path == "/api/vouchers/upsert":
+            # 預留：建立/更新票券（折扣碼只接收明文 → 存 hash+mask，不回傳明文）
+            if not _require_any_perm(self, ["voucher_manage"]):
+                return
+            data = _read_json(self)
+            voucher_id = str(data.get("voucher_id") or "").strip() or _new_job_id()
+            vtype = str(data.get("type") or "discount_code").strip()
+            if vtype not in ("discount_code", "coupon_ticket", "product_voucher"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "invalid_type"})
+                return
+            owner = str(data.get("owner_account_id") or "").strip()
+            code_plain = str(data.get("code_plain") or "").strip()
+            code_hash = _voucher_code_hash(code_plain) if code_plain else ""
+            code_masked = _voucher_code_mask(code_plain) if code_plain else str(data.get("code_masked") or "").strip()
+
+            sess_aid = _session_account_id(self)
+            actor = f"acct:{sess_aid}" if sess_aid else "ops"
+
+            store = _read_voucher_store()
+            vouchers = store.get("vouchers") if isinstance(store.get("vouchers"), dict) else {}
+            prev = vouchers.get(voucher_id) if isinstance(vouchers.get(voucher_id), dict) else {}
+
+            v: Dict[str, Any] = dict(prev) if isinstance(prev, dict) else {}
+            v.update(
+                {
+                    "type": vtype,
+                    "owner_account_id": owner,
+                    "status": str(data.get("status") or v.get("status") or "active"),
+                    "code_masked": code_masked,
+                    "updated_at": _job_now_iso(),
+                    "updated_by": actor,
+                }
+            )
+            if code_hash:
+                v["code_hash"] = code_hash
+
+            # value / constraints / meta（預留結構）
+            if isinstance(data.get("value"), dict):
+                v["value"] = data.get("value")
+            if isinstance(data.get("constraints"), dict):
+                v["constraints"] = data.get("constraints")
+            if isinstance(data.get("meta"), dict):
+                v["meta"] = data.get("meta")
+
+            # validity shortcuts
+            if data.get("valid_from_epoch") is not None:
+                try:
+                    v["valid_from_epoch"] = int(data.get("valid_from_epoch"))
+                except Exception:
+                    pass
+            if data.get("valid_until_epoch") is not None:
+                try:
+                    v["valid_until_epoch"] = int(data.get("valid_until_epoch"))
+                except Exception:
+                    pass
+
+            vouchers[voucher_id] = v
+            store["vouchers"] = vouchers
+            p = _write_voucher_store(store)
+            digest = _sha256_text(json.dumps({"voucher_id": voucher_id, "type": vtype, "owner": owner, "code_masked": code_masked}, ensure_ascii=False, sort_keys=True))
+            _append_jsonl(VOUCHER_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "voucher_upsert", "actor": actor, "voucher_id": voucher_id, "sha256": digest})
+
+            safe = dict(v)
+            safe.pop("code_hash", None)
+            _json(self, HTTPStatus.OK, {"ok": True, "voucher_id": voucher_id, "voucher": safe, "store_path": str(p or "")})
+            return
+
+        if parsed.path == "/api/vouchers/validate":
+            # 預留：驗證折扣碼是否存在且有效（不改狀態）
+            if not _require_any_perm(self, ["voucher_read", "voucher_manage"]):
+                return
+            data = _read_json(self)
+            code_plain = str(data.get("code_plain") or "").strip()
+            voucher_id = str(data.get("voucher_id") or "").strip()
+            if not code_plain and not voucher_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_code_or_voucher_id"})
+                return
+            store = _read_voucher_store()
+            vouchers = store.get("vouchers") if isinstance(store.get("vouchers"), dict) else {}
+            target: Optional[Dict[str, Any]] = None
+            if voucher_id and isinstance(vouchers.get(voucher_id), dict):
+                target = vouchers.get(voucher_id)
+            elif code_plain:
+                h = _voucher_code_hash(code_plain)
+                for vid, v in vouchers.items():
+                    if not isinstance(v, dict):
+                        continue
+                    if str(v.get("code_hash") or "") == h:
+                        target = dict(v)
+                        target["voucher_id"] = str(vid)
+                        break
+            if not target:
+                _json(self, HTTPStatus.OK, {"ok": True, "match": False, "valid_now": False})
+                return
+            vid2 = str(target.get("voucher_id") or voucher_id or "")
+            safe = dict(target)
+            safe.pop("code_hash", None)
+            _json(self, HTTPStatus.OK, {"ok": True, "match": True, "valid_now": _voucher_is_valid_now(target), "voucher": safe, "voucher_id": vid2})
+            return
+
+        if parsed.path == "/api/vouchers/redeem":
+            # 預留：兌換（會把狀態改成 redeemed）
+            if not _require_any_perm(self, ["voucher_redeem", "voucher_manage"]):
+                return
+            data = _read_json(self)
+            code_plain = str(data.get("code_plain") or "").strip()
+            voucher_id = str(data.get("voucher_id") or "").strip()
+            if not code_plain and not voucher_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_code_or_voucher_id"})
+                return
+            store = _read_voucher_store()
+            vouchers = store.get("vouchers") if isinstance(store.get("vouchers"), dict) else {}
+            vid = voucher_id
+            v: Optional[Dict[str, Any]] = vouchers.get(vid) if vid and isinstance(vouchers.get(vid), dict) else None
+            if not v and code_plain:
+                h = _voucher_code_hash(code_plain)
+                for k, vv in vouchers.items():
+                    if isinstance(vv, dict) and str(vv.get("code_hash") or "") == h:
+                        vid = str(k)
+                        v = vv
+                        break
+            if not v:
+                _json(self, HTTPStatus.OK, {"ok": True, "redeemed": False, "error": "not_found"})
+                return
+            # 驗證 code（若有提供）
+            if code_plain:
+                if str(v.get("code_hash") or "") != _voucher_code_hash(code_plain):
+                    _json(self, HTTPStatus.OK, {"ok": True, "redeemed": False, "error": "bad_code"})
+                    return
+            if not _voucher_is_valid_now(v):
+                _json(self, HTTPStatus.OK, {"ok": True, "redeemed": False, "error": "not_valid_now"})
+                return
+            sess_aid = _session_account_id(self)
+            actor = f"acct:{sess_aid}" if sess_aid else "ops"
+            v["status"] = "redeemed"
+            v["redeemed_at"] = _job_now_iso()
+            v["redeemed_by"] = actor
+            vouchers[vid] = v
+            store["vouchers"] = vouchers
+            p = _write_voucher_store(store)
+            digest = _sha256_text(json.dumps({"voucher_id": vid, "redeemed_by": actor}, ensure_ascii=False, sort_keys=True))
+            _append_jsonl(VOUCHER_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "voucher_redeem", "actor": actor, "voucher_id": vid, "sha256": digest})
+            safe = dict(v)
+            safe.pop("code_hash", None)
+            _json(self, HTTPStatus.OK, {"ok": True, "redeemed": True, "voucher_id": vid, "voucher": safe, "store_path": str(p or "")})
+            return
+
+        if parsed.path == "/api/profile/nonid/set":
+            # 帳號層級不可識別個資：只允許寫自己的 account_id（除非 admin_all）
+            sess = _require_any_perm(self, ["pii_write_non_identifiable", "pii_write"])
+            if not sess:
+                return
+            account_id = str((sess or {}).get("account_id") or "").strip()
+            if not account_id:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            if not _require_consent(self, account_id=account_id, scope="account_non_identifiable_profile"):
+                return
+
+            data = _read_json(self)
+            actor = str(data.get("actor") or "ops").strip() or "ops"
+            actor = f"acct:{account_id}"
+            raw_profile = data.get("profile") if isinstance(data.get("profile"), dict) else None
+
+            vault_path = _account_nonid_profile_path()
+            if not vault_path:
+                _json(
+                    self,
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": "missing_workspace_outdir", "hint": "set WUCHANG_WORKSPACE_OUTDIR or WUCHANG_PII_OUTDIR"},
+                )
+                return
+
+            vault = _read_account_nonid_profiles()
+            if raw_profile is None:
+                vault.pop(account_id, None)
+                action = "deleted"
+                digest = ""
+                saved = {}
+            else:
+                saved = _sanitize_account_nonid_profile(raw_profile)
+                vault[account_id] = saved
+                action = "upserted"
+                digest = _sha256_text(json.dumps(saved, ensure_ascii=False, sort_keys=True))
+
+            p = _write_account_nonid_profiles(vault)
+            _append_jsonl(
+                PII_AUDIT_JSONL,
+                {
+                    "timestamp": _job_now_iso(),
+                    "kind": "account_nonid_profile_update",
+                    "actor": actor,
+                    "account_id": account_id,
+                    "pii_class": "non_identifiable",
+                    "action": action,
+                    "sha256": digest,
+                },
+            )
+            _json(self, HTTPStatus.OK, {"ok": True, "account_id": account_id, "action": action, "profile": saved, "vault_path": str(p) if p else str(vault_path)})
+            return
+
+        if parsed.path == "/api/consent/grant":
+            sess = _get_session(self)
+            if not sess:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            account_id = str((sess or {}).get("account_id") or "").strip()
+            if not account_id:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            data = _read_json(self)
+            actor = f"acct:{account_id}"
+            scope = str(data.get("scope") or DEFAULT_CONSENT_POLICY.get("scope") or "").strip()
+            if scope != DEFAULT_CONSENT_POLICY.get("scope"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "invalid_scope"})
+                return
+            # 必須明確確認（ack=true），避免誤觸
+            ack = bool(data.get("ack") is True)
+            if not ack:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_ack", "hint": "set ack=true after showing policy to user"})
+                return
+
+            vault_path = _consent_vault_path()
+            if not vault_path:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_workspace_outdir"})
+                return
+            vault = _read_consent_vault()
+            expires_at = time.time() + int(DEFAULT_CONSENT_POLICY.get("retention_days") or 365) * 86400
+            rec = {
+                "account_id": account_id,
+                "scope": scope,
+                "policy_version": CONSENT_POLICY_VERSION,
+                "granted": True,
+                "granted_at": _job_now_iso(),
+                "expires_at_epoch": int(expires_at),
+                "revoked_at": "",
+                "source": str(data.get("source") or "ui").strip(),
+                "purposes": list(DEFAULT_CONSENT_POLICY.get("purposes") or []),
+                "data_fields": list(DEFAULT_CONSENT_POLICY.get("data_fields") or []),
+            }
+            vault[account_id] = rec
+            p = _write_consent_vault(vault)
+            digest = _sha256_text(json.dumps(rec, ensure_ascii=False, sort_keys=True))
+            _append_jsonl(CONSENT_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "consent_granted", "actor": actor, "account_id": account_id, "scope": scope, "policy_version": CONSENT_POLICY_VERSION, "sha256": digest})
+            _json(self, HTTPStatus.OK, {"ok": True, "account_id": account_id, "effective": True, "scope": scope, "vault_path": str(p) if p else str(vault_path)})
+            return
+
+        if parsed.path == "/api/consent/revoke":
+            sess = _get_session(self)
+            if not sess:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            account_id = str((sess or {}).get("account_id") or "").strip()
+            if not account_id:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            actor = f"acct:{account_id}"
+            vault_path = _consent_vault_path()
+            if not vault_path:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_workspace_outdir"})
+                return
+            vault = _read_consent_vault()
+            rec = vault.get(account_id) if isinstance(vault.get(account_id), dict) else {}
+            if rec:
+                rec["revoked_at"] = _job_now_iso()
+                rec["granted"] = False
+                vault[account_id] = rec
+                p = _write_consent_vault(vault)
+                digest = _sha256_text(json.dumps(rec, ensure_ascii=False, sort_keys=True))
+            else:
+                p = _write_consent_vault(vault)
+                digest = ""
+            _append_jsonl(CONSENT_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "consent_revoked", "actor": actor, "account_id": account_id, "scope": DEFAULT_CONSENT_POLICY.get("scope"), "sha256": digest})
+            _json(self, HTTPStatus.OK, {"ok": True, "account_id": account_id, "effective": False, "vault_path": str(p) if p else str(vault_path)})
+            return
+
         if parsed.path == "/api/agent/chat":
             data = _read_json(self)
             text = str(data.get("text") or "").strip()
@@ -784,6 +2176,10 @@ class Handler(BaseHTTPRequestHandler):
             agent_mode = str(data.get("agent_mode") or AGENT_CONFIG.get("mode") or "command").strip()
             agent_model = str(data.get("agent_model") or AGENT_CONFIG.get("model") or "local_rule").strip()
             agent_provider = str(data.get("agent_provider") or AGENT_CONFIG.get("provider") or "local").strip()
+            sess = _get_session(self)
+            account_id = str((sess or {}).get("account_id") or "").strip()
+            if account_id:
+                actor = f"acct:{account_id}"
 
             if not text:
                 _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_text"})
@@ -792,6 +2188,22 @@ class Handler(BaseHTTPRequestHandler):
             # 若是雲端對話模式：只用於一般問答；涉及動作仍走本機白名單（可控）
             # 判斷是否為「純問答」：意圖 unknown 才交給模型
             intent_peek = _detect_intent(text)
+            # 若已啟用帳號政策：所有功能對接都依賴編號（必須先登入）
+            pol = _load_accounts_policy()
+            accounts_enabled = bool((pol.get("accounts") or []))
+            if accounts_enabled and not sess:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "read"})
+                return
+
+            # 依意圖做權限門檻（避免繞過 job_create/pii/workspace 等）
+            it0 = str(intent_peek.get("intent") or "unknown")
+            if it0 in ("push_rules", "push_kb"):
+                if not _require_perm(self, "job_create"):
+                    return
+            else:
+                # 其他查詢/說明類：read
+                if not _require_perm(self, "read"):
+                    return
             if agent_mode == "cloud_chat" and (intent_peek.get("intent") == "unknown"):
                 env = _llm_env()
                 if not env.get("api_key"):
@@ -817,6 +2229,7 @@ class Handler(BaseHTTPRequestHandler):
                         "ok": True,
                         "executed": True,
                         "reply": reply_text,
+                        "account_id": account_id,
                         "agent": {"mode": agent_mode, "model": agent_model, "provider": agent_provider},
                     },
                 )
@@ -947,6 +2360,7 @@ class Handler(BaseHTTPRequestHandler):
                     "created_at": _job_now_iso(),
                     "type": "sync_push",
                     "requested_by": actor,
+                    "requester_account_id": account_id,
                     "domain": domain,
                     "node": {"id": node.get("id"), "name": node.get("name")} if isinstance(node, dict) else {},
                     "params": {
@@ -954,6 +2368,7 @@ class Handler(BaseHTTPRequestHandler):
                         "health_url": health_url or "",
                         "copy_to": copy_to or "",
                         "actor": actor,
+                        "account_id": account_id,
                         "note": "由本機中控台小J產生命令單；建議由伺服器端執行器拉取並執行。",
                     },
                     "policy": {
@@ -964,7 +2379,10 @@ class Handler(BaseHTTPRequestHandler):
                     "status": {"state": "outbox"},
                 }
                 p = _write_job("outbox", job)
-                _append_jsonl(JOB_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "job_created", "job_id": job_id, "type": "sync_push", "actor": actor})
+                _append_jsonl(
+                    JOB_AUDIT_JSONL,
+                    {"timestamp": _job_now_iso(), "kind": "job_created", "job_id": job_id, "type": "sync_push", "actor": actor, "account_id": account_id},
+                )
 
                 reply = prefix + (
                     f"我已為你建立【推送命令單】（建議交由伺服器執行）：\n"
@@ -994,6 +2412,8 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/run/sync_push":
+            if not _require_perm(self, "high_risk_execute_local"):
+                return
             data = _read_json(self)
             profile = str(data.get("profile") or "rules").strip()
             if profile not in ("rules", "kb"):
@@ -1015,6 +2435,8 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/workspace/write":
+            if not _require_perm(self, "workspace_write"):
+                return
             data = _read_json(self)
             kind = str(data.get("kind") or "little_j").strip()
             title = str(data.get("title") or "control_center").strip()
