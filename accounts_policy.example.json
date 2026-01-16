@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "note": "範例：每個帳號用「號碼（account_id）」決定可做什麼。請把正式檔放到 Google Drive 同步資料夾（建議）並命名 accounts_policy.json。",
+  "accounts": [
+    {
+      "account_id": "1001",
+      "label": "維運管理",
+      "profile_id": "ops_admin",
+      "pin_sha256": "",
+      "permissions": [
+        "read",
+        "job_read",
+        "job_create",
+        "job_manage",
+        "device_request",
+        "voucher_read",
+        "voucher_manage",
+        "voucher_redeem",
+        "pii_read",
+        "pii_write",
+        "workspace_write",
+        "agent_config"
+      ]
+    },
+    {
+      "account_id": "2001",
+      "label": "協會",
+      "profile_id": "org_association",
+      "pin_sha256": "",
+      "permissions": [
+        "read",
+        "job_read",
+        "job_create",
+        "pii_read",
+        "workspace_write"
+      ]
+    },
+    {
+      "account_id": "9000",
+      "label": "設備看板（只讀）",
+      "profile_id": "device_kiosk",
+      "pin_sha256": "",
+      "permissions": [
+        "read"
+      ]
+    }
+  ]
+}
+

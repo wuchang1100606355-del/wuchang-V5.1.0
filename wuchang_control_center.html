@@ -375,6 +375,124 @@
     <div class="banner">
       <strong>硬規則：</strong>只要出現「關鍵確認無回應/無法驗證」，<strong>不得進行高風險作業</strong>（推送/清快取/重建索引/部署/重啟）。本頁面按鈕會把這條規則放在第一順位。
       <div class="small muted" style="margin-top:8px;">提示：此頁面由本機 `local_control_center.py` 服務提供（僅 127.0.0.1）。</div>
+      <div class="row" style="margin-top:10px;">
+        <div>
+          <label style="margin-top:0;">目前身分/介面</label>
+          <select id="uiProfile">
+            <option value="ops_admin">維運/管理（Ops/Admin）</option>
+            <option value="org_association">協會（治理/對外）</option>
+            <option value="org_fund">基金池（仁義店）</option>
+            <option value="org_sponsor">贊助方（重新店）</option>
+            <option value="device_kiosk">設備端（只讀看板）</option>
+            <option value="public_readonly">公開視圖（只讀）</option>
+          </select>
+          <div class="muted small" style="margin-top:6px;">
+            說明：不同身分會看到不同模組，並套用不同小J權限（唯讀/可建命令單/可雲端對話等）。
+          </div>
+        </div>
+        <div>
+          <label style="margin-top:0;">身分權限摘要（唯讀）</label>
+          <input id="uiProfilePolicy" readonly />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <div>
+          <label style="margin-top:0;">帳號號碼（決定可做什麼）</label>
+          <div class="row" style="grid-template-columns: 1fr 1fr; gap:10px;">
+            <input id="accountId" placeholder="例如：1001 / 2001 / 9000" />
+            <input id="accountPin" placeholder="PIN（可選）" type="password" />
+          </div>
+          <div class="btns">
+            <button id="btnLogin" class="secondary">登入</button>
+            <button id="btnLogout" class="secondary">登出</button>
+            <button id="btnAuthRefresh" class="secondary">刷新狀態</button>
+          </div>
+          <div class="muted small" id="authHint" style="margin-top:6px;"></div>
+        </div>
+        <div>
+          <label style="margin-top:0;">目前帳號狀態</label>
+          <input id="authStatus" readonly />
+          <div class="muted small" style="margin-top:6px;">
+            說明：若已啟用帳號政策（Workspace 內的 <span class="mono">accounts_policy.json</span>），未登入會被限制多數操作（PII/建單/寫入等）。
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <div>
+          <label style="margin-top:0;">不可識別個資（依帳號編碼，供習慣分析/系統升級）</label>
+          <div class="muted small">
+            只存「性別 / 年齡區間 / 習慣摘要」等不可識別資訊（不存生日/電話/Email）。資料會寫入 Google Drive 同步夾的私密檔案。
+          </div>
+          <div style="margin-top:10px; background:#fff; border:1px dashed #dee2e6; border-radius:12px; padding:10px;">
+            <div class="muted small" style="margin-bottom:6px;">
+              <strong>使用前必須同意：</strong>系統會告知「範圍/用途/保存期限」，你在本機介面或設備端確認同意後，系統才會有使用權。
+            </div>
+            <details style="margin-top:8px;">
+              <summary class="muted small" style="cursor:pointer;">查看「用途/範圍/使用權利/不收集項目」（必讀）</summary>
+              <pre id="consentPolicyText" class="mono" style="white-space:pre-wrap; background:#f8f9fa; border:1px solid #e9ecef; border-radius:10px; padding:10px; margin-top:8px; max-height: 240px; overflow:auto;"></pre>
+            </details>
+            <div class="row" style="margin-top:6px;">
+              <div>
+                <label style="margin-top:0;">同意狀態</label>
+                <input id="consentStatus" readonly />
+              </div>
+              <div>
+                <label style="margin-top:0;">保存期限（天）</label>
+                <input id="consentRetention" readonly />
+              </div>
+            </div>
+            <label class="toggle" style="margin-top:8px;">
+              <input type="checkbox" id="consentAck" />
+              我已閱讀並同意上述用途與範圍（可隨時撤回）
+            </label>
+            <div class="btns">
+              <button id="btnConsentGrant">同意並啟用</button>
+              <button id="btnConsentRevoke" class="secondary">撤回同意</button>
+              <button id="btnConsentRefresh" class="secondary">刷新同意狀態</button>
+            </div>
+            <div class="muted small" id="consentHint" style="margin-top:6px;"></div>
+          </div>
+          <div class="row" style="margin-top:10px;">
+            <div>
+              <label style="margin-top:0;">性別</label>
+              <select id="nonidGender">
+                <option value="">（未填）</option>
+                <option value="unknown">未知</option>
+                <option value="male">男性</option>
+                <option value="female">女性</option>
+                <option value="non_binary">非二元</option>
+                <option value="other">其他</option>
+              </select>
+            </div>
+            <div>
+              <label style="margin-top:0;">年齡（區間）</label>
+              <select id="nonidAgeBand">
+                <option value="">（未填）</option>
+                <option value="0-12">0–12</option>
+                <option value="13-17">13–17</option>
+                <option value="18-24">18–24</option>
+                <option value="25-34">25–34</option>
+                <option value="35-44">35–44</option>
+                <option value="45-54">45–54</option>
+                <option value="55-64">55–64</option>
+                <option value="65+">65+</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label>習慣摘要（不可識別）</label>
+            <textarea id="nonidHabits" class="mono" style="min-height: 72px;" placeholder="例如：常用功能、偏好操作方式、常見問題（不要放個人電話/Email/住址/生日）"></textarea>
+          </div>
+          <div class="btns">
+            <button id="btnNonidLoad" class="secondary">載入（Workspace）</button>
+            <button id="btnNonidSave">儲存（Workspace）</button>
+            <button id="btnNonidClear" class="secondary">清除</button>
+          </div>
+          <div class="muted small" id="nonidHint" style="margin-top:6px;"></div>
+        </div>
+      </div>
     </div>
 
     <div class="stats">
@@ -396,7 +514,7 @@
       </div>
     </div>
 
-    <div class="card wide" style="margin-bottom:18px;">
+    <div class="card wide" style="margin-bottom:18px;" data-section="map">
       <h2>中央區塊：大型地圖模組（環狀切換 / 樹狀導覽 / 狀態數據）</h2>
       <div class="muted">
         這是「本機中控」的互動視覺層：外圈用來切換模組（環狀），左側用樹狀圖點選上一層/下一層，右側看狀態與數據並可切換。
@@ -498,6 +616,70 @@
 
           <div class="cc-kv" id="ccDetails"></div>
 
+          <div style="margin-top:12px; background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:12px;">
+            <h3 style="margin:0 0 8px; font-size: 1em; color:#333;">管理員聯繫（個資分級：可識別 / 不可識別）</h3>
+            <div class="muted small">
+              可識別（姓名/電話/Email）會寫入你的 Google Drive 同步資料夾（<span class="mono">WUCHANG_WORKSPACE_OUTDIR</span> 或 <span class="mono">WUCHANG_PII_OUTDIR</span>）的私密檔；
+              不可識別（角色/備註）可用於對外摘要，但仍建議只放必要資訊。
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <div>
+                <label style="margin-top:0;">個資分類</label>
+                <select id="piiClass">
+                  <option value="identifiable">可識別（私密）</option>
+                  <option value="non_identifiable">不可識別（可用於摘要）</option>
+                </select>
+              </div>
+              <div>
+                <label style="margin-top:0;">提示</label>
+                <input id="piiClassHint" readonly />
+              </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <div>
+                <label style="margin-top:0;">姓名（可識別）</label>
+                <input id="piiName" placeholder="（私密）" />
+              </div>
+              <div>
+                <label style="margin-top:0;">角色（不可識別）</label>
+                <input id="piiRole" placeholder="admin / ops / netops..." />
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>電話（可識別）</label>
+                <input id="piiPhone" placeholder="（私密）" />
+              </div>
+              <div>
+                <label>Email（可識別）</label>
+                <input id="piiEmail" placeholder="（私密）" />
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>姓名遮罩比對（例如：王＊）</label>
+                <input id="piiMatchNameMask" placeholder="例如：王＊ / 王xx / 王**" />
+              </div>
+              <div>
+                <label>手機後四碼</label>
+                <input id="piiMatchPhoneLast4" placeholder="例如：1234" />
+              </div>
+            </div>
+            <div class="btns">
+              <button id="btnPiiMatch" class="secondary">部分個資比對（不顯示明文）</button>
+            </div>
+            <div>
+              <label>備註（不可識別）</label>
+              <textarea id="piiNote" class="mono" style="min-height: 64px;" placeholder="例如：值班方式、聯絡窗口類型（不要放個人電話/Email）"></textarea>
+            </div>
+            <div class="btns">
+              <button id="btnPiiLoad" class="secondary">載入（Workspace）</button>
+              <button id="btnPiiSave">儲存（Workspace）</button>
+              <button id="btnPiiClear" class="secondary">清除（Workspace）</button>
+            </div>
+            <div class="muted small" id="piiHint" style="margin-top:8px;"></div>
+          </div>
+
           <div class="cc-actions">
             <button id="ccBtnApplyStatus">套用狀態</button>
             <button id="ccBtnRefreshHint" class="secondary">顯示處置提示</button>
@@ -521,7 +703,7 @@
     </div>
 
     <div class="grid">
-      <div class="card wide">
+      <div class="card wide" data-section="chat">
         <h2>小J：自然語言中控（ChatGPT 代理 + 語音對話）</h2>
         <div class="muted">
           你可以用「自然語言」叫小J做事（查 DNS、產生網路快照、查看稽核、推送 rules/kb）。<strong>推送屬高風險</strong>：一定會先要求你說/打「確認推送 …」才會執行，並且仍受「無回應＝禁止」硬閘門保護。
@@ -585,7 +767,7 @@
         </div>
       </div>
 
-      <div class="card wide">
+      <div class="card wide" data-section="jobs">
         <h2>命令單（Job）收件匣：待送 / 已送 / 封存</h2>
         <div class="muted">
           這裡是「推送命令單」的落地位置：小J 會把高風險動作改成先建立命令單，避免本機直接硬做。
@@ -621,7 +803,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-section="targets">
         <h2>1) 目標資訊（可不填，但不填就只能「看狀態」不能推送）</h2>
         <div class="row">
           <div>
@@ -648,7 +830,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-section="dns">
         <h2>DNS 處置（簽發憑證前置）</h2>
         <div class="muted">
           這裡會把 <span class="mono">dns_records.json</span> 內的預期 <span class="mono">_acme-challenge</span> TXT 值「中文化」呈現。
@@ -683,7 +865,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-section="actions">
         <h2>2) 一鍵動作（已內建「無回應＝禁止」）</h2>
         <div class="muted">
           推送會呼叫 <span class="mono">safe_sync_push.py</span>，它會先做健康檢查；只要無回應/不可驗證就會中止，並寫入稽核。
@@ -698,7 +880,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-section="runlog">
         <h2>3) 即時輸出（本機執行結果）</h2>
         <div class="toggle">
           <input type="checkbox" id="showRawJson" />
@@ -707,7 +889,7 @@
         <div id="runLog" class="log human">（尚未執行）</div>
       </div>
 
-      <div class="card">
+      <div class="card" data-section="audit">
         <h2>4) 稽核紀錄（尾端 50 筆）</h2>
         <div class="toggle">
           <input type="checkbox" id="showRawAudit" />
@@ -716,7 +898,7 @@
         <div id="auditLog" class="log human">（尚未載入）</div>
       </div>
 
-      <div class="card">
+      <div class="card" data-section="docs">
         <h2>5) 規則文本（供臨時查閱）</h2>
         <div class="row">
           <div>
@@ -1003,7 +1185,14 @@
       $("ccNodeStatus").value = n.status || "ok";
 
       const stDisp = ccNodeDisplayStatus(ccSelected);
-      const admins = (n.admins || []).map(a => `${a.name}${a.phone ? " / " + a.phone : ""}${a.email ? " / " + a.email : ""}`).join("； ");
+      const piiIdent = (window.__piiCacheIdent && window.__piiCacheIdent[n.id]) ? window.__piiCacheIdent[n.id] : null;
+      const piiNon = (window.__piiCacheNon && window.__piiCacheNon[n.id]) ? window.__piiCacheNon[n.id] : null;
+      const adminsPublic = piiNon
+        ? `${piiNon.role ? (piiNon.role) : "（未填角色）"}${piiNon.note ? (" / " + piiNon.note) : ""}`
+        : "（未填/未載入）";
+      const adminsPrivate = piiIdent
+        ? `${piiIdent.name || "（未填）"}${piiIdent.phone ? " / " + piiIdent.phone : ""}${piiIdent.email ? " / " + piiIdent.email : ""}`
+        : "（私密：未登入/無權限/未載入/未填）";
       const agent = n.agent || ccDefaultAgent;
       const agentLine = `${agent.name}｜${agent.duty}｜${agent.policy}`;
       const lines = [
@@ -1012,7 +1201,8 @@
         ["類型", n.type || "module"],
         ["顯示狀態", `${ccStatusLabel[stDisp] || stDisp}（${$("ccViewMode").value === "platform" ? "聚合" : "本體"}）`],
         ["說明", n.desc || "—"],
-        ["管理員聯繫", admins || "（待填）"],
+        ["管理員聯繫（公開/不可識別）", adminsPublic || "（未填）"],
+        ["管理員聯繫（私密/可識別）", adminsPrivate || "（未填）"],
         ["小J AI 代理", agentLine],
         ["子節點數", String((n.children || []).length)],
         ["資料", Object.keys(n.metrics || {}).length ? JSON.stringify(n.metrics, null, 0) : "—"]
@@ -1025,6 +1215,8 @@
       if (!ccModel.nodes[id]) return;
       ccSelected = id;
       ccRenderAll();
+      // 個資分級：切節點時自動載入（公開/私密各一份）
+      try { piiLoadAllForSelected().catch(() => {}); } catch (e) {}
     }
 
     function ccGoUp() {
@@ -1119,6 +1311,8 @@
         logRun("沒有可寫入的內容（請先產生小J輸出）。");
         return;
       }
+      const pub = (window.__piiCacheNon && window.__piiCacheNon[n.id]) ? window.__piiCacheNon[n.id] : null;
+      const admins_public = pub ? [{ role: pub.role || "", note: pub.note || "" }] : [];
       const body = {
         kind: "little_j_agent",
         title: `${n.name}__${ccStatusLabel[st] || st}`,
@@ -1127,7 +1321,8 @@
           node_id: n.id,
           node_name: n.name,
           status: st,
-          admins: n.admins || [],
+          admins: [],
+          admins_public,
         }
       };
       const { data } = await fetchJson("/api/workspace/write", {
@@ -1252,16 +1447,244 @@
       $("runLog").textContent = summary ? (showRaw ? (summary + "\n\n---\n【原始 JSON】\n" + raw) : summary) : raw;
     }
 
+    function authSessionId() {
+      try { return localStorage.getItem("wuchang_session_id") || ""; } catch (e) { return ""; }
+    }
+
+    function setAuthSessionId(v) {
+      try {
+        if (!v) localStorage.removeItem("wuchang_session_id");
+        else localStorage.setItem("wuchang_session_id", v);
+      } catch (e) {}
+    }
+
+    window.__auth = { accounts_enabled: false, session: null, policy_path: "" };
+
+    async function authRefresh() {
+      const { data } = await fetchJson("/api/auth/status");
+      window.__auth = data || window.__auth;
+      const enabled = data?.accounts_enabled === true;
+      const sess = data?.session && Object.keys(data.session).length ? data.session : null;
+      const sid = authSessionId();
+
+      $("authStatus").value = enabled
+        ? (sess ? `已登入：${sess.account_id || ""}（${sess.label || ""}）` : "未登入（已啟用帳號政策）")
+        : "未啟用帳號政策（單機模式）";
+
+      if (enabled) {
+        $("authHint").textContent = `帳號政策檔：${data?.policy_path || "（未找到）"}（建議放在 Google Drive 同步資料夾）`;
+        if (!sid || !sess) {
+          // 未登入：強制最低可見
+          $("uiProfile").value = "public_readonly";
+          $("uiProfile").disabled = true;
+          try { uiApplyProfile(); } catch (e) {}
+        } else {
+          // 已登入：套用帳號綁定 profile
+          const pid = sess.profile_id || "ops_admin";
+          $("uiProfile").value = pid;
+          $("uiProfile").disabled = true;
+          try { uiApplyProfile(); } catch (e) {}
+        }
+      } else {
+        $("authHint").textContent = "尚未建立 accounts_policy.json：你可以用範例檔建立（每個帳號用號碼決定權限）。";
+        $("uiProfile").disabled = false;
+      }
+
+      // 顯示權限摘要（不含敏感）
+      const perms = (sess?.permissions || []);
+      if (enabled && sess) {
+        $("uiProfilePolicy").value = `perms=${perms.slice(0, 8).join(",")}${perms.length > 8 ? "…" : ""}`;
+      }
+      logRun(data);
+    }
+
+    async function authLogin() {
+      const account_id = ($("accountId").value || "").trim();
+      const pin = ($("accountPin").value || "").trim();
+      const { data } = await fetchJson("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ account_id, pin })
+      });
+      if (data?.ok && data?.session_id) {
+        setAuthSessionId(data.session_id);
+        $("accountPin").value = "";
+        await uiLoadProfiles().catch(() => {});
+        await authRefresh();
+        await consentRefresh().catch(() => {});
+        await jobRefresh().catch(() => {});
+      } else {
+        logRun(data);
+      }
+    }
+
+    async function authLogout() {
+      const sid = authSessionId();
+      if (sid) {
+        await fetchJson("/api/auth/logout", { method: "POST" }).catch(() => {});
+      }
+      setAuthSessionId("");
+      await authRefresh();
+      try { nonidSetEnabled(false); } catch (e) {}
+    }
+
+    // ===== Consent（同意）：告知範圍/用途後才可使用 =====
+    window.__consent = { effective: false, policy: null, scope: "" };
+
+    function nonidSetEnabled(enabled) {
+      const ids = ["btnNonidLoad", "btnNonidSave", "btnNonidClear", "nonidGender", "nonidAgeBand", "nonidHabits"];
+      for (const id of ids) {
+        const el = $(id);
+        if (el) el.disabled = !enabled;
+      }
+    }
+
+    async function consentRefresh() {
+      const { data: pol } = await fetchJson("/api/consent/policy").catch(() => ({ data: null }));
+      const { data } = await fetchJson("/api/consent/status");
+      if (!data?.ok) {
+        $("consentStatus").value = "未登入/無權限";
+        $("consentRetention").value = "";
+        $("consentHint").textContent = "請先登入帳號號碼，才能檢視/設定同意。";
+        $("consentPolicyText").textContent = "（需登入後才可載入同意條款）";
+        nonidSetEnabled(false);
+        logRun(data);
+        return;
+      }
+      window.__consent.policy = pol?.policy || null;
+      window.__consent.effective = data.effective === true;
+      window.__consent.scope = data.scope || "";
+      $("consentStatus").value = data.effective ? "已同意（有效）" : (data?.consent?.revoked_at ? "已撤回" : "未同意/未生效");
+      $("consentRetention").value = String((pol?.policy?.retention_days ?? "") || "");
+      const p = pol?.policy || {};
+      const lines = [];
+      lines.push(`【同意條款】v${p.policy_version ?? "?"}`);
+      lines.push(`- 範圍（scope）：${p.scope || ""}`);
+      lines.push(`- 用途（purposes）：${(p.purposes || []).join("、") || "（無）"}`);
+      lines.push(`- 使用資料欄位：${(p.data_fields || []).join("、") || "（無）"}`);
+      lines.push(`- 明確不收集：${(p.not_collect || []).join("、") || "（無）"}`);
+      lines.push(`- 保存期限：${p.retention_days ?? "?"} 天`);
+      lines.push(`- 保存位置：${p.storage || ""}`);
+      lines.push(`- 對外分享：${p.sharing || ""}`);
+      lines.push("");
+      lines.push("【使用權利 / 使用者權利】");
+      for (const r of (p.rights || [])) lines.push(`- ${r}`);
+      $("consentPolicyText").textContent = lines.join("\n");
+
+      $("consentHint").textContent = `範圍：${data.scope || ""}｜用途：${(p.purposes || []).join("、") || "（無）"}｜保存：${p.retention_days ?? "?"} 天｜可隨時撤回`;
+      nonidSetEnabled(window.__consent.effective);
+      logRun({ consent: data, policy: pol?.policy || {} });
+    }
+
+    async function consentGrant() {
+      if ($("consentAck")?.checked !== true) {
+        $("consentHint").textContent = "請先勾選「我已閱讀並同意」才可啟用。";
+        return;
+      }
+      const { data } = await fetchJson("/api/consent/grant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scope: "account_non_identifiable_profile", ack: true, source: "ui" })
+      });
+      if (!data?.ok) {
+        $("consentHint").textContent = "同意失敗（請確認已登入/已設定 Workspace）。";
+        logRun(data);
+        return;
+      }
+      $("consentHint").textContent = "已同意並啟用不可識別個資功能。";
+      await consentRefresh();
+    }
+
+    async function consentRevoke() {
+      const { data } = await fetchJson("/api/consent/revoke", { method: "POST" });
+      if (!data?.ok) {
+        $("consentHint").textContent = "撤回失敗（請確認已登入/已設定 Workspace）。";
+        logRun(data);
+        return;
+      }
+      $("consentHint").textContent = "已撤回同意（不可識別個資功能已停用）。";
+      await consentRefresh();
+    }
+
+    async function nonidLoad() {
+      const { data } = await fetchJson("/api/profile/nonid/get");
+      if (!data?.ok) {
+        if (data?.error === "consent_required") {
+          $("nonidHint").textContent = "無法載入：必須先完成同意（告知用途/範圍後同意）。";
+          nonidSetEnabled(false);
+          await consentRefresh().catch(() => {});
+        } else {
+          $("nonidHint").textContent = (data?.error === "forbidden") ? "無法載入：請先登入且需權限。" : "無法載入：請先設定 Workspace 同步路徑。";
+        }
+        logRun(data);
+        return;
+      }
+      const p = data.profile || {};
+      $("nonidGender").value = p.gender || "";
+      $("nonidAgeBand").value = p.age_band || "";
+      $("nonidHabits").value = p.habits || "";
+      $("nonidHint").textContent = `已載入（account_id=${data.account_id || ""}｜vault: ${data.vault_path || ""}）`;
+      logRun(data);
+    }
+
+    async function nonidSave(clear = false) {
+      const actor = ($("actor").value || "ops").trim();
+      const profile = clear ? null : {
+        gender: ($("nonidGender").value || "").trim(),
+        age_band: ($("nonidAgeBand").value || "").trim(),
+        habits: ($("nonidHabits").value || "").trim(),
+      };
+      const { data } = await fetchJson("/api/profile/nonid/set", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ actor, profile })
+      });
+      if (data?.ok) {
+        if (clear) {
+          $("nonidGender").value = "";
+          $("nonidAgeBand").value = "";
+          $("nonidHabits").value = "";
+          $("nonidHint").textContent = "已清除";
+        } else {
+          $("nonidHint").textContent = "已儲存（不可識別個資）";
+        }
+      } else {
+        if (data?.error === "consent_required") {
+          $("nonidHint").textContent = "無法儲存：必須先完成同意（告知用途/範圍後同意）。";
+          nonidSetEnabled(false);
+          await consentRefresh().catch(() => {});
+        } else {
+          $("nonidHint").textContent = (data?.error === "forbidden") ? "無法儲存：請先登入且需權限。" : "儲存失敗";
+        }
+      }
+      logRun(data);
+    }
+
     async function fetchJson(url, opts) {
-      const res = await fetch(url, opts);
+      const o = opts ? { ...opts } : {};
+      const headers = { ...(o.headers || {}) };
+      const sid = authSessionId();
+      if (sid) headers["X-Wuchang-Session"] = sid;
+      o.headers = headers;
+      const res = await fetch(url, o);
       const data = await res.json();
       return { res, data };
     }
 
     async function init() {
       try {
+        await uiLoadProfiles();
+      } catch (e) {}
+      try {
+        await authRefresh();
+      } catch (e) {}
+      try {
+        await consentRefresh();
+      } catch (e) {}
+      try {
         const { data } = await fetchJson("/api/local/health");
-        setPill($("localStatus"), data.ok ? "ok" : "bad", data.ok ? "OK" : "失敗");
+        const txt = data?.ok ? "OK" : (data?.error === "forbidden" ? "需登入" : "失敗");
+        setPill($("localStatus"), data?.ok ? "ok" : "bad", txt);
       } catch (e) {
         setPill($("localStatus"), "bad", "失敗");
       }
@@ -1287,6 +1710,7 @@
       try {
         await jobRefresh();
       } catch (e) {}
+      try { uiApplyProfile(); } catch (e) {}
     }
 
     async function checkServer() {
@@ -1482,6 +1906,8 @@
         agent_mode,
         agent_model,
         agent_provider: (agent_model === "local_rule") ? "local" : "openai_compat",
+        ui_profile: (window.__uiProfileId || $("uiProfile")?.value || "ops_admin"),
+        account_id: (window.__auth?.session?.account_id || ""),
         node: (typeof ccSelected !== "undefined" && typeof ccGetNode === "function") ? {
           id: ccSelected,
           name: (ccGetNode(ccSelected)?.name || "")
@@ -1588,6 +2014,68 @@
         }
       });
     }
+
+    // ===== 身分/介面（Profile） =====
+    window.__uiProfiles = [];
+    window.__uiProfileId = "ops_admin";
+
+    async function uiLoadProfiles() {
+      const { data } = await fetchJson("/api/ui/profiles");
+      const profiles = data?.profiles || [];
+      if (Array.isArray(profiles) && profiles.length) {
+        window.__uiProfiles = profiles;
+        // 更新下拉選單（保留既有選項）
+        const sel = $("uiProfile");
+        const cur = sel.value;
+        sel.innerHTML = profiles.map(p => `<option value="${p.id}">${p.label}</option>`).join("");
+        // 讀 localStorage 或沿用原本
+        const saved = localStorage.getItem("wuchang_ui_profile") || cur;
+        sel.value = saved || profiles[0].id;
+      }
+      // 存起來
+      window.__uiProfileId = $("uiProfile").value || "ops_admin";
+    }
+
+    function uiGetProfile() {
+      const id = $("uiProfile")?.value || "ops_admin";
+      window.__uiProfileId = id;
+      return (window.__uiProfiles || []).find(p => p.id === id) || null;
+    }
+
+    function uiApplyProfile() {
+      const p = uiGetProfile();
+      if (!p) return;
+      try { localStorage.setItem("wuchang_ui_profile", p.id); } catch (e) {}
+
+      const visible = new Set(p.visible_sections || []);
+      document.querySelectorAll("[data-section]").forEach(el => {
+        const key = el.getAttribute("data-section");
+        el.style.display = visible.has(key) ? "" : "none";
+      });
+
+      const pol = p.agent_policy || {};
+      $("uiProfilePolicy").value =
+        `cloud=${pol.allow_cloud_chat ? "允許" : "禁止"}｜建單=${pol.allow_job_create ? "允許" : "禁止"}｜本機高風險執行=${pol.allow_high_risk_execute_local ? "允許" : "禁止"}`;
+
+      // 同步節點：切換身分後，預設跳到該身分節點（若存在）
+      const nid = p.default_node_id;
+      try {
+        if (nid && typeof ccSelect === "function") ccSelect(nid);
+      } catch (e) {}
+
+      // 同步小J模式：若政策禁止雲端就強制改回 command
+      try {
+        if (!pol.allow_cloud_chat) {
+          $("ljMode").value = "command";
+          if ($("ljModel").value !== "local_rule") $("ljModel").value = "local_rule";
+        }
+      } catch (e) {}
+    }
+
+    $("uiProfile").addEventListener("change", () => {
+      uiApplyProfile();
+      logRun({ ok: true, action: "ui_profile_changed", profile: $("uiProfile").value });
+    });
 
     async function ljLoadModels() {
       const { data } = await fetchJson("/api/agent/models");
@@ -1715,9 +2203,159 @@
       logRun(data);
     });
 
+    // ===== PII（個資）分級：可識別 / 不可識別 =====
+    window.__piiCacheIdent = window.__piiCacheIdent || {};
+    window.__piiCacheNon = window.__piiCacheNon || {};
+
+    function piiClass() {
+      return ($("piiClass")?.value || "identifiable").trim();
+    }
+
+    function piiApplyClassUI() {
+      const cls = piiClass();
+      const ident = (cls === "identifiable");
+      $("piiClassHint").value = ident ? "私密：姓名/電話/Email（不對外輸出）" : "摘要：角色/備註（可用於 Workspace 輸出）";
+
+      // 顯示/隱藏欄位（避免誤填）
+      const showIdent = (el, on) => { if (el && el.parentElement) el.parentElement.style.display = on ? "" : "none"; };
+      showIdent($("piiName"), ident);
+      showIdent($("piiPhone"), ident);
+      showIdent($("piiEmail"), ident);
+
+      showIdent($("piiRole"), !ident);
+      if ($("piiNote") && $("piiNote").parentElement) $("piiNote").parentElement.style.display = ident ? "none" : "";
+    }
+
+    function piiFillFromCache(nid) {
+      const cls = piiClass();
+      if (cls === "identifiable") {
+        const c = window.__piiCacheIdent[nid] || {};
+        $("piiName").value = c.name || "";
+        $("piiPhone").value = c.phone || "";
+        $("piiEmail").value = c.email || "";
+      } else {
+        const c = window.__piiCacheNon[nid] || {};
+        $("piiRole").value = c.role || "";
+        $("piiNote").value = c.note || "";
+      }
+    }
+
+    async function piiLoadForSelected(cls) {
+      const nid = (typeof ccSelected !== "undefined") ? ccSelected : "";
+      if (!nid) return;
+      const c = (cls || piiClass()).trim();
+      const { data } = await fetchJson("/api/pii/get?node_id=" + encodeURIComponent(nid) + "&class=" + encodeURIComponent(c));
+      if (!data?.ok) {
+        $("piiHint").textContent = (data?.error === "forbidden")
+          ? "無法載入：未登入或無權限。"
+          : "無法載入：請先設定 WUCHANG_WORKSPACE_OUTDIR（或 WUCHANG_PII_OUTDIR）。";
+        return;
+      }
+      const got = data.contact || {};
+      if (data.pii_class === "non_identifiable" || c === "non_identifiable") window.__piiCacheNon[nid] = got;
+      else window.__piiCacheIdent[nid] = got;
+
+      piiApplyClassUI();
+      piiFillFromCache(nid);
+      $("piiHint").textContent = `已載入（${data.pii_class}｜vault: ${data.vault_path || ""}）`;
+      try { ccRenderDetails(); } catch (e) {}
+    }
+
+    async function piiLoadAllForSelected() {
+      await piiLoadForSelected("non_identifiable").catch(() => {});
+      await piiLoadForSelected("identifiable").catch(() => {});
+    }
+
+    async function piiSaveForSelected(clear = false) {
+      const nid = (typeof ccSelected !== "undefined") ? ccSelected : "";
+      if (!nid) { logRun("尚未選擇節點。"); return; }
+      const actor = ($("actor").value || "ops").trim();
+      const cls = piiClass();
+      let contact = null;
+      if (!clear) {
+        if (cls === "identifiable") {
+          contact = {
+            name: ($("piiName").value || "").trim(),
+            phone: ($("piiPhone").value || "").trim(),
+            email: ($("piiEmail").value || "").trim(),
+          };
+        } else {
+          contact = {
+            role: ($("piiRole").value || "").trim(),
+            note: ($("piiNote").value || "").trim(),
+          };
+        }
+      }
+      const { data } = await fetchJson("/api/pii/set", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ node_id: nid, actor, pii_class: cls, contact })
+      });
+      if (data?.ok) {
+        if (cls === "identifiable") window.__piiCacheIdent[nid] = clear ? {} : (contact || {});
+        else window.__piiCacheNon[nid] = clear ? {} : (contact || {});
+        piiFillFromCache(nid);
+        $("piiHint").textContent = clear ? `已清除（${cls}）` : `已儲存（${cls}）`;
+        try { ccRenderDetails(); } catch (e) {}
+      }
+      logRun(data);
+    }
+
+    async function piiMatchForSelected() {
+      const nid = (typeof ccSelected !== "undefined") ? ccSelected : "";
+      if (!nid) { logRun("尚未選擇節點。"); return; }
+      const name_mask = ($("piiMatchNameMask").value || "").trim();
+      const phone_last4 = ($("piiMatchPhoneLast4").value || "").trim();
+      const { data } = await fetchJson("/api/pii/match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ node_id: nid, name_mask, phone_last4 })
+      });
+      if (data?.ok) {
+        $("piiHint").textContent = data.match
+          ? `比對通過（遮罩預覽：${data?.preview?.name_masked || ""} / ${data?.preview?.phone_masked || ""}）`
+          : `比對未通過（遮罩預覽：${data?.preview?.name_masked || ""} / ${data?.preview?.phone_masked || ""}）`;
+      } else {
+        $("piiHint").textContent = (data?.error === "forbidden") ? "無法比對：未登入或無權限。" : "比對失敗";
+      }
+      logRun(data);
+    }
+
+    $("piiClass").addEventListener("change", () => {
+      piiApplyClassUI();
+      const nid = (typeof ccSelected !== "undefined") ? ccSelected : "";
+      if (nid) piiFillFromCache(nid);
+    });
+    piiApplyClassUI();
+
+    $("btnPiiLoad").addEventListener("click", () => piiLoadForSelected(piiClass()).catch(e => logRun(String(e))));
+    $("btnPiiSave").addEventListener("click", () => piiSaveForSelected(false).catch(e => logRun(String(e))));
+    $("btnPiiClear").addEventListener("click", () => piiSaveForSelected(true).catch(e => logRun(String(e))));
+    $("btnPiiMatch").addEventListener("click", () => piiMatchForSelected().catch(e => logRun(String(e))));
+
     // 小J 模型切換按鈕
     $("ljLoadModels").addEventListener("click", () => ljLoadModels().catch(e => logRun(String(e))));
     $("ljSaveConfig").addEventListener("click", () => ljSaveConfig().catch(e => logRun(String(e))));
+
+    // 帳號登入/登出
+    $("btnLogin").addEventListener("click", () => authLogin().catch(e => logRun(String(e))));
+    $("btnLogout").addEventListener("click", () => authLogout().catch(e => logRun(String(e))));
+    $("btnAuthRefresh").addEventListener("click", () => authRefresh().catch(e => logRun(String(e))));
+    $("accountId").addEventListener("keydown", (e) => { if (e.key === "Enter") authLogin().catch(err => logRun(String(err))); });
+    $("accountPin").addEventListener("keydown", (e) => { if (e.key === "Enter") authLogin().catch(err => logRun(String(err))); });
+
+    // 不可識別個資（帳號編碼）
+    $("btnNonidLoad").addEventListener("click", () => nonidLoad().catch(e => logRun(String(e))));
+    $("btnNonidSave").addEventListener("click", () => nonidSave(false).catch(e => logRun(String(e))));
+    $("btnNonidClear").addEventListener("click", () => nonidSave(true).catch(e => logRun(String(e))));
+
+    // 同意（Consent）
+    $("btnConsentGrant").addEventListener("click", () => consentGrant().catch(e => logRun(String(e))));
+    $("btnConsentRevoke").addEventListener("click", () => consentRevoke().catch(e => logRun(String(e))));
+    $("btnConsentRefresh").addEventListener("click", () => consentRefresh().catch(e => logRun(String(e))));
+
+    // 初始：未同意先禁用不可識別資料操作（待 consentRefresh/登入後更新）
+    try { nonidSetEnabled(false); } catch (e) {}
   </script>
 </body>
 </html>
