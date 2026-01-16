@@ -6,15 +6,8 @@ import socket
 import requests
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
-import sys
-import io
 
 urllib3.disable_warnings(InsecureRequestWarning)
-
-# Force UTF-8 output so captured logs don't become mojibake on Windows
-if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 def get_local_ip_range():
     """獲取本地 IP 範圍"""
@@ -53,30 +46,14 @@ def test_local_router():
             url = f"{protocol}://{ip}:{port}"
             
             try:
-                # Routers may respond with 200/302/401/403 depending on auth settings.
-                response = requests.get(url, verify=False, timeout=2, allow_redirects=False)
-                if response.status_code in (200, 302, 401, 403):
-                    server = response.headers.get("Server", "")
-                    location = response.headers.get("Location", "")
-                    ct = response.headers.get("Content-Type", "")
+                response = requests.get(url, verify=False, timeout=2)
+                if response.status_code == 200:
                     print(f"\n[發現] {url} - 狀態碼: {response.status_code}")
-                    if server:
-                        print(f"  Server: {server}")
-                    if location:
-                        print(f"  Location: {location}")
-                    if ct:
-                        print(f"  Content-Type: {ct}")
-
-                    # Heuristic confirmation (best-effort)
-                    body = (response.text or "").lower()
-                    if "asus" in body or "asus" in server.lower() or "asus" in location.lower():
-                        print("  [確認] 可能是華碩路由器（偵測到 asus 標記）")
-                    else:
-                        print("  [INFO] 裝置已回應，但頁面未包含 asus 字樣（可能需要登入或是不同品牌介面）")
-
-                    return ip, port, protocol
-            except Exception:
-                continue
+                    if "asus" in response.text.lower():
+                        print(f"  [確認] 這是華碩路由器！")
+                        return ip, port, protocol
+            except:
+                pass
     
     print("\n未找到本地路由器")
     return None, None, None

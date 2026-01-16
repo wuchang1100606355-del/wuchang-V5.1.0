@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>本機中控台（兩機互動）- wuchang.life</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      padding: 26px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 { color: #333; text-align: center; margin-bottom: 8px; font-size: 2em; }
+    .subtitle { text-align: center; color: #666; margin-bottom: 18px; }
+
+    .banner {
+      background: #fff3cd;
+      border: 1px solid #ffe69c;
+      color: #664d03;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      line-height: 1.4;
+    }
+    .banner strong { color: #5a3f00; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid #e9ecef;
+    }
+    .card h2 {
+      color: #667eea;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #667eea;
+      font-size: 1.05em;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+    }
+    .stat .label { opacity: 0.9; font-size: 0.9em; }
+    .stat .value { font-weight: 700; font-size: 1.05em; margin-top: 6px; word-break: break-all; }
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85em;
+    }
+    .pill.ok { background: #d1e7dd; color: #0f5132; }
+    .pill.bad { background: #f8d7da; color: #842029; }
+    .pill.unk { background: #e2e3e5; color: #41464b; }
+
+    label { display: block; margin: 10px 0 6px; color: #333; font-weight: 700; }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid #ced4da;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    textarea { min-height: 140px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 900px) { .row { grid-template-columns: 1fr; } }
+
+    .btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 800;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    button.secondary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .muted { color: #6c757d; font-size: 0.9em; line-height: 1.4; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .log {
+      background: #0b1020;
+      color: #d7def2;
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 180px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+    }
+    .small { font-size: 12px; }
+
+    /* Central Map Control Center */
+    .grid .card.wide { grid-column: 1 / -1; }
+    .cc-wrap {
+      display: grid;
+      grid-template-columns: 320px 1fr 360px;
+      gap: 12px;
+      align-items: stretch;
+    }
+    @media (max-width: 1100px) {
+      .cc-wrap { grid-template-columns: 1fr; }
+    }
+
+    .cc-panel {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .cc-panel h3 {
+      font-size: 1em;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .cc-map {
+      position: relative;
+      background: radial-gradient(circle at 50% 40%, rgba(102,126,234,0.20), rgba(118,75,162,0.06) 60%, rgba(255,255,255,1) 100%);
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 440px;
+    }
+    .cc-map-inner {
+      position: absolute;
+      inset: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
+    }
+    .cc-zone {
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.85);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .cc-zone:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+    }
+    .cc-zone.active {
+      outline: 3px solid rgba(102,126,234,0.55);
+      box-shadow: 0 14px 35px rgba(102,126,234,0.22);
+    }
+    .cc-zone .title { font-weight: 900; color: #333; }
+    .cc-zone .desc { color: #6c757d; font-size: 0.9em; margin-top: 6px; line-height: 1.35; }
+    .cc-zone .meta { margin-top: 10px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    .cc-ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 360px;
+      height: 360px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .cc-ring button {
+      pointer-events: auto;
+      position: absolute;
+      width: 120px;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-weight: 900;
+      font-size: 12px;
+      background: linear-gradient(135deg, rgba(240,147,251,0.95) 0%, rgba(245,87,108,0.95) 100%);
+      box-shadow: 0 10px 25px rgba(245,87,108,0.25);
+    }
+    .cc-ring button.active {
+      background: linear-gradient(135deg, rgba(102,126,234,0.98) 0%, rgba(118,75,162,0.98) 100%);
+      box-shadow: 0 14px 35px rgba(102,126,234,0.28);
+    }
+    .cc-center-badge {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 170px;
+      height: 170px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.92);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10px;
+    }
+    .cc-center-badge .big { font-weight: 1000; color: #333; }
+    .cc-center-badge .small { color: #6c757d; margin-top: 6px; }
+
+    .cc-tree {
+      max-height: 440px;
+      overflow: auto;
+      padding-right: 6px;
+    }
+    .cc-tree ul { list-style: none; padding-left: 16px; }
+    .cc-tree li { margin: 6px 0; }
+    .cc-tree .item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cc-tree .item:hover { background: rgba(102,126,234,0.10); }
+    .cc-tree .item.active { background: rgba(102,126,234,0.18); }
+    .cc-dot { width: 10px; height: 10px; border-radius: 999px; background: #adb5bd; }
+    .cc-dot.ok { background: #2fb344; }
+    .cc-dot.warn { background: #f59f00; }
+    .cc-dot.bad { background: #e03131; }
+    .cc-dot.offline { background: #495057; }
+    .cc-tree .name { font-weight: 800; color: #333; font-size: 13px; }
+    .cc-tree .hint { color: #6c757d; font-size: 12px; }
+
+    .cc-kv { display: grid; grid-template-columns: 120px 1fr; gap: 8px 10px; margin-top: 10px; }
+    .cc-kv .k { color: #6c757d; font-weight: 800; }
+    .cc-kv .v { color: #333; word-break: break-word; }
+    .cc-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .cc-actions button { padding: 9px 12px; font-size: 12px; }
+    .cc-breadcrumb { color: #6c757d; font-size: 12px; line-height: 1.4; }
+    .cc-breadcrumb .mono { font-weight: 900; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>本機中控台（兩機互動）</h1>
+    <div class="subtitle">把「本機 ↔ 伺服器」互動狀態與稽核集中在同一頁（繁中）</div>
+
+    <div class="banner">
+      <strong>硬規則：</strong>只要出現「關鍵確認無回應/無法驗證」，<strong>不得進行高風險作業</strong>（推送/清快取/重建索引/部署/重啟）。本頁面按鈕會把這條規則放在第一順位。
+      <div class="small muted" style="margin-top:8px;">提示：此頁面由本機 `local_control_center.py` 服務提供（僅 127.0.0.1）。</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="label">本機狀態</div>
+        <div class="value"><span id="localStatus" class="pill unk">未知</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">伺服器健康（health URL）</div>
+        <div class="value"><span id="serverStatus" class="pill unk">未檢查</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">DNS / _acme-challenge（憑證前置）</div>
+        <div class="value"><span id="dnsStatus" class="pill unk">未檢查</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">稽核（risk_action_audit.jsonl）</div>
+        <div class="value"><span id="auditStatus" class="pill unk">未載入</span></div>
+      </div>
+    </div>
+
+    <div class="card wide" style="margin-bottom:18px;">
+      <h2>中央區塊：大型地圖模組（環狀切換 / 樹狀導覽 / 狀態數據）</h2>
+      <div class="muted">
+        這是「本機中控」的互動視覺層：外圈用來切換模組（環狀），左側用樹狀圖點選上一層/下一層，右側看狀態與數據並可切換。
+        <strong>注意：</strong>此模組預設只做「狀態顯示與管理」，不會自動執行高風險動作；任何推送仍受「無回應＝禁止」硬規則約束。
+      </div>
+
+      <div class="cc-actions" style="margin-top:12px;">
+        <label style="margin:0;">
+          <span class="muted small">顯示模式</span>
+          <select id="ccViewMode" style="max-width:260px;">
+            <option value="module">模組狀態（節點本身）</option>
+            <option value="platform">平台狀態（聚合到上一層）</option>
+          </select>
+        </label>
+        <button id="ccBtnUp" class="secondary">上一層</button>
+        <button id="ccBtnDown" class="secondary">下一層</button>
+        <button id="ccBtnReset">回到平台總覽</button>
+      </div>
+
+      <div class="cc-wrap" style="margin-top:12px;">
+        <div class="cc-panel">
+          <h3>樹狀圖（點選切換）</h3>
+          <div id="ccBreadcrumb" class="cc-breadcrumb">（尚未載入）</div>
+          <div id="ccTree" class="cc-tree" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="cc-map" id="ccMap">
+          <div class="cc-map-inner">
+            <div class="cc-zone" data-zone="A">
+              <div>
+                <div class="title" id="ccZoneATitle">（載入中）</div>
+                <div class="desc" id="ccZoneADesc">—</div>
+              </div>
+              <div class="meta">
+                <span class="pill unk" id="ccZoneAState">未知</span>
+                <span class="muted small mono" id="ccZoneAMetric">—</span>
+              </div>
+            </div>
+            <div class="cc-zone" data-zone="B">
+              <div>
+                <div class="title" id="ccZoneBTitle">（載入中）</div>
+                <div class="desc" id="ccZoneBDesc">—</div>
+              </div>
+              <div class="meta">
+                <span class="pill unk" id="ccZoneBState">未知</span>
+                <span class="muted small mono" id="ccZoneBMetric">—</span>
+              </div>
+            </div>
+            <div class="cc-zone" data-zone="C">
+              <div>
+                <div class="title" id="ccZoneCTitle">（載入中）</div>
+                <div class="desc" id="ccZoneCDesc">—</div>
+              </div>
+              <div class="meta">
+                <span class="pill unk" id="ccZoneCState">未知</span>
+                <span class="muted small mono" id="ccZoneCMetric">—</span>
+              </div>
+            </div>
+            <div class="cc-zone" data-zone="D">
+              <div>
+                <div class="title" id="ccZoneDTitle">（載入中）</div>
+                <div class="desc" id="ccZoneDDesc">—</div>
+              </div>
+              <div class="meta">
+                <span class="pill unk" id="ccZoneDState">未知</span>
+                <span class="muted small mono" id="ccZoneDMetric">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cc-ring" id="ccRing"></div>
+
+          <div class="cc-center-badge">
+            <div class="big" id="ccCenterTitle">平台總覽</div>
+            <div class="small">
+              <span id="ccCenterState" class="pill unk">未知</span>
+              <div class="small muted" style="margin-top:6px;">點外圈或樹狀圖切換</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cc-panel">
+          <h3>狀態與數據（可切換）</h3>
+          <div class="row">
+            <div>
+              <label style="margin-top:0;">節點狀態</label>
+              <select id="ccNodeStatus">
+                <option value="ok">正常（OK）</option>
+                <option value="warn">警告（WARN）</option>
+                <option value="bad">異常（BAD）</option>
+                <option value="offline">離線（OFFLINE）</option>
+              </select>
+            </div>
+            <div>
+              <label style="margin-top:0;">平台狀態（顯示）</label>
+              <input id="ccPlatformStatus" readonly />
+            </div>
+          </div>
+
+          <div class="cc-kv" id="ccDetails"></div>
+
+          <div class="cc-actions">
+            <button id="ccBtnApplyStatus">套用狀態</button>
+            <button id="ccBtnRefreshHint" class="secondary">顯示處置提示</button>
+          <button id="ccBtnAgentSuggest" class="secondary">小J：處置建議</button>
+          <button id="ccBtnAgentDaily" class="secondary">小J：每日摘要</button>
+          <button id="ccBtnWriteWorkspace" class="secondary">寫入 Google Workspace</button>
+          </div>
+
+        <label class="small muted" style="margin-top:10px;">小J AI 代理輸出（本地示範）</label>
+        <textarea id="ccAgentOut" class="mono" readonly style="min-height: 120px;"></textarea>
+        <div class="muted small" style="margin-top:8px;">
+          Workspace 寫入：優先寫入 <span class="mono">WUCHANG_WORKSPACE_OUTDIR</span> 指定資料夾（建議設在 Google Drive 同步路徑）；
+          或設定 <span class="mono">WUCHANG_WORKSPACE_WEBHOOK_URL</span>（可選）。
+        </div>
+
+          <div class="muted small" style="margin-top:10px;">
+            說明：此區的「套用狀態」只會更新本頁面的模組狀態模型，用於演示/管理；不會直接變更 DNS 或服務設定。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>1) 目標資訊（可不填，但不填就只能「看狀態」不能推送）</h2>
+        <div class="row">
+          <div>
+            <label>伺服器健康檢查 URL</label>
+            <input id="healthUrl" placeholder='例如：https://wuchang.life/health 或 https://<your-domain>/health' />
+            <div class="muted small" style="margin-top:6px;">也可改用環境變數：<span class="mono">WUCHANG_HEALTH_URL</span></div>
+          </div>
+          <div>
+            <label>伺服器接收資料夾（SMB/掛載磁碟）</label>
+            <input id="copyTo" placeholder='例如：\\\\SERVER\\share\\wuchang' />
+            <div class="muted small" style="margin-top:6px;">也可改用環境變數：<span class="mono">WUCHANG_COPY_TO</span></div>
+          </div>
+        </div>
+        <label>操作者（稽核用）</label>
+        <input id="actor" placeholder="例如：ops / 店長 / admin" value="ops" />
+
+        <div class="btns">
+          <button id="btnCheckServer">檢查伺服器健康</button>
+          <button id="btnCheckDNS" class="secondary">檢查 DNS（_acme-challenge）</button>
+          <button id="btnNetSnapshot" class="secondary">網路快照（本機/路由器/DNS）</button>
+        </div>
+        <div class="muted small" style="margin-top:10px;">
+          DNS 檢查會參照 repo 內的 <span class="mono">dns_records.json</span> 預期值；若多個公用 DNS 回應不一致，代表尚未完全傳播，暫不建議簽發憑證。
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>DNS 處置（簽發憑證前置）</h2>
+        <div class="muted">
+          這裡會把 <span class="mono">dns_records.json</span> 內的預期 <span class="mono">_acme-challenge</span> TXT 值「中文化」呈現。
+          <strong>本系統不會自動改 DNS</strong>（避免高風險誤操作）；你只要把下面的 TXT 值貼到你的 DNS 管理介面即可。
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div>
+            <label>預期 TXT：_acme-challenge</label>
+            <input id="expectedAcmeRoot" readonly />
+            <div class="btns">
+              <button id="btnCopyAcmeRoot" class="secondary">複製</button>
+            </div>
+          </div>
+          <div>
+            <label>預期 TXT：_acme-challenge.www</label>
+            <input id="expectedAcmeWww" readonly />
+            <div class="btns">
+              <button id="btnCopyAcmeWww" class="secondary">複製</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button id="btnLoadExpectedDNS">載入預期值（從 dns_records.json）</button>
+          <button id="btnCheckDNS2" class="secondary">查詢傳播狀態（多 DNS）</button>
+        </div>
+
+        <div class="muted small" style="margin-top:10px;">
+          判斷邏輯：同時向多個公用 DNS（1.1.1.1 / 8.8.8.8 / 9.9.9.9 / OpenDNS）查 TXT；
+          只要任何 resolver 無回應、或回應不一致、或缺少預期 token，即視為 <strong>NOT READY</strong>。
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2) 一鍵動作（已內建「無回應＝禁止」）</h2>
+        <div class="muted">
+          推送會呼叫 <span class="mono">safe_sync_push.py</span>，它會先做健康檢查；只要無回應/不可驗證就會中止，並寫入稽核。
+        </div>
+        <div class="btns" style="margin-top:12px;">
+          <button id="btnPushRules">推送：新規則檔案（rules）</button>
+          <button id="btnPushKB" class="secondary">推送：知識庫索引（kb）</button>
+          <button id="btnReloadAudit">重新載入稽核</button>
+        </div>
+        <div class="muted small" style="margin-top:10px;">
+          rules 內容包含：<span class="mono">AGENT_CONSTITUTION.md</span>、<span class="mono">RISK_ACTION_SOP.md</span>、<span class="mono">risk_gate.py</span>、<span class="mono">safe_sync_push.py</span> 等。
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>3) 即時輸出（本機執行結果）</h2>
+        <div id="runLog" class="log">（尚未執行）</div>
+      </div>
+
+      <div class="card">
+        <h2>4) 稽核紀錄（尾端 50 筆）</h2>
+        <div id="auditLog" class="log">（尚未載入）</div>
+      </div>
+
+      <div class="card">
+        <h2>5) 規則文本（供臨時查閱）</h2>
+        <div class="row">
+          <div>
+            <label>文件</label>
+            <select id="docName">
+              <option value="RISK_ACTION_SOP.md">RISK_ACTION_SOP.md</option>
+              <option value="AGENT_CONSTITUTION.md">AGENT_CONSTITUTION.md</option>
+            </select>
+            <div class="btns">
+              <button id="btnLoadDoc" class="secondary">載入文件</button>
+            </div>
+          </div>
+          <div class="muted small">
+            這裡只做「查閱」，不做修改。修改仍以檔案為準。
+          </div>
+        </div>
+        <label>內容</label>
+        <textarea id="docText" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    // ===== 中央區塊：平台狀態模型（示範資料，可接真實狀態） =====
+    const ccModel = {
+      nodes: {
+        platform: {
+          id: "platform",
+          name: "平台總覽",
+          type: "platform",
+          status: "ok",
+          metrics: { services: 16, ips: 4 },
+          admins: [{ name: "平台管理員", role: "admin", phone: "（待填）", email: "（待填）" }],
+          agent: { name: "小J AI 代理", duty: "監看/提示/留痕", policy: "無回應＝禁止高風險作業" },
+          children: ["domain", "org", "devices", "services", "dns", "server", "ops", "security", "ui"]
+        },
+
+        // 你要的示例：進入「網域」後可在同層級切換前台/後台/管理等
+        domain: {
+          id: "domain",
+          parent: "platform",
+          name: "網域（wuchang.life）",
+          desc: "前台/後台/子網域同層級切換",
+          status: "ok",
+          metrics: { root: "wuchang.life", ttl: 300 },
+          admins: [{ name: "網域/憑證管理", role: "admin", phone: "（待填）", email: "（待填）" }],
+          agent: { name: "小J AI 代理", duty: "網域狀態看門狗", policy: "DNS READY 前不簽發" },
+          children: ["domain_frontend", "domain_backend", "domain_admin", "domain_verify", "domain_shop", "domain_ui"]
+        },
+        domain_frontend: { id: "domain_frontend", parent: "domain", name: "前台（www）", desc: "對外入口/展示", status: "ok", metrics: { host: "www.wuchang.life", role: "frontend" }, admins: [{ name: "前台值班", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "前台巡檢", policy: "異常先標註再處置" }, children: [] },
+        domain_backend: { id: "domain_backend", parent: "domain", name: "後台（odoo）", desc: "後台業務/管理", status: "warn", metrics: { host: "odoo.wuchang.life", role: "backend" }, admins: [{ name: "後台管理", role: "admin", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "後台巡檢", policy: "先稽核後變更" }, children: [] },
+        domain_admin: { id: "domain_admin", parent: "domain", name: "管理（admin/core）", desc: "管理端/核心服務", status: "warn", metrics: { host: "admin.wuchang.life", role: "admin" }, admins: [{ name: "核心管理", role: "admin", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "權限/變更守門", policy: "無回應＝禁止高風險作業" }, children: [] },
+        domain_verify: { id: "domain_verify", parent: "domain", name: "驗證（verify）", desc: "驗證服務/權限", status: "ok", metrics: { host: "verify.wuchang.life", role: "verify" }, admins: [{ name: "驗證管理", role: "admin", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "驗證巡檢", policy: "疑慮先降權" }, children: [] },
+        domain_shop: { id: "domain_shop", parent: "domain", name: "商店（shop）", desc: "商家入口/商業端", status: "ok", metrics: { host: "shop.wuchang.life", role: "shop" }, admins: [{ name: "商店管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "商店巡檢", policy: "可用性優先" }, children: [] },
+        domain_ui: { id: "domain_ui", parent: "domain", name: "UI（ui）", desc: "Web UI/管理介面", status: "ok", metrics: { host: "ui.wuchang.life", role: "ui" }, admins: [{ name: "UI 管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "UI 巡檢", policy: "先提示後變更" }, children: [] },
+
+        // 你要的示例：進入「組織」後可在同級組織之間切換（協會/基金池/贊助方）
+        org: { id: "org", parent: "platform", name: "組織/主體", desc: "協會/基金池/贊助方同層級切換", status: "ok", metrics: { policy: "合規/公開/可稽核" }, admins: [{ name: "治理窗口", role: "steward", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "治理看板", policy: "公開/可稽核" }, children: ["org_association", "org_fund", "org_sponsor"] },
+        org_association: { id: "org_association", parent: "org", name: "協會", desc: "法定主體/治理", status: "ok", metrics: { name: "五常社區發展協會" }, admins: [{ name: "協會聯繫人", role: "contact", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "協會資訊代理", policy: "去識別/可公開" }, children: [] },
+        org_fund: { id: "org_fund", parent: "org", name: "基金池（仁義店）", desc: "獨立基金池/無資本利得", status: "ok", metrics: { ledger: "仁義店會計系統" }, admins: [{ name: "基金/帳務窗口", role: "finance", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "基金稽核代理", policy: "不可私領/可稽核" }, children: [] },
+        org_sponsor: { id: "org_sponsor", parent: "org", name: "贊助方（重新店）", desc: "只出不進/不得回流", status: "warn", metrics: { mode: "只出不進" }, admins: [{ name: "贊助聯繫人", role: "sponsor", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "贊助隔離代理", policy: "只出不進" }, children: [] },
+
+        // 設備：路由器/伺服器/GPU/攝影機/保全…（每個位置都掛小J代理）
+        devices: { id: "devices", parent: "platform", name: "設備", desc: "設備清單與位置/責任/聯繫", status: "warn", metrics: { site: "現場/雲端" }, admins: [{ name: "設備管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "設備巡檢", policy: "異常先標註" }, children: ["dev_router", "dev_server", "dev_local", "dev_gpu0", "dev_gpu1", "dev_cam_01", "dev_cam_02", "dev_cam_03", "dev_cam_04", "dev_cam_05", "dev_cam_06", "dev_cam_07", "dev_cam_08", "dev_cam_09", "dev_security_vendor"] },
+        dev_router: { id: "dev_router", parent: "devices", name: "路由器（ASUS RT-BE86U）", desc: "DDNS/轉發/網路入口", status: "warn", metrics: { ddns: "CoffeeLoge.asuscomm.com:8443", wan_ip: "220.135.21.74" }, admins: [{ name: "網路管理", role: "netops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "入口層巡檢", policy: "連線不可用先止血" }, children: [] },
+        dev_server: { id: "dev_server", parent: "devices", name: "伺服器（主機）", desc: "服務承載/推送接收", status: "warn", metrics: { note: "雙 GPU" }, admins: [{ name: "伺服器管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "伺服器守望", policy: "無回應＝禁止高風險作業" }, children: [] },
+        dev_local: { id: "dev_local", parent: "devices", name: "本機（中控/操作端）", desc: "本機中控 UI/工具執行端", status: "ok", metrics: { os: "Windows", ui: "127.0.0.1:8788" }, admins: [{ name: "現場值班", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "本機代理", policy: "先稽核後動作" }, children: [] },
+        dev_gpu0: { id: "dev_gpu0", parent: "devices", name: "GPU #0", desc: "推論/影像分析", status: "ok", metrics: { vram: "（待填）" }, admins: [{ name: "AI/算力管理", role: "mlops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "算力分配提示", policy: "先確認負載" }, children: [] },
+        dev_gpu1: { id: "dev_gpu1", parent: "devices", name: "GPU #1", desc: "推論/影像分析", status: "ok", metrics: { vram: "（待填）" }, admins: [{ name: "AI/算力管理", role: "mlops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "算力分配提示", policy: "先確認負載" }, children: [] },
+        dev_cam_01: { id: "dev_cam_01", parent: "devices", name: "攝影機 01", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_cam_02: { id: "dev_cam_02", parent: "devices", name: "攝影機 02", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_cam_03: { id: "dev_cam_03", parent: "devices", name: "攝影機 03", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_cam_04: { id: "dev_cam_04", parent: "devices", name: "攝影機 04", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_cam_05: { id: "dev_cam_05", parent: "devices", name: "攝影機 05", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_cam_06: { id: "dev_cam_06", parent: "devices", name: "攝影機 06", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_cam_07: { id: "dev_cam_07", parent: "devices", name: "攝影機 07", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_cam_08: { id: "dev_cam_08", parent: "devices", name: "攝影機 08", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_cam_09: { id: "dev_cam_09", parent: "devices", name: "攝影機 09", desc: "店內監視器", status: "ok", metrics: { zone: "（待填）" }, admins: [{ name: "現場管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "影像點位代理", policy: "只做事件記錄/不刪除" }, children: [] },
+        dev_security_vendor: { id: "dev_security_vendor", parent: "devices", name: "保全系統（中興）", desc: "外掛模組/告警來源", status: "warn", metrics: { vendor: "中興保全" }, admins: [{ name: "保全聯繫人", role: "vendor", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "告警事件代理", policy: "只做處置/不刪除" }, children: [] },
+
+        // 服務：平台服務清單（與設備/網域對應）
+        services: { id: "services", parent: "platform", name: "服務", desc: "平台服務清單/對應資訊/聯繫", status: "warn", metrics: { note: "可逐步接真實健康檢查" }, admins: [{ name: "服務管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "服務巡檢", policy: "無回應＝禁止高風險作業" }, children: ["svc_control_center", "svc_dns_check", "svc_sync_push", "svc_security_demo", "svc_community_api"] },
+        svc_control_center: { id: "svc_control_center", parent: "services", name: "本機中控台服務", desc: "local_control_center.py", status: "ok", metrics: { url: "http://127.0.0.1:8788/" }, admins: [{ name: "本機維運", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "中控看板代理", policy: "只顯示/不自動改" }, children: [] },
+        svc_dns_check: { id: "svc_dns_check", parent: "services", name: "DNS 傳播檢查", desc: "dns_propagation_check.py", status: "ok", metrics: { resolvers: 4 }, admins: [{ name: "DNS 維運", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "DNS READY 判定", policy: "READY 才簽發" }, children: [] },
+        svc_sync_push: { id: "svc_sync_push", parent: "services", name: "同步推送", desc: "safe_sync_push.py", status: "warn", metrics: { audit: "risk_action_audit.jsonl" }, admins: [{ name: "推送維運", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "推送守門", policy: "無回應＝禁止" }, children: [] },
+        svc_security_demo: { id: "svc_security_demo", parent: "services", name: "保全處置演示", desc: "demo_security_ack_server.py", status: "warn", metrics: { port: 8799 }, admins: [{ name: "保全整合", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "告警處置代理", policy: "可稽核/不刪除" }, children: [] },
+        svc_community_api: { id: "svc_community_api", parent: "services", name: "社區 API（Blueprint）", desc: "api_community_data.py", status: "ok", metrics: { health: "/health" }, admins: [{ name: "後端維運", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "API 巡檢", policy: "健康檢查先行" }, children: [] },
+
+        dns: { id: "dns", parent: "platform", name: "DNS / 憑證", desc: "DNS 解析、_acme-challenge、簽發前置", status: "warn", metrics: { ttl: 300, acme: "pending" }, admins: [{ name: "DNS 管理", role: "netops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "DNS/憑證代理", policy: "READY 才簽發" }, children: ["dns_acme", "dns_records"] },
+        dns_acme: { id: "dns_acme", parent: "dns", name: "_acme-challenge", desc: "DNS-01 驗證 TXT", status: "warn", metrics: { token: "from dns_records.json" }, admins: [{ name: "DNS 管理", role: "netops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "ACME token 檢核", policy: "一致才過" }, children: [] },
+        dns_records: { id: "dns_records", parent: "dns", name: "A/CNAME/TXT 記錄", desc: "主要子網域與 IP 對照", status: "ok", metrics: { records: "dns_records.json" }, admins: [{ name: "DNS 管理", role: "netops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "DNS 記錄代理", policy: "變更要留痕" }, children: [] },
+
+        server: { id: "server", parent: "platform", name: "伺服器健康", desc: "health URL、連線狀態、服務可達性", status: "warn", metrics: { health: "未檢查" }, admins: [{ name: "伺服器管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "健康檢查守門", policy: "無回應＝禁止高風險作業" }, children: ["server_api", "server_storage"] },
+        server_api: { id: "server_api", parent: "server", name: "API", desc: "/health /api/* 服務", status: "warn", metrics: { endpoints: 2 }, admins: [{ name: "後端維運", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "API 健康巡檢", policy: "先健康後推送" }, children: [] },
+        server_storage: { id: "server_storage", parent: "server", name: "儲存/接收目錄", desc: "SMB/掛載磁碟接收推送", status: "ok", metrics: { path: "WUCHANG_COPY_TO" }, admins: [{ name: "儲存管理", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "接收目錄代理", policy: "只版本化不覆蓋" }, children: [] },
+
+        ops: { id: "ops", parent: "platform", name: "維運（推送/稽核）", desc: "同步推送、稽核、無回應禁止", status: "ok", metrics: { audit: "risk_action_audit.jsonl" }, admins: [{ name: "值班維運", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "維運協作", policy: "先看 SOP" }, children: ["push_rules", "push_kb", "audit"] },
+        push_rules: { id: "push_rules", parent: "ops", name: "推送規則", desc: "rules profile 推送", status: "ok", metrics: { tool: "safe_sync_push.py" }, children: [] },
+        push_kb: { id: "push_kb", parent: "ops", name: "推送索引", desc: "kb profile 推送", status: "ok", metrics: { tool: "safe_sync_push.py" }, children: [] },
+        audit: { id: "audit", parent: "ops", name: "稽核", desc: "append-only JSONL", status: "ok", metrics: { tail: 50 }, children: [] },
+
+        security: { id: "security", parent: "platform", name: "保全/告警（演示）", desc: "一鍵處置 + 可稽核（不刪除）", status: "warn", metrics: { demo: 8799 }, admins: [{ name: "保全整合", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "告警處置代理", policy: "可稽核/不刪除" }, children: ["security_demo"] },
+        security_demo: { id: "security_demo", parent: "security", name: "demo ack server", desc: "/health /api/security/*", status: "warn", metrics: { port: 8799 }, children: [] },
+
+        ui: { id: "ui", parent: "platform", name: "本機中控 UI", desc: "中文化互動層、樹狀/地圖/狀態", status: "ok", metrics: { port: 8788 }, admins: [{ name: "中控維運", role: "ops", phone: "（待填）" }], agent: { name: "小J AI 代理", duty: "中控導覽代理", policy: "讓人不迷路" }, children: ["ui_map", "ui_docs"] },
+        ui_map: { id: "ui_map", parent: "ui", name: "中央地圖模組", desc: "環狀切換 + 樹狀導覽", status: "ok", metrics: { mode: "module/platform" }, children: [] },
+        ui_docs: { id: "ui_docs", parent: "ui", name: "規則文件", desc: "SOP/憲法查閱", status: "ok", metrics: { docs: 2 }, children: [] },
+      }
+    };
+
+    // 強制：每個位置都必須有小J代理（若缺漏就補上預設代理）
+    const ccDefaultAgent = { name: "小J AI 代理", duty: "監看/提示/留痕", policy: "無回應＝禁止高風險作業" };
+    for (const id of Object.keys(ccModel.nodes)) {
+      const n = ccModel.nodes[id];
+      if (!n.agent) n.agent = { ...ccDefaultAgent };
+      if (!n.admins) n.admins = [{ name: "（待指派）", role: "ops", phone: "（待填）" }];
+    }
+
+    const ccStatusRank = { bad: 4, offline: 3, warn: 2, ok: 1 };
+    const ccStatusLabel = { ok: "OK", warn: "WARN", bad: "BAD", offline: "OFFLINE" };
+    const ccStatusPillClass = (s) => (s === "ok" ? "ok" : (s === "warn" ? "unk" : "bad")); // reuse existing pill palette
+
+    let ccCurrentRoot = "platform";
+    let ccSelected = "platform";
+
+    function ccGetNode(id) { return ccModel.nodes[id]; }
+
+    function ccAggregateStatus(id) {
+      const node = ccGetNode(id);
+      if (!node) return "offline";
+      if (!node.children || !node.children.length) return node.status || "offline";
+      let best = node.status || "ok";
+      for (const cid of node.children) {
+        const cs = ccAggregateStatus(cid);
+        if (ccStatusRank[cs] > ccStatusRank[best]) best = cs;
+      }
+      return best;
+    }
+
+    function ccPath(id) {
+      const path = [];
+      let cur = ccGetNode(id);
+      while (cur) {
+        path.unshift(cur);
+        cur = cur.parent ? ccGetNode(cur.parent) : null;
+      }
+      return path;
+    }
+
+    function ccRenderBreadcrumb() {
+      const p = ccPath(ccSelected);
+      $("ccBreadcrumb").innerHTML = p.map(n => `<span class="mono">${n.name}</span>`).join("  /  ");
+    }
+
+    function ccDotClass(status) {
+      if (status === "ok") return "ok";
+      if (status === "warn") return "warn";
+      if (status === "bad") return "bad";
+      return "offline";
+    }
+
+    function ccNodeDisplayStatus(id) {
+      const mode = $("ccViewMode").value;
+      return mode === "platform" ? ccAggregateStatus(id) : (ccGetNode(id)?.status || "offline");
+    }
+
+    function ccRenderTree(rootId) {
+      const root = ccGetNode(rootId);
+      if (!root) { $("ccTree").textContent = "（找不到樹狀資料）"; return; }
+
+      function renderNode(id) {
+        const n = ccGetNode(id);
+        if (!n) return "";
+        const st = ccNodeDisplayStatus(id);
+        const active = id === ccSelected ? "active" : "";
+        const hint = n.desc ? `<span class="hint">— ${n.desc}</span>` : "";
+        const hasChild = (n.children && n.children.length) ? true : false;
+        const childHtml = hasChild ? `<ul>${n.children.map(renderNode).join("")}</ul>` : "";
+        return `
+          <li>
+            <div class="item ${active}" data-cc-node="${id}">
+              <span class="cc-dot ${ccDotClass(st)}"></span>
+              <span class="name">${n.name}</span>
+              ${hint}
+            </div>
+            ${childHtml}
+          </li>
+        `;
+      }
+
+      $("ccTree").innerHTML = `<ul>${renderNode(rootId)}</ul>`;
+      $("ccTree").querySelectorAll("[data-cc-node]").forEach(el => {
+        el.addEventListener("click", () => ccSelect(el.getAttribute("data-cc-node")));
+      });
+    }
+
+    function ccRenderRing(rootId) {
+      // 需求：同一層級切換（同級前台/後台、同級組織）
+      // 規則：以「被選取節點的父節點」作為同層級；若沒有父節點，就用目前中央層級。
+      const sel = ccGetNode(ccSelected);
+      const ringBaseId = (sel && sel.parent) ? sel.parent : ccCurrentRoot;
+      const root = ccGetNode(ringBaseId);
+      const ring = $("ccRing");
+      ring.innerHTML = "";
+      const targets = (root && root.children) ? root.children.slice(0, 6) : [];
+      const n = targets.length || 1;
+      const radius = 150;
+      for (let i = 0; i < targets.length; i++) {
+        const id = targets[i];
+        const node = ccGetNode(id);
+        const angle = (Math.PI * 2) * (i / n) - Math.PI / 2;
+        const x = 180 + radius * Math.cos(angle) - 60;
+        const y = 180 + radius * Math.sin(angle) - 18;
+        const btn = document.createElement("button");
+        btn.textContent = node?.name || id;
+        btn.style.left = `${x}px`;
+        btn.style.top = `${y}px`;
+        // 同層級 ring：以「目前被選取」作為 active
+        if (id === ccSelected) btn.classList.add("active");
+        btn.addEventListener("click", () => {
+          ccSelect(id);
+        });
+        ring.appendChild(btn);
+      }
+    }
+
+    function ccRenderMap() {
+      const root = ccGetNode(ccCurrentRoot);
+      const zones = ["A", "B", "C", "D"];
+      const children = (root?.children || []).slice(0, 4);
+      const fill = (idx) => children[idx] ? ccGetNode(children[idx]) : null;
+      const zoneNodes = [fill(0), fill(1), fill(2), fill(3)];
+
+      function setZone(idx, key) {
+        const n = zoneNodes[idx];
+        const titleEl = $(`ccZone${key}Title`);
+        const descEl = $(`ccZone${key}Desc`);
+        const stateEl = $(`ccZone${key}State`);
+        const metricEl = $(`ccZone${key}Metric`);
+        const zoneEl = $("ccMap").querySelector(`.cc-zone[data-zone="${key}"]`);
+        zoneEl.classList.remove("active");
+
+        if (!n) {
+          titleEl.textContent = "（空）";
+          descEl.textContent = "—";
+          stateEl.className = "pill unk";
+          stateEl.textContent = "N/A";
+          metricEl.textContent = "—";
+          zoneEl.onclick = null;
+          return;
+        }
+
+        const st = ccNodeDisplayStatus(n.id);
+        stateEl.className = `pill ${ccStatusPillClass(st)}`;
+        stateEl.textContent = ccStatusLabel[st] || st;
+        titleEl.textContent = n.name;
+        descEl.textContent = n.desc || "—";
+        const mkeys = Object.keys(n.metrics || {});
+        metricEl.textContent = mkeys.length ? `${mkeys[0]}=${String(n.metrics[mkeys[0]])}` : "—";
+        if (n.id === ccSelected) zoneEl.classList.add("active");
+        zoneEl.onclick = () => ccSelect(n.id);
+      }
+
+      setZone(0, "A");
+      setZone(1, "B");
+      setZone(2, "C");
+      setZone(3, "D");
+
+      $("ccCenterTitle").textContent = root?.name || "平台總覽";
+      const centerStatus = ccAggregateStatus(ccCurrentRoot);
+      $("ccCenterState").className = `pill ${ccStatusPillClass(centerStatus)}`;
+      $("ccCenterState").textContent = ccStatusLabel[centerStatus] || centerStatus;
+
+      // platform status field (right panel)
+      const plat = ccAggregateStatus("platform");
+      $("ccPlatformStatus").value = `${ccStatusLabel[plat] || plat}（聚合）`;
+    }
+
+    function ccRenderDetails() {
+      const n = ccGetNode(ccSelected);
+      if (!n) return;
+      $("ccNodeStatus").value = n.status || "ok";
+
+      const stDisp = ccNodeDisplayStatus(ccSelected);
+      const admins = (n.admins || []).map(a => `${a.name}${a.phone ? " / " + a.phone : ""}${a.email ? " / " + a.email : ""}`).join("； ");
+      const agent = n.agent || ccDefaultAgent;
+      const agentLine = `${agent.name}｜${agent.duty}｜${agent.policy}`;
+      const lines = [
+        ["節點", n.name],
+        ["ID", n.id],
+        ["類型", n.type || "module"],
+        ["顯示狀態", `${ccStatusLabel[stDisp] || stDisp}（${$("ccViewMode").value === "platform" ? "聚合" : "本體"}）`],
+        ["說明", n.desc || "—"],
+        ["管理員聯繫", admins || "（待填）"],
+        ["小J AI 代理", agentLine],
+        ["子節點數", String((n.children || []).length)],
+        ["資料", Object.keys(n.metrics || {}).length ? JSON.stringify(n.metrics, null, 0) : "—"]
+      ];
+      $("ccDetails").innerHTML = lines.map(([k,v]) => `<div class="k">${k}</div><div class="v">${String(v)}</div>`).join("");
+      $("ccAgentOut").value = `（小J待命）\n節點：${n.name}\n狀態：${ccStatusLabel[stDisp] || stDisp}\n規則：${agent.policy}\n\n提示：點「小J：處置建議」或「小J：每日摘要」。`;
+    }
+
+    function ccSelect(id) {
+      if (!ccModel.nodes[id]) return;
+      ccSelected = id;
+      ccRenderAll();
+    }
+
+    function ccGoUp() {
+      const n = ccGetNode(ccSelected);
+      if (n?.parent) ccSelect(n.parent);
+    }
+
+    function ccGoDown() {
+      const n = ccGetNode(ccSelected);
+      if (n?.children && n.children.length) ccSelect(n.children[0]);
+    }
+
+    function ccApplyStatus() {
+      const n = ccGetNode(ccSelected);
+      if (!n) return;
+      const v = $("ccNodeStatus").value;
+      n.status = v;
+      ccRenderAll();
+      logRun({ ok: true, action: "set_status", node: n.id, status: v });
+    }
+
+    function ccShowHint() {
+      const n = ccGetNode(ccSelected);
+      const hints = [];
+      if (n.id.startsWith("dns")) {
+        hints.push("DNS 處置：請先用「載入預期值」取得 _acme-challenge TXT，貼到 DNS 管理介面後等待 TTL 傳播。");
+        hints.push("完成後用「查詢傳播狀態（多 DNS）」確認 READY，再進行憑證簽發。");
+      } else if (n.id.startsWith("server")) {
+        hints.push("伺服器處置：先確認 health URL 可回應（無回應＝禁止高風險作業）。");
+        hints.push("必要時先切維護模式，再做推送/索引/清快取。");
+      } else if (n.id.startsWith("push")) {
+        hints.push("推送處置：推送前必須通過 health 檢查；沒有 health 或無回應會被阻擋（這是預期行為）。");
+      } else {
+        hints.push("提示：此模組目前是 UI 示範層，可先用「套用狀態」做演練與標註，後續再接真實資料源。");
+      }
+      logRun({ ok: true, node: n.id, hint: hints });
+    }
+
+    function ccAgentSuggest() {
+      const n = ccGetNode(ccSelected);
+      if (!n) return;
+      const st = ccNodeDisplayStatus(n.id);
+      const todo = [];
+      if (st === "offline" || st === "bad") {
+        todo.push("先止血：標記異常、確認影響範圍、避免高風險作業（無回應＝禁止）。");
+      }
+      if (n.id.startsWith("dns")) {
+        todo.push("先載入 dns_records.json 的 _acme-challenge 預期值 → 貼到 DNS 管理介面。");
+        todo.push("再用「多 DNS 查詢」確認 READY → 才能簽發憑證。");
+      }
+      if (n.id.startsWith("server")) {
+        todo.push("先檢查 health URL 是否可回應；無回應就停止推送/重啟/清快取。");
+      }
+      if (n.id.startsWith("dev_")) {
+        todo.push("設備：先確認供電/網路/位置，再決定要不要派人到場（留痕）。");
+      }
+      if (n.id.startsWith("svc_") || n.id.startsWith("push_")) {
+        todo.push("服務：先看稽核（risk_action_audit.jsonl）確認最後一次動作與結果。");
+      }
+      if (!todo.length) todo.push("保持現狀：持續監看，有變更先留痕。");
+      $("ccAgentOut").value = `【小J：處置建議】\n節點：${n.name}\n狀態：${ccStatusLabel[st] || st}\n\n- ${todo.join("\n- ")}\n`;
+      logRun({ ok: true, node: n.id, agent: "little_j", suggest: todo });
+    }
+
+    function ccAgentDaily() {
+      const n = ccGetNode(ccSelected);
+      if (!n) return;
+      const siblings = (n.parent ? (ccGetNode(n.parent)?.children || []) : ccGetNode("platform")?.children || []).slice(0, 12);
+      const snapshot = siblings.map(id => {
+        const st = ccNodeDisplayStatus(id);
+        const name = ccGetNode(id)?.name || id;
+        return `${name}: ${ccStatusLabel[st] || st}`;
+      });
+      const msg = [
+        `【小J：每日摘要】`,
+        `焦點節點：${n.name}`,
+        `同層級狀態：`,
+        ...snapshot.map(x => `- ${x}`),
+        ``,
+        `提醒：任何高風險作業前，先看 SOP 檢核表；無回應＝禁止。`
+      ].join("\n");
+      $("ccAgentOut").value = msg;
+      logRun({ ok: true, node: n.id, agent: "little_j", daily: snapshot });
+    }
+
+    async function ccWriteWorkspace() {
+      const n = ccGetNode(ccSelected);
+      if (!n) return;
+      const st = ccNodeDisplayStatus(n.id);
+      const content = ($("ccAgentOut").value || "").trim();
+      if (!content) {
+        logRun("沒有可寫入的內容（請先產生小J輸出）。");
+        return;
+      }
+      const body = {
+        kind: "little_j_agent",
+        title: `${n.name}__${ccStatusLabel[st] || st}`,
+        content,
+        meta: {
+          node_id: n.id,
+          node_name: n.name,
+          status: st,
+          admins: n.admins || [],
+        }
+      };
+      const { data } = await fetchJson("/api/workspace/write", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      logRun(data);
+    }
+
+    function ccRenderAll() {
+      ccRenderBreadcrumb();
+      ccRenderTree(ccCurrentRoot);
+      ccRenderRing();
+      ccRenderMap();
+      ccRenderDetails();
+    }
+
+    function setPill(el, state, text) {
+      el.classList.remove("ok","bad","unk");
+      el.classList.add(state);
+      el.textContent = text;
+    }
+
+    function logRun(obj) {
+      const s = typeof obj === "string" ? obj : JSON.stringify(obj, null, 2);
+      $("runLog").textContent = s;
+    }
+
+    async function fetchJson(url, opts) {
+      const res = await fetch(url, opts);
+      const data = await res.json();
+      return { res, data };
+    }
+
+    async function init() {
+      try {
+        const { data } = await fetchJson("/api/local/health");
+        setPill($("localStatus"), data.ok ? "ok" : "bad", data.ok ? "OK" : "失敗");
+      } catch (e) {
+        setPill($("localStatus"), "bad", "失敗");
+      }
+      // init central map module
+      try {
+        $("ccViewMode").addEventListener("change", () => ccRenderAll());
+        $("ccBtnUp").addEventListener("click", () => ccGoUp());
+        $("ccBtnDown").addEventListener("click", () => ccGoDown());
+        $("ccBtnReset").addEventListener("click", () => { ccCurrentRoot = "platform"; ccSelect("platform"); });
+        $("ccBtnApplyStatus").addEventListener("click", () => ccApplyStatus());
+        $("ccBtnRefreshHint").addEventListener("click", () => ccShowHint());
+        $("ccBtnAgentSuggest").addEventListener("click", () => ccAgentSuggest());
+        $("ccBtnAgentDaily").addEventListener("click", () => ccAgentDaily());
+        $("ccBtnWriteWorkspace").addEventListener("click", () => ccWriteWorkspace().catch(e => logRun(String(e))));
+        ccSelect("platform");
+      } catch (e) {
+        // ignore
+      }
+      await loadAudit();
+    }
+
+    async function checkServer() {
+      const url = ($("healthUrl").value || "").trim();
+      if (!url) {
+        setPill($("serverStatus"), "unk", "未填 URL");
+        logRun("伺服器健康檢查：請先填入 health URL（或改用環境變數 WUCHANG_HEALTH_URL）。");
+        return;
+      }
+      const { data } = await fetchJson("/api/server/health?url=" + encodeURIComponent(url));
+      const ok = data?.health?.ok === true;
+      setPill($("serverStatus"), ok ? "ok" : "bad", ok ? "OK" : "無回應/不可驗證");
+      logRun(data);
+    }
+
+    async function checkDNS() {
+      setPill($("dnsStatus"), "unk", "檢查中…");
+      // 改成拿結構化結果（UI 顯示用）
+      const { data } = await fetchJson("/api/dns/acme_status?domain=" + encodeURIComponent("wuchang.life"));
+      const ok = data?.status?.ready_to_issue === true;
+      setPill($("dnsStatus"), ok ? "ok" : "bad", ok ? "READY" : "NOT READY");
+      logRun(data);
+    }
+
+    async function loadExpectedDNS() {
+      const { data } = await fetchJson("/api/dns/expected?domain=" + encodeURIComponent("wuchang.life"));
+      const recs = data?.expected?.records || [];
+      const byName = {};
+      for (const r of recs) byName[r.qname] = (r.expected_values || []).join(" | ");
+      $("expectedAcmeRoot").value = byName["_acme-challenge.wuchang.life"] || "";
+      $("expectedAcmeWww").value = byName["_acme-challenge.www.wuchang.life"] || "";
+      logRun(data);
+    }
+
+    async function checkDNS2() {
+      await checkDNS();
+    }
+
+    async function copyText(value) {
+      try {
+        await navigator.clipboard.writeText(value);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function runPush(profile) {
+      const health_url = ($("healthUrl").value || "").trim();
+      const copy_to = ($("copyTo").value || "").trim();
+      const actor = ($("actor").value || "ops").trim();
+
+      // 不強迫填，但會提示：不填通常推送會被工具擋下（符合規則）
+      if (!health_url || !copy_to) {
+        logRun("提醒：你未填 health URL 或 copy-to。依規則，推送應該被阻擋並寫入稽核（這是預期行為）。");
+      }
+
+      const { data } = await fetchJson("/api/run/sync_push", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile, health_url, copy_to, actor })
+      });
+      logRun(data);
+      await loadAudit();
+    }
+
+    async function loadAudit() {
+      const { data } = await fetchJson("/api/audit/tail?file=" + encodeURIComponent("risk_action_audit.jsonl") + "&limit=50");
+      const items = data?.items || [];
+      if (!items.length) {
+        setPill($("auditStatus"), "unk", "無紀錄/尚未產生");
+        $("auditLog").textContent = "（目前沒有稽核紀錄）";
+        return;
+      }
+      setPill($("auditStatus"), "ok", "已載入");
+      $("auditLog").textContent = items.map((x) => JSON.stringify(x)).join("\n");
+    }
+
+    async function loadDoc() {
+    async function netSnapshot() {
+      const health_url = ($("healthUrl").value || "").trim();
+      const url = "/api/net/snapshot" + (health_url ? ("?health_url=" + encodeURIComponent(health_url)) : "");
+      const { data } = await fetchJson(url);
+      // 同步更新狀態 pill：若有 health_url，並且 health ok 則 OK；否則維持未知但把快照印出來
+      try {
+        const snap = JSON.parse(data?.run?.stdout || "{}");
+        const gw = snap?.default_gateway_ipv4;
+        const hostOverrides = (snap?.hosts_overrides?.matches || []).length;
+        const hcOk = snap?.server_health?.result?.ok === true;
+        if (health_url) setPill($("serverStatus"), hcOk ? "ok" : "bad", hcOk ? "OK" : "無回應/不可驗證");
+        logRun({
+          ok: true,
+          note: "network_snapshot",
+          default_gateway_ipv4: gw || null,
+          hosts_overrides_matches: hostOverrides,
+          snapshot: snap
+        });
+      } catch (e) {
+        logRun(data);
+      }
+    }
+
+      const name = $("docName").value;
+      const { data } = await fetchJson("/api/docs?name=" + encodeURIComponent(name));
+      $("docText").value = data?.text || "";
+    }
+
+    $("btnCheckServer").addEventListener("click", () => checkServer().catch(e => logRun(String(e))));
+    $("btnCheckDNS").addEventListener("click", () => checkDNS().catch(e => logRun(String(e))));
+    $("btnNetSnapshot").addEventListener("click", () => netSnapshot().catch(e => logRun(String(e))));
+    $("btnLoadExpectedDNS").addEventListener("click", () => loadExpectedDNS().catch(e => logRun(String(e))));
+    $("btnCheckDNS2").addEventListener("click", () => checkDNS2().catch(e => logRun(String(e))));
+    $("btnCopyAcmeRoot").addEventListener("click", async () => {
+      const v = ($("expectedAcmeRoot").value || "").trim();
+      const ok = await copyText(v);
+      logRun(ok ? "已複製 _acme-challenge TXT" : "複製失敗（瀏覽器權限限制）");
+    });
+    $("btnCopyAcmeWww").addEventListener("click", async () => {
+      const v = ($("expectedAcmeWww").value || "").trim();
+      const ok = await copyText(v);
+      logRun(ok ? "已複製 _acme-challenge.www TXT" : "複製失敗（瀏覽器權限限制）");
+    });
+    $("btnPushRules").addEventListener("click", () => runPush("rules").catch(e => logRun(String(e))));
+    $("btnPushKB").addEventListener("click", () => runPush("kb").catch(e => logRun(String(e))));
+    $("btnReloadAudit").addEventListener("click", () => loadAudit().catch(e => logRun(String(e))));
+    $("btnLoadDoc").addEventListener("click", () => loadDoc().catch(e => logRun(String(e))));
+
+    init();
+  </script>
+</body>
+</html>
+

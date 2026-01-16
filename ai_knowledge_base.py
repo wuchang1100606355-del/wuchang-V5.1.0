@@ -20,14 +20,11 @@ class AIKnowledgeBase:
         Args:
             knowledge_base_path: 知識庫 JSON 文件路徑
         """
-        base_dir = Path(__file__).resolve().parent
-        kb_path = Path(knowledge_base_path)
-        self.knowledge_base_path = str(kb_path if kb_path.is_absolute() else (base_dir / kb_path))
+        self.knowledge_base_path = knowledge_base_path
         self.knowledge_data = {}
         self.learning_history = []
         self.memory_cache = {}
-        idx_path = Path('wuchang_community_knowledge_index.json')
-        self.index_path = str(idx_path if idx_path.is_absolute() else (base_dir / idx_path))
+        self.index_path = 'wuchang_community_knowledge_index.json'
         self.index_data: Dict[str, Any] = {}
         self.load_knowledge_base()
         self.load_index()

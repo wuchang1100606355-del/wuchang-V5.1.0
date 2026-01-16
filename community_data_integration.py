@@ -11,9 +11,7 @@ class CommunityDataManager:
     """社區數據管理器"""
     
     def __init__(self, data_file='wuchang_community_analysis.json'):
-        base_dir = Path(__file__).resolve().parent
-        p = Path(data_file)
-        self.data_file = str(p if p.is_absolute() else (base_dir / p))
+        self.data_file = data_file
         self.data = self.load_data()
     
     def load_data(self):
