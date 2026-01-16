@@ -121,6 +121,108 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 12px;
     }
+    .log.human {
+      font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #6c757d;
+      font-size: 12px;
+      user-select: none;
+      margin: 8px 0 10px;
+    }
+    .toggle input { width: auto; }
+
+    /* Little J Chat */
+    .chat {
+      background: #ffffff;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .chat-head {
+      padding: 12px 14px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.10) 0%, rgba(118,75,162,0.08) 100%);
+      border-bottom: 1px solid #e9ecef;
+    }
+    .chat-head .title { font-weight: 1000; color: #333; }
+    .chat-head .sub { color: #6c757d; font-size: 12px; margin-top: 4px; line-height: 1.35; }
+    .chat-body {
+      padding: 12px;
+      max-height: 340px;
+      overflow: auto;
+      background: #f8f9fa;
+    }
+    .msg {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+      align-items: flex-start;
+    }
+    .msg .role {
+      width: 64px;
+      font-weight: 900;
+      color: #333;
+      flex: 0 0 auto;
+    }
+    .msg .bubble {
+      flex: 1 1 auto;
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 10px 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.45;
+    }
+    .msg.user .bubble {
+      border-color: rgba(102,126,234,0.25);
+      background: rgba(102,126,234,0.06);
+    }
+    .msg.assistant .bubble {
+      border-color: rgba(245,87,108,0.22);
+      background: rgba(245,87,108,0.05);
+    }
+    .chat-foot {
+      padding: 12px;
+      border-top: 1px solid #e9ecef;
+      background: #fff;
+    }
+    .chat-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .chat-row input {
+      padding: 11px 12px;
+      border-radius: 12px;
+    }
+    .chipbar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .chip {
+      border: 1px solid rgba(0,0,0,0.10);
+      background: white;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 900;
+      font-size: 12px;
+      cursor: pointer;
+      color: #333;
+    }
+    .chip:hover { background: rgba(0,0,0,0.03); }
+    .smallhint { color: #6c757d; font-size: 12px; margin-top: 8px; line-height: 1.35; }
+    .joblist { background: white; border: 1px solid #e9ecef; border-radius: 12px; padding: 10px; max-height: 260px; overflow:auto; }
+    .jobitem { padding: 8px 10px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(0,0,0,0.06); background: rgba(255,255,255,0.9); margin-bottom: 8px; }
+    .jobitem:hover { background: rgba(102,126,234,0.06); border-color: rgba(102,126,234,0.18); }
+    .jobitem .top { display:flex; justify-content: space-between; gap: 10px; align-items:center; }
+    .jobitem .id { font-weight: 1000; color: #333; }
+    .jobitem .type { font-weight: 900; color: #667eea; font-size: 12px; }
+    .jobitem .meta { color:#6c757d; font-size: 12px; margin-top: 4px; line-height:1.35; }
+    .jobdetail { width: 100%; min-height: 160px; }
     .small { font-size: 12px; }
 
     /* Central Map Control Center */
@@ -419,6 +521,106 @@
     </div>
 
     <div class="grid">
+      <div class="card wide">
+        <h2>小J：自然語言中控（ChatGPT 代理 + 語音對話）</h2>
+        <div class="muted">
+          你可以用「自然語言」叫小J做事（查 DNS、產生網路快照、查看稽核、推送 rules/kb）。<strong>推送屬高風險</strong>：一定會先要求你說/打「確認推送 …」才會執行，並且仍受「無回應＝禁止」硬閘門保護。
+        </div>
+
+        <div class="chat" style="margin-top:12px;">
+          <div class="chat-head">
+            <div class="title">小J 對話</div>
+            <div class="sub">
+              語音功能使用瀏覽器 Web Speech API（Edge/Chrome 通常可用）。若公司政策/權限限制麥克風，仍可用打字操作。
+            </div>
+          </div>
+          <div class="chat-body" id="ljMessages"></div>
+          <div class="chat-foot">
+            <div class="toggle" style="margin:0 0 10px;">
+              <input type="checkbox" id="ljSpeak" />
+              <span>小J 回覆自動朗讀（語音輸出）</span>
+            </div>
+            <div class="row">
+              <div>
+                <label style="margin-top:0;">小J 模式</label>
+                <select id="ljMode">
+                  <option value="command">本機指揮模式（安全/不外送）</option>
+                  <option value="cloud_chat">雲端對話模式（需金鑰/可能外送）</option>
+                </select>
+              </div>
+              <div>
+                <label style="margin-top:0;">模型</label>
+                <select id="ljModel">
+                  <option value="local_rule">本機規則（指揮/安全）</option>
+                  <option value="gpt-4o-mini">雲端：gpt-4o-mini</option>
+                  <option value="gpt-4o">雲端：gpt-4o</option>
+                  <option value="gpt-4.1-mini">雲端：gpt-4.1-mini</option>
+                  <option value="custom">雲端：自訂（看環境變數）</option>
+                </select>
+              </div>
+            </div>
+            <div class="btns" style="margin-top:10px;">
+              <button id="ljSaveConfig" class="secondary">儲存小J設定</button>
+              <button id="ljLoadModels" class="secondary">重新載入模型清單</button>
+            </div>
+            <div class="muted small" id="ljModelHint" style="margin-top:8px;">
+              提示：雲端模式需要設定 <span class="mono">WUCHANG_LLM_API_KEY</span>（可選 <span class="mono">WUCHANG_LLM_BASE_URL</span> / <span class="mono">WUCHANG_LLM_MODEL</span>）。未設定時不會外送內容。
+            </div>
+            <div class="chat-row">
+              <input id="ljInput" placeholder="例如：檢查 DNS 目前狀態 / 做網路快照 / 推送 rules" />
+              <button id="ljSend">送出</button>
+              <button id="ljMic" class="secondary">語音</button>
+            </div>
+            <div class="chipbar">
+              <button class="chip" data-lj="檢查 DNS 目前狀態">檢查 DNS</button>
+              <button class="chip" data-lj="載入 DNS 預期值">DNS 預期值</button>
+              <button class="chip" data-lj="做網路快照並存檔">網路快照</button>
+              <button class="chip" data-lj="查看稽核紀錄">稽核摘要</button>
+              <button class="chip" data-lj="推送 rules">推送 rules</button>
+              <button class="chip" data-lj="推送 kb">推送 kb</button>
+              <button class="chip" id="ljClear" type="button">清空對話</button>
+            </div>
+            <div class="smallhint" id="ljVoiceHint"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card wide">
+        <h2>命令單（Job）收件匣：待送 / 已送 / 封存</h2>
+        <div class="muted">
+          這裡是「推送命令單」的落地位置：小J 會把高風險動作改成先建立命令單，避免本機直接硬做。
+          未來伺服器端只要監看 job inbox，就能安全執行（白名單 + 稽核 + 無回應＝禁止）。
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div>
+            <label style="margin-top:0;">狀態</label>
+            <select id="jobState">
+              <option value="outbox">待送（outbox）</option>
+              <option value="sent">已送（sent）</option>
+              <option value="archive">封存（archive）</option>
+            </select>
+            <div class="btns">
+              <button id="btnJobRefresh" class="secondary">重新整理</button>
+              <button id="btnJobMarkSent" class="secondary">標記為已送</button>
+              <button id="btnJobArchive" class="secondary">封存</button>
+            </div>
+            <div id="jobList" class="joblist" style="margin-top:10px;">（尚未載入）</div>
+          </div>
+          <div>
+            <label style="margin-top:0;">命令單內容（JSON）</label>
+            <textarea id="jobDetail" class="mono jobdetail" readonly></textarea>
+            <div class="btns">
+              <button id="btnJobCopy" class="secondary">複製命令單</button>
+              <button id="btnJobWriteWorkspace" class="secondary">寫入 Google Workspace</button>
+            </div>
+            <div class="muted small" style="margin-top:8px;">
+              提示：若要把命令單送到伺服器，可把「伺服器接收資料夾」指到伺服器的 job inbox，然後用既有推送工具把該 JSON 檔送過去（未來也可一鍵化）。
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <h2>1) 目標資訊（可不填，但不填就只能「看狀態」不能推送）</h2>
         <div class="row">
@@ -498,12 +700,20 @@
 
       <div class="card">
         <h2>3) 即時輸出（本機執行結果）</h2>
-        <div id="runLog" class="log">（尚未執行）</div>
+        <div class="toggle">
+          <input type="checkbox" id="showRawJson" />
+          <span>顯示原始 JSON（除錯用）</span>
+        </div>
+        <div id="runLog" class="log human">（尚未執行）</div>
       </div>
 
       <div class="card">
         <h2>4) 稽核紀錄（尾端 50 筆）</h2>
-        <div id="auditLog" class="log">（尚未載入）</div>
+        <div class="toggle">
+          <input type="checkbox" id="showRawAudit" />
+          <span>顯示原始稽核 JSONL（除錯用）</span>
+        </div>
+        <div id="auditLog" class="log human">（尚未載入）</div>
       </div>
 
       <div class="card">
@@ -943,8 +1153,103 @@
     }
 
     function logRun(obj) {
-      const s = typeof obj === "string" ? obj : JSON.stringify(obj, null, 2);
-      $("runLog").textContent = s;
+      const showRaw = $("showRawJson")?.checked === true;
+      if (typeof obj === "string") {
+        $("runLog").textContent = obj;
+        return;
+      }
+
+      function fmtList(arr) {
+        if (!arr || !arr.length) return "（無）";
+        return arr.map(x => String(x)).join("、");
+      }
+
+      function summarizeServerHealth(data) {
+        const h = data?.health;
+        if (!h) return null;
+        const ok = h.ok === true;
+        return [
+          "【伺服器健康檢查】",
+          `結果：${ok ? "OK（可達）" : "無回應/不可驗證（依規則：禁止高風險作業）"}`,
+          `狀態碼：${h.status ?? "（無）"}`,
+          `Content-Type：${h.content_type ?? "（無）"}`,
+          `回應摘要：${(h.body_preview || "").trim() || "（無）"}`
+        ].join("\n");
+      }
+
+      function summarizeDnsStatus(data) {
+        const s = data?.status;
+        if (!s) return null;
+        const ready = s.ready_to_issue === true;
+        const mismatches = s.mismatches || [];
+        const resolvers = s.resolvers || [];
+        return [
+          "【DNS 傳播（_acme-challenge）】",
+          `判定：${ready ? "READY（可簽發）" : "NOT READY（先不要簽發）"}`,
+          `Resolver：${fmtList(resolvers)}`,
+          mismatches.length ? `缺口/不一致：\n- ${mismatches.join("\n- ")}` : "缺口/不一致：無",
+          s.note ? `備註：${s.note}` : ""
+        ].filter(Boolean).join("\n");
+      }
+
+      function summarizeExpectedDns(data) {
+        const exp = data?.expected;
+        if (!exp || !Array.isArray(exp.records)) return null;
+        const by = {};
+        for (const r of exp.records) by[r.qname] = (r.expected_values || []).join(" | ");
+        return [
+          "【DNS 預期值（來自 dns_records.json）】",
+          `_acme-challenge：${by["_acme-challenge.wuchang.life"] || "（無）"}`,
+          `_acme-challenge.www：${by["_acme-challenge.www.wuchang.life"] || "（無）"}`
+        ].join("\n");
+      }
+
+      function summarizeNetSnapshot(data) {
+        if (data?.note !== "network_snapshot" || !data?.snapshot) return null;
+        const snap = data.snapshot;
+        const gw = snap?.default_gateway_ipv4 || "（未偵測到）";
+        const matches = snap?.hosts_overrides?.matches || [];
+        const hostPath = snap?.hosts_overrides?.path || "（未知）";
+        const dnsSocket = (snap?.dns?.socket || []).filter(x => x && x.domain);
+        const dnsOk = dnsSocket.filter(x => x.ok).map(x => `${x.domain} -> ${fmtList(x.addrs)}`);
+        const dnsBad = dnsSocket.filter(x => !x.ok).map(x => `${x.domain}（失敗：${x.error || "未知"}）`);
+        const hc = snap?.server_health?.result;
+        const hcLine = hc ? (hc.ok ? "伺服器健康：OK（可達）" : "伺服器健康：無回應/不可驗證") : "伺服器健康：未檢查（未填 health URL）";
+        const saveLine = data.saved_path ? `快照已存檔：${data.saved_path}` : "快照未存檔";
+        return [
+          "【網路快照（本機/路由器/DNS）】",
+          saveLine,
+          `預設閘道（多半是路由器 LAN）：${gw}`,
+          hcLine,
+          `hosts 檔：${hostPath}`,
+          matches.length ? `hosts 覆寫命中：${matches.map(m => `${m.domain} -> ${m.ip}`).join("； ")}` : "hosts 覆寫命中：無",
+          dnsOk.length ? `DNS（socket）成功：\n- ${dnsOk.join("\n- ")}` : "DNS（socket）成功：無",
+          dnsBad.length ? `DNS（socket）失敗：\n- ${dnsBad.join("\n- ")}` : "DNS（socket）失敗：無"
+        ].join("\n");
+      }
+
+      function summarizeToolRun(data) {
+        if (!data?.run || typeof data.run !== "object" || !("exit_code" in data.run)) return null;
+        const ec = data.run.exit_code;
+        const out = (data.run.stdout || "").trim();
+        const err = (data.run.stderr || "").trim();
+        return [
+          "【工具執行結果】",
+          `Exit code：${ec}`,
+          err ? `錯誤：${err}` : "錯誤：無",
+          out ? `輸出：\n${out}` : "輸出：無"
+        ].join("\n");
+      }
+
+      const summary =
+        summarizeServerHealth(obj) ||
+        summarizeDnsStatus(obj) ||
+        summarizeExpectedDns(obj) ||
+        summarizeNetSnapshot(obj) ||
+        summarizeToolRun(obj);
+
+      const raw = JSON.stringify(obj, null, 2);
+      $("runLog").textContent = summary ? (showRaw ? (summary + "\n\n---\n【原始 JSON】\n" + raw) : summary) : raw;
     }
 
     async function fetchJson(url, opts) {
@@ -976,6 +1281,12 @@
         // ignore
       }
       await loadAudit();
+      try {
+        ljInit();
+      } catch (e) {}
+      try {
+        await jobRefresh();
+      } catch (e) {}
     }
 
     async function checkServer() {
@@ -1051,13 +1362,31 @@
         return;
       }
       setPill($("auditStatus"), "ok", "已載入");
-      $("auditLog").textContent = items.map((x) => JSON.stringify(x)).join("\n");
+      const showRaw = $("showRawAudit")?.checked === true;
+      if (showRaw) {
+        $("auditLog").textContent = items.map((x) => JSON.stringify(x)).join("\n");
+        return;
+      }
+      const lines = items.map((x) => {
+        const ts = x.timestamp || x.time || "（無時間）";
+        const kind = x.kind || x.action_type || "（未知）";
+        const actor = x.actor || "（未知操作者）";
+        const result = x.result || x.status || "（無結果）";
+        const health = x?.evidence?.status ? `http=${x.evidence.status}` : "";
+        return `- ${ts}｜${kind}｜操作者=${actor}｜結果=${result}${health ? "｜" + health : ""}`;
+      });
+      $("auditLog").textContent = "【稽核摘要（最新在下方）】\n" + lines.join("\n");
     }
 
     async function loadDoc() {
+      const name = $("docName").value;
+      const { data } = await fetchJson("/api/docs?name=" + encodeURIComponent(name));
+      $("docText").value = data?.text || "";
+    }
+
     async function netSnapshot() {
       const health_url = ($("healthUrl").value || "").trim();
-      const url = "/api/net/snapshot" + (health_url ? ("?health_url=" + encodeURIComponent(health_url)) : "");
+      const url = "/api/net/snapshot?save=1" + (health_url ? ("&health_url=" + encodeURIComponent(health_url)) : "");
       const { data } = await fetchJson(url);
       // 同步更新狀態 pill：若有 health_url，並且 health ok 則 OK；否則維持未知但把快照印出來
       try {
@@ -1069,6 +1398,7 @@
         logRun({
           ok: true,
           note: "network_snapshot",
+          saved_path: data?.saved_path || "",
           default_gateway_ipv4: gw || null,
           hosts_overrides_matches: hostOverrides,
           snapshot: snap
@@ -1076,11 +1406,6 @@
       } catch (e) {
         logRun(data);
       }
-    }
-
-      const name = $("docName").value;
-      const { data } = await fetchJson("/api/docs?name=" + encodeURIComponent(name));
-      $("docText").value = data?.text || "";
     }
 
     $("btnCheckServer").addEventListener("click", () => checkServer().catch(e => logRun(String(e))));
@@ -1102,8 +1427,297 @@
     $("btnPushKB").addEventListener("click", () => runPush("kb").catch(e => logRun(String(e))));
     $("btnReloadAudit").addEventListener("click", () => loadAudit().catch(e => logRun(String(e))));
     $("btnLoadDoc").addEventListener("click", () => loadDoc().catch(e => logRun(String(e))));
+    $("showRawAudit").addEventListener("change", () => loadAudit().catch(e => logRun(String(e))));
 
     init();
+
+    // ===== 小J：自然語言聊天 + 語音 =====
+    function ljSessionId() {
+      const k = "wuchang_lj_session_id";
+      let v = localStorage.getItem(k);
+      if (!v) {
+        v = Math.random().toString(16).slice(2) + Date.now().toString(16);
+        localStorage.setItem(k, v);
+      }
+      return v;
+    }
+
+    function ljAdd(role, text) {
+      const box = $("ljMessages");
+      const div = document.createElement("div");
+      div.className = "msg " + (role === "user" ? "user" : "assistant");
+      div.innerHTML = `<div class="role">${role === "user" ? "你" : "小J"}</div><div class="bubble"></div>`;
+      div.querySelector(".bubble").textContent = String(text || "");
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function ljSpeak(text) {
+      try {
+        if (!$("ljSpeak")?.checked) return;
+        if (!window.speechSynthesis) return;
+        const u = new SpeechSynthesisUtterance(String(text || ""));
+        u.lang = "zh-TW";
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    async function ljSend(text) {
+      const t = String(text || "").trim();
+      if (!t) return;
+      $("ljInput").value = "";
+      ljAdd("user", t);
+
+      const agent_mode = ($("ljMode").value || "command").trim();
+      const agent_model = ($("ljModel").value || "local_rule").trim();
+
+      const body = {
+        text: t,
+        session_id: ljSessionId(),
+        domain: "wuchang.life",
+        health_url: ($("healthUrl").value || "").trim(),
+        copy_to: ($("copyTo").value || "").trim(),
+        actor: ($("actor").value || "ops").trim(),
+        agent_mode,
+        agent_model,
+        agent_provider: (agent_model === "local_rule") ? "local" : "openai_compat",
+        node: (typeof ccSelected !== "undefined" && typeof ccGetNode === "function") ? {
+          id: ccSelected,
+          name: (ccGetNode(ccSelected)?.name || "")
+        } : {}
+      };
+
+      const { data } = await fetchJson("/api/agent/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      const reply = data?.reply || "（沒有回覆）";
+      ljAdd("assistant", reply);
+      ljSpeak(reply);
+      // 同步把結果丟到「即時輸出」區，方便你一眼看到
+      try { logRun(data); } catch (e) {}
+      // 若回覆包含 job，順便刷新收件匣
+      try {
+        if (data?.job || data?.job_id) await jobRefresh();
+      } catch (e) {}
+
+      // 若需要確認，提供一鍵送出確認句
+      if (data?.needs_confirmation && data?.confirm_phrase) {
+        const phrase = data.confirm_phrase;
+        const hint = `（需要確認）你可以直接回覆：${phrase}`;
+        ljAdd("assistant", hint);
+        ljSpeak(hint);
+      }
+    }
+
+    function ljInit() {
+      // 初始歡迎
+      $("ljMessages").innerHTML = "";
+      ljAdd("assistant", "我在。你可以用自然語言叫我做：檢查 DNS、載入 DNS 預期值、做網路快照、查看稽核、推送 rules/kb（預設改成建立『命令單』）。你也可以說：列出命令單。");
+
+      $("ljSend").addEventListener("click", () => ljSend($("ljInput").value).catch(e => ljAdd("assistant", String(e))));
+      $("ljInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") ljSend($("ljInput").value).catch(err => ljAdd("assistant", String(err)));
+      });
+      $("ljClear").addEventListener("click", () => {
+        $("ljMessages").innerHTML = "";
+        ljAdd("assistant", "已清空。請繼續下指令。");
+      });
+      document.querySelectorAll("[data-lj]").forEach(el => {
+        el.addEventListener("click", () => ljSend(el.getAttribute("data-lj")).catch(e => ljAdd("assistant", String(e))));
+      });
+
+      // load saved config from localStorage (UI side)
+      try {
+        const lm = localStorage.getItem("wuchang_lj_mode");
+        const lmodel = localStorage.getItem("wuchang_lj_model");
+        if (lm) $("ljMode").value = lm;
+        if (lmodel) $("ljModel").value = lmodel;
+      } catch (e) {}
+
+      // load from backend (best-effort)
+      ljLoadModels().catch(() => {});
+
+      // Voice input (Web Speech API)
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        $("ljVoiceHint").textContent = "提示：此瀏覽器不支援語音辨識（SpeechRecognition）。可改用 Edge/Chrome，或使用打字。";
+        $("ljMic").disabled = true;
+        return;
+      }
+      const rec = new SR();
+      rec.lang = "zh-TW";
+      rec.interimResults = true;
+      rec.continuous = false;
+      let listening = false;
+
+      rec.onresult = (ev) => {
+        let finalText = "";
+        let interim = "";
+        for (let i = ev.resultIndex; i < ev.results.length; i++) {
+          const r = ev.results[i];
+          const txt = r[0]?.transcript || "";
+          if (r.isFinal) finalText += txt;
+          else interim += txt;
+        }
+        $("ljInput").value = (finalText || interim || "").trim();
+      };
+      rec.onstart = () => {
+        listening = true;
+        $("ljVoiceHint").textContent = "語音辨識中…請說話。";
+        $("ljMic").textContent = "停止";
+      };
+      rec.onend = () => {
+        listening = false;
+        $("ljMic").textContent = "語音";
+        $("ljVoiceHint").textContent = $("ljInput").value ? "已轉成文字，按 Enter 或送出即可。" : "語音已停止。";
+      };
+      rec.onerror = (e) => {
+        $("ljVoiceHint").textContent = "語音錯誤：" + (e?.error || "unknown") + "（可能是麥克風權限/政策限制）";
+      };
+
+      $("ljMic").addEventListener("click", () => {
+        try {
+          if (listening) rec.stop();
+          else rec.start();
+        } catch (e) {
+          $("ljVoiceHint").textContent = "無法啟動語音辨識（可能需要先允許麥克風權限）。";
+        }
+      });
+    }
+
+    async function ljLoadModels() {
+      const { data } = await fetchJson("/api/agent/models");
+      const cloudEnabled = data?.cloud_enabled === true;
+      const current = data?.current || {};
+      if (current?.mode) $("ljMode").value = current.mode;
+      if (current?.model) $("ljModel").value = current.model;
+      $("ljModelHint").textContent = cloudEnabled
+        ? `雲端已啟用（base_url=${data?.cloud_base_url || ""}）。切到雲端模式時，未知問答會外送到雲端模型；涉及動作仍走本機白名單/命令單。`
+        : "雲端未啟用（未設定 WUCHANG_LLM_API_KEY）。切到雲端模式時不會外送內容，會提示你先設定金鑰。";
+      // also persist UI choices
+      try {
+        localStorage.setItem("wuchang_lj_mode", $("ljMode").value);
+        localStorage.setItem("wuchang_lj_model", $("ljModel").value);
+      } catch (e) {}
+      logRun(data);
+    }
+
+    async function ljSaveConfig() {
+      const actor = ($("actor").value || "ops").trim();
+      const mode = ($("ljMode").value || "command").trim();
+      const model = ($("ljModel").value || "local_rule").trim();
+      const provider = (model === "local_rule") ? "local" : "openai_compat";
+      // persist UI side
+      try {
+        localStorage.setItem("wuchang_lj_mode", mode);
+        localStorage.setItem("wuchang_lj_model", model);
+      } catch (e) {}
+      const { data } = await fetchJson("/api/agent/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode, model, provider, actor })
+      });
+      logRun(data);
+      ljAdd("assistant", data?.ok ? `已儲存小J設定：mode=${mode} / model=${model}` : "儲存失敗（請看即時輸出）");
+    }
+
+    // ===== 命令單（Job）面板 =====
+    let jobSelectedId = "";
+
+    function jobRenderList(items) {
+      const box = $("jobList");
+      if (!items || !items.length) {
+        box.textContent = "（目前沒有命令單）";
+        return;
+      }
+      box.innerHTML = "";
+      for (const j of items) {
+        const id = j.id || j._id || j.job_id || "unknown";
+        const div = document.createElement("div");
+        div.className = "jobitem";
+        div.setAttribute("data-job-id", id);
+        const t = j.type || "（未知）";
+        const by = j.requested_by || j.actor || "（未知）";
+        const at = j.created_at || j.timestamp || "（無時間）";
+        div.innerHTML = `
+          <div class="top">
+            <div class="id">${id}</div>
+            <div class="type">${t}</div>
+          </div>
+          <div class="meta">由 ${by} 建立｜${at}</div>
+        `;
+        div.addEventListener("click", () => jobSelect(id));
+        box.appendChild(div);
+      }
+    }
+
+    async function jobRefresh() {
+      const state = $("jobState").value;
+      const { data } = await fetchJson("/api/jobs/list?state=" + encodeURIComponent(state) + "&limit=50");
+      jobRenderList(data?.items || []);
+      if (jobSelectedId) {
+        try { await jobSelect(jobSelectedId); } catch (e) {}
+      }
+    }
+
+    async function jobSelect(id) {
+      jobSelectedId = String(id || "").trim();
+      if (!jobSelectedId) return;
+      const { data } = await fetchJson("/api/jobs/get?id=" + encodeURIComponent(jobSelectedId));
+      const job = data?.job || null;
+      $("jobDetail").value = job ? JSON.stringify(job, null, 2) : (JSON.stringify(data, null, 2));
+      logRun(data);
+    }
+
+    async function jobMove(to) {
+      if (!jobSelectedId) {
+        logRun("請先在左側點選一筆命令單。");
+        return;
+      }
+      const actor = ($("actor").value || "ops").trim();
+      const { data } = await fetchJson("/api/jobs/move", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: jobSelectedId, to, actor })
+      });
+      logRun(data);
+      await jobRefresh();
+    }
+
+    $("btnJobRefresh").addEventListener("click", () => jobRefresh().catch(e => logRun(String(e))));
+    $("jobState").addEventListener("change", () => jobRefresh().catch(e => logRun(String(e))));
+    $("btnJobMarkSent").addEventListener("click", () => jobMove("sent").catch(e => logRun(String(e))));
+    $("btnJobArchive").addEventListener("click", () => jobMove("archive").catch(e => logRun(String(e))));
+    $("btnJobCopy").addEventListener("click", async () => {
+      const v = ($("jobDetail").value || "").trim();
+      const ok = await copyText(v);
+      logRun(ok ? "已複製命令單 JSON" : "複製失敗（瀏覽器權限限制）");
+    });
+    $("btnJobWriteWorkspace").addEventListener("click", async () => {
+      const v = ($("jobDetail").value || "").trim();
+      if (!v) { logRun("沒有命令單內容可寫入。"); return; }
+      const actor = ($("actor").value || "ops").trim();
+      const body = {
+        kind: "job_order",
+        title: `job__${jobSelectedId || "unknown"}`,
+        content: v,
+        meta: { job_id: jobSelectedId, actor }
+      };
+      const { data } = await fetchJson("/api/workspace/write", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      logRun(data);
+    });
+
+    // 小J 模型切換按鈕
+    $("ljLoadModels").addEventListener("click", () => ljLoadModels().catch(e => logRun(String(e))));
+    $("ljSaveConfig").addEventListener("click", () => ljSaveConfig().catch(e => logRun(String(e))));
   </script>
 </body>
 </html>
