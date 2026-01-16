@@ -57,6 +57,20 @@ AUTH_AUDIT_JSONL = BASE_DIR / "auth_audit.jsonl"
 DEVICE_AUDIT_JSONL = BASE_DIR / "device_audit.jsonl"
 CONSENT_AUDIT_JSONL = BASE_DIR / "consent_audit.jsonl"
 VOUCHER_AUDIT_JSONL = BASE_DIR / "voucher_audit.jsonl"
+AUTHZ_AUDIT_JSONL = BASE_DIR / "authz_audit.jsonl"
+VERIFY_AUDIT_JSONL = BASE_DIR / "verify_audit.jsonl"
+MAINT_AUDIT_JSONL = BASE_DIR / "maintenance_audit.jsonl"
+DESIGN_MODE_AUDIT_JSONL = BASE_DIR / "design_mode_audit.jsonl"
+
+# 系統資料庫（建議放在 admin@wuchang.life 的 Google Drive 同步路徑）
+# - WUCHANG_SYSTEM_DB_DIR：指向 Drive 同步中的「五常_中控」根目錄
+#   內部約定：
+#   - config/：accounts_policy.json, workspace_matching.json
+#   - vault/：PII/consent/nonid/vouchers...
+#   - exchange/：device_tasks/device_results...
+#   - artifacts/：workspace 輸出
+#
+# Odoo 快取區（非權威資料）：WUCHANG_ODOO_CACHE_DIR（可選）
 
 # 小J 自然語言代理：高風險動作兩段式確認（記憶僅在本程序生命週期內）
 PENDING_CONFIRM: Dict[str, Dict[str, Any]] = {}
@@ -217,6 +231,61 @@ def _detect_intent(text: str) -> Dict[str, Any]:
     return {"intent": "unknown"}
 
 
+def _suggest_authz_permissions(text: str) -> List[str]:
+    """
+    將使用者自然語言「控制需求」映射到可調式授權層級（僅用於提示/請示單）。
+    注意：這裡不等於實際執行能力；實際執行仍要走 function 白名單與 confirmed。
+    """
+    t = _norm_text(text)
+    perms: List[str] = []
+
+    def add(p: str) -> None:
+        if p and p not in perms:
+            perms.append(p)
+
+    # VM / RDP / 遠端桌面
+    if "rdp" in t or "遠端桌面" in t or "vm" in t or "虛擬機" in t:
+        add("vm_control")
+    # 容器 / Docker
+    if "容器" in t or "docker" in t or "compose" in t:
+        add("container_control")
+    # 伺服器本機系統控制（管理員級）
+    if "伺服器本機" in t or "系統控制" in t or "系統管理員" in t or "administrator" in t:
+        add("server_system_control")
+    # 路由器 / LAN 設備
+    if "路由器" in t or "router" in t or "lan" in t or "設備控制" in t:
+        add("router_admin")
+    # 網域 / DNS 設定
+    if "dns" in t or "網域" in t or "domain" in t or "憑證" in t:
+        add("dns_admin")
+    # 瀏覽器控制（自動化）
+    if "瀏覽器" in t or "browser" in t or "playwright" in t or "selenium" in t:
+        add("browser_control")
+
+    return perms
+
+
+def _suggest_authz_items(text: str) -> List[Dict[str, Any]]:
+    """
+    小J 自動提出「授權需求」：每個項目各自 TTL（秒）。
+    用於建立授權請示單（items），讓管理員能按鍵核准。
+    """
+    perms = _suggest_authz_permissions(text)
+    # 預設建議 TTL（你可依營運再調）
+    ttl_map = {
+        "vm_control": 20 * 60,  # 20 分
+        "server_system_control": 20 * 60,  # 20 分（系統管理員級）
+        "container_control": 10 * 60,
+        "router_admin": 10 * 60,
+        "dns_admin": 10 * 60,
+        "browser_control": 10 * 60,
+    }
+    items: List[Dict[str, Any]] = []
+    for p in perms:
+        items.append({"permission": p, "ttl_seconds": int(ttl_map.get(p, 3600))})
+    return items
+
+
 def _little_j_reply_help() -> str:
     return (
         "我可以用自然語言幫你操作本機中控台。\n"
@@ -333,6 +402,281 @@ def _session_account_id(handler: BaseHTTPRequestHandler) -> str:
     return str((sess or {}).get("account_id") or "").strip()
 
 
+def _system_db_dir() -> Optional[Path]:
+    """
+    系統資料庫根目錄（建議：admin@wuchang.life 的 Google Drive 同步資料夾內）。
+    """
+    p = (os.getenv("WUCHANG_SYSTEM_DB_DIR") or "").strip()
+    if not p:
+        return None
+    return Path(p).expanduser().resolve()
+
+
+def _system_config_dir() -> Optional[Path]:
+    d = _system_db_dir()
+    return (d / "config").resolve() if d else None
+
+
+def _system_vault_dir() -> Optional[Path]:
+    d = _system_db_dir()
+    return (d / "vault").resolve() if d else None
+
+
+def _system_exchange_dir() -> Optional[Path]:
+    d = _system_db_dir()
+    return (d / "exchange").resolve() if d else None
+
+
+def _system_artifacts_dir() -> Optional[Path]:
+    d = _system_db_dir()
+    return (d / "artifacts").resolve() if d else None
+
+
+def _odoo_cache_dir() -> Optional[Path]:
+    p = (os.getenv("WUCHANG_ODOO_CACHE_DIR") or "").strip()
+    if not p:
+        return None
+    return Path(p).expanduser().resolve()
+
+
+# ===== 可調式授權（暫時授權 / 授權請示單）=====
+def _authz_dir() -> Path:
+    """
+    授權資料落地（偏私密）：優先放在系統 vault，否則落回 repo（本機模式）。
+    """
+    d = _system_vault_dir()
+    if d:
+        return (d / "authz").resolve()
+    return (BASE_DIR / "authz").resolve()
+
+
+# ===== 設計啟用（Design Mode）：用於「硬編碼生效」=====
+def _design_mode_state_path() -> Path:
+    base = _authz_dir()
+    p = (base / "design_mode_state.json").resolve()
+    if base not in p.parents and p != base:
+        return (base / "design_mode_state.json").resolve()
+    return p
+
+
+def _load_design_mode_state() -> Dict[str, Any]:
+    return _read_json_file(_design_mode_state_path(), default={})
+
+
+def _save_design_mode_state(state: Dict[str, Any]) -> None:
+    _write_json_file(_design_mode_state_path(), state if isinstance(state, dict) else {})
+
+
+def _design_mode_status() -> Dict[str, Any]:
+    st = _load_design_mode_state()
+    enabled = bool(st.get("enabled"))
+    try:
+        until = int(st.get("enabled_until_epoch") or 0)
+    except Exception:
+        until = 0
+    now = int(time.time())
+    active = bool(enabled and until and until >= now)
+    return {
+        "active": active,
+        "enabled": enabled,
+        "enabled_until_epoch": until,
+        "enabled_by_account_id": str(st.get("enabled_by_account_id") or "").strip(),
+        "reason": str(st.get("reason") or "").strip(),
+        "updated_at": str(st.get("updated_at") or "").strip(),
+        "now_epoch": now,
+        "path": str(_design_mode_state_path()),
+    }
+
+
+def _design_mode_is_active() -> bool:
+    return bool(_design_mode_status().get("active") is True)
+
+
+def _design_mode_records_dir() -> Optional[Path]:
+    """
+    硬編碼/設計啟用資訊紀錄落地位置（可交接/可稽核）：
+    - 優先：<WUCHANG_SYSTEM_DB_DIR>/artifacts/design_mode_records
+    - 次要：WUCHANG_WORKSPACE_OUTDIR/design_mode_records
+    - 最後：repo 內 artifacts_design_mode_records（本機模式）
+    """
+    base = _system_artifacts_dir() or _workspace_outdir()
+    if not base:
+        base = BASE_DIR
+        p = (base / "artifacts_design_mode_records").resolve()
+        return p
+    p = (base / "design_mode_records").resolve()
+    # 防路徑穿越：必須在 base 之下（base 是 artifacts/outdir）
+    try:
+        if Path(base).resolve() not in p.parents and p != Path(base).resolve():
+            return (Path(base).resolve() / "design_mode_records").resolve()
+    except Exception:
+        return None
+    return p
+
+
+def _write_design_mode_record(kind: str, sess: Optional[Dict[str, Any]], actor: str, reason: str, extra: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """
+    產生「需以硬編碼製作的資訊紀錄」：JSON 檔 + 回傳路徑/摘要。
+    """
+    outdir = _design_mode_records_dir()
+    if not outdir:
+        return {"ok": False, "error": "missing_records_dir"}
+    outdir.mkdir(parents=True, exist_ok=True)
+    ts = time.strftime("%Y%m%d_%H%M%S")
+    rid = uuid.uuid4().hex[:10]
+    fname = f"design_mode_record_{ts}_{rid}.json"
+    p = (outdir / fname).resolve()
+
+    dm = _design_mode_status()
+    maint = _system_maintenance_status()
+    accountability = _accountability_from_session(sess)
+    payload: Dict[str, Any] = {
+        "kind": str(kind or "design_mode_record"),
+        "timestamp": _job_now_iso(),
+        "actor": str(actor or "").strip(),
+        "reason": str(reason or "").strip(),
+        "design_mode": dm,
+        "maintenance": maint,
+        "accountability": accountability,
+    }
+    if isinstance(extra, dict) and extra:
+        payload["extra"] = extra
+
+    try:
+        p.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception as e:
+        return {"ok": False, "error": f"write_failed: {e}"}
+
+    _append_jsonl(
+        DESIGN_MODE_AUDIT_JSONL,
+        {"timestamp": _job_now_iso(), "kind": "design_mode_record_written", "actor": payload.get("actor"), "path": str(p), "record_kind": payload.get("kind")},
+    )
+    return {"ok": True, "path": str(p), "record": payload}
+
+
+def _authz_requests_dir(state: str = "pending") -> Path:
+    base = _authz_dir()
+    st = (state or "pending").strip().lower()
+    if st not in ("pending", "approved", "denied"):
+        st = "pending"
+    p = (base / "requests" / st).resolve()
+    # 防路徑穿越：必須在 base 之下
+    if base not in p.parents and p != base:
+        return (base / "requests" / "pending").resolve()
+    return p
+
+
+def _authz_grants_path() -> Path:
+    base = _authz_dir()
+    p = (base / "temp_grants.json").resolve()
+    if base not in p.parents and p != base:
+        return (base / "temp_grants.json").resolve()
+    return p
+
+
+def _ensure_authz_dirs() -> None:
+    base = _authz_dir()
+    base.mkdir(parents=True, exist_ok=True)
+    for st in ("pending", "approved", "denied"):
+        _authz_requests_dir(st).mkdir(parents=True, exist_ok=True)
+
+
+def _new_authz_request_id() -> str:
+    return "authz_" + uuid.uuid4().hex[:12]
+
+
+def _read_json_file(path: Path, default: Any) -> Any:
+    try:
+        if not path.exists():
+            return default
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def _write_json_file(path: Path, obj: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _load_temp_grants() -> List[Dict[str, Any]]:
+    _ensure_authz_dirs()
+    v = _read_json_file(_authz_grants_path(), default=[])
+    return v if isinstance(v, list) else []
+
+
+def _save_temp_grants(grants: List[Dict[str, Any]]) -> None:
+    _ensure_authz_dirs()
+    _write_json_file(_authz_grants_path(), grants)
+
+
+def _grant_active_for_account(grant: Dict[str, Any], account_id: str) -> bool:
+    if not isinstance(grant, dict):
+        return False
+    if str(grant.get("account_id") or "").strip() != str(account_id or "").strip():
+        return False
+    if grant.get("revoked_at"):
+        return False
+    # 若是新格式（items 各自 TTL）：只要任一 item 仍有效，就視為 grant 仍有效
+    if isinstance(grant.get("items"), list):
+        ok_any = False
+        for it in grant.get("items") or []:
+            if not isinstance(it, dict):
+                continue
+            if it.get("revoked_at"):
+                continue
+            exp = it.get("expires_at_epoch")
+            try:
+                if exp and int(exp) >= int(time.time()):
+                    ok_any = True
+                    break
+            except Exception:
+                continue
+        if not ok_any:
+            return False
+    else:
+        exp = grant.get("expires_at_epoch")
+        try:
+            if exp and int(exp) < int(time.time()):
+                return False
+        except Exception:
+            return False
+    return True
+
+
+def _temp_granted_perms(account_id: str) -> List[str]:
+    if not account_id:
+        return []
+    perms: List[str] = []
+    now = int(time.time())
+    for g in _load_temp_grants():
+        if not _grant_active_for_account(g, account_id):
+            continue
+        # 新格式：items
+        if isinstance(g.get("items"), list):
+            for it in g.get("items") or []:
+                if not isinstance(it, dict):
+                    continue
+                if it.get("revoked_at"):
+                    continue
+                exp = it.get("expires_at_epoch")
+                try:
+                    if exp and int(exp) < now:
+                        continue
+                except Exception:
+                    continue
+                s = str(it.get("permission") or "").strip()
+                if s and s not in perms:
+                    perms.append(s)
+            continue
+        # 舊格式：permissions + expires_at_epoch
+        for p in (g.get("permissions") or []):
+            s = str(p).strip()
+            if s and s not in perms:
+                perms.append(s)
+    return perms
+
+
 # ===== 帳號（號碼）→權限 =====
 SESSIONS: Dict[str, Dict[str, Any]] = {}
 
@@ -341,12 +685,16 @@ def _accounts_policy_path() -> Optional[Path]:
     """
     建議放在 Google Drive 同步資料夾（Workspace 私密區）：
     - WUCHANG_ACCOUNTS_PATH（優先）
-    - 或 <WUCHANG_WORKSPACE_OUTDIR>/accounts_policy.json
+    - 或 <WUCHANG_SYSTEM_DB_DIR>/config/accounts_policy.json
+    - 或 <WUCHANG_PII_OUTDIR>/accounts_policy.json（相容舊）
     """
     p = (os.getenv("WUCHANG_ACCOUNTS_PATH") or "").strip()
     if p:
         return Path(p).expanduser().resolve()
-    d = _pii_vault_dir()  # 同樣依賴 Workspace outdir
+    cfg = _system_config_dir()
+    if cfg:
+        return (cfg / "accounts_policy.json").resolve()
+    d = _pii_vault_dir()  # 相容舊：依賴 Workspace outdir
     if not d:
         return None
     return (d / "accounts_policy.json").resolve()
@@ -356,12 +704,16 @@ def _workspace_matching_path() -> Optional[Path]:
     """
     Google Workspace（Drive 同步）高度媒合設定檔：
     - WUCHANG_WORKSPACE_MATCHING_PATH（優先）
-    - 或 <WUCHANG_WORKSPACE_OUTDIR>/workspace_matching.json
+    - 或 <WUCHANG_SYSTEM_DB_DIR>/config/workspace_matching.json
+    - 或 <WUCHANG_WORKSPACE_OUTDIR>/workspace_matching.json（相容舊）
     """
     p = (os.getenv("WUCHANG_WORKSPACE_MATCHING_PATH") or "").strip()
     if p:
         return Path(p).expanduser().resolve()
-    d = _workspace_outdir()
+    cfg = _system_config_dir()
+    if cfg:
+        return (cfg / "workspace_matching.json").resolve()
+    d = _system_artifacts_dir() or _workspace_outdir()
     if not d:
         return None
     return (d / "workspace_matching.json").resolve()
@@ -413,8 +765,399 @@ def _new_session(account: Dict[str, Any]) -> str:
         "label": str(account.get("label") or ""),
         "profile_id": str(account.get("profile_id") or "ops_admin"),
         "permissions": [str(x) for x in perms if str(x).strip()],
+        # 可究責對象（兩個面向）：設計責任 / 使用責任
+        # 每個面向都可包含：natural_person / legal_entity（皆為 dict）
+        "design_responsibility": account.get("design_responsibility") if isinstance(account.get("design_responsibility"), dict) else {},
+        "usage_responsibility": account.get("usage_responsibility") if isinstance(account.get("usage_responsibility"), dict) else {},
+        # 相容舊欄位（若仍有人用自然人/法人二分）：會在 _accountability_from_session 做映射
+        "accountable_natural_person": account.get("accountable_natural_person") if isinstance(account.get("accountable_natural_person"), dict) else {},
+        "accountable_legal_entity": account.get("accountable_legal_entity") if isinstance(account.get("accountable_legal_entity"), dict) else {},
     }
     return sid
+
+
+def _accountability_from_session(sess: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    可究責 AI：每筆動作必須能對應到兩個可究責對象：
+    - design_responsibility：設計責任（誰/哪個法人負責設計與制度）
+    - usage_responsibility：使用責任（誰/哪個法人發起與使用）
+
+    每個責任對象皆可含：
+    - natural_person（自然人）
+    - legal_entity（連帶法人）
+    """
+    if not isinstance(sess, dict):
+        return {"design_responsibility": {"natural_person": {}, "legal_entity": {}}, "usage_responsibility": {"natural_person": {}, "legal_entity": {}}}
+
+    def norm_role(v: Any) -> Dict[str, Any]:
+        vv = v if isinstance(v, dict) else {}
+        nat2 = vv.get("natural_person") if isinstance(vv.get("natural_person"), dict) else {}
+        leg2 = vv.get("legal_entity") if isinstance(vv.get("legal_entity"), dict) else {}
+        return {"natural_person": nat2, "legal_entity": leg2}
+
+    def pick_design_legal_entity(design_raw: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        從設計責任中挑一個可用的法人（交接暫代用途）。
+        規則：優先 design_responsibility.legal_entities 第一個「有 name/tax_id/email 任一」的；否則退回 design_responsibility.legal_entity。
+        """
+        if not isinstance(design_raw, dict):
+            return {}
+        les = design_raw.get("legal_entities") if isinstance(design_raw.get("legal_entities"), list) else []
+        for le in les:
+            if not isinstance(le, dict):
+                continue
+            if str(le.get("name") or "").strip() or str(le.get("tax_id") or "").strip() or str(le.get("email") or "").strip():
+                return le
+        leg = design_raw.get("legal_entity") if isinstance(design_raw.get("legal_entity"), dict) else {}
+        if str(leg.get("name") or "").strip() or str(leg.get("tax_id") or "").strip() or str(leg.get("email") or "").strip():
+            return leg
+        return {}
+
+    design_raw = sess.get("design_responsibility") if isinstance(sess.get("design_responsibility"), dict) else {}
+    usage_raw = sess.get("usage_responsibility") if isinstance(sess.get("usage_responsibility"), dict) else {}
+    design = norm_role(design_raw)
+    usage = norm_role(usage_raw)
+
+    # 相容舊欄位：若沒有 design/usage，就用舊 natural/legal 填入 usage（使用責任）
+    if not design["natural_person"] and not design["legal_entity"] and not usage["natural_person"] and not usage["legal_entity"]:
+        nat_old = sess.get("accountable_natural_person") if isinstance(sess.get("accountable_natural_person"), dict) else {}
+        leg_old = sess.get("accountable_legal_entity") if isinstance(sess.get("accountable_legal_entity"), dict) else {}
+        usage = {"natural_person": nat_old, "legal_entity": leg_old}
+
+    # 交接暫代：允許「設計法人」暫代「使用法人」以完成交接（必須明確宣告旗標）
+    # - 預設不啟用（維持責任分離）
+    # - 僅當 usage_responsibility.handover_legal_entity_from_design == true 且使用法人未填時才套用
+    # - 會在 accountability 額外標註 handover，方便稽核與後續交接收回
+    handover: Dict[str, Any] = {}
+    if bool(usage_raw.get("handover_legal_entity_from_design")) and not usage.get("legal_entity"):
+        dle = pick_design_legal_entity(design_raw)
+        if dle:
+            usage["legal_entity"] = dle
+            handover = {
+                "usage_legal_entity_from_design": True,
+                "source": "design_responsibility",
+                "note": "交接暫代：使用法人未填時，以設計法人暫代（需後續完成正式交接/回收）。",
+            }
+
+    # usage fallback：至少帶上 account_id/label（仍可追到登入帳號）
+    if not usage["natural_person"]:
+        usage["natural_person"] = {"account_id": str(sess.get("account_id") or "").strip(), "label": str(sess.get("label") or "").strip()}
+
+    out: Dict[str, Any] = {"design_responsibility": design, "usage_responsibility": usage}
+    if handover:
+        out["handover"] = handover
+    return out
+
+
+def _responsibility_filled(role: Dict[str, Any]) -> bool:
+    """
+    判斷「責任位置」是否已填寫（最小可行）：
+    - 只要 natural_person 或 legal_entity 任一有非空欄位即可視為已填
+    - 不把 fallback 的 account_id/label 當作「已填」
+    """
+    if not isinstance(role, dict):
+        return False
+    def _obj_filled(obj: Dict[str, Any]) -> bool:
+        if not isinstance(obj, dict) or not obj:
+            return False
+        # 忽略 fallback 欄位（避免未填也被當成已填）
+        obj2 = {k: v for k, v in obj.items() if str(k) not in ("account_id", "label")}
+        for v in obj2.values():
+            if isinstance(v, str) and v.strip():
+                return True
+            if isinstance(v, (int, float)) and v != 0:
+                return True
+            if isinstance(v, dict) and v:
+                return True
+            if isinstance(v, list) and v:
+                return True
+        return False
+
+    # 單一 natural_person / legal_entity
+    if _obj_filled(role.get("natural_person") if isinstance(role.get("natural_person"), dict) else {}):
+        return True
+    if _obj_filled(role.get("legal_entity") if isinstance(role.get("legal_entity"), dict) else {}):
+        return True
+
+    # 多法人（legal_entities）
+    les = role.get("legal_entities") if isinstance(role.get("legal_entities"), list) else []
+    for le in les:
+        if isinstance(le, dict) and _obj_filled(le):
+            return True
+    return False
+
+
+def _role_natural_person_filled(role: Dict[str, Any]) -> bool:
+    """
+    只判斷「自然人」是否已填（最小可行）：
+    - 只看 role.natural_person
+    - 不把 fallback 的 account_id/label 當作「已填」
+    """
+    if not isinstance(role, dict):
+        return False
+    nat = role.get("natural_person") if isinstance(role.get("natural_person"), dict) else {}
+    if not nat:
+        return False
+    nat2 = {k: v for k, v in nat.items() if str(k) not in ("account_id", "label")}
+    for v in nat2.values():
+        if isinstance(v, str) and v.strip():
+            return True
+        if isinstance(v, (int, float)) and v != 0:
+            return True
+        if isinstance(v, dict) and v:
+            return True
+        if isinstance(v, list) and v:
+            return True
+    return False
+
+
+def _responsibility_has_email(role: Dict[str, Any]) -> bool:
+    """
+    電子聯絡資訊必填（email）：
+    - natural_person.email 或 legal_entity.email 任一存在即可
+    """
+    if not isinstance(role, dict):
+        return False
+    nat = role.get("natural_person") if isinstance(role.get("natural_person"), dict) else {}
+    e1 = str(nat.get("email") or "").strip()
+    if e1:
+        return True
+
+    # 單一法人
+    leg = role.get("legal_entity") if isinstance(role.get("legal_entity"), dict) else {}
+    e2 = str(leg.get("email") or "").strip()
+    if e2:
+        return True
+
+    # 多法人：只要任一法人有 email 即視為「有 email」
+    les = role.get("legal_entities") if isinstance(role.get("legal_entities"), list) else []
+    for le in les:
+        if isinstance(le, dict) and str(le.get("email") or "").strip():
+            return True
+    return False
+
+
+def _responsibility_all_legal_entities_have_email(role: Dict[str, Any]) -> bool:
+    """
+    設計責任更嚴格：若有列出 legal_entities，要求每個法人都要有 email。
+    - 沒有列 legal_entities 時，不強制此條（讓舊格式可用）
+    """
+    if not isinstance(role, dict):
+        return False
+    les = role.get("legal_entities") if isinstance(role.get("legal_entities"), list) else []
+    if not les:
+        return True
+    for le in les:
+        if not isinstance(le, dict):
+            return False
+        if not str(le.get("email") or "").strip():
+            return False
+    return True
+
+
+def _full_agent_allowed_for_account(account: Dict[str, Any]) -> bool:
+    """
+    規則（依最新需求調整）：
+    - 只要「設計責任」與「使用責任」兩者都各有一位自然人，即可生效 full_agent
+    - email 仍建議填寫用於維護/交接，但不再作為 full_agent 的硬門檻
+    """
+    if not isinstance(account, dict):
+        return False
+    def _norm_role(v: Any) -> Dict[str, Any]:
+        vv = v if isinstance(v, dict) else {}
+        nat = vv.get("natural_person") if isinstance(vv.get("natural_person"), dict) else {}
+        leg = vv.get("legal_entity") if isinstance(vv.get("legal_entity"), dict) else {}
+        les = vv.get("legal_entities") if isinstance(vv.get("legal_entities"), list) else []
+        les2 = [x for x in les if isinstance(x, dict)]
+        return {"natural_person": nat, "legal_entity": leg, "legal_entities": les2}
+    design = _norm_role(account.get("design_responsibility"))
+    usage = _norm_role(account.get("usage_responsibility"))
+    return _role_natural_person_filled(design) and _role_natural_person_filled(usage)
+
+
+def _full_agent_allowed_for_session(sess: Optional[Dict[str, Any]]) -> bool:
+    """
+    以 session 內容判斷是否允許 full_agent（避免未填責任仍放行）。
+    """
+    if not isinstance(sess, dict):
+        return False
+    design = sess.get("design_responsibility") if isinstance(sess.get("design_responsibility"), dict) else {}
+    usage = sess.get("usage_responsibility") if isinstance(sess.get("usage_responsibility"), dict) else {}
+    # session 的 role 直接用（不做 account_id fallback）
+    def _norm(v: Any) -> Dict[str, Any]:
+        vv = v if isinstance(v, dict) else {}
+        nat = vv.get("natural_person") if isinstance(vv.get("natural_person"), dict) else {}
+        leg = vv.get("legal_entity") if isinstance(vv.get("legal_entity"), dict) else {}
+        les = vv.get("legal_entities") if isinstance(vv.get("legal_entities"), list) else []
+        les2 = [x for x in les if isinstance(x, dict)]
+        return {"natural_person": nat, "legal_entity": leg, "legal_entities": les2}
+    d2 = _norm(design)
+    u2 = _norm(usage)
+    return _role_natural_person_filled(d2) and _role_natural_person_filled(u2)
+
+
+def _system_design_maintenance_key() -> str:
+    """
+    系統層級：找出「設計法人」維護展延的 key（用於全 UI 顯示風險提示）。
+    - 讀取 accounts_policy.json
+    - 找到第一個具有 design_responsibility 的帳號
+    - 取 design_responsibility.legal_entities 第一個有 tax_id 的作為 key
+    - 若找不到 tax_id，退回 account_id
+    """
+    pol = _load_accounts_policy()
+    accs = pol.get("accounts") if isinstance(pol.get("accounts"), list) else []
+    for a in accs:
+        if not isinstance(a, dict):
+            continue
+        design = a.get("design_responsibility") if isinstance(a.get("design_responsibility"), dict) else {}
+        if not design:
+            continue
+        les = design.get("legal_entities") if isinstance(design.get("legal_entities"), list) else []
+        for le in les:
+            if not isinstance(le, dict):
+                continue
+            tax_id = str(le.get("tax_id") or le.get("id") or "").strip()
+            if tax_id:
+                return f"design_tax_id:{tax_id}"
+        leg = design.get("legal_entity") if isinstance(design.get("legal_entity"), dict) else {}
+        tax_id2 = str(leg.get("tax_id") or leg.get("id") or "").strip()
+        if tax_id2:
+            return f"design_tax_id:{tax_id2}"
+        aid = str(a.get("account_id") or "").strip()
+        if aid:
+            return f"design_account:{aid}"
+    return ""
+
+
+def _system_maintenance_status() -> Dict[str, Any]:
+    """
+    系統層級維護狀態（不需要登入即可查詢）：
+    - 若沒有有效的設計法人維護展延（maintenance_state verified_until），回傳 warn 與固定提示文案
+    """
+    key = _system_design_maintenance_key()
+    if not key:
+        return {
+            "ok": False,
+            "verified": False,
+            "level": "warn",
+            "message": "（本系統未經原設計者做定期維護，可能存在風險）\n（此時所有風險全歸使用者端點）",
+            "risk_owner": "user_endpoint",
+            "reason": "missing_design_responsibility_key",
+        }
+    st = _load_maintenance_state()
+    rec = st.get(key) if isinstance(st.get(key), dict) else {}
+    if not rec or rec.get("revoked_at"):
+        return {
+            "ok": False,
+            "verified": False,
+            "level": "warn",
+            "message": "（本系統未經原設計者做定期維護，可能存在風險）\n（此時所有風險全歸使用者端點）",
+            "risk_owner": "user_endpoint",
+            "reason": "missing_or_revoked",
+            "key": key,
+        }
+    exp = rec.get("verified_until_epoch")
+    try:
+        exp_i = int(exp) if exp is not None else 0
+    except Exception:
+        exp_i = 0
+    now = int(time.time())
+    if rec.get("verified") is True and exp_i and exp_i >= now:
+        return {"ok": True, "verified": True, "level": "ok", "verified_until_epoch": exp_i, "key": key}
+    return {
+        "ok": False,
+        "verified": False,
+        "level": "warn",
+        "message": "（本系統未經原設計者做定期維護，可能存在風險）\n（此時所有風險全歸使用者端點）",
+        "risk_owner": "user_endpoint",
+        "reason": "expired_or_not_verified",
+        "verified_until_epoch": exp_i,
+        "key": key,
+    }
+
+
+def _smtp_env() -> Dict[str, str]:
+    return {
+        "host": (os.getenv("WUCHANG_SMTP_HOST") or "").strip(),
+        "port": (os.getenv("WUCHANG_SMTP_PORT") or "587").strip(),
+        "user": (os.getenv("WUCHANG_SMTP_USER") or "").strip(),
+        "pass": (os.getenv("WUCHANG_SMTP_PASS") or "").strip(),
+        "from": (os.getenv("WUCHANG_SMTP_FROM") or os.getenv("WUCHANG_SMTP_USER") or "").strip(),
+    }
+
+
+def _maintenance_state_path() -> Path:
+    base = _authz_dir()
+    p = (base / "maintenance_state.json").resolve()
+    if base not in p.parents and p != base:
+        return (base / "maintenance_state.json").resolve()
+    return p
+
+
+def _maintenance_key_from_session(sess: Optional[Dict[str, Any]]) -> str:
+    """
+    綁定設計責任（法人）作為保養驗證對象 key（避免換人就繞過）。
+    """
+    if not isinstance(sess, dict):
+        return ""
+    design = sess.get("design_responsibility") if isinstance(sess.get("design_responsibility"), dict) else {}
+    # 允許多法人：優先取 legal_entities 第一個有 tax_id 的
+    tax_id = ""
+    les = design.get("legal_entities") if isinstance(design.get("legal_entities"), list) else []
+    for le in les:
+        if not isinstance(le, dict):
+            continue
+        tax_id = str(le.get("tax_id") or le.get("id") or "").strip()
+        if tax_id:
+            break
+    if not tax_id:
+        leg = design.get("legal_entity") if isinstance(design.get("legal_entity"), dict) else {}
+        tax_id = str(leg.get("tax_id") or leg.get("id") or "").strip()
+    if tax_id:
+        return f"design_tax_id:{tax_id}"
+    # fallback：account_id
+    return f"design_account:{str(sess.get('account_id') or '').strip()}"
+
+
+def _maintenance_contact_email(sess: Optional[Dict[str, Any]]) -> str:
+    if not isinstance(sess, dict):
+        return ""
+    design = sess.get("design_responsibility") if isinstance(sess.get("design_responsibility"), dict) else {}
+    nat = design.get("natural_person") if isinstance(design.get("natural_person"), dict) else {}
+    # 多法人優先取第一個有 email 的
+    les = design.get("legal_entities") if isinstance(design.get("legal_entities"), list) else []
+    for le in les:
+        if isinstance(le, dict) and str(le.get("email") or "").strip():
+            return str(le.get("email") or "").strip()
+    leg = design.get("legal_entity") if isinstance(design.get("legal_entity"), dict) else {}
+    return str(leg.get("email") or nat.get("email") or "").strip()
+
+
+def _load_maintenance_state() -> Dict[str, Any]:
+    return _read_json_file(_maintenance_state_path(), default={})
+
+
+def _save_maintenance_state(state: Dict[str, Any]) -> None:
+    _write_json_file(_maintenance_state_path(), state if isinstance(state, dict) else {})
+
+
+def _maintenance_is_verified(sess: Optional[Dict[str, Any]]) -> bool:
+    key = _maintenance_key_from_session(sess)
+    if not key:
+        return False
+    st = _load_maintenance_state()
+    rec = st.get(key) if isinstance(st.get(key), dict) else {}
+    if not rec:
+        return False
+    if rec.get("revoked_at"):
+        return False
+    exp = rec.get("verified_until_epoch")
+    try:
+        if exp and int(exp) < int(time.time()):
+            return False
+    except Exception:
+        return False
+    return rec.get("verified") is True
 
 
 def _get_session(handler: BaseHTTPRequestHandler) -> Optional[Dict[str, Any]]:
@@ -439,7 +1182,106 @@ def _has_perm(sess: Optional[Dict[str, Any]], perm: str) -> bool:
     if not sess:
         return False
     perms = sess.get("permissions") or []
-    return perm in perms or "admin_all" in perms
+    # 最高權限完整代理：完全開放（不受時間/項目/範圍限制）
+    # 注意：Design Mode 目前只做「資訊紀錄/留痕」，不作為硬閘門（依使用者要求）
+    if "full_agent" in perms and _full_agent_allowed_for_session(sess):
+        return True
+    if perm in perms or "admin_all" in perms:
+        return True
+    # 可調式授權：把有效的「暫時授權」納入判斷（帳號層級）
+    account_id = str(sess.get("account_id") or "").strip()
+    if not account_id:
+        return False
+    extra = _temp_granted_perms(account_id)
+    return perm in extra or "admin_all" in extra
+
+
+def _scope_matches(scope: Dict[str, Any], ctx: Dict[str, Any]) -> bool:
+    """
+    範圍授權（scope）最小可行版：
+    - 支援：domain/domains、node_id/node_ids
+    - 未指定限制時視為允許
+    """
+    if not isinstance(scope, dict):
+        return True
+    if not isinstance(ctx, dict):
+        ctx = {}
+
+    dom = str(ctx.get("domain") or "").strip()
+    node_id = str(ctx.get("node_id") or "").strip()
+
+    # domain
+    if "domain" in scope:
+        want = str(scope.get("domain") or "").strip()
+        if want and dom and want != dom:
+            return False
+    if "domains" in scope and isinstance(scope.get("domains"), list):
+        ds = [str(x).strip() for x in scope.get("domains") if str(x).strip()]
+        if ds and dom and dom not in ds:
+            return False
+
+    # node_id
+    if "node_id" in scope:
+        want = str(scope.get("node_id") or "").strip()
+        if want and node_id and want != node_id:
+            return False
+    if "node_ids" in scope and isinstance(scope.get("node_ids"), list):
+        ns = [str(x).strip() for x in scope.get("node_ids") if str(x).strip()]
+        if ns and node_id and node_id not in ns:
+            return False
+
+    return True
+
+
+def _has_perm_scoped(sess: Optional[Dict[str, Any]], perm: str, ctx: Dict[str, Any]) -> bool:
+    """
+    用於「指令/對話」等帶上下文的場景：
+    - 永久權限（accounts_policy）仍視為全域允許
+    - 暫時授權（grant）會受 scope 限制
+    - full_agent：完全開放
+    """
+    pol = _load_accounts_policy()
+    enabled = bool((pol.get("accounts") or []))
+    if not enabled:
+        return perm == "read"
+    if not sess:
+        return False
+    perms = sess.get("permissions") or []
+    if "full_agent" in perms and _full_agent_allowed_for_session(sess):
+        return True
+    if perm in perms or "admin_all" in perms:
+        return True
+    account_id = str(sess.get("account_id") or "").strip()
+    if not account_id:
+        return False
+    for g in _load_temp_grants():
+        if not _grant_active_for_account(g, account_id):
+            continue
+        gscope = g.get("scope") if isinstance(g.get("scope"), dict) else {}
+        if not _scope_matches(gscope, ctx):
+            continue
+        # 新格式：items（每個 permission 各自到期）
+        if isinstance(g.get("items"), list):
+            now = int(time.time())
+            for it in g.get("items") or []:
+                if not isinstance(it, dict):
+                    continue
+                if str(it.get("permission") or "").strip() != perm:
+                    continue
+                if it.get("revoked_at"):
+                    continue
+                exp = it.get("expires_at_epoch")
+                try:
+                    if exp and int(exp) >= now:
+                        return True
+                except Exception:
+                    continue
+            continue
+        # 舊格式：permissions + expires_at_epoch
+        gperms = g.get("permissions") if isinstance(g.get("permissions"), list) else []
+        if perm in [str(x).strip() for x in gperms if str(x).strip()]:
+            return True
+    return False
 
 
 def _require_perm(handler: BaseHTTPRequestHandler, perm: str) -> Optional[Dict[str, Any]]:
@@ -462,13 +1304,70 @@ def _require_any_perm(handler: BaseHTTPRequestHandler, perms: List[str]) -> Opti
     return None
 
 
+def _authz_request_path(state: str, request_id: str) -> Path:
+    _ensure_authz_dirs()
+    rid = _safe_filename(request_id).replace(".", "")[:64] or _new_authz_request_id()
+    base = _authz_requests_dir(state)
+    p = (base / f"{rid}.json").resolve()
+    if _authz_dir() not in p.parents:
+        return (_authz_requests_dir("pending") / f"{_new_authz_request_id()}.json").resolve()
+    return p
+
+
+def _list_authz_requests(state: str = "pending", limit: int = 50) -> List[Dict[str, Any]]:
+    _ensure_authz_dirs()
+    base = _authz_requests_dir(state)
+    files = sorted(base.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    out: List[Dict[str, Any]] = []
+    for fp in files[: max(1, min(int(limit), 200))]:
+        try:
+            obj = json.loads(fp.read_text(encoding="utf-8"))
+            if isinstance(obj, dict):
+                obj.setdefault("id", fp.stem)
+                obj["_path"] = str(fp)
+                out.append(obj)
+            else:
+                out.append({"id": fp.stem, "error": "invalid_json", "_path": str(fp)})
+        except Exception:
+            out.append({"id": fp.stem, "error": "invalid_json", "_path": str(fp)})
+    return out
+
+
+def _find_authz_request(request_id: str) -> Optional[Path]:
+    rid = _safe_filename(request_id).replace(".", "")[:64]
+    if not rid:
+        return None
+    for st in ("pending", "approved", "denied"):
+        p = _authz_request_path(st, rid)
+        if p.exists():
+            return p
+    return None
+
+
+def _move_authz_request(request_id: str, to_state: str) -> Path:
+    src = _find_authz_request(request_id)
+    if not src:
+        raise FileNotFoundError("not_found")
+    rid = _safe_filename(request_id).replace(".", "")[:64] or src.stem
+    dst = _authz_request_path(to_state, rid)
+    src.replace(dst)
+    return dst
+
+
 def _pii_vault_dir() -> Optional[Path]:
     """
     個資保管：靠 Google Workspace（Drive 同步資料夾）落地。
     - 優先：WUCHANG_PII_OUTDIR（可指定更私密的子資料夾）
-    - 其次：WUCHANG_WORKSPACE_OUTDIR
+    - 其次：<WUCHANG_SYSTEM_DB_DIR>/vault
+    - 再其次：WUCHANG_WORKSPACE_OUTDIR（相容舊）
     """
-    outdir = (os.getenv("WUCHANG_PII_OUTDIR") or os.getenv("WUCHANG_WORKSPACE_OUTDIR") or "").strip()
+    outdir = (os.getenv("WUCHANG_PII_OUTDIR") or "").strip()
+    if outdir:
+        return Path(outdir).expanduser().resolve()
+    d2 = _system_vault_dir()
+    if d2:
+        return d2
+    outdir = (os.getenv("WUCHANG_WORKSPACE_OUTDIR") or "").strip()
     if not outdir:
         return None
     return Path(outdir).expanduser().resolve()
@@ -495,13 +1394,18 @@ def _vault_safe_path(*parts: str) -> Path:
 
 def _workspace_outdir() -> Optional[Path]:
     """
-    一般輸出/交換區：靠 Google Drive 同步資料夾落地。
-    （用於「設備任務/回覆」等，不放 repo）
+    交換區（建議）：靠 Google Drive 同步資料夾落地。
+    - 優先：WUCHANG_WORKSPACE_EXCHANGE_DIR（更精準：專放 device_tasks/device_results 等交換檔）
+    - 其次：<WUCHANG_SYSTEM_DB_DIR>/exchange
+    - 再其次：WUCHANG_WORKSPACE_OUTDIR（相容舊設定）
     """
-    outdir = (os.getenv("WUCHANG_WORKSPACE_OUTDIR") or "").strip()
-    if not outdir:
-        return None
-    return Path(outdir).expanduser().resolve()
+    outdir = (os.getenv("WUCHANG_WORKSPACE_EXCHANGE_DIR") or os.getenv("WUCHANG_WORKSPACE_OUTDIR") or "").strip()
+    if outdir:
+        return Path(outdir).expanduser().resolve()
+    d2 = _system_exchange_dir()
+    if d2:
+        return d2
+    return None
 
 
 def _workspace_safe_path(*parts: str) -> Path:
@@ -690,6 +1594,160 @@ def _voucher_is_valid_now(v: Dict[str, Any]) -> bool:
 
 def _job_now_iso() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%S%z")
+
+
+def _parse_iso_epoch(ts: str) -> Optional[int]:
+    ts = str(ts or "").strip()
+    if not ts:
+        return None
+    try:
+        # 例如 2026-01-15T12:34:56+0800
+        t = time.strptime(ts, "%Y-%m-%dT%H:%M:%S%z")
+        return int(time.mktime(t))
+    except Exception:
+        return None
+
+
+def _job_age_seconds(job: Dict[str, Any]) -> Optional[int]:
+    created = str(job.get("created_at") or "").strip()
+    ep = _parse_iso_epoch(created)
+    if ep is None:
+        return None
+    return int(time.time()) - ep
+
+
+def _verify_programmatically(*, include_hub: bool = True) -> Dict[str, Any]:
+    """
+    程序驗證器（不依賴語言模型）：
+    - 檢查本機 job 是否卡住（outbox/sent 逾時）
+    - 若已設定 Hub：檢查 Hub 可達、inbox 是否有 confirmed 卡住、以及是否已歸檔
+    """
+    now = int(time.time())
+    alerts: List[Dict[str, Any]] = []
+
+    def add(level: str, code: str, msg: str, extra: Optional[Dict[str, Any]] = None) -> None:
+        item = {"level": level, "code": code, "message": msg, "time_epoch": now}
+        if isinstance(extra, dict):
+            item.update(extra)
+        alerts.append(item)
+
+    # 本機 jobs
+    outbox = _list_jobs("outbox", limit=200)
+    sent = _list_jobs("sent", limit=200)
+
+    # 規則：outbox > 10 分鐘 → 警告
+    for j in outbox:
+        if not isinstance(j, dict):
+            continue
+        age = _job_age_seconds(j)
+        if age is None:
+            continue
+        if age > 10 * 60:
+            add(
+                "warn",
+                "local_outbox_stale",
+                "本機命令單待送（outbox）逾時，可能尚未送到 Hub。",
+                {"job_id": j.get("id"), "type": j.get("type"), "age_seconds": age},
+            )
+
+    # 規則：sent > 60 分鐘仍未能驗證完成 → 警告（需配合 Hub archive 才能判定完成）
+    for j in sent:
+        if not isinstance(j, dict):
+            continue
+        age = _job_age_seconds(j)
+        if age is None:
+            continue
+        if age > 60 * 60:
+            add(
+                "warn",
+                "local_sent_unverified",
+                "本機命令單已送（sent）但逾時仍未驗證完成（建議查看 Hub inbox/archive 與 executor）。",
+                {"job_id": j.get("id"), "type": j.get("type"), "age_seconds": age},
+            )
+
+    hub_summary: Dict[str, Any] = {"configured": False}
+    if include_hub:
+        env = _hub_env()
+        if env.get("url") and env.get("token"):
+            hub_summary["configured"] = True
+            health = _hub_request("GET", env["url"] + "/health", payload=None, timeout=3)
+            hub_summary["health"] = health
+            if not health.get("ok"):
+                add("bad", "hub_unreachable", "Hub 無回應/不可驗證（無回應＝禁止高風險作業）。", {"hub_url": env.get("url")})
+            else:
+                inbox_res = _hub_request("GET", env["url"] + "/api/hub/jobs/list?state=inbox&limit=200", payload=None, timeout=6)
+                arch_res = _hub_request("GET", env["url"] + "/api/hub/jobs/list?state=archive&limit=200", payload=None, timeout=6)
+                hub_summary["inbox"] = inbox_res
+                hub_summary["archive"] = arch_res
+
+                inbox_items = (inbox_res.get("data") or {}).get("items") if isinstance(inbox_res.get("data"), dict) else []
+                arch_items = (arch_res.get("data") or {}).get("items") if isinstance(arch_res.get("data"), dict) else []
+                arch_ids = set()
+                for x in arch_items or []:
+                    if isinstance(x, dict) and x.get("id"):
+                        arch_ids.add(str(x.get("id")))
+
+                # 規則：Hub inbox confirmed 逾 15 分鐘 → 異常（executor 可能未啟動/未 execute）
+                for j in inbox_items or []:
+                    if not isinstance(j, dict):
+                        continue
+                    hub = j.get("hub") if isinstance(j.get("hub"), dict) else {}
+                    if hub.get("confirmed") is True:
+                        t0 = _parse_iso_epoch(str(hub.get("confirmed_at") or hub.get("received_at") or "")) or _parse_iso_epoch(str(j.get("created_at") or ""))
+                        if t0 and (now - t0) > 15 * 60:
+                            add(
+                                "bad",
+                                "hub_confirmed_stuck",
+                                "Hub 收件匣已確認但逾時未歸檔（疑似未執行或執行器未啟用）。",
+                                {"job_id": j.get("id"), "type": j.get("type"), "age_seconds": now - t0},
+                            )
+                    else:
+                        t0 = _parse_iso_epoch(str(hub.get("received_at") or "")) or _parse_iso_epoch(str(j.get("created_at") or ""))
+                        if t0 and (now - t0) > 60 * 60:
+                            add(
+                                "warn",
+                                "hub_pending_stale",
+                                "Hub 收件匣待確認逾時（可能忘了按「Hub 確認」）。",
+                                {"job_id": j.get("id"), "type": j.get("type"), "age_seconds": now - t0},
+                            )
+
+                # 規則：本機 sent 若已出現在 Hub archive → 視為已完成可驗證
+                for j in sent:
+                    if not isinstance(j, dict):
+                        continue
+                    jid = str(j.get("id") or "").strip()
+                    if jid and jid in arch_ids:
+                        # 可選：不列 alert，只在 summary 統計
+                        pass
+
+    # 整體狀態
+    worst = "ok"
+    for a in alerts:
+        if a.get("level") == "bad":
+            worst = "bad"
+            break
+        if a.get("level") == "warn" and worst != "bad":
+            worst = "warn"
+
+    summary = {
+        "ok": True,
+        "timestamp": _job_now_iso(),
+        "status": worst,
+        "counts": {
+            "alerts": len(alerts),
+            "local_outbox": len(outbox),
+            "local_sent": len(sent),
+        },
+        "alerts": alerts,
+        "hub": hub_summary,
+    }
+
+    # 稽核：只記摘要（避免太大）
+    try:
+        _append_jsonl(VERIFY_AUDIT_JSONL, {"timestamp": summary["timestamp"], "kind": "verify_snapshot", "status": worst, "alerts": len(alerts)})
+    except Exception:
+        pass
+    return summary
 
 
 # ===== 不可識別個資（帳號編號 account_id 為主鍵，用於習慣分析/系統改版參考） =====
@@ -1129,6 +2187,31 @@ def _run_script(args: List[str], timeout_seconds: int = 60) -> Dict[str, Any]:
         return {"exit_code": 3, "stdout": "", "stderr": f"exception: {e}"}
 
 
+def _hub_env() -> Dict[str, str]:
+    return {
+        "url": (os.getenv("WUCHANG_HUB_URL") or "").strip().rstrip("/"),
+        "token": (os.getenv("WUCHANG_HUB_TOKEN") or "").strip(),
+    }
+
+
+def _hub_request(method: str, url: str, payload: Optional[Dict[str, Any]] = None, timeout: int = 6) -> Dict[str, Any]:
+    env = _hub_env()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    if env.get("token"):
+        headers["X-LittleJ-Token"] = env["token"]
+    data = json.dumps(payload or {}, ensure_ascii=False).encode("utf-8") if payload is not None else None
+    try:
+        req = Request(url, method=method.upper(), headers=headers)
+        with urlopen(req, data=data, timeout=timeout) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+            try:
+                return {"ok": True, "status": int(getattr(resp, "status", 200)), "data": json.loads(raw)}
+            except Exception:
+                return {"ok": True, "status": int(getattr(resp, "status", 200)), "raw": raw}
+    except Exception as e:
+        return {"ok": False, "error": f"hub_request_failed: {e}"}
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt: str, *args: Any) -> None:
         return
@@ -1137,6 +2220,17 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == "/":
             _serve_file(self, UI_HTML, "text/html; charset=utf-8")
+            return
+
+        if parsed.path == "/api/maintenance/status":
+            # 全 UI 都需要顯示的風險提示：不要求登入（不回傳敏感資料）
+            _json(self, HTTPStatus.OK, {"ok": True, "status": _system_maintenance_status()})
+            return
+
+        if parsed.path == "/api/design_mode/status":
+            if not _require_perm(self, "read"):
+                return
+            _json(self, HTTPStatus.OK, {"ok": True, "design_mode": _design_mode_status()})
             return
 
         if parsed.path == "/api/local/health":
@@ -1221,6 +2315,76 @@ class Handler(BaseHTTPRequestHandler):
                 return
             items = _tail_jsonl(p, limit=max(1, min(limit, 200)))
             _json(self, HTTPStatus.OK, {"ok": True, "file": str(p), "items": items})
+            return
+
+        if parsed.path == "/api/authz/requests/list":
+            # 管理員查看授權請示單（pending/approved/denied）
+            qs = parse_qs(parsed.query)
+            state = (qs.get("state") or ["pending"])[0].strip()
+            limit = int((qs.get("limit") or ["50"])[0])
+            mine = (qs.get("mine") or ["0"])[0].strip().lower() in ("1", "true", "yes", "y")
+            sess = _get_session(self)
+            is_admin = _has_perm(sess, "auth_manage") or _has_perm(sess, "job_manage")
+            if not is_admin:
+                # 非管理員：只允許列出自己的 pending（mine=1）
+                if not sess or not mine:
+                    _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required_any": ["auth_manage", "job_manage"], "hint": "use ?mine=1 to list your pending requests"})
+                    return
+                items = _list_authz_requests(state="pending", limit=limit)
+                aid = str((sess or {}).get("account_id") or "").strip()
+                items = [x for x in items if isinstance(x, dict) and str(x.get("requester_account_id") or "").strip() == aid]
+                _json(self, HTTPStatus.OK, {"ok": True, "state": "pending", "count": len(items), "items": items, "mine": True})
+                return
+            qs = parse_qs(parsed.query)
+            items = _list_authz_requests(state=state, limit=limit)
+            _json(self, HTTPStatus.OK, {"ok": True, "state": state, "count": len(items), "items": items})
+            return
+
+        if parsed.path == "/api/authz/requests/get":
+            qs = parse_qs(parsed.query)
+            rid = (qs.get("id") or [""])[0].strip()
+            sess = _get_session(self)
+            is_admin = _has_perm(sess, "auth_manage") or _has_perm(sess, "job_manage")
+            if not is_admin and not sess:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            qs = parse_qs(parsed.query)
+            p = _find_authz_request(rid)
+            if not p:
+                _json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": "not_found"})
+                return
+            try:
+                obj = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                _json(self, HTTPStatus.OK, {"ok": True, "id": rid, "error": "invalid_json", "path": str(p)})
+                return
+            # 非管理員：只允許讀自己的請示單
+            if not is_admin:
+                aid = str((sess or {}).get("account_id") or "").strip()
+                if aid and str(obj.get("requester_account_id") or "").strip() != aid:
+                    _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required_any": ["auth_manage", "job_manage"]})
+                    return
+            _json(self, HTTPStatus.OK, {"ok": True, "id": rid, "path": str(p), "request": obj})
+            return
+
+        if parsed.path == "/api/authz/grants/list":
+            if not _require_any_perm(self, ["auth_manage", "job_manage"]):
+                return
+            qs = parse_qs(parsed.query)
+            account_id = (qs.get("account_id") or [""])[0].strip()
+            grants = _load_temp_grants()
+            if account_id:
+                grants = [g for g in grants if isinstance(g, dict) and str(g.get("account_id") or "").strip() == account_id]
+            _json(self, HTTPStatus.OK, {"ok": True, "count": len(grants), "items": grants, "path": str(_authz_grants_path())})
+            return
+
+        if parsed.path == "/api/verify/status":
+            if not _require_perm(self, "read"):
+                return
+            qs = parse_qs(parsed.query)
+            include_hub = (qs.get("hub") or ["1"])[0].strip().lower() in ("1", "true", "yes", "y")
+            res = _verify_programmatically(include_hub=include_hub)
+            _json(self, HTTPStatus.OK, res)
             return
 
         if parsed.path == "/api/docs":
@@ -1388,6 +2552,60 @@ class Handler(BaseHTTPRequestHandler):
             _json(self, HTTPStatus.OK, {"ok": True, "path": str(p or ""), "data": _read_workspace_matching()})
             return
 
+        if parsed.path == "/api/workspace/alignment":
+            if not _require_perm(self, "read"):
+                return
+            # 直接讀取檢查腳本輸出（不落地、不改檔）
+            res = _run_script(["workspace_alignment_check.py"], timeout_seconds=20)
+            try:
+                obj = json.loads(res.get("stdout") or "{}")
+            except Exception:
+                obj = {"ok": False, "error": "invalid_checker_output", "run": res}
+            _json(self, HTTPStatus.OK, {"ok": True, "alignment": obj, "run": res})
+            return
+
+        if parsed.path == "/api/hub/status":
+            if not _require_perm(self, "read"):
+                return
+            env = _hub_env()
+            if not env.get("url"):
+                _json(self, HTTPStatus.OK, {"ok": True, "configured": False, "hint": "set WUCHANG_HUB_URL and WUCHANG_HUB_TOKEN"})
+                return
+            health = _hub_request("GET", env["url"] + "/health", payload=None, timeout=3)
+            _json(self, HTTPStatus.OK, {"ok": True, "configured": True, "hub_url": env["url"], "health": health})
+            return
+
+        if parsed.path == "/api/hub/server_info":
+            if not _require_perm(self, "read"):
+                return
+            env = _hub_env()
+            if not env.get("url") or not env.get("token"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_hub_config", "hint": "set WUCHANG_HUB_URL and WUCHANG_HUB_TOKEN"})
+                return
+            health = _hub_request("GET", env["url"] + "/health", payload=None, timeout=3)
+            if not health.get("ok"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "hub_unreachable", "health": health})
+                return
+            res = _hub_request("GET", env["url"] + "/api/hub/server/info", payload=None, timeout=8)
+            _json(self, HTTPStatus.OK, {"ok": True, "hub": res})
+            return
+
+        if parsed.path == "/api/hub/server_architecture":
+            if not _require_perm(self, "read"):
+                return
+            env = _hub_env()
+            if not env.get("url") or not env.get("token"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_hub_config", "hint": "set WUCHANG_HUB_URL and WUCHANG_HUB_TOKEN"})
+                return
+            # 無回應＝禁止：先確認 Hub 可回應，再取架構資料
+            health = _hub_request("GET", env["url"] + "/health", payload=None, timeout=3)
+            if not health.get("ok"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "hub_unreachable", "health": health})
+                return
+            res = _hub_request("GET", env["url"] + "/api/hub/server/architecture", payload=None, timeout=12)
+            _json(self, HTTPStatus.OK, {"ok": True, "hub": res})
+            return
+
         if parsed.path == "/api/vouchers/list":
             # 預留：票券/折扣碼清單（不回傳明文折扣碼）
             if not _require_any_perm(self, ["voucher_read", "voucher_manage", "read"]):
@@ -1516,6 +2734,7 @@ class Handler(BaseHTTPRequestHandler):
             # 任務檔寫入 Drive 同步夾：手機/設備可直接看到並處理
             task_path = _write_workspace_json(rel_dir="device_tasks", filename=f"{job_id}.json", payload=task)
 
+            accountability = _accountability_from_session(sess)
             job = {
                 "id": job_id,
                 "created_at": _job_now_iso(),
@@ -1524,6 +2743,7 @@ class Handler(BaseHTTPRequestHandler):
                 "requester_account_id": account_id,
                 "domain": domain,
                 "node": node,
+                "accountability": accountability,
                 "params": {
                     "device_id": device_id,
                     "action": action,
@@ -1540,7 +2760,10 @@ class Handler(BaseHTTPRequestHandler):
                 "status": {"state": "outbox", "device_task_written": True, "device_done": False},
             }
             p = _write_job("outbox", job)
-            _append_jsonl(JOB_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "job_created", "job_id": job_id, "type": "device_request", "actor": actor})
+            _append_jsonl(
+                JOB_AUDIT_JSONL,
+                {"timestamp": _job_now_iso(), "kind": "job_created", "job_id": job_id, "type": "device_request", "actor": actor, "accountability": accountability},
+            )
             _append_jsonl(DEVICE_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "device_task_written", "job_id": job_id, "device_id": device_id, "task_relpath": str(task_path)})
 
             # 注意：回覆 token 需要交付給設備（此回應會顯示在 UI）；請勿貼到雲端聊天。
@@ -1709,6 +2932,68 @@ class Handler(BaseHTTPRequestHandler):
             _json(self, HTTPStatus.OK, {"ok": True, "config": dict(AGENT_CONFIG)})
             return
 
+        if parsed.path == "/api/design_mode/set":
+            # 只有具備管理型權限的人可啟用/關閉（避免一般帳號誤觸）
+            if not _require_any_perm(self, ["auth_manage", "agent_config", "job_manage"]):
+                return
+            sess = _get_session(self)
+            data = _read_json(self)
+            enabled = bool(data.get("enabled"))
+            ttl = int(data.get("ttl_seconds") or 0)
+            ttl = max(60, min(ttl if ttl > 0 else 20 * 60, 8 * 3600))  # 預設 20 分鐘，上限 8 小時
+            reason = str(data.get("reason") or "").strip()
+            actor = str(data.get("actor") or "").strip()
+            aid = str((sess or {}).get("account_id") or "").strip()
+            who = aid or actor or "unknown"
+
+            now = int(time.time())
+            st = _load_design_mode_state()
+            if enabled:
+                st = {
+                    "enabled": True,
+                    "enabled_until_epoch": now + ttl,
+                    "enabled_by_account_id": who,
+                    "reason": reason,
+                    "updated_at": _job_now_iso(),
+                }
+                _save_design_mode_state(st)
+                _append_jsonl(
+                    DESIGN_MODE_AUDIT_JSONL,
+                    {"timestamp": _job_now_iso(), "kind": "design_mode_enabled", "by": who, "ttl_seconds": ttl, "until_epoch": now + ttl, "reason": reason},
+                )
+                rec = _write_design_mode_record("design_mode_enabled", sess=sess, actor=who, reason=reason, extra={"ttl_seconds": ttl, "until_epoch": now + ttl})
+            else:
+                st = {
+                    "enabled": False,
+                    "enabled_until_epoch": 0,
+                    "enabled_by_account_id": who,
+                    "reason": reason,
+                    "updated_at": _job_now_iso(),
+                }
+                _save_design_mode_state(st)
+                _append_jsonl(
+                    DESIGN_MODE_AUDIT_JSONL,
+                    {"timestamp": _job_now_iso(), "kind": "design_mode_disabled", "by": who, "reason": reason},
+                )
+                rec = _write_design_mode_record("design_mode_disabled", sess=sess, actor=who, reason=reason, extra={})
+            _json(self, HTTPStatus.OK, {"ok": True, "design_mode": _design_mode_status(), "record_written": rec})
+            return
+
+        if parsed.path == "/api/design_mode/record":
+            # 手動產生資訊紀錄（不影響任何功能）
+            if not _require_any_perm(self, ["auth_manage", "agent_config", "job_manage", "read"]):
+                return
+            sess = _get_session(self)
+            data = _read_json(self)
+            actor = str(data.get("actor") or "").strip()
+            reason = str(data.get("reason") or "").strip()
+            kind = str(data.get("kind") or "design_mode_record_manual").strip() or "design_mode_record_manual"
+            aid = str((sess or {}).get("account_id") or "").strip()
+            who = aid or actor or "unknown"
+            rec = _write_design_mode_record(kind, sess=sess, actor=who, reason=reason, extra={"manual": True})
+            _json(self, HTTPStatus.OK, {"ok": True, "record_written": rec, "design_mode": _design_mode_status()})
+            return
+
         if parsed.path == "/api/jobs/create":
             if not _require_perm(self, "job_create"):
                 return
@@ -1726,6 +3011,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             job_id = _new_job_id()
+            accountability = _accountability_from_session(sess)
             job = {
                 "id": job_id,
                 "created_at": _job_now_iso(),
@@ -1735,6 +3021,7 @@ class Handler(BaseHTTPRequestHandler):
                 "domain": domain,
                 "node": node,
                 "params": params,
+                "accountability": accountability,
                 "policy": {
                     "no_response_no_high_risk_action": True,
                     "requires_confirmation": True if job_type in ("sync_push", "deploy", "restart", "clear_cache", "issue_cert") else False,
@@ -1744,7 +3031,15 @@ class Handler(BaseHTTPRequestHandler):
             p = _write_job("outbox", job)
             _append_jsonl(
                 JOB_AUDIT_JSONL,
-                {"timestamp": _job_now_iso(), "kind": "job_created", "job_id": job_id, "type": job_type, "actor": actor, "account_id": account_id},
+                {
+                    "timestamp": _job_now_iso(),
+                    "kind": "job_created",
+                    "job_id": job_id,
+                    "type": job_type,
+                    "actor": actor,
+                    "account_id": account_id,
+                    "accountability": accountability,
+                },
             )
             _json(self, HTTPStatus.OK, {"ok": True, "job_id": job_id, "path": str(p), "job": job})
             return
@@ -2035,6 +3330,286 @@ class Handler(BaseHTTPRequestHandler):
             _json(self, HTTPStatus.OK, {"ok": True, "redeemed": True, "voucher_id": vid, "voucher": safe, "store_path": str(p or "")})
             return
 
+        if parsed.path == "/api/hub/submit_job":
+            # 人類端點：由本機 UI 把命令單送到伺服器小J Hub（機器可讀交流區）
+            if not _require_perm(self, "job_create"):
+                return
+            env = _hub_env()
+            if not env.get("url") or not env.get("token"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_hub_config", "hint": "set WUCHANG_HUB_URL and WUCHANG_HUB_TOKEN"})
+                return
+            data = _read_json(self)
+            job_id = str(data.get("job_id") or "").strip()
+            if not job_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_job_id"})
+                return
+            p = _find_job(job_id)
+            if not p:
+                _json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": "job_not_found"})
+                return
+            try:
+                job = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "invalid_job_json"})
+                return
+
+            # 無回應＝禁止：Hub health 不可達就不送（避免黑洞）
+            health = _hub_request("GET", env["url"] + "/health", payload=None, timeout=3)
+            if not health.get("ok"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "hub_unreachable", "health": health})
+                return
+
+            res = _hub_request("POST", env["url"] + "/api/hub/jobs/submit", payload={"job": job}, timeout=6)
+            _json(self, HTTPStatus.OK, {"ok": True, "hub": res, "job_id": job_id})
+            return
+
+        if parsed.path == "/api/hub/confirm_job":
+            # 人類端點：由本機 UI 代替人類在伺服器端 Hub 上確認該 job（允許 executor 執行）
+            if not _require_perm(self, "job_manage"):
+                return
+            env = _hub_env()
+            if not env.get("url") or not env.get("token"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_hub_config", "hint": "set WUCHANG_HUB_URL and WUCHANG_HUB_TOKEN"})
+                return
+            data = _read_json(self)
+            job_id = str(data.get("job_id") or "").strip()
+            actor = str(data.get("actor") or "ops").strip() or "ops"
+            if not job_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_job_id"})
+                return
+            health = _hub_request("GET", env["url"] + "/health", payload=None, timeout=3)
+            if not health.get("ok"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "hub_unreachable", "health": health})
+                return
+            res = _hub_request("POST", env["url"] + "/api/hub/jobs/confirm", payload={"id": job_id, "actor": actor}, timeout=6)
+            _json(self, HTTPStatus.OK, {"ok": True, "hub": res, "job_id": job_id})
+            return
+
+        if parsed.path == "/api/hub/generate_reports":
+            # 伺服器端生成回報檔（寫入 server exchange/artifacts），供後續設計/對齊使用
+            if not _require_perm(self, "job_manage"):
+                return
+            env = _hub_env()
+            if not env.get("url") or not env.get("token"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_hub_config", "hint": "set WUCHANG_HUB_URL and WUCHANG_HUB_TOKEN"})
+                return
+            data = _read_json(self)
+            actor = str(data.get("actor") or "ops").strip() or "ops"
+            # 無回應＝禁止：Hub health 不可達就不做（避免黑洞）
+            health = _hub_request("GET", env["url"] + "/health", payload=None, timeout=3)
+            if not health.get("ok"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "hub_unreachable", "health": health})
+                return
+            res = _hub_request("POST", env["url"] + "/api/hub/server/reports/generate", payload={"actor": actor}, timeout=20)
+            _json(self, HTTPStatus.OK, {"ok": True, "hub": res})
+            return
+
+        if parsed.path == "/api/authz/request":
+            # 任何已登入帳號可提出「權限請示」；由管理員核准後給暫時授權（可到期）
+            sess = _get_session(self)
+            if not sess:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
+                return
+            data = _read_json(self)
+            account_id = str(sess.get("account_id") or "").strip()
+            actor = str(data.get("actor") or f"acct:{account_id}" or "ops").strip() or "ops"
+            perms = data.get("permissions") if isinstance(data.get("permissions"), list) else []
+            perms = [str(x).strip() for x in perms if str(x).strip()]
+            ttl = int(data.get("ttl_seconds") or 0)
+            items = data.get("items") if isinstance(data.get("items"), list) else []
+            scope = data.get("scope") if isinstance(data.get("scope"), dict) else {}
+            reason = str(data.get("reason") or "").strip()
+            context = data.get("context") if isinstance(data.get("context"), dict) else {}
+            if not perms:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_permissions"})
+                return
+            # full_agent：若責任位置未填，不可提出/保存完整權限請示
+            if "full_agent" in perms:
+                acc = _find_account(account_id) or {}
+                if not _full_agent_allowed_for_account(acc):
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "full_agent_blocked_missing_responsibility", "hint": "fill design_responsibility.natural_person and usage_responsibility.natural_person first"})
+                    return
+            # 指令/請示必須包含：時間授權 + 範圍授權（除非 full_agent 完全開放）
+            if not _has_perm(sess, "full_agent"):
+                # 支援兩種時間模型：ttl_seconds（整體）或 items[*].ttl_seconds（逐項）
+                has_item_ttl = False
+                for it in items:
+                    if isinstance(it, dict) and int(it.get("ttl_seconds") or 0) > 0:
+                        has_item_ttl = True
+                        break
+                if ttl <= 0 and not has_item_ttl:
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_time_grant", "hint": "include ttl_seconds or items[].ttl_seconds"})
+                    return
+                if not scope:
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_scope", "hint": "include scope in authz request (e.g. {domain,node_id})"})
+                    return
+            rid = _new_authz_request_id()
+            req = {
+                "id": rid,
+                "created_at": _job_now_iso(),
+                "requester_account_id": account_id,
+                "requested_by": actor,
+                "permissions": perms,
+                "ttl_seconds": ttl if ttl > 0 else 0,
+                "items": items,
+                "scope": scope,
+                "reason": reason,
+                "context": context,
+                "status": "pending",
+            }
+            p = _authz_request_path("pending", rid)
+            _write_json_file(p, req)
+            _append_jsonl(AUTHZ_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "authz_request_created", "request_id": rid, "account_id": account_id, "permissions": perms})
+            _json(self, HTTPStatus.OK, {"ok": True, "request_id": rid, "path": str(p), "request": req})
+            return
+
+        if parsed.path == "/api/authz/requests/approve":
+            if not _require_any_perm(self, ["auth_manage", "job_manage"]):
+                return
+            data = _read_json(self)
+            rid = str(data.get("id") or "").strip()
+            ttl = int(data.get("ttl_seconds") or 3600)
+            ttl = max(60, min(ttl, 24 * 3600))
+            override_scope = data.get("scope") if isinstance(data.get("scope"), dict) else None
+            override_items = data.get("items") if isinstance(data.get("items"), list) else None
+            sess = _get_session(self)
+            approver = str((sess or {}).get("account_id") or "").strip()
+            if not rid:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_id"})
+                return
+            p = _find_authz_request(rid)
+            if not p:
+                _json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": "not_found"})
+                return
+            req = _read_json_file(p, default={})
+            if not isinstance(req, dict):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "invalid_request"})
+                return
+            acct = str(req.get("requester_account_id") or "").strip()
+            perms = req.get("permissions") if isinstance(req.get("permissions"), list) else []
+            perms = [str(x).strip() for x in perms if str(x).strip()]
+            scope = override_scope if isinstance(override_scope, dict) else (req.get("scope") if isinstance(req.get("scope"), dict) else {})
+            items = override_items if isinstance(override_items, list) else (req.get("items") if isinstance(req.get("items"), list) else [])
+            if not acct or not perms:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "invalid_request_fields"})
+                return
+            # full_agent：若該帳號責任位置未填，不可核准完整權限
+            if "full_agent" in perms or any(isinstance(it, dict) and str(it.get("permission") or "").strip() == "full_agent" for it in (items or [])):
+                acc = _find_account(acct) or {}
+                if not _full_agent_allowed_for_account(acc):
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "full_agent_blocked_missing_responsibility", "hint": "fill design_responsibility.natural_person and usage_responsibility.natural_person for the requester account first"})
+                    return
+            if not scope and not _has_perm(sess, "full_agent"):
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_scope", "hint": "approve must include scope (or request must contain scope)"})
+                return
+            # 建立逐項到期（items）；若 items 不存在就用 permissions+ttl 退化成舊模式
+            now = int(time.time())
+            items_out: List[Dict[str, Any]] = []
+            if isinstance(items, list) and items:
+                for it in items:
+                    if not isinstance(it, dict):
+                        continue
+                    p0 = str(it.get("permission") or "").strip()
+                    t0 = int(it.get("ttl_seconds") or 0)
+                    if not p0:
+                        continue
+                    if t0 <= 0:
+                        t0 = ttl
+                    t0 = max(60, min(int(t0), 24 * 3600))
+                    items_out.append({"permission": p0, "ttl_seconds": t0, "expires_at_epoch": now + t0})
+            grant_id = "grant_" + uuid.uuid4().hex[:12]
+            grant = {
+                "id": grant_id,
+                "account_id": acct,
+                "permissions": perms,
+                "scope": scope,
+                "items": items_out,
+                "approved_at": _job_now_iso(),
+                "approved_by": approver,
+                "expires_at_epoch": now + ttl,
+                "expires_in_seconds": ttl,
+                "request_id": rid,
+            }
+            grants = _load_temp_grants()
+            grants.insert(0, grant)
+            _save_temp_grants(grants)
+            req["status"] = "approved"
+            req["approved_at"] = _job_now_iso()
+            req["approved_by"] = approver
+            req["grant_id"] = grant_id
+            _write_json_file(p, req)
+            dst = _move_authz_request(rid, "approved")
+            _append_jsonl(
+                AUTHZ_AUDIT_JSONL,
+                {
+                    "timestamp": _job_now_iso(),
+                    "kind": "authz_request_approved",
+                    "request_id": rid,
+                    "grant_id": grant_id,
+                    "approved_by": approver,
+                    "account_id": acct,
+                    "permissions": perms,
+                    "ttl_seconds": ttl,
+                },
+            )
+            _json(self, HTTPStatus.OK, {"ok": True, "request_id": rid, "grant": grant, "moved_to": str(dst), "grants_path": str(_authz_grants_path())})
+            return
+
+        if parsed.path == "/api/authz/requests/deny":
+            if not _require_any_perm(self, ["auth_manage", "job_manage"]):
+                return
+            data = _read_json(self)
+            rid = str(data.get("id") or "").strip()
+            deny_reason = str(data.get("reason") or "").strip()
+            sess = _get_session(self)
+            actor = str((sess or {}).get("account_id") or "").strip()
+            if not rid:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_id"})
+                return
+            p = _find_authz_request(rid)
+            if not p:
+                _json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": "not_found"})
+                return
+            req = _read_json_file(p, default={})
+            if isinstance(req, dict):
+                req["status"] = "denied"
+                req["denied_at"] = _job_now_iso()
+                req["denied_by"] = actor
+                if deny_reason:
+                    req["deny_reason"] = deny_reason
+                _write_json_file(p, req)
+            dst = _move_authz_request(rid, "denied")
+            _append_jsonl(AUTHZ_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "authz_request_denied", "request_id": rid, "denied_by": actor, "reason": deny_reason})
+            _json(self, HTTPStatus.OK, {"ok": True, "request_id": rid, "moved_to": str(dst)})
+            return
+
+        if parsed.path == "/api/authz/grants/revoke":
+            if not _require_any_perm(self, ["auth_manage", "job_manage"]):
+                return
+            data = _read_json(self)
+            gid = str(data.get("id") or "").strip()
+            revoke_reason = str(data.get("reason") or "").strip()
+            if not gid:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_id"})
+                return
+            sess = _get_session(self)
+            actor = str((sess or {}).get("account_id") or "").strip()
+            grants = _load_temp_grants()
+            changed = False
+            for g in grants:
+                if isinstance(g, dict) and str(g.get("id") or "").strip() == gid and not g.get("revoked_at"):
+                    g["revoked_at"] = _job_now_iso()
+                    g["revoked_by"] = actor
+                    if revoke_reason:
+                        g["revoke_reason"] = revoke_reason
+                    changed = True
+                    break
+            if changed:
+                _save_temp_grants(grants)
+                _append_jsonl(AUTHZ_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "authz_grant_revoked", "grant_id": gid, "revoked_by": actor, "reason": revoke_reason})
+            _json(self, HTTPStatus.OK, {"ok": True, "revoked": changed, "grant_id": gid, "path": str(_authz_grants_path())})
+            return
+
         if parsed.path == "/api/profile/nonid/set":
             # 帳號層級不可識別個資：只允許寫自己的 account_id（除非 admin_all）
             sess = _require_any_perm(self, ["pii_write_non_identifiable", "pii_write"])
@@ -2197,13 +3772,95 @@ class Handler(BaseHTTPRequestHandler):
 
             # 依意圖做權限門檻（避免繞過 job_create/pii/workspace 等）
             it0 = str(intent_peek.get("intent") or "unknown")
-            if it0 in ("push_rules", "push_kb"):
-                if not _require_perm(self, "job_create"):
+            required_perm = "job_create" if it0 in ("push_rules", "push_kb") else "read"
+            ctx_scope = {"domain": domain, "node_id": str(node.get("id") or "").strip()}
+            if not _has_perm_scoped(sess, required_perm, ctx_scope):
+                # 可調式授權：權限不足時，小J 主動建立「授權請示單」並回覆下一步
+                if not sess or not str((sess or {}).get("account_id") or "").strip():
+                    _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": required_perm})
                     return
-            else:
-                # 其他查詢/說明類：read
-                if not _require_perm(self, "read"):
-                    return
+                suggested = _suggest_authz_permissions(text)
+                requested_perms = suggested if suggested else [required_perm]
+                rid = _new_authz_request_id()
+                items = _suggest_authz_items(text)
+                if not items:
+                    items = [{"permission": p, "ttl_seconds": 3600} for p in requested_perms]
+                ttl_seconds = max([int(it.get("ttl_seconds") or 0) for it in items] + [3600])
+                scope = {
+                    "domain": domain,
+                    "node_id": str(node.get("id") or "").strip(),
+                }
+                req = {
+                    "id": rid,
+                    "created_at": _job_now_iso(),
+                    "requester_account_id": str((sess or {}).get("account_id") or "").strip(),
+                    "requested_by": actor,
+                    "permissions": requested_perms,
+                    "ttl_seconds": ttl_seconds,
+                    "items": items,
+                    "scope": scope,
+                    "reason": (
+                        f"小J 自動請示：執行意圖={it0} 權限不足。"
+                        + (f" 建議授權層級={','.join(requested_perms)}" if requested_perms else f" 需要權限 {required_perm}")
+                    ),
+                    "context": {
+                        "source": "agent_chat",
+                        "intent": it0,
+                        "text": text[:5000],
+                        "node": {"id": str(node.get("id") or ""), "name": str(node.get("name") or "")} if isinstance(node, dict) else {},
+                        "scope": scope,
+                    },
+                    "status": "pending",
+                }
+                p = _authz_request_path("pending", rid)
+                _write_json_file(p, req)
+                _append_jsonl(
+                    AUTHZ_AUDIT_JSONL,
+                    {
+                        "timestamp": _job_now_iso(),
+                        "kind": "authz_request_created_auto",
+                        "request_id": rid,
+                        "account_id": str((sess or {}).get("account_id") or "").strip(),
+                        "permissions": requested_perms,
+                        "intent": it0,
+                    },
+                )
+                levels = " / ".join(requested_perms) if requested_perms else required_perm
+                items_lines = []
+                for it in items[:12]:
+                    p0 = str(it.get("permission") or "").strip()
+                    t0 = int(it.get("ttl_seconds") or 0)
+                    if p0:
+                        items_lines.append(f"  - {p0}：{t0} 秒")
+                reply = (
+                    "此命令需要調整授權：\n"
+                    f"- 時間授權：\n" + ("\n".join(items_lines) if items_lines else f"  - {ttl_seconds} 秒") + "\n"
+                    f"- 項目授權：{levels}\n"
+                    f"- 範圍授權：domain={domain or '（未指定）'} / node_id={scope.get('node_id') or '（未指定）'}\n"
+                    f"\n我已替你建立【授權請示單】：{rid}\n"
+                    "請管理員核准（可調 TTL/範圍）；核准後你再重試同一句命令即可。"
+                )
+                _json(
+                    self,
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        "executed": False,
+                        "reply": reply,
+                        "authz_request": {
+                            "id": rid,
+                            "path": str(p),
+                            "required": required_perm,
+                            "suggested_permissions": requested_perms,
+                            "ttl_seconds": ttl_seconds,
+                            "scope": scope,
+                            "items": items,
+                        },
+                        "account_id": account_id,
+                        "agent": {"mode": agent_mode, "model": agent_model, "provider": agent_provider},
+                    },
+                )
+                return
             if agent_mode == "cloud_chat" and (intent_peek.get("intent") == "unknown"):
                 env = _llm_env()
                 if not env.get("api_key"):
@@ -2443,7 +4100,11 @@ class Handler(BaseHTTPRequestHandler):
             content = str(data.get("content") or "").strip()
             meta = data.get("meta") if isinstance(data.get("meta"), dict) else {}
 
-            outdir = os.getenv("WUCHANG_WORKSPACE_OUTDIR") or ""
+            outdir = (os.getenv("WUCHANG_WORKSPACE_OUTDIR") or "").strip()
+            if not outdir:
+                # 若有設定系統資料庫根目錄，預設 artifacts/ 當 workspace 輸出
+                d2 = _system_artifacts_dir()
+                outdir = str(d2) if d2 else ""
             webhook = os.getenv("WUCHANG_WORKSPACE_WEBHOOK_URL") or ""
 
             if not outdir and not webhook:

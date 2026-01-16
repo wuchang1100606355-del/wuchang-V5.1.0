@@ -2,6 +2,11 @@
 
 目標：讓「所有平台功能」在不導入 OAuth / Admin SDK 的前提下，**精準落地**到 Google Drive 同步資料夾並可稽核。
 
+你指定的營運規則：
+
+- **小J 系統資料庫**：完整設置於 `admin@wuchang.life` 的 Google Drive（同步路徑）
+- **Odoo**：作為**快取資料區**（非權威資料、可隨時重建）
+
 ---
 
 ## 建議 Drive 資料夾結構（你只要建一次）
@@ -31,11 +36,13 @@
 > 設定後請**重開終端機**再啟動主控台。
 
 ```powershell
+setx WUCHANG_SYSTEM_DB_DIR "C:\Users\<你>\Google Drive\五常_中控"
 setx WUCHANG_WORKSPACE_OUTDIR "C:\Users\<你>\Google Drive\五常_中控\artifacts"
 setx WUCHANG_WORKSPACE_EXCHANGE_DIR "C:\Users\<你>\Google Drive\五常_中控\exchange"
 setx WUCHANG_PII_OUTDIR "C:\Users\<你>\Google Drive\五常_中控\vault"
 setx WUCHANG_ACCOUNTS_PATH "C:\Users\<你>\Google Drive\五常_中控\config\accounts_policy.json"
 setx WUCHANG_WORKSPACE_MATCHING_PATH "C:\Users\<你>\Google Drive\五常_中控\config\workspace_matching.json"
+setx WUCHANG_ODOO_CACHE_DIR "D:\odoo_cache\wuchang"  # 可選：Odoo 快取區
 ```
 
 可選：

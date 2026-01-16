@@ -53,11 +53,14 @@ def _is_under_repo(p: Optional[Path]) -> bool:
 def main() -> Dict[str, Any]:
     out: Dict[str, Any] = {"ok": True, "timestamp": _now_iso(), "checks": [], "warnings": [], "missing": []}
 
-    workspace_outdir = _p(_env("WUCHANG_WORKSPACE_OUTDIR"))
-    pii_outdir = _p(_env("WUCHANG_PII_OUTDIR")) or workspace_outdir
-    exchange_dir = _p(_env("WUCHANG_WORKSPACE_EXCHANGE_DIR")) or workspace_outdir
-    accounts_path = _p(_env("WUCHANG_ACCOUNTS_PATH")) or (pii_outdir / "accounts_policy.json" if pii_outdir else None)
-    matching_path = _p(_env("WUCHANG_WORKSPACE_MATCHING_PATH")) or (workspace_outdir / "workspace_matching.json" if workspace_outdir else None)
+    system_db_dir = _p(_env("WUCHANG_SYSTEM_DB_DIR"))
+    workspace_outdir = _p(_env("WUCHANG_WORKSPACE_OUTDIR")) or (system_db_dir / "artifacts" if system_db_dir else None)
+    pii_outdir = _p(_env("WUCHANG_PII_OUTDIR")) or (system_db_dir / "vault" if system_db_dir else None) or workspace_outdir
+    exchange_dir = _p(_env("WUCHANG_WORKSPACE_EXCHANGE_DIR")) or (system_db_dir / "exchange" if system_db_dir else None) or workspace_outdir
+    config_dir = (system_db_dir / "config") if system_db_dir else None
+    accounts_path = _p(_env("WUCHANG_ACCOUNTS_PATH")) or (config_dir / "accounts_policy.json" if config_dir else None) or (pii_outdir / "accounts_policy.json" if pii_outdir else None)
+    matching_path = _p(_env("WUCHANG_WORKSPACE_MATCHING_PATH")) or (config_dir / "workspace_matching.json" if config_dir else None) or (workspace_outdir / "workspace_matching.json" if workspace_outdir else None)
+    odoo_cache_dir = _p(_env("WUCHANG_ODOO_CACHE_DIR"))
 
     def add_check(name: str, ok: bool, detail: Dict[str, Any]) -> None:
         out["checks"].append({"name": name, "ok": ok, **detail})
@@ -65,12 +68,14 @@ def main() -> Dict[str, Any]:
             out["ok"] = False
 
     # 基本資料夾
+    add_check("system_db_dir", _exists(system_db_dir), {"path": str(system_db_dir or ""), "env": "WUCHANG_SYSTEM_DB_DIR (recommended)"})
     add_check("workspace_outdir", _exists(workspace_outdir), {"path": str(workspace_outdir or ""), "env": "WUCHANG_WORKSPACE_OUTDIR"})
     add_check("pii_outdir", _exists(pii_outdir), {"path": str(pii_outdir or ""), "env": "WUCHANG_PII_OUTDIR (optional)"})
     add_check("exchange_dir", _exists(exchange_dir), {"path": str(exchange_dir or ""), "env": "WUCHANG_WORKSPACE_EXCHANGE_DIR (optional)"})
+    add_check("odoo_cache_dir", _exists(odoo_cache_dir) or True, {"path": str(odoo_cache_dir or ""), "env": "WUCHANG_ODOO_CACHE_DIR (optional)", "note": "Odoo 快取區（非權威資料）"})
 
     # 建議不要落在 repo 內
-    for nm, pth in (("workspace_outdir", workspace_outdir), ("pii_outdir", pii_outdir), ("exchange_dir", exchange_dir)):
+    for nm, pth in (("system_db_dir", system_db_dir), ("workspace_outdir", workspace_outdir), ("pii_outdir", pii_outdir), ("exchange_dir", exchange_dir), ("odoo_cache_dir", odoo_cache_dir)):
         if _is_under_repo(pth):
             out["warnings"].append(f"{nm} 位於 repo 內（不建議）：{pth}")
 
@@ -99,11 +104,13 @@ def main() -> Dict[str, Any]:
 
     # 建議對齊指令（PowerShell）
     out["suggested_powershell"] = [
+        'setx WUCHANG_SYSTEM_DB_DIR "C:\\Users\\<你>\\Google Drive\\五常_中控"',
         'setx WUCHANG_WORKSPACE_OUTDIR "C:\\Users\\<你>\\Google Drive\\五常_中控\\artifacts"',
         'setx WUCHANG_WORKSPACE_EXCHANGE_DIR "C:\\Users\\<你>\\Google Drive\\五常_中控\\exchange"',
         'setx WUCHANG_PII_OUTDIR "C:\\Users\\<你>\\Google Drive\\五常_中控\\vault"',
         'setx WUCHANG_ACCOUNTS_PATH "C:\\Users\\<你>\\Google Drive\\五常_中控\\config\\accounts_policy.json"',
         'setx WUCHANG_WORKSPACE_MATCHING_PATH "C:\\Users\\<你>\\Google Drive\\五常_中控\\config\\workspace_matching.json"',
+        'setx WUCHANG_ODOO_CACHE_DIR "D:\\odoo_cache\\wuchang"  # 可選：快取區',
     ]
 
     return out

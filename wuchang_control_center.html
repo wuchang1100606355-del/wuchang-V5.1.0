@@ -34,6 +34,38 @@
     }
     .banner strong { color: #5a3f00; }
 
+    /* 全域：維護展延風險提示（左下角） */
+    .maint-banner {
+      position: fixed;
+      left: 14px;
+      bottom: 14px;
+      z-index: 9999;
+      max-width: min(520px, calc(100vw - 28px));
+      background: rgba(255, 243, 205, 0.98);
+      border: 1px solid #ffe69c;
+      color: #664d03;
+      padding: 10px 12px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      font-weight: 800;
+      line-height: 1.35;
+      pointer-events: none; /* 不影響任何操作點擊 */
+    }
+    .maint-banner.hidden { display: none; }
+    .maint-banner .small { font-weight: 700; opacity: 0.9; font-size: 0.92em; }
+
+    @keyframes maintPulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.25; }
+      100% { opacity: 1; }
+    }
+    .maint-banner.warn {
+      animation: maintPulse 1.15s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .maint-banner.warn { animation: none; }
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -78,6 +110,16 @@
     .pill.ok { background: #d1e7dd; color: #0f5132; }
     .pill.bad { background: #f8d7da; color: #842029; }
     .pill.unk { background: #e2e3e5; color: #41464b; }
+    .pill.warn { background: #fff3cd; color: #664d03; }
+
+    /* 設計啟用（資訊紀錄/留痕）提示 */
+    .design-mode-box {
+      background: #fff;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+    }
 
     label { display: block; margin: 10px 0 6px; color: #333; font-weight: 700; }
     input, textarea, select {
@@ -224,6 +266,51 @@
     .jobitem .meta { color:#6c757d; font-size: 12px; margin-top: 4px; line-height:1.35; }
     .jobdetail { width: 100%; min-height: 160px; }
     .small { font-size: 12px; }
+
+    /* Authz modal */
+    .authz-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 9999;
+    }
+    .authz-modal {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.10);
+      box-shadow: 0 20px 80px rgba(0,0,0,0.40);
+      width: min(980px, 96vw);
+      max-height: 86vh;
+      overflow: auto;
+      padding: 14px;
+    }
+    .authz-modal .head {
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .authz-modal .title {
+      font-weight: 1000;
+      color: #333;
+      font-size: 1.05em;
+    }
+    .authz-modal .close {
+      background: rgba(0,0,0,0.06);
+      color: #333;
+      border: 1px solid rgba(0,0,0,0.10);
+    }
+    .authz-modal .hint {
+      color: #6c757d;
+      font-size: 12px;
+      line-height: 1.35;
+      margin-top: 6px;
+    }
 
     /* Central Map Control Center */
     .grid .card.wide { grid-column: 1 / -1; }
@@ -512,6 +599,10 @@
         <div class="label">稽核（risk_action_audit.jsonl）</div>
         <div class="value"><span id="auditStatus" class="pill unk">未載入</span></div>
       </div>
+      <div class="stat">
+        <div class="label">程序驗證（小J 稽核）</div>
+        <div class="value"><span id="verifyStatus" class="pill unk">未檢查</span></div>
+      </div>
     </div>
 
     <div class="card wide" style="margin-bottom:18px;" data-section="map">
@@ -703,6 +794,37 @@
     </div>
 
     <div class="grid">
+      <div class="card" data-section="design_mode">
+        <h2>設計啟用（資訊紀錄/留痕）</h2>
+        <div class="muted">
+          目的：先不把它當成硬閘門；改成「需以硬編碼製作的資訊紀錄」與留痕開關。
+          每次啟用/關閉都會自動產生一份 JSON 紀錄（可交接/可稽核）。
+        </div>
+        <div class="design-mode-box">
+          <div class="row">
+            <div>
+              <label style="margin-top:0;">狀態</label>
+              <div class="value"><span id="designModePill" class="pill unk">未知</span></div>
+            </div>
+            <div>
+              <label style="margin-top:0;">TTL（秒）</label>
+              <input id="designModeTtl" value="1200" />
+            </div>
+          </div>
+          <label>原因（可選，留痕）</label>
+          <input id="designModeReason" placeholder="例如：臨時調整硬編碼/修復/交接" />
+          <div class="btns">
+            <button id="btnDesignModeEnable">啟用（留痕）</button>
+            <button id="btnDesignModeDisable" class="secondary">關閉</button>
+            <button id="btnDesignModeRefresh" class="secondary">刷新</button>
+            <button id="btnDesignModeRecord" class="secondary">產生資訊紀錄</button>
+          </div>
+          <div class="muted small" id="designModeHint" style="margin-top:8px;"></div>
+          <label class="small muted" style="margin-top:10px;">資訊紀錄（JSON，最近一次）</label>
+          <textarea id="designModeRecord" class="mono" readonly style="min-height: 140px;"></textarea>
+        </div>
+      </div>
+
       <div class="card wide" data-section="chat">
         <h2>小J：自然語言中控（ChatGPT 代理 + 語音對話）</h2>
         <div class="muted">
@@ -795,9 +917,73 @@
             <div class="btns">
               <button id="btnJobCopy" class="secondary">複製命令單</button>
               <button id="btnJobWriteWorkspace" class="secondary">寫入 Google Workspace</button>
+              <button id="btnJobSendHub" class="secondary">送到伺服器小J（Hub）</button>
+              <button id="btnJobConfirmHub" class="secondary">Hub 確認（允許執行）</button>
             </div>
             <div class="muted small" style="margin-top:8px;">
-              提示：若要把命令單送到伺服器，可把「伺服器接收資料夾」指到伺服器的 job inbox，然後用既有推送工具把該 JSON 檔送過去（未來也可一鍵化）。
+              提示：本機 UI 是人類控制端點；你可以把命令單「送到伺服器小J Hub」，再由你在此按「Hub 確認」讓伺服器端 executor 執行（confirmed=true 才會跑）。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card wide" data-section="authz">
+        <h2>授權請示單（可調式授權：不足時可主動請示）</h2>
+        <div class="muted">
+          當小J判斷「目前層級不足」時，會自動建立授權請示單並彈出授權窗。
+          管理員可在此核准（可設定時效 TTL），授權到期會自動失效。
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div>
+            <label style="margin-top:0;">狀態</label>
+            <select id="authzState">
+              <option value="pending">待核准（pending）</option>
+              <option value="approved">已核准（approved）</option>
+              <option value="denied">已拒絕（denied）</option>
+            </select>
+            <div class="btns">
+              <button id="btnAuthzRefresh" class="secondary">重新整理</button>
+              <button id="btnAuthzOpenModal" class="secondary">開啟授權窗（選取）</button>
+            </div>
+            <div id="authzList" class="joblist" style="margin-top:10px;">（尚未載入）</div>
+          </div>
+          <div>
+            <label style="margin-top:0;">授權請示單內容（JSON）</label>
+            <textarea id="authzDetail" class="mono jobdetail" readonly></textarea>
+            <div class="row" style="margin-top:10px;">
+              <div>
+                <label style="margin-top:0;">核准 TTL（秒）</label>
+                <input id="authzTtl" value="3600" />
+              </div>
+              <div>
+                <label style="margin-top:0;">拒絕/撤銷原因（可選）</label>
+                <input id="authzReason" placeholder="例如：不在維護時段 / 請補充用途" />
+              </div>
+            </div>
+            <div>
+              <label>範圍授權 scope（JSON）</label>
+              <textarea id="authzScope" class="mono" style="min-height: 90px;" placeholder='例如：{"domain":"wuchang.life","node_id":"dev_server"}'></textarea>
+              <div class="muted small">管理員可調整 scope（範圍），例如限定 domain / node_id。</div>
+            </div>
+            <div>
+              <label>項目授權 items（JSON，可含逐項 TTL）</label>
+              <textarea id="authzItems" class="mono" style="min-height: 90px;" placeholder='例如：[{"permission":"vm_control","ttl_seconds":1200}]'></textarea>
+              <div class="muted small">若提供 items，系統會以 items 逐項 TTL 為準（缺少 ttl_seconds 時會用上方 TTL 補齊）。</div>
+            </div>
+            <div class="btns">
+              <button id="btnAuthzApprove">核准（暫時授權）</button>
+              <button id="btnAuthzDeny" class="secondary">拒絕</button>
+              <button id="btnAuthzLoadGrants" class="secondary">載入暫時授權清單</button>
+            </div>
+            <div class="muted small" id="authzHint" style="margin-top:8px;"></div>
+            <div style="margin-top:10px;">
+              <label>暫時授權（grants）</label>
+              <textarea id="authzGrants" class="mono" readonly style="min-height: 120px;" placeholder="（尚未載入）"></textarea>
+              <div class="btns">
+                <button id="btnAuthzRevoke" class="secondary">撤銷（依 grant_id）</button>
+              </div>
+              <div class="muted small">撤銷時請在「即時輸出」找到 grant_id，或在上方 grants JSON 內複製 id。</div>
             </div>
           </div>
         </div>
@@ -828,6 +1014,22 @@
         <div class="muted small" style="margin-top:10px;">
           DNS 檢查會參照 repo 內的 <span class="mono">dns_records.json</span> 預期值；若多個公用 DNS 回應不一致，代表尚未完全傳播，暫不建議簽發憑證。
         </div>
+      </div>
+
+      <div class="card" data-section="hub_arch">
+        <h2>伺服器系統架構（先索取再設計）</h2>
+        <div class="muted">
+          這會透過伺服器端「小J Hub」回報容器/編排/port 映射等<strong>機器可讀</strong>資訊，協助先理解架構後再做設計。
+          需要先設定 <span class="mono">WUCHANG_HUB_URL</span> 與 <span class="mono">WUCHANG_HUB_TOKEN</span>（本機端），且伺服器 Hub 已啟動。
+        </div>
+        <div class="btns" style="margin-top:12px;">
+          <button id="btnHubServerArch" class="secondary">向伺服器索取系統架構（Hub）</button>
+          <button id="btnHubGenerateReports" class="secondary">要求伺服器生成回報檔（寫入指定目錄）</button>
+          <button id="btnHubServerArchCopy" class="secondary">複製</button>
+        </div>
+        <label style="margin-top:10px;">架構回報（JSON）</label>
+        <textarea id="serverArchText" class="mono" readonly style="min-height: 220px;" placeholder="（尚未索取）"></textarea>
+        <div class="muted small" id="serverArchHint" style="margin-top:6px;"></div>
       </div>
 
       <div class="card" data-section="dns">
@@ -898,6 +1100,23 @@
         <div id="auditLog" class="log human">（尚未載入）</div>
       </div>
 
+      <div class="card" data-section="verify">
+        <h2>4.5) 程序驗證（小J 稽核：複查/告警）</h2>
+        <div class="muted">
+          這是<strong>純程序驗證</strong>：不依賴語言模型。它會檢查命令單是否卡住、Hub 是否可達、Hub inbox 是否有已確認但未歸檔的工作；若未完成會自動顯示告警。
+        </div>
+        <div class="toggle" style="margin-top:10px;">
+          <input type="checkbox" id="verifyAuto" checked />
+          <span>自動刷新（每 15 秒）</span>
+        </div>
+        <div class="btns" style="margin-top:10px;">
+          <button id="btnVerifyNow" class="secondary">立即驗證</button>
+          <button id="btnVerifyCopy" class="secondary">一鍵複製調查報告</button>
+          <button id="btnVerifySendToLJ" class="secondary">貼到小J並送出（提醒）</button>
+        </div>
+        <div id="verifyLog" class="log human" style="min-height: 160px; margin-top:10px;">（尚未驗證）</div>
+      </div>
+
       <div class="card" data-section="docs">
         <h2>5) 規則文本（供臨時查閱）</h2>
         <div class="row">
@@ -921,8 +1140,53 @@
     </div>
   </div>
 
+  <!-- 授權窗（權限不足時自動彈出） -->
+  <div id="authzModalBackdrop" class="authz-backdrop">
+    <div class="authz-modal">
+      <div class="head">
+        <div class="title">授權請示單：核准 / 拒絕（暫時授權）</div>
+        <button id="btnAuthzModalClose" class="close">關閉</button>
+      </div>
+      <div class="muted">
+        若你不是管理員，這裡會顯示「等待核准」；管理員可核准 TTL（到期自動失效）。
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <div>
+          <label style="margin-top:0;">請示單 ID</label>
+          <input id="authzModalId" readonly />
+        </div>
+        <div>
+          <label style="margin-top:0;">TTL（秒）</label>
+          <input id="authzModalTtl" value="3600" />
+        </div>
+      </div>
+      <label>範圍授權 scope（JSON）</label>
+      <textarea id="authzModalScope" class="mono" style="min-height: 90px;" placeholder='例如：{"domain":"wuchang.life","node_id":"dev_server"}'></textarea>
+      <label>項目授權 items（JSON）</label>
+      <textarea id="authzModalItems" class="mono" style="min-height: 90px;" placeholder='例如：[{"permission":"vm_control","ttl_seconds":1200}]'></textarea>
+      <label>內容（JSON）</label>
+      <textarea id="authzModalDetail" class="mono" readonly style="min-height: 220px;"></textarea>
+      <div class="btns">
+        <button id="btnAuthzModalApprove">核准</button>
+        <button id="btnAuthzModalDeny" class="secondary">拒絕</button>
+        <button id="btnAuthzModalCopy" class="secondary">複製 JSON</button>
+      </div>
+      <div class="hint" id="authzModalHint"></div>
+    </div>
+  </div>
+
   <script>
     const $ = (id) => document.getElementById(id);
+
+    function escapeHtml(s) {
+      const str = String(s ?? "");
+      return str
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
     // ===== 中央區塊：平台狀態模型（示範資料，可接真實狀態） =====
     const ccModel = {
@@ -1704,6 +1968,7 @@
         // ignore
       }
       await loadAudit();
+      try { await verifyRefresh(); } catch (e) {}
       try {
         ljInit();
       } catch (e) {}
@@ -1711,6 +1976,114 @@
         await jobRefresh();
       } catch (e) {}
       try { uiApplyProfile(); } catch (e) {}
+      try { await maintenanceRefresh(); } catch (e) {}
+      try { await designModeRefresh(); } catch (e) {}
+    }
+
+    // 自動輪詢：程序驗證（不依賴語言模型）
+    setInterval(() => {
+      try {
+        if ($("verifyAuto")?.checked === true) verifyRefresh().catch(() => {});
+      } catch (e) {}
+    }, 15000);
+
+    // 自動輪詢：設計法人定期維護展延狀態（全 UI 左下角提示）
+    setInterval(() => {
+      try { maintenanceRefresh().catch(() => {}); } catch (e) {}
+    }, 60000);
+
+    // 自動輪詢：設計啟用狀態（避免誤判）
+    setInterval(() => {
+      try { designModeRefresh().catch(() => {}); } catch (e) {}
+    }, 15000);
+
+    async function designModeRefresh() {
+      const pill = $("designModePill");
+      const hint = $("designModeHint");
+      const box = $("designModeRecord");
+      if (!pill || !hint) return;
+      try {
+        const { data } = await fetchJson("/api/design_mode/status");
+        const dm = data?.design_mode || {};
+        const active = dm?.active === true;
+        pill.className = `pill ${active ? "ok" : "warn"}`;
+        pill.textContent = active ? "已啟用" : "未啟用";
+        const until = dm?.enabled_until_epoch ? `｜到期：${new Date((dm.enabled_until_epoch || 0) * 1000).toLocaleString()}` : "";
+        hint.textContent = (dm?.path ? `state: ${dm.path}` : "") + (dm?.reason ? `｜原因：${dm.reason}` : "") + until;
+        if (box && !box.value) box.value = "（尚未產生資訊紀錄）";
+      } catch (e) {
+        pill.className = "pill bad";
+        pill.textContent = "讀取失敗";
+        hint.textContent = "無法取得設計啟用狀態（請先登入或查看即時輸出）。";
+        if (box) box.value = "（無法讀取狀態）";
+      }
+    }
+
+    async function designModeSet(enabled) {
+      const actor = ($("actor")?.value || "ops").trim();
+      const ttl_seconds = parseInt(($("designModeTtl")?.value || "1200").trim(), 10) || 1200;
+      const reason = ($("designModeReason")?.value || "").trim();
+      const { data } = await fetchJson("/api/design_mode/set", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled: !!enabled, ttl_seconds, reason, actor })
+      });
+      logRun(data);
+      try {
+        const r = data?.record_written;
+        const box = $("designModeRecord");
+        if (box && r) box.value = JSON.stringify(r, null, 2);
+      } catch (e) {}
+      await designModeRefresh().catch(() => {});
+    }
+
+    async function designModeRecord() {
+      const actor = ($("actor")?.value || "ops").trim();
+      const reason = ($("designModeReason")?.value || "").trim();
+      const { data } = await fetchJson("/api/design_mode/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ actor, reason, kind: "design_mode_record_manual" })
+      });
+      logRun(data);
+      try {
+        const r = data?.record_written;
+        const box = $("designModeRecord");
+        if (box && r) box.value = JSON.stringify(r, null, 2);
+      } catch (e) {}
+      await designModeRefresh().catch(() => {});
+    }
+
+    async function maintenanceRefresh() {
+      const el = $("maintBanner");
+      if (!el) return;
+      try {
+        const { data } = await fetchJson("/api/maintenance/status");
+        const st = data?.status || {};
+        if (st?.verified === true && st?.ok === true) {
+          el.classList.add("hidden");
+          el.classList.remove("warn");
+          el.textContent = "";
+          return;
+        }
+        const msg = (st?.message || "（本系統未經原設計者做定期維護，可能存在風險）\n（此時所有風險全歸使用者端點）");
+        const parts = String(msg).split("\n").filter(Boolean);
+        const html = parts.map(p => `<div>${escapeHtml(p)}</div>`).join("") +
+          (st?.reason ? `<div class="small">原因：${escapeHtml(String(st.reason))}</div>` : "") +
+          (st?.risk_owner ? `<div class="small">責任歸屬：${escapeHtml(String(st.risk_owner))}</div>` : "");
+        const sig = JSON.stringify({ level: st?.level, verified: st?.verified, reason: st?.reason, msg });
+        if (window.__maintLastSig !== sig) {
+          el.innerHTML = html;
+          window.__maintLastSig = sig;
+        }
+        el.classList.remove("hidden");
+        el.classList.toggle("warn", (st?.level || "warn") === "warn");
+      } catch (e) {
+        // 無法確認狀態時也要提示（符合「不可驗證即高風險」精神）
+        el.classList.remove("hidden");
+        el.classList.add("warn");
+        el.innerHTML = `<div>（本系統未經原設計者做定期維護，可能存在風險）</div><div>（此時所有風險全歸使用者端點）</div><div class="small">原因：無法取得維護狀態</div>`;
+      }
     }
 
     async function checkServer() {
@@ -1802,6 +2175,87 @@
       $("auditLog").textContent = "【稽核摘要（最新在下方）】\n" + lines.join("\n");
     }
 
+    async function verifyRefresh() {
+      try {
+        const { data } = await fetchJson("/api/verify/status?hub=1");
+        window.__verifyLast = data || null;
+        const st = data?.status || "unk";
+        if (st === "bad") setPill($("verifyStatus"), "bad", "異常");
+        else if (st === "warn") setPill($("verifyStatus"), "warn", "警告");
+        else setPill($("verifyStatus"), "ok", "OK");
+
+        const alerts = data?.alerts || [];
+        if (!alerts.length) {
+          $("verifyLog").textContent = "【程序驗證】OK：目前未偵測到未完成/卡住項目。";
+          return;
+        }
+        const lines = alerts.slice(0, 80).map(a => {
+          const lv = a.level || "warn";
+          const code = a.code || "unknown";
+          const jid = a.job_id ? `｜job=${a.job_id}` : "";
+          const t = (typeof a.age_seconds === "number") ? `｜age=${a.age_seconds}s` : "";
+          return `- [${lv}] ${code}${jid}${t}｜${a.message || ""}`;
+        });
+        $("verifyLog").textContent = "【程序驗證：告警清單】\n" + lines.join("\n");
+      } catch (e) {
+        setPill($("verifyStatus"), "bad", "失敗");
+        $("verifyLog").textContent = "【程序驗證】失敗：" + String(e);
+      }
+    }
+
+    function buildInvestigationReport(v) {
+      const ts = v?.timestamp || new Date().toISOString();
+      const st = v?.status || "unk";
+      const counts = v?.counts || {};
+      const alerts = v?.alerts || [];
+      const hub = v?.hub || {};
+      const hubOk = hub?.health?.ok === true;
+      const hubConfigured = hub?.configured === true;
+
+      const lines = [];
+      lines.push("【調查報告｜小J 程序驗證（非語言）】");
+      lines.push(`時間：${ts}`);
+      lines.push(`狀態：${st}｜告警數=${counts.alerts ?? alerts.length ?? 0}｜outbox=${counts.local_outbox ?? "?"}｜sent=${counts.local_sent ?? "?"}`);
+      lines.push(`Hub：${hubConfigured ? "已設定" : "未設定"}｜health=${hubOk ? "OK" : "無回應/不可驗證"}`);
+      lines.push("");
+      lines.push("【告警（前 12 筆）】");
+      if (!alerts.length) {
+        lines.push("- （無告警）");
+      } else {
+        for (const a of alerts.slice(0, 12)) {
+          const lv = a.level || "warn";
+          const code = a.code || "unknown";
+          const jid = a.job_id ? ` job=${a.job_id}` : "";
+          const jt = a.type ? ` type=${a.type}` : "";
+          const age = (typeof a.age_seconds === "number") ? ` age=${a.age_seconds}s` : "";
+          lines.push(`- [${lv}] ${code}${jid}${jt}${age}｜${a.message || ""}`);
+        }
+      }
+      lines.push("");
+      lines.push("【提醒小J（可貼回去）】");
+      lines.push("你先前回覆可能出現『已完成』但程序驗證顯示『證據不足/未歸檔/Hub 未回應』。");
+      lines.push("請依告警代碼逐一補證據或承認未完成並提出下一步。");
+      lines.push("（強制規則：無回應＝禁止高風險作業）");
+      return lines.join("\n");
+    }
+
+    async function verifyCopyReport() {
+      const v = window.__verifyLast || null;
+      if (!v) { logRun("尚未有程序驗證結果可複製，請先按「立即驗證」。"); return; }
+      const text = buildInvestigationReport(v);
+      const ok = await copyText(text);
+      logRun(ok ? "已複製調查報告（可貼回小J或外部官方 AI）。" : "複製失敗（瀏覽器權限限制）。");
+    }
+
+    async function verifySendToLittleJ() {
+      const v = window.__verifyLast || null;
+      if (!v) { logRun("尚未有程序驗證結果可送出，請先按「立即驗證」。"); return; }
+      const text = buildInvestigationReport(v);
+      // 送到小J 指令窗口並送出
+      try { $("ljInput").value = text; } catch (e) {}
+      try { await ljSend(text); } catch (e) { logRun(String(e)); }
+    }
+
     async function loadDoc() {
       const name = $("docName").value;
       const { data } = await fetchJson("/api/docs?name=" + encodeURIComponent(name));
@@ -1832,11 +2286,68 @@
       }
     }
 
+    async function hubFetchServerArchitecture() {
+      try {
+        if ($("serverArchHint")) $("serverArchHint").textContent = "索取中…";
+        const { data } = await fetchJson("/api/hub/server_architecture");
+        // 本機端回傳格式：{ ok: true, hub: { ok, status, data/raw } }
+        const hub = data?.hub || {};
+        const payload = (hub && typeof hub === "object" && ("data" in hub)) ? hub.data : data;
+        if ($("serverArchText")) $("serverArchText").value = JSON.stringify(payload, null, 2);
+        if ($("serverArchHint")) {
+          if (payload?.error === "forbidden") $("serverArchHint").textContent = "無法索取：未登入或無權限。";
+          else if (hub?.ok === true) $("serverArchHint").textContent = "已取得伺服器系統架構回報（Hub）。";
+          else $("serverArchHint").textContent = "索取失敗：請確認 Hub 已啟動、且本機已設定 WUCHANG_HUB_URL/WUCHANG_HUB_TOKEN。";
+        }
+        logRun(data);
+      } catch (e) {
+        if ($("serverArchHint")) $("serverArchHint").textContent = "索取失敗（請看即時輸出）。";
+        logRun(String(e));
+      }
+    }
+
+    async function hubGenerateServerReports() {
+      try {
+        const actor = ($("actor").value || "ops").trim();
+        if ($("serverArchHint")) $("serverArchHint").textContent = "請求伺服器生成回報檔中…";
+        const { data } = await fetchJson("/api/hub/generate_reports", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ actor })
+        });
+        const hub = data?.hub || {};
+        const payload = (hub && typeof hub === "object" && ("data" in hub)) ? hub.data : data;
+        // 將結果附加在輸出區，方便複製/留存
+        if ($("serverArchText")) {
+          const prev = ($("serverArchText").value || "").trim();
+          const next = JSON.stringify(payload, null, 2);
+          $("serverArchText").value = prev ? (prev + "\n\n---\n\n" + next) : next;
+        }
+        if ($("serverArchHint")) {
+          const ok = hub?.ok === true && (payload?.ok === true || payload?.ok === undefined);
+          $("serverArchHint").textContent = ok
+            ? "已請求伺服器生成回報檔（請看 JSON 內的 out_dir / inventory_path / architecture_path）。"
+            : "生成失敗：請確認 Hub 已啟動、且你已登入且具備 job_manage 權限。";
+        }
+        logRun(data);
+      } catch (e) {
+        if ($("serverArchHint")) $("serverArchHint").textContent = "生成失敗（請看即時輸出）。";
+        logRun(String(e));
+      }
+    }
+
     $("btnCheckServer").addEventListener("click", () => checkServer().catch(e => logRun(String(e))));
     $("btnCheckDNS").addEventListener("click", () => checkDNS().catch(e => logRun(String(e))));
     $("btnNetSnapshot").addEventListener("click", () => netSnapshot().catch(e => logRun(String(e))));
     $("btnLoadExpectedDNS").addEventListener("click", () => loadExpectedDNS().catch(e => logRun(String(e))));
     $("btnCheckDNS2").addEventListener("click", () => checkDNS2().catch(e => logRun(String(e))));
+    $("btnHubServerArch").addEventListener("click", () => hubFetchServerArchitecture().catch(e => logRun(String(e))));
+    $("btnHubGenerateReports").addEventListener("click", () => hubGenerateServerReports().catch(e => logRun(String(e))));
+    $("btnHubServerArchCopy").addEventListener("click", async () => {
+      const v = ($("serverArchText")?.value || "").trim();
+      const ok = await copyText(v);
+      logRun(ok ? "已複製伺服器系統架構 JSON" : "複製失敗（瀏覽器權限限制）");
+    });
     $("btnCopyAcmeRoot").addEventListener("click", async () => {
       const v = ($("expectedAcmeRoot").value || "").trim();
       const ok = await copyText(v);
@@ -1852,6 +2363,9 @@
     $("btnReloadAudit").addEventListener("click", () => loadAudit().catch(e => logRun(String(e))));
     $("btnLoadDoc").addEventListener("click", () => loadDoc().catch(e => logRun(String(e))));
     $("showRawAudit").addEventListener("change", () => loadAudit().catch(e => logRun(String(e))));
+    $("btnVerifyNow").addEventListener("click", () => verifyRefresh().catch(e => logRun(String(e))));
+    $("btnVerifyCopy").addEventListener("click", () => verifyCopyReport().catch(e => logRun(String(e))));
+    $("btnVerifySendToLJ").addEventListener("click", () => verifySendToLittleJ().catch(e => logRun(String(e))));
 
     init();
 
@@ -1937,6 +2451,14 @@
         ljAdd("assistant", hint);
         ljSpeak(hint);
       }
+
+      // 權限不足：若小J 回傳授權請示單，就自動打開授權窗
+      try {
+        const rid = data?.authz_request?.id || "";
+        if (rid) {
+          await authzOpenModal(rid);
+        }
+      } catch (e) {}
     }
 
     function ljInit() {
@@ -2203,6 +2725,222 @@
       logRun(data);
     });
 
+    async function hubSendSelectedJob() {
+      if (!jobSelectedId) { logRun("請先點選一筆命令單。"); return; }
+      const { data } = await fetchJson("/api/hub/submit_job", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ job_id: jobSelectedId })
+      });
+      logRun(data);
+    }
+
+    async function hubConfirmSelectedJob() {
+      if (!jobSelectedId) { logRun("請先點選一筆命令單。"); return; }
+      const actor = ($("actor").value || "ops").trim();
+      const { data } = await fetchJson("/api/hub/confirm_job", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ job_id: jobSelectedId, actor })
+      });
+      logRun(data);
+    }
+
+    $("btnJobSendHub").addEventListener("click", () => hubSendSelectedJob().catch(e => logRun(String(e))));
+    $("btnJobConfirmHub").addEventListener("click", () => hubConfirmSelectedJob().catch(e => logRun(String(e))));
+
+    // ===== 授權請示單（Authz）面板 + 授權窗 =====
+    let authzSelectedId = "";
+
+    function authzRenderList(items) {
+      const box = $("authzList");
+      if (!box) return;
+      if (!items || !items.length) {
+        box.textContent = "（目前沒有授權請示單）";
+        return;
+      }
+      box.innerHTML = "";
+      for (const r of items) {
+        const id = r.id || r.request_id || r._id || "unknown";
+        const div = document.createElement("div");
+        div.className = "jobitem";
+        div.setAttribute("data-authz-id", id);
+        const perms = (r.permissions || []).join(", ") || "（未填）";
+        const by = r.requested_by || r.requester_account_id || "（未知）";
+        const at = r.created_at || "（無時間）";
+        const st = r.status || "unknown";
+        div.innerHTML = `
+          <div class="top">
+            <div class="id">${id}</div>
+            <div class="type">${st}</div>
+          </div>
+          <div class="meta">權限：${perms}｜由 ${by}｜${at}</div>
+        `;
+        div.addEventListener("click", () => authzSelect(id));
+        box.appendChild(div);
+      }
+    }
+
+    async function authzRefresh() {
+      const state = ($("authzState")?.value || "pending").trim();
+      // 非管理員可用 mine=1 列出自己的 pending
+      const mine = (state === "pending") ? "&mine=1" : "";
+      const { data } = await fetchJson("/api/authz/requests/list?state=" + encodeURIComponent(state) + "&limit=50" + mine);
+      authzRenderList(data?.items || []);
+      if (authzSelectedId) {
+        try { await authzSelect(authzSelectedId); } catch (e) {}
+      }
+      $("authzHint").textContent = data?.ok ? "已載入授權請示單清單。" : "載入失敗（請看即時輸出）。";
+      logRun(data);
+    }
+
+    async function authzSelect(id) {
+      authzSelectedId = String(id || "").trim();
+      if (!authzSelectedId) return;
+      const { data } = await fetchJson("/api/authz/requests/get?id=" + encodeURIComponent(authzSelectedId));
+      $("authzDetail").value = data?.request ? JSON.stringify(data.request, null, 2) : JSON.stringify(data, null, 2);
+      try {
+        const scope = data?.request?.scope || {};
+        $("authzScope").value = JSON.stringify(scope, null, 2);
+        const items = data?.request?.items || [];
+        $("authzItems").value = JSON.stringify(items, null, 2);
+        $("authzTtl").value = String(data?.request?.ttl_seconds || $("authzTtl")?.value || "3600");
+      } catch (e) {}
+      logRun(data);
+    }
+
+    async function authzApprove(id, ttlSeconds) {
+      const rid = String(id || authzSelectedId || "").trim();
+      if (!rid) { logRun("請先選取一張授權請示單。"); return; }
+      const ttl = Number(ttlSeconds || $("authzTtl")?.value || 3600);
+      let scope = {};
+      try { scope = JSON.parse(($("authzScope")?.value || "{}").trim() || "{}"); } catch (e) { scope = {}; }
+      let items = null;
+      try {
+        const raw = ($("authzItems")?.value || "").trim();
+        items = raw ? JSON.parse(raw) : null;
+      } catch (e) { items = null; }
+      const { data } = await fetchJson("/api/authz/requests/approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: rid, ttl_seconds: ttl, scope, items })
+      });
+      logRun(data);
+      await authzRefresh();
+      try { await authzLoadGrants(); } catch (e) {}
+    }
+
+    async function authzDeny(id, reason) {
+      const rid = String(id || authzSelectedId || "").trim();
+      if (!rid) { logRun("請先選取一張授權請示單。"); return; }
+      const why = String(reason || $("authzReason")?.value || "").trim();
+      const { data } = await fetchJson("/api/authz/requests/deny", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: rid, reason: why })
+      });
+      logRun(data);
+      await authzRefresh();
+    }
+
+    async function authzLoadGrants() {
+      const { data } = await fetchJson("/api/authz/grants/list");
+      $("authzGrants").value = JSON.stringify(data?.items || [], null, 2);
+      logRun(data);
+    }
+
+    async function authzRevoke(grantId, reason) {
+      const gid = String(grantId || "").trim() || (() => {
+        try {
+          const items = JSON.parse($("authzGrants")?.value || "[]");
+          return (items && items[0] && items[0].id) ? String(items[0].id) : "";
+        } catch (e) { return ""; }
+      })();
+      if (!gid) { logRun("請提供 grant_id（可先載入 grants）。"); return; }
+      const why = String(reason || $("authzReason")?.value || "").trim();
+      const { data } = await fetchJson("/api/authz/grants/revoke", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: gid, reason: why })
+      });
+      logRun(data);
+      await authzLoadGrants();
+    }
+
+    function authzModalShow(on) {
+      const el = $("authzModalBackdrop");
+      if (!el) return;
+      el.style.display = on ? "flex" : "none";
+    }
+
+    async function authzOpenModal(requestId) {
+      const rid = String(requestId || authzSelectedId || "").trim();
+      if (!rid) { logRun("沒有 request_id 可開啟。"); return; }
+      authzSelectedId = rid;
+      $("authzModalId").value = rid;
+      $("authzModalHint").textContent = "載入中…";
+      authzModalShow(true);
+      const { data } = await fetchJson("/api/authz/requests/get?id=" + encodeURIComponent(rid));
+      const text = data?.request ? JSON.stringify(data.request, null, 2) : JSON.stringify(data, null, 2);
+      $("authzModalDetail").value = text;
+      $("authzDetail").value = text; // 同步到面板
+      try {
+        const scope = data?.request?.scope || {};
+        $("authzModalScope").value = JSON.stringify(scope, null, 2);
+        const items = data?.request?.items || [];
+        $("authzModalItems").value = JSON.stringify(items, null, 2);
+        $("authzModalTtl").value = String(data?.request?.ttl_seconds || $("authzModalTtl")?.value || "3600");
+        $("authzScope").value = JSON.stringify(scope, null, 2);
+        $("authzItems").value = JSON.stringify(items, null, 2);
+        $("authzTtl").value = String(data?.request?.ttl_seconds || $("authzTtl")?.value || "3600");
+      } catch (e) {}
+      $("authzModalHint").textContent = data?.ok ? "已載入。" : "載入失敗（可能需要管理員權限）。";
+      try { logRun(data); } catch (e) {}
+    }
+
+    $("btnAuthzRefresh")?.addEventListener("click", () => authzRefresh().catch(e => logRun(String(e))));
+    $("authzState")?.addEventListener("change", () => authzRefresh().catch(e => logRun(String(e))));
+    $("btnAuthzOpenModal")?.addEventListener("click", () => authzOpenModal(authzSelectedId).catch(e => logRun(String(e))));
+    $("btnAuthzApprove")?.addEventListener("click", () => authzApprove(authzSelectedId, $("authzTtl")?.value).catch(e => logRun(String(e))));
+    $("btnAuthzDeny")?.addEventListener("click", () => authzDeny(authzSelectedId, $("authzReason")?.value).catch(e => logRun(String(e))));
+    $("btnAuthzLoadGrants")?.addEventListener("click", () => authzLoadGrants().catch(e => logRun(String(e))));
+    $("btnAuthzRevoke")?.addEventListener("click", () => authzRevoke("", $("authzReason")?.value).catch(e => logRun(String(e))));
+
+    $("btnAuthzModalClose")?.addEventListener("click", () => authzModalShow(false));
+    $("authzModalBackdrop")?.addEventListener("click", (e) => { if (e.target && e.target.id === "authzModalBackdrop") authzModalShow(false); });
+    $("btnAuthzModalApprove")?.addEventListener("click", async () => {
+      const rid = ($("authzModalId")?.value || "").trim();
+      const ttl = ($("authzModalTtl")?.value || "3600").trim();
+      // modal scope 優先
+      let scope = {};
+      try { scope = JSON.parse(($("authzModalScope")?.value || "{}").trim() || "{}"); } catch (e) { scope = {}; }
+      let items = null;
+      try {
+        const raw = ($("authzModalItems")?.value || "").trim();
+        items = raw ? JSON.parse(raw) : null;
+      } catch (e) { items = null; }
+      const { data } = await fetchJson("/api/authz/requests/approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: rid, ttl_seconds: Number(ttl || 3600), scope, items })
+      });
+      logRun(data);
+      await authzRefresh();
+      try { await authzLoadGrants(); } catch (e) {}
+      $("authzModalHint").textContent = "已送出核准（請看即時輸出）。";
+    });
+    $("btnAuthzModalDeny")?.addEventListener("click", async () => {
+      const rid = ($("authzModalId")?.value || "").trim();
+      const why = ($("authzReason")?.value || "").trim();
+      await authzDeny(rid, why);
+      $("authzModalHint").textContent = "已送出拒絕（請看即時輸出）。";
+    });
+    $("btnAuthzModalCopy")?.addEventListener("click", async () => {
+      const v = ($("authzModalDetail")?.value || "").trim();
+      const ok = await copyText(v);
+      $("authzModalHint").textContent = ok ? "已複製。" : "複製失敗（瀏覽器權限限制）。";
+    });
+
     // ===== PII（個資）分級：可識別 / 不可識別 =====
     window.__piiCacheIdent = window.__piiCacheIdent || {};
     window.__piiCacheNon = window.__piiCacheNon || {};
@@ -2344,6 +3082,12 @@
     $("accountId").addEventListener("keydown", (e) => { if (e.key === "Enter") authLogin().catch(err => logRun(String(err))); });
     $("accountPin").addEventListener("keydown", (e) => { if (e.key === "Enter") authLogin().catch(err => logRun(String(err))); });
 
+    // 設計啟用（資訊紀錄/留痕）
+    $("btnDesignModeRefresh")?.addEventListener("click", () => designModeRefresh().catch(e => logRun(String(e))));
+    $("btnDesignModeEnable")?.addEventListener("click", () => designModeSet(true).catch(e => logRun(String(e))));
+    $("btnDesignModeDisable")?.addEventListener("click", () => designModeSet(false).catch(e => logRun(String(e))));
+    $("btnDesignModeRecord")?.addEventListener("click", () => designModeRecord().catch(e => logRun(String(e))));
+
     // 不可識別個資（帳號編碼）
     $("btnNonidLoad").addEventListener("click", () => nonidLoad().catch(e => logRun(String(e))));
     $("btnNonidSave").addEventListener("click", () => nonidSave(false).catch(e => logRun(String(e))));
@@ -2357,6 +3101,8 @@
     // 初始：未同意先禁用不可識別資料操作（待 consentRefresh/登入後更新）
     try { nonidSetEnabled(false); } catch (e) {}
   </script>
+
+  <div id="maintBanner" class="maint-banner hidden">（本系統未經原設計者做定期維護，可能存在風險）</div>
 </body>
 </html>
 
