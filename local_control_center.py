@@ -38,6 +38,14 @@ from risk_gate import check_server_health
 from dns_propagation_check import DEFAULT_RESOLVERS, load_expected_from_config, query
 from google_workspace_writer import write_workspace_artifact
 
+# Google Tasks 整合（可選）
+try:
+    from google_tasks_integration import get_google_tasks_integration
+    GOOGLE_TASKS_AVAILABLE = True
+except ImportError:
+    GOOGLE_TASKS_AVAILABLE = False
+    get_google_tasks_integration = None
+
 # 系統神經網路（可選，如果模組存在）
 try:
     from system_neural_network import get_neural_network
@@ -2791,6 +2799,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
+        method = self.command.upper()
+        
+        # 處理 DELETE 請求（某些客戶端可能用 POST 發送 DELETE）
+        if method == "DELETE" or parsed.path.endswith("/delete"):
+            self._handle_delete(parsed)
+            return
+        
+        # 處理 PUT 請求
+        if method == "PUT":
+            self._handle_put(parsed)
+            return
         if parsed.path == "/api/device/request":
             # 建立「請使用者設備/帳號自行完成」的任務：靠 Drive 同步交付/回收（合規：最小資料）
             if not _require_perm(self, "device_request"):
@@ -4276,6 +4295,170 @@ class Handler(BaseHTTPRequestHandler):
             _json(self, HTTPStatus.OK, {"ok": True, "result": res.__dict__})
             return
 
+        # Google Tasks API 端點 (POST)
+        if parsed.path == "/api/google-tasks/lists":
+            # POST /api/google-tasks/lists - 建立新任務列表
+            if not _require_perm(self, "workspace_write"):
+                return
+            if not GOOGLE_TASKS_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "google_tasks_module_not_available"})
+                return
+            try:
+                data = _read_json(self)
+                title = str(data.get("title") or "").strip()
+                if not title:
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_title"})
+                    return
+                integration = get_google_tasks_integration()
+                task_list = integration.create_task_list(title)
+                _json(self, HTTPStatus.OK, {"ok": True, "task_list": asdict(task_list)})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path.startswith("/api/google-tasks/lists/") and parsed.path.endswith("/tasks"):
+            # POST /api/google-tasks/lists/{list_id}/tasks - 建立新任務
+            if not _require_perm(self, "workspace_write"):
+                return
+            if not GOOGLE_TASKS_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "google_tasks_module_not_available"})
+                return
+            try:
+                parts = parsed.path.split("/")
+                list_idx = parts.index("lists")
+                if list_idx + 1 >= len(parts):
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_task_list_id"})
+                    return
+                task_list_id = parts[list_idx + 1]
+                data = _read_json(self)
+                title = str(data.get("title") or "").strip()
+                if not title:
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_title"})
+                    return
+                notes = str(data.get("notes") or "").strip() or None
+                due = str(data.get("due") or "").strip() or None
+                parent = str(data.get("parent") or "").strip() or None
+                integration = get_google_tasks_integration()
+                task = integration.create_task(task_list_id, title, notes=notes, due=due, parent=parent)
+                _json(self, HTTPStatus.OK, {"ok": True, "task": asdict(task)})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path.startswith("/api/google-tasks/lists/") and "/tasks/" in parsed.path and not parsed.path.endswith("/tasks"):
+            # PUT /api/google-tasks/lists/{list_id}/tasks/{task_id} - 更新任務
+            if not _require_perm(self, "workspace_write"):
+                return
+            if not GOOGLE_TASKS_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "google_tasks_module_not_available"})
+                return
+            try:
+                parts = parsed.path.split("/")
+                list_idx = parts.index("lists")
+                task_idx = parts.index("tasks")
+                if list_idx + 1 >= len(parts) or task_idx + 1 >= len(parts):
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_task_list_id_or_task_id"})
+                    return
+                task_list_id = parts[list_idx + 1]
+                task_id = parts[task_idx + 1]
+                data = _read_json(self)
+                title = data.get("title")
+                notes = data.get("notes")
+                status = data.get("status")
+                due = data.get("due")
+                integration = get_google_tasks_integration()
+                task = integration.update_task(task_list_id, task_id, title=title, notes=notes, status=status, due=due)
+                _json(self, HTTPStatus.OK, {"ok": True, "task": asdict(task)})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/google-tasks/tasks/from-url":
+            # POST /api/google-tasks/tasks/from-url - 從 URL 獲取任務
+            if not _require_perm(self, "read"):
+                return
+            if not GOOGLE_TASKS_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "google_tasks_module_not_available"})
+                return
+            try:
+                data = _read_json(self)
+                task_url = str(data.get("url") or "").strip()
+                if not task_url:
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_url"})
+                    return
+                integration = get_google_tasks_integration()
+                task = integration.get_task_by_url(task_url)
+                if task:
+                    _json(self, HTTPStatus.OK, {"ok": True, "task": asdict(task)})
+                else:
+                    _json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": "task_not_found"})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        self.send_response(HTTPStatus.NOT_FOUND)
+        self.end_headers()
+
+    def do_DELETE(self) -> None:
+        """處理 DELETE 請求"""
+        parsed = urlparse(self.path)
+        # DELETE /api/google-tasks/lists/{list_id}/tasks/{task_id}
+        if parsed.path.startswith("/api/google-tasks/lists/") and "/tasks/" in parsed.path:
+            if not _require_perm(self, "workspace_write"):
+                return
+            if not GOOGLE_TASKS_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "google_tasks_module_not_available"})
+                return
+            try:
+                parts = parsed.path.split("/")
+                list_idx = parts.index("lists")
+                task_idx = parts.index("tasks")
+                if list_idx + 1 >= len(parts) or task_idx + 1 >= len(parts):
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_task_list_id_or_task_id"})
+                    return
+                task_list_id = parts[list_idx + 1]
+                task_id = parts[task_idx + 1]
+                integration = get_google_tasks_integration()
+                success = integration.delete_task(task_list_id, task_id)
+                _json(self, HTTPStatus.OK, {"ok": True, "deleted": success})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+        
+        self.send_response(HTTPStatus.NOT_FOUND)
+        self.end_headers()
+
+    def do_PUT(self) -> None:
+        """處理 PUT 請求"""
+        parsed = urlparse(self.path)
+        # PUT /api/google-tasks/lists/{list_id}/tasks/{task_id} - 更新任務
+        if parsed.path.startswith("/api/google-tasks/lists/") and "/tasks/" in parsed.path:
+            if not _require_perm(self, "workspace_write"):
+                return
+            if not GOOGLE_TASKS_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "google_tasks_module_not_available"})
+                return
+            try:
+                parts = parsed.path.split("/")
+                list_idx = parts.index("lists")
+                task_idx = parts.index("tasks")
+                if list_idx + 1 >= len(parts) or task_idx + 1 >= len(parts):
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_task_list_id_or_task_id"})
+                    return
+                task_list_id = parts[list_idx + 1]
+                task_id = parts[task_idx + 1]
+                data = _read_json(self)
+                title = data.get("title")
+                notes = data.get("notes")
+                status = data.get("status")
+                due = data.get("due")
+                integration = get_google_tasks_integration()
+                task = integration.update_task(task_list_id, task_id, title=title, notes=notes, status=status, due=due)
+                _json(self, HTTPStatus.OK, {"ok": True, "task": asdict(task)})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+        
         self.send_response(HTTPStatus.NOT_FOUND)
         self.end_headers()
 
