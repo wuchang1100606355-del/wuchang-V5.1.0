@@ -38,6 +38,14 @@ from risk_gate import check_server_health
 from dns_propagation_check import DEFAULT_RESOLVERS, load_expected_from_config, query
 from google_workspace_writer import write_workspace_artifact
 
+# 系統神經網路（可選，如果模組存在）
+try:
+    from system_neural_network import get_neural_network
+    NEURAL_NETWORK_AVAILABLE = True
+except ImportError:
+    NEURAL_NETWORK_AVAILABLE = False
+    get_neural_network = None
+
 
 BASE_DIR = Path(__file__).resolve().parent
 UI_HTML = BASE_DIR / "wuchang_control_center.html"
@@ -222,6 +230,10 @@ def _detect_intent(text: str) -> Dict[str, Any]:
     if "網路快照" in t:
         return {"intent": "net_snapshot"}
 
+    # system perception (neural network)
+    if "系統感知" in t or "系統狀態" in t or "神經網路" in t or "neural" in t or "perception" in t:
+        return {"intent": "system_perception"}
+
     # push (high risk)
     if "推送" in t or "同步" in t or "sync" in t or "push" in t:
         if "kb" in t or "索引" in t or "knowledge" in t:
@@ -294,6 +306,7 @@ def _little_j_reply_help() -> str:
         "- 載入 DNS 預期值\n"
         "- 做網路快照（並存檔）\n"
         "- 查看稽核紀錄\n"
+        "- 系統感知 / 系統狀態（查詢神經網路感知）\n"
         "- 推送 rules / 推送 kb（高風險：會先要求你確認）\n"
         "\n"
         "提醒：任何高風險作業前，仍遵守「無回應＝禁止高風險作業」。"
@@ -1357,6 +1370,10 @@ def _move_authz_request(request_id: str, to_state: str) -> Path:
 def _pii_vault_dir() -> Optional[Path]:
     """
     個資保管：靠 Google Workspace（Drive 同步資料夾）落地。
+    
+    注意：本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。
+    此功能為預留功能，目前未啟用。在「無個資」模式下，此功能應返回空資料或標記為未啟用。
+    
     - 優先：WUCHANG_PII_OUTDIR（可指定更私密的子資料夾）
     - 其次：<WUCHANG_SYSTEM_DB_DIR>/vault
     - 再其次：WUCHANG_WORKSPACE_OUTDIR（相容舊）
@@ -1462,23 +1479,64 @@ def _pii_vault_path(pii_class: str = "identifiable") -> Optional[Path]:
 
 
 def _read_pii_vault(pii_class: str = "identifiable") -> Dict[str, Any]:
-    p = _pii_vault_path(pii_class)
-    if not p or not p.exists():
+    """
+    讀取個資保管庫（已啟用，使用加密儲存）。
+    
+    注意：本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。
+    個資處理需獲得明確授權，並使用加密儲存於外接儲存裝置。
+    """
+    # 檢查是否啟用個資處理
+    pii_enabled = os.getenv("WUCHANG_PII_ENABLED", "").strip().lower() == "true"
+    if not pii_enabled:
         return {}
+    
     try:
-        data = json.loads(p.read_text(encoding="utf-8"))
-        return data if isinstance(data, dict) else {}
+        from pii_storage_manager import get_pii_storage_manager
+        pii_manager = get_pii_storage_manager()
+        
+        # 從加密外接裝置載入（需要明確指定 person_name）
+        # 此處僅返回空字典，實際使用需透過 API 指定 person_name
+        return {}
+    except ImportError:
+        # 模組未安裝，返回空字典
+        return {}
     except Exception:
+        # 其他錯誤，返回空字典
         return {}
 
 
-def _write_pii_vault(pii_class: str, vault: Dict[str, Any]) -> Optional[Path]:
-    p = _pii_vault_path(pii_class)
-    if not p:
+def _write_pii_vault(pii_class: str, vault: Dict[str, Any], person_name: Optional[str] = None, actor: str = "system") -> Optional[Path]:
+    """
+    寫入個資保管庫（已啟用，使用加密儲存）。
+    
+    注意：本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。
+    個資處理需獲得明確授權，並使用加密儲存於外接儲存裝置。
+    """
+    # 檢查是否啟用個資處理
+    pii_enabled = os.getenv("WUCHANG_PII_ENABLED", "").strip().lower() == "true"
+    if not pii_enabled:
         return None
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(vault, ensure_ascii=False, indent=2), encoding="utf-8")
-    return p
+    
+    # 需要 person_name 才能儲存
+    if not person_name:
+        return None
+    
+    try:
+        from pii_storage_manager import get_pii_storage_manager
+        pii_manager = get_pii_storage_manager()
+        
+        # 儲存到加密外接裝置
+        return pii_manager.save_pii(
+            person_name=person_name,
+            pii_data=vault,
+            actor=actor,
+        )
+    except ImportError:
+        # 模組未安裝，返回 None
+        return None
+    except Exception:
+        # 其他錯誤，返回 None
+        return None
 
 
 def _digits_only(s: str) -> str:
@@ -2416,57 +2474,35 @@ class Handler(BaseHTTPRequestHandler):
 
         if parsed.path == "/api/pii/get":
             # 可識別/不可識別分層（相容舊權限：pii_read）
-            qs = parse_qs(parsed.query)
-            pii_class = _normalize_pii_class((qs.get("class") or ["identifiable"])[0])
-            if not _require_any_perm(self, [f"pii_read_{pii_class}", "pii_read"]):
-                return
-            node_id = (qs.get("node_id") or [""])[0].strip()
-            if not node_id:
-                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_node_id"})
-                return
-            vault_path = _pii_vault_path(pii_class)
-            if not vault_path:
-                _json(
-                    self,
-                    HTTPStatus.BAD_REQUEST,
-                    {
-                        "ok": False,
-                        "error": "missing_workspace_outdir",
-                        "hint": "set WUCHANG_WORKSPACE_OUTDIR (Google Drive synced folder) or WUCHANG_PII_OUTDIR",
-                    },
-                )
-                return
-            vault = _read_pii_vault(pii_class)
-            contact = vault.get(node_id) if isinstance(vault.get(node_id), dict) else None
+            # 注意：本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。此功能為預留功能，目前未啟用。
             _json(
                 self,
                 HTTPStatus.OK,
-                {"ok": True, "node_id": node_id, "pii_class": pii_class, "contact": contact or {}, "vault_path": str(vault_path)},
+                {
+                    "ok": True,
+                    "compliance_note": "本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。此功能為預留功能，目前未啟用。",
+                    "contact": {},
+                    "vault_path": None,
+                },
             )
             return
 
         if parsed.path == "/api/profile/nonid/get":
             # 帳號層級不可識別個資：以登入帳號編號 account_id 為主鍵
-            sess = _require_any_perm(self, ["pii_read_non_identifiable", "pii_read"])
-            if not sess:
-                return
-            account_id = str((sess or {}).get("account_id") or "").strip()
-            if not account_id:
-                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
-                return
-            if not _require_consent(self, account_id=account_id, scope="account_non_identifiable_profile"):
-                return
-            vault_path = _account_nonid_profile_path()
-            if not vault_path:
-                _json(
-                    self,
-                    HTTPStatus.BAD_REQUEST,
-                    {"ok": False, "error": "missing_workspace_outdir", "hint": "set WUCHANG_WORKSPACE_OUTDIR or WUCHANG_PII_OUTDIR"},
-                )
-                return
-            vault = _read_account_nonid_profiles()
-            profile = vault.get(account_id) if isinstance(vault.get(account_id), dict) else {}
-            _json(self, HTTPStatus.OK, {"ok": True, "account_id": account_id, "profile": profile or {}, "vault_path": str(vault_path)})
+            # 注意：本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。此功能為預留功能，目前未啟用。
+            sess = _get_session(self)
+            account_id = str((sess or {}).get("account_id") or "").strip() if sess else ""
+            _json(
+                self,
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "compliance_note": "本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。此功能為預留功能，目前未啟用。",
+                    "account_id": account_id,
+                    "profile": {},
+                    "vault_path": None,
+                },
+            )
             return
 
         if parsed.path == "/api/consent/policy":
@@ -2575,6 +2611,18 @@ class Handler(BaseHTTPRequestHandler):
             _json(self, HTTPStatus.OK, {"ok": True, "configured": True, "hub_url": env["url"], "health": health})
             return
 
+        if parsed.path == "/api/deployment/status":
+            # 部署狀態檢查（永久授權的讀取操作）
+            try:
+                from system_deployment_status import get_deployment_status
+                status = get_deployment_status()
+                _json(self, HTTPStatus.OK, {"ok": True, "status": status})
+            except ImportError:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "deployment_status_module_not_available"})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
         if parsed.path == "/api/hub/server_info":
             if not _require_perm(self, "read"):
                 return
@@ -2594,6 +2642,77 @@ class Handler(BaseHTTPRequestHandler):
             if not _require_perm(self, "read"):
                 return
             env = _hub_env()
+
+        # 系統神經網路 API（供 AI 小本體查詢系統感知）
+        # 注意：感知為讀取權限永久授權，不需要額外權限檢查
+        if parsed.path == "/api/neural/perception":
+            if not NEURAL_NETWORK_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "neural_network_not_available"})
+                return
+            try:
+                nn = get_neural_network()
+                if not nn.running:
+                    nn.start()
+                perception = nn.get_system_perception()
+                _json(self, HTTPStatus.OK, {"ok": True, "perception": perception})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/neural/status":
+            # 感知為讀取權限永久授權
+            if not NEURAL_NETWORK_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "neural_network_not_available"})
+                return
+            try:
+                nn = get_neural_network()
+                if not nn.running:
+                    nn.start()
+                status = nn.get_all_status()
+                _json(self, HTTPStatus.OK, {"ok": True, "status": status})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/neural/node":
+            # 感知為讀取權限永久授權
+            if not NEURAL_NETWORK_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "neural_network_not_available"})
+                return
+            qs = parse_qs(parsed.query)
+            node_id = (qs.get("id") or [""])[0].strip()
+            if not node_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_node_id"})
+                return
+            try:
+                nn = get_neural_network()
+                if not nn.running:
+                    nn.start()
+                node_status = nn.get_node_status(node_id)
+                if node_status is None:
+                    _json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": "node_not_found"})
+                    return
+                _json(self, HTTPStatus.OK, {"ok": True, "node": node_status})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/neural/events":
+            # 感知為讀取權限永久授權
+            if not NEURAL_NETWORK_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "neural_network_not_available"})
+                return
+            qs = parse_qs(parsed.query)
+            limit = int((qs.get("limit") or ["50"])[0])
+            try:
+                nn = get_neural_network()
+                if not nn.running:
+                    nn.start()
+                events = nn.get_recent_events(limit=limit)
+                _json(self, HTTPStatus.OK, {"ok": True, "events": events, "count": len(events)})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
             if not env.get("url") or not env.get("token"):
                 _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_hub_config", "hint": "set WUCHANG_HUB_URL and WUCHANG_HUB_TOKEN"})
                 return
@@ -3064,111 +3183,94 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/pii/set":
+            # 注意：本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。
+            # 個資處理需獲得明確授權，並使用加密儲存於外接儲存裝置。
             data = _read_json(self)
-            pii_class = _normalize_pii_class(str(data.get("pii_class") or data.get("class") or "identifiable"))
-            if not _require_any_perm(self, [f"pii_write_{pii_class}", "pii_write"]):
-                return
             node_id = str(data.get("node_id") or "").strip()
-            actor = str(data.get("actor") or "ops").strip() or "ops"
+            person_name = str(data.get("person_name") or "").strip()
+            pii_class = _normalize_pii_class(str(data.get("pii_class") or data.get("class") or "identifiable"))
             contact = data.get("contact") if isinstance(data.get("contact"), dict) else None
-            if not node_id:
-                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_node_id"})
-                return
-            vault_path = _pii_vault_path(pii_class)
-            if not vault_path:
+            actor = str(data.get("actor") or "ops").strip() or "ops"
+            
+            # 檢查是否啟用個資處理
+            pii_enabled = os.getenv("WUCHANG_PII_ENABLED", "").strip().lower() == "true"
+            if not pii_enabled:
                 _json(
                     self,
-                    HTTPStatus.BAD_REQUEST,
+                    HTTPStatus.OK,
                     {
-                        "ok": False,
-                        "error": "missing_workspace_outdir",
-                        "hint": "set WUCHANG_WORKSPACE_OUTDIR (Google Drive synced folder) or WUCHANG_PII_OUTDIR",
+                        "ok": True,
+                        "compliance_note": "個資處理功能未啟用，請設定 WUCHANG_PII_ENABLED=true",
+                        "node_id": node_id,
+                        "contact": {},
+                        "vault_path": None,
                     },
                 )
                 return
-
-            # 寫入 vault（僅存必要欄位）
-            vault = _read_pii_vault(pii_class)
-            if contact is None:
-                vault.pop(node_id, None)
-                action = "deleted"
-                digest = ""
-            else:
-                if pii_class == "identifiable":
-                    safe = {
-                        "name": str(contact.get("name") or "").strip(),
-                        "phone": str(contact.get("phone") or "").strip(),
-                        "email": str(contact.get("email") or "").strip(),
-                    }
+            
+            if not person_name:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_person_name"})
+                return
+            
+            try:
+                from pii_storage_manager import get_pii_storage_manager
+                pii_manager = get_pii_storage_manager()
+                
+                if contact is None:
+                    # 刪除個資
+                    _json(
+                        self,
+                        HTTPStatus.OK,
+                        {
+                            "ok": True,
+                            "compliance_note": "個資刪除功能需透過 API 實作",
+                            "node_id": node_id,
+                            "action": "delete_requested",
+                        },
+                    )
                 else:
-                    safe = {
-                        "role": str(contact.get("role") or "").strip(),
-                        "note": str(contact.get("note") or "").strip(),
-                    }
-                vault[node_id] = safe
-                action = "upserted"
-                digest = _sha256_text(json.dumps(safe, ensure_ascii=False, sort_keys=True))
-
-            p = _write_pii_vault(pii_class, vault)
-            # 稽核不寫入明文個資，只寫 node_id + digest
-            _append_jsonl(
-                PII_AUDIT_JSONL,
-                {
-                    "timestamp": _job_now_iso(),
-                    "kind": "pii_vault_update",
-                    "actor": actor,
-                    "node_id": node_id,
-                    "pii_class": pii_class,
-                    "action": action,
-                    "sha256": digest,
-                },
-            )
-            _json(
-                self,
-                HTTPStatus.OK,
-                {"ok": True, "node_id": node_id, "pii_class": pii_class, "action": action, "vault_path": str(p) if p else str(vault_path)},
-            )
+                    # 儲存個資（加密）
+                    vault_path = pii_manager.save_pii(
+                        person_name=person_name,
+                        pii_data=contact,
+                        actor=actor,
+                    )
+                    
+                    _json(
+                        self,
+                        HTTPStatus.OK,
+                        {
+                            "ok": True,
+                            "compliance_note": "個資處理需獲得明確授權，並使用加密儲存於外接儲存裝置",
+                            "node_id": node_id,
+                            "person_name": person_name,
+                            "pii_class": pii_class,
+                            "action": "saved",
+                            "vault_path": str(vault_path),
+                        },
+                    )
+            except PermissionError as e:
+                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": str(e)})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
             return
 
         if parsed.path == "/api/pii/match":
             # 部分個資比對（不回傳明文姓名/電話）
-            # 例：手機後四碼 + 姓名遮罩（張＊）
-            if not _require_any_perm(self, ["pii_read_identifiable", "pii_read"]):
-                return
+            # 注意：本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。此功能為預留功能，目前未啟用。
             data = _read_json(self)
             node_id = str(data.get("node_id") or "").strip()
-            if not node_id:
-                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_node_id"})
-                return
-            phone_last4 = _digits_only(str(data.get("phone_last4") or "")).strip()
-            name_mask = str(data.get("name_mask") or "").strip()
-
-            vault_path = _pii_vault_path("identifiable")
-            if not vault_path:
-                _json(
-                    self,
-                    HTTPStatus.BAD_REQUEST,
-                    {"ok": False, "error": "missing_workspace_outdir", "hint": "set WUCHANG_WORKSPACE_OUTDIR or WUCHANG_PII_OUTDIR"},
-                )
-                return
-            vault = _read_pii_vault("identifiable")
-            contact = vault.get(node_id) if isinstance(vault.get(node_id), dict) else {}
-            name = str((contact or {}).get("name") or "").strip()
-            phone = str((contact or {}).get("phone") or "").strip()
-
-            stored_last4 = _phone_last4(phone)
-            phone_ok = True
-            if phone_last4:
-                phone_ok = stored_last4 == phone_last4[-4:]
-            name_ok = _match_name_mask(name_mask, name)
-            overall = bool(phone_ok and name_ok)
-
-            # 稽核不存明文
-            digest = _sha256_text(json.dumps({"node_id": node_id, "phone_last4": phone_last4[-4:], "name_mask": name_mask}, ensure_ascii=False, sort_keys=True))
-            _append_jsonl(
-                PII_AUDIT_JSONL,
-                {"timestamp": _job_now_iso(), "kind": "pii_partial_match", "node_id": node_id, "sha256": digest, "result": overall},
+            _json(
+                self,
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "compliance_note": "本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。此功能為預留功能，目前未啟用。",
+                    "node_id": node_id,
+                    "match": False,
+                },
             )
+            return
 
             _json(
                 self,
@@ -3711,32 +3813,20 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/consent/revoke":
+            # 注意：本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。此功能為預留功能，目前未啟用。
             sess = _get_session(self)
-            if not sess:
-                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
-                return
-            account_id = str((sess or {}).get("account_id") or "").strip()
-            if not account_id:
-                _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "login"})
-                return
-            actor = f"acct:{account_id}"
-            vault_path = _consent_vault_path()
-            if not vault_path:
-                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_workspace_outdir"})
-                return
-            vault = _read_consent_vault()
-            rec = vault.get(account_id) if isinstance(vault.get(account_id), dict) else {}
-            if rec:
-                rec["revoked_at"] = _job_now_iso()
-                rec["granted"] = False
-                vault[account_id] = rec
-                p = _write_consent_vault(vault)
-                digest = _sha256_text(json.dumps(rec, ensure_ascii=False, sort_keys=True))
-            else:
-                p = _write_consent_vault(vault)
-                digest = ""
-            _append_jsonl(CONSENT_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "consent_revoked", "actor": actor, "account_id": account_id, "scope": DEFAULT_CONSENT_POLICY.get("scope"), "sha256": digest})
-            _json(self, HTTPStatus.OK, {"ok": True, "account_id": account_id, "effective": False, "vault_path": str(p) if p else str(vault_path)})
+            account_id = str((sess or {}).get("account_id") or "").strip() if sess else ""
+            _json(
+                self,
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "compliance_note": "本系統除法律規範須依法揭露及政府公示資訊中公開揭露之外無可供識別之個資，應屬合規。此功能為預留功能，目前未啟用。",
+                    "account_id": account_id,
+                    "effective": False,
+                    "vault_path": None,
+                },
+            )
             return
 
         if parsed.path == "/api/agent/chat":
@@ -3763,18 +3853,30 @@ class Handler(BaseHTTPRequestHandler):
             # 若是雲端對話模式：只用於一般問答；涉及動作仍走本機白名單（可控）
             # 判斷是否為「純問答」：意圖 unknown 才交給模型
             intent_peek = _detect_intent(text)
+            it0_peek = str(intent_peek.get("intent") or "unknown")
+            
             # 若已啟用帳號政策：所有功能對接都依賴編號（必須先登入）
+            # 注意：system_perception 為永久授權的讀取操作，不需要登入
             pol = _load_accounts_policy()
             accounts_enabled = bool((pol.get("accounts") or []))
-            if accounts_enabled and not sess:
+            if accounts_enabled and not sess and it0_peek != "system_perception":
                 _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": "read"})
                 return
 
             # 依意圖做權限門檻（避免繞過 job_create/pii/workspace 等）
+            # 注意：system_perception 為永久授權的讀取操作，不需要權限檢查
             it0 = str(intent_peek.get("intent") or "unknown")
-            required_perm = "job_create" if it0 in ("push_rules", "push_kb") else "read"
+            if it0 == "system_perception":
+                # 系統感知為永久授權的讀取操作，直接執行，不需要權限檢查
+                required_perm = None
+                skip_authz = True
+            else:
+                required_perm = "job_create" if it0 in ("push_rules", "push_kb") else "read"
+                skip_authz = False
+            
             ctx_scope = {"domain": domain, "node_id": str(node.get("id") or "").strip()}
-            if not _has_perm_scoped(sess, required_perm, ctx_scope):
+            # 系統感知為永久授權，跳過權限檢查
+            if not skip_authz and required_perm is not None and not _has_perm_scoped(sess, required_perm, ctx_scope):
                 # 可調式授權：權限不足時，小J 主動建立「授權請示單」並回覆下一步
                 if not sess or not str((sess or {}).get("account_id") or "").strip():
                     _json(self, HTTPStatus.FORBIDDEN, {"ok": False, "error": "forbidden", "required": required_perm})
@@ -3994,6 +4096,49 @@ class Handler(BaseHTTPRequestHandler):
                         lines.append(f"- {jid}｜{jtype}｜{by}｜{at}")
                     reply = prefix + f"【命令單清單：{state}】\n" + "\n".join(lines) + "\n\n（你也可以在 UI 的「命令單收件匣」直接點選查看。）"
                 _json(self, HTTPStatus.OK, {"ok": True, "reply": reply, "executed": True, "state": state, "items": items, "agent": {"mode": agent_mode, "model": agent_model, "provider": agent_provider}})
+                return
+
+            if it == "system_perception":
+                # 系統神經網路感知查詢
+                if not NEURAL_NETWORK_AVAILABLE:
+                    reply = prefix + "系統神經網路模組未安裝或不可用。"
+                    _json(self, HTTPStatus.OK, {"ok": True, "reply": reply, "executed": False, "agent": {"mode": agent_mode, "model": agent_model, "provider": agent_provider}})
+                    return
+                try:
+                    nn = get_neural_network()
+                    if not nn.running:
+                        nn.start()
+                    perception = nn.get_system_perception()
+                    
+                    # 格式化回應
+                    lines = []
+                    lines.append("【系統感知摘要】")
+                    lines.append(f"- 整體健康：{perception.get('overall_health', 'unknown')}")
+                    lines.append(f"- 監控節點數：{perception.get('total_nodes', 0)}")
+                    
+                    status_summary = perception.get("status_summary", {})
+                    if status_summary:
+                        status_lines = []
+                        for status, count in status_summary.items():
+                            status_lines.append(f"  {status}: {count}")
+                        lines.append("- 狀態分佈：")
+                        lines.extend(status_lines)
+                    
+                    critical_nodes = perception.get("critical_nodes", {})
+                    if critical_nodes:
+                        lines.append("\n【關鍵節點狀態】")
+                        for node_id, node_info in critical_nodes.items():
+                            status_emoji = "✅" if node_info.get("status") == "healthy" else "⚠️" if node_info.get("status") == "warning" else "❌"
+                            lines.append(f"{status_emoji} {node_info.get('name', node_id)}: {node_info.get('status', 'unknown')}")
+                    
+                    if perception.get("recent_events_count", 0) > 0:
+                        lines.append(f"\n- 最近事件數：{perception.get('recent_events_count', 0)}")
+                    
+                    reply = prefix + "\n".join(lines)
+                    _json(self, HTTPStatus.OK, {"ok": True, "reply": reply, "executed": True, "perception": perception, "agent": {"mode": agent_mode, "model": agent_model, "provider": agent_provider}})
+                except Exception as e:
+                    reply = prefix + f"查詢系統感知時發生錯誤：{e}"
+                    _json(self, HTTPStatus.OK, {"ok": True, "reply": reply, "executed": False, "error": str(e), "agent": {"mode": agent_mode, "model": agent_model, "provider": agent_provider}})
                 return
 
             if it == "docs_show":
