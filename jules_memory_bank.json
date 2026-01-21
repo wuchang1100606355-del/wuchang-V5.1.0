@@ -370,5 +370,41 @@
       "記錄優化建議並執行安全操作",
       "定期檢討協作效果"
     ]
+  },
+  
+  "community_info": {
+    "title": "五常社區發展協會轄區資訊",
+    "organization": "新北市三重區五常社區發展協會",
+    "last_updated": "2026-01-21T00:00:00",
+    "geographic_boundary": {
+      "description": "五常社區發展協會服務轄區包含三個里",
+      "boundary_file": "wuchang_community_boundary.geojson",
+      "covered_areas": [
+        {
+          "name": "五常里",
+          "admin_level": 9,
+          "description": "五常社區發展協會主要服務區域之一"
+        },
+        {
+          "name": "五順里",
+          "admin_level": 9,
+          "description": "五常社區發展協會主要服務區域之一"
+        },
+        {
+          "name": "仁忠里",
+          "admin_level": 9,
+          "description": "五常社區發展協會主要服務區域之一"
+        }
+      ],
+      "coordinate_reference": {
+        "system": "WGS84",
+        "format": "[經度, 緯度]",
+        "center_approximate": {
+          "longitude": 121.497,
+          "latitude": 25.079
+        }
+      }
+    },
+    "notes": "此地理資訊用於社區服務範圍界定、活動規劃、以及系統服務區域識別"
   }
 }

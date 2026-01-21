@@ -1,6 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2026-01-20T17:00:00",
+  "last_updated": "2026-01-21T00:00:00",
+  "community_boundary_file": "wuchang_community_boundary.geojson",
   "records": [
     {
       "id": "chiang_cheng_lung_001",
@@ -12,9 +13,18 @@
       "email": "",
       "role": "總幹事",
       "organization": "新北市三重區五常社區發展協會",
+      "service_area": {
+        "description": "五常社區發展協會服務轄區",
+        "boundary_file": "wuchang_community_boundary.geojson",
+        "covered_areas": [
+          "五常里",
+          "五順里",
+          "仁忠里"
+        ]
+      },
       "status": "active",
       "created_at": "2026-01-20T17:00:00",
-      "notes": "協會總幹事，負責會務承攬業務"
+      "notes": "協會總幹事，負責會務承攬業務。服務範圍包含五常里、五順里、仁忠里三個里。"
     }
   ]
 }
