@@ -1,0 +1,163 @@
+{
+  "calendar_version": "1.0",
+  "last_updated": "2026-01-15",
+  "association_name": "新北市三重區五常社區發展協會",
+  "calendar_items": [
+    {
+      "id": "annual_plan_2026",
+      "title": "113年度工作計畫提交",
+      "type": "法定時程",
+      "due_date": "2026-01-31",
+      "reminders": [
+        {
+          "days_before": 30,
+          "method": ["email", "system_notification"],
+          "message": "113年度工作計畫需於1月31日前提交主管機關，請開始準備相關文件"
+        },
+        {
+          "days_before": 15,
+          "method": ["email", "system_notification"],
+          "message": "113年度工作計畫提交截止日為1月31日，請確認文件完整性"
+        },
+        {
+          "days_before": 7,
+          "method": ["email", "system_notification", "sms"],
+          "message": "113年度工作計畫提交截止日為1月31日，請盡快完成"
+        }
+      ],
+      "responsible": "秘書處",
+      "related_documents": ["02_年度工作計畫_2026.md"],
+      "status": "pending"
+    },
+    {
+      "id": "annual_report_2025",
+      "title": "112年度決算提交",
+      "type": "法定時程",
+      "due_date": "2026-03-31",
+      "reminders": [
+        {
+          "days_before": 30,
+          "method": ["email", "system_notification"],
+          "message": "112年度決算需於3月31日前提交主管機關，請開始準備相關文件"
+        },
+        {
+          "days_before": 15,
+          "method": ["email", "system_notification"],
+          "message": "112年度決算提交截止日為3月31日，請確認文件完整性"
+        }
+      ],
+      "responsible": "財務組",
+      "related_documents": ["04_財務管理規範.md"],
+      "status": "pending"
+    },
+    {
+      "id": "budget_2027",
+      "title": "114年度預算編列",
+      "type": "法定時程",
+      "due_date": "2026-11-30",
+      "reminders": [
+        {
+          "days_before": 30,
+          "method": ["email", "system_notification"],
+          "message": "114年度預算需於11月30日前完成編列，請開始準備"
+        }
+      ],
+      "responsible": "財務組",
+      "related_documents": ["04_財務管理規範.md"],
+      "status": "pending"
+    },
+    {
+      "id": "monthly_financial_report",
+      "title": "財務月報表",
+      "type": "每月固定",
+      "due_date": "每月5日",
+      "recurring": true,
+      "reminders": [
+        {
+          "days_before": 3,
+          "method": ["email", "system_notification"],
+          "message": "財務月報表需於每月5日前完成，請開始準備"
+        }
+      ],
+      "responsible": "財務組",
+      "related_documents": ["04_財務管理規範.md"],
+      "status": "active"
+    },
+    {
+      "id": "board_meeting",
+      "title": "理監事會會議",
+      "type": "每月固定",
+      "due_date": "每月15日",
+      "recurring": true,
+      "reminders": [
+        {
+          "days_before": 7,
+          "method": ["email", "system_notification"],
+          "message": "理監事會會議將於每月15日召開，請確認議程與文件準備"
+        }
+      ],
+      "responsible": "秘書處",
+      "related_documents": ["08_公文處理與行政營運組織.md"],
+      "status": "active"
+    },
+    {
+      "id": "grant_application_monitor",
+      "title": "補助申請監控",
+      "type": "補助申請",
+      "monitoring": true,
+      "reminders": [
+        {
+          "days_before": 30,
+          "method": ["email", "system_notification"],
+          "message": "補助申請截止日將至，請開始準備申請文件"
+        }
+      ],
+      "responsible": "秘書處",
+      "related_documents": ["03_補助申請作業規範.md"],
+      "status": "active"
+    },
+    {
+      "id": "grant_reimbursement_monitor",
+      "title": "補助核銷監控",
+      "type": "核銷作業",
+      "monitoring": true,
+      "reminders": [
+        {
+          "days_before": 15,
+          "method": ["email", "system_notification"],
+          "message": "補助核銷截止日將至，請開始準備核銷文件"
+        }
+      ],
+      "responsible": "財務組",
+      "related_documents": ["03_補助申請作業規範.md", "04_財務管理規範.md"],
+      "status": "active"
+    }
+  ],
+  "google_calendar_sync": {
+    "enabled": true,
+    "calendar_id": "wuchang.association.calendar",
+    "sync_frequency": "daily"
+  },
+  "notification_settings": {
+    "email_enabled": true,
+    "sms_enabled": true,
+    "system_notification_enabled": true,
+    "notification_recipients": [
+      {
+        "role": "理事長",
+        "email": "（待補充）",
+        "phone": "（待補充）"
+      },
+      {
+        "role": "秘書處",
+        "email": "（待補充）",
+        "phone": "（待補充）"
+      },
+      {
+        "role": "財務組",
+        "email": "（待補充）",
+        "phone": "（待補充）"
+      }
+    ]
+  }
+}

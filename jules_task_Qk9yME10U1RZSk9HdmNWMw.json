@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "task": {
+    "id": "Qk9yME10U1RZSk9HdmNWMw",
+    "title": "修復網路問題 - 2026-01-19 16:54",
+    "status": "needsAction",
+    "notes": "# 網路問題修復任務\n\n## 問題描述\n\n系統目前存在網路連接問題，需要 JULES 協助解決。\n\n## 當前狀態\n\n### ✅ 已正常\n- 控制中心運行中（端口 8788）\n- VPN 連接正常（10.8.0.6 → 10.8.0.1）\n- 本地服務正常\n\n### ❌ 待解決\n- 網路共享路徑不可訪問：`\\\\HOME-COMMPUT\\wuchang V5.1.0`\n- 伺服器端服務無回應\n- 環境變數未完整設定\n\n## 需要檢查的項目\n\n### 1. 網路共享路徑\n- [ ] 確認伺服器名稱：`HOME-COMMPUT` vs `HOME-COMPUTER`\n- [ ] 測試網路連接：`ping HOME-COMMPUT`\n- [ ] 掃描網路上的電腦：`net view`\n- [ ] 確認共享資料夾是否存在\n- [ ] 檢查共享權限設定\n\n### 2. 伺服器端服務\n- [ ] 確認伺服器端控制中心是否運行\n- [ ] 檢查實際應用伺服器 IP（可能不是 10.8.0.1）\n- [ ] 掃描 VPN 網段內的其他 IP（10.8.0.2-10.8.0.10）\n- [ ] 檢查防火牆設定\n- [ ] 測試 TCP 連接（端口 8788, 8799）\n- [ ] 測試 HTTP 健康檢查端點\n\n### 3. 環境變數設定\n- [ ] 設定 `WUCHANG_HEALTH_URL`（伺服器健康檢查 URL）\n- [ ] 設定 `WUCHANG_COPY_TO`（正確的共享路徑）\n- [ ] 設定 `WUCHANG_HUB_URL`（Little J Hub URL）\n- [ ] 設定 `WUCHANG_HUB_TOKEN`（Hub 認證 Token）\n\n## 修復步驟\n\n### 步驟 1：確認網路共享\n```powershell\n# 測試伺服器連接\nping HOME-COMMPUT\nping HOME-COMPUTER\n\n# 查看網路上的電腦\nnet view\n\n# 嘗試訪問共享\ndir \\HOME-COMMPUT\\wuchang*\ndir \\HOME-COMPUTER\\wuchang*\n```\n\n### 步驟 2：映射網路磁碟機\n```powershell\n# 取消現有映射（如果有）\nnet use Z: /delete\n\n# 使用認證資訊映射\nnet use Z: \\正確路徑\\wuchang V5.1.0 /user:帳號 密碼 /persistent:yes\n\n# 驗證映射\nTest-Path Z:dir Z:```\n\n### 步驟 3：設定環境變數\n```powershell\n# 設定健康檢查 URL\n[System.Environment]::SetEnvironmentVariable(\"WUCHANG_HEALTH_URL\", \"https://coffeeLofe.asuscomm.com:8443/health\", \"User\")\n\n# 設定共享路徑\n[System.Environment]::SetEnvironmentVariable(\"WUCHANG_COPY_TO\", \"Z:\", \"User\")\n\n# 設定 Hub URL（如果需要）\n[System.Environment]::SetEnvironmentVariable(\"WUCHANG_HUB_URL\", \"http://10.8.0.1:8799\", \"User\")\n```\n\n### 步驟 4：測試連接\n```powershell\n# 測試健康檢查\nInvoke-WebRequest -Uri $env:WUCHANG_HEALTH_URL -UseBasicParsing\n\n# 測試檔案同步\npython check_server_connection.py\n```\n\n## 預期結果\n\n- ✅ 網路共享路徑可訪問\n- ✅ 伺服器端服務可正常連接\n- ✅ 環境變數正確設定\n- ✅ 檔案同步功能正常\n\n## 相關檔案\n\n- `network_interconnection_config.json` - 網路配置\n- `check_server_connection.py` - 連接檢查工具\n- `fix_network_drive.py` - 網路磁碟機修復工具\n- `diagnose_network_share.py` - 網路共享診斷工具\n\n## 優先級\n\n**高優先級** - 影響檔案同步和系統整合\n\n## 備註\n\n請 JULES 協助：\n1. 確認正確的伺服器名稱和共享路徑\n2. 檢查伺服器端服務狀態\n3. 提供正確的連接資訊\n4. 協助完成環境變數設定\n",
+    "due": null,
+    "completed": null,
+    "updated": "2026-01-19T08:54:11.069Z"
+  }
+}

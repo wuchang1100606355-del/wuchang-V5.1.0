@@ -1,102 +1,125 @@
-## 系統盤點報告（以證據為準）
-更新時間：2026-01-15
+# 系統盤點總覽
 
----
+## 功能狀態統計
 
-## 1) 本機 DNS/hosts 覆寫（會造成「看起來沒部署/其實有部署」的假象）
-證據：`C:\Windows\System32\drivers\etc\hosts`
-- `wuchang.life`、`app.wuchang.life`、`ai.wuchang.life`、`llm.wuchang.life`、`asr.wuchang.life`、`tts.wuchang.life` 被固定指向 `127.0.0.1`
-- `wuchang.global` 與其子網域也被固定指向 `127.0.0.1`
+| 狀態 | 數量 | 說明 |
+|------|------|------|
+| **已提出** | 待整理 | 用戶曾提出構想 |
+| **設計中** | 1+ | 討論中 |
+| **已開發** | 3+ | 已完成細節討論，隨時可進入程式碼編寫 |
+| **已實裝** | 待確認 | 完成程式碼 |
+| **已上架** | 待確認 | 於使用者面板出現且功能正常（不需列管） |
 
-結論：在這台機器上，直接用瀏覽器或程式連 `wuchang.life`，**預設會打到本機**，不是公網真實服務。
+## 已開發功能清單
 
----
+### 1. PII 物理隔絕系統
 
-## 2) 公網 DNS（外部真實解析）
-證據來源：
-- repo 檔：`dns_records.json`
-- 外部驗證：`nslookup <subdomain> 8.8.8.8` 與 `nslookup <subdomain> 1.1.1.1`（結果一致）
+- **狀態**：已開發
+- **描述**：間諜名單等級的 PII 保護系統
+- **文檔**：功能列管/已開發/PII_物理隔絕系統.md
 
-主要 A 記錄（摘要）：
-- `wuchang.life` → `35.185.167.23`, `220.135.21.74`
-- `www.wuchang.life` → `220.135.21.74`
-- `shop.wuchang.life` → `220.135.21.74`
-- `odoo.wuchang.life` → `35.185.167.23`
-- `core/admin/verify/butler/ft/vs.wuchang.life` → `35.201.170.114`
-- `pos/pm/hj/housing.wuchang.life` → `104.199.144.93`
+### 2. 社區安全鈴
 
----
+- **狀態**：已開發
+- **描述**：會員緊急求救機制，僅限社區內使用
+- **文檔**：功能列管/已開發/社區安全鈴.md
 
-## 3) 本機 80/443 實際被誰接管（本機 UI/反代層的關鍵）
-證據：`netstat -ano` + `tasklist` / `wmic`
+### 3. 閉環消費價值分配系統
 
-### 3.1 LISTENING
-- `0.0.0.0:80` / `0.0.0.0:443`：
-  - PID `47404` = `com.docker.backend.exe`（Docker Desktop）
-  - PID `27712` = `svchost.exe (iphlpsvc)`
-- `::1:80` / `::1:443`：
-  - PID `7280` = `wslrelay.exe`（WSL）
+- **狀態**：已開發
+- **描述**：50% 消費循環、50% 組織運作，動態分配機制
+- **文檔**：功能列管/已開發/閉環消費價值分配系統.md
 
-### 3.2 對本機 `wuchang.life` 的 HTTP 回應
-證據：`curl -I -H "Host: wuchang.life" http://127.0.0.1/`
-- 回應：`HTTP/1.1 400 Bad Request`（代表本機確實有反代/服務在回應，但因 Host/路徑/協定不符合而拒絕）
+### 4. 系統架構（條約層、規則層、執行層）
 
-結論：你這台機器的 `wuchang.life -> 127.0.0.1` 明確存在「本機入口/反代層」，但目前回應為 400/或超時，表示需要補齊正確的 vhost/路由/對應服務才會正常。
+- **狀態**：已開發
+- **描述**：多層次系統架構，電子簽章控制
+- **文檔**：功能列管/已開發/系統架構_條約層規則層執行層.md
 
----
+## 設計中功能清單
 
-## 4) 公網服務連通性（從本機出網的可達性）
-證據：`Test-NetConnection` 與 `curl`
+### 1. AI 會計師（零人工會計）
 
-### 4.1 可達
-- `220.135.21.74:8443`（RT-BE86U 遠端管理 HTTPS）：
-  - `Test-NetConnection`：`TcpTestSucceeded=True`
-  - `curl -k -I https://220.135.21.74:8443/`：`HTTP/1.0 200 OK`，`Server: httpd/3.0`
+- **狀態**：設計中
+- **描述**：完全自動化的財務系統，零人工會計
+- **文檔**：功能列管/設計中/AI_會計師.md
 
-### 4.2 不可達（至少在此機器/此網路環境下）
-- `220.135.21.74:80`：TCP 連線失敗（拒絕/未開）
-- `220.135.21.74:5000`：TCP 連線失敗（未開）
-- `35.185.167.23:80/443`、`35.201.170.114:80/443`、`104.199.144.93:80/443`：
-  - `Test-NetConnection` 顯示 `TcpTestSucceeded=False`（多為 timeout）
+## 資料夾結構
 
-解讀：這不等於「那些服務不存在」，而是「從這台機器的出網路徑目前連不到」。常見原因包括：
-- 目標端防火牆未開 80/443
-- 目標端只開特定來源 IP（ACL）
-- ISP/網路環境對特定路徑/國外 IP 有阻斷或不穩
 
----
+## 功能列管流程
 
-## 5) 本 workspace（repo）內實際包含的內容定位
-### 5.1 git 追蹤到的檔案（`git ls-files`）
-- `.gitignore`
-- `MAP_3D_INTEGRATION.md`
-- `README.md`
-- `diagnose_connection.py`
-- `dns_records.json`
-- `login_router.py`
-- `requirements.txt`
-- `router_connection.py`
-- `test_local_connection.py`
+### 功能狀態轉換流程
 
-### 5.2 workspace 內目前存在（多為未追蹤/資料與 UI 片段）
-- 社區分析資料與知識庫：`wuchang_community_analysis.json`、`wuchang_community_knowledge_base.json`、`wuchang_community_knowledge_index.json`…
-- API 模組（Blueprint）：`api_community_data.py`、`upload_avatar_api.py`（需要「主 Flask app」掛載才可跑）
-- UI/展示頁：`system_architecture.html`、`wuchang_community_dashboard.html`
-- 小 J icon HTML 片段：`little_j_floating_icon.py`（會呼叫 `/api/ai/settings`、`/api/ai/execute`，但本 workspace 未見該 API 實作）
+`" >> 
+SYSTEM_INVENTORY.md && echo 已提出
+→
+設計中
+→
+已開發
+→
+已實裝
+→
+已上架 >> SYSTEM_INVENTORY.md && echo 
+↓
+↓
+↓
+↓
+↓ >> SYSTEM_INVENTORY.md && echo 列管
+列管
+列管
+列管
+不列管 >> SYSTEM_INVENTORY.md && echo `"
 
-### 5.3 文件提到但 workspace 內缺少的元件（表示主系統在別處）
-在 `MAP_3D_INTEGRATION.md` / `WUCHANG_COMMUNITY_ANALYSIS.md` / `LITTLE_J_ICON_GUIDE.md` 中提到：
-- `web_ui.py`
-- `map_api_routes.py`
-- `map_downloader.py`
-- `map_3d_viewer.html`
-- `responsive_ui_module.py`
-上述檔案在本 workspace 內 **不存在**，因此文件所描述的「localhost:5000 Web UI」與「地圖 API」應位於其他 repo/其他主機/或尚未同步到此 workspace。
+## 完整功能清單（依狀態分類）
 
----
+### 已開發功能（4項）
 
-## 6) 盤點結論（當前可用的架構對話基準）
-1. 你本機有一個「wuchang.life 本機入口層」（hosts + 80/443 listener），由 Docker/WSL/系統服務介入；目前回應 400/超時，代表入口存在但路由未對齊。
-2. 公網 DNS 的子網域分流架構清楚（220.* / 35.* / 104.*），但從此機器出網目前只穩定打到 `220.135.21.74:8443`，其餘多為 timeout。
-3. 本 workspace 的角色偏向「UI/資料/片段與工具」，不是完整後端；主系統（尤其是 `core/pos/admin/verify/odoo` 對應的服務實作與部署）必須到對應主機或其他 repo 才能盤到。
+1. **PII 物理隔絕系統** - 間諜名單等級防護
+2. **社區安全鈴** - 緊急求救機制，僅限社區內
+3. **閉環消費價值分配系統** - 動態分配機制
+4. **系統架構（條約層、規則層、執行層）** - 多層次架構，電子簽章控制
 
+### 設計中功能（1項）
+
+1. **AI 會計師（零人工會計）** - 完全自動化財務系統
+
+### 已提出功能（待整理）
+
+待用戶確認並整理已提出的構想...
+
+### 已實裝功能（待確認）
+
+待確認已完成程式碼的功能...
+
+### 已上架功能（不需列管）
+
+已於使用者面板出現且功能正常的功能，不需列管...
+
+## 規則層級與管理者權限架構
+
+### 規則層級分類（8層級）
+
+1. **最高法規** - 中華民國憲法
+2. **通用台灣法規** - 六法、專利權法
+3. **主管機關法規** - 社會、文化相關法規
+4. **主規則** - 社區發展協會章程、社區幹部選舉罷免相關規則
+5. **已定規則** - 已正式確定的系統規則
+6. **待訂規則** - 討論中但尚未正式確定的規則
+7. **道德限制類** - 道德倫理層面的限制與規範
+8. **精神理念類** - 系統的核心價值與理念
+
+### 管理者權限層級（10層級）
+
+1. **使用者** - 一般系統使用者
+2. **管理人** - 系統日常管理人員
+3. **管理組織** - 理監事會等組織決策層
+4. **公司管理人** - 公司層級的管理人員
+5. **公司** - 公司法人實體
+6. **系統創辦人（含AI小j）** - 專利所有權人，設計層級最高權限
+7. **地方主管機關** - 地方政府相關主管機關
+8. **中央主管機關** - 中央政府相關主管機關
+9. **最高行政機關** - 行政院等最高行政機關
+10. **法律主管機關** - 法務部、司法院等法律主管機關
+
+詳細對應關係請參閱：**規則權限對應表.md**

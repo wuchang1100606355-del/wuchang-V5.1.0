@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-01-20T17:00:00",
+  "records": [
+    {
+      "id": "chiang_cheng_lung_001",
+      "name": "江政隆",
+      "id_number": "A123456789",
+      "birth_date": "1970-01-01",
+      "address": "新北市三重區",
+      "phone": "",
+      "email": "",
+      "role": "總幹事",
+      "organization": "新北市三重區五常社區發展協會",
+      "status": "active",
+      "created_at": "2026-01-20T17:00:00",
+      "notes": "協會總幹事，負責會務承攬業務"
+    }
+  ]
+}

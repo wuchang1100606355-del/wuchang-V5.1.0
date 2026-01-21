@@ -1,0 +1,75 @@
+{
+  "timestamp": "C:\\Users\\o0930",
+  "container_running": true,
+  "config_status": {
+    "config_exists": true,
+    "credentials_exists": false,
+    "config_valid": true,
+    "tunnel_id_set": false,
+    "domains_configured": [
+      "app.wuchang.org.tw"
+    ]
+  },
+  "dns_results": {
+    "app.wuchang.org.tw": {
+      "resolved": false,
+      "error": "[Errno 11001] getaddrinfo failed",
+      "ips": []
+    },
+    "ai.wuchang.org.tw": {
+      "resolved": false,
+      "error": "[Errno 11001] getaddrinfo failed",
+      "ips": []
+    },
+    "admin.wuchang.org.tw": {
+      "resolved": false,
+      "error": "[Errno 11001] getaddrinfo failed",
+      "ips": []
+    },
+    "monitor.wuchang.org.tw": {
+      "resolved": false,
+      "error": "[Errno 11001] getaddrinfo failed",
+      "ips": []
+    }
+  },
+  "service_results": {
+    "app.wuchang.org.tw": {
+      "connected": false,
+      "error": "無法連接"
+    },
+    "ai.wuchang.org.tw": {
+      "connected": false,
+      "error": "無法連接"
+    },
+    "admin.wuchang.org.tw": {
+      "connected": false,
+      "error": "無法連接"
+    },
+    "monitor.wuchang.org.tw": {
+      "connected": false,
+      "error": "無法連接"
+    }
+  },
+  "issues": [
+    {
+      "severity": "ERROR",
+      "issue": "Cloudflare 憑證檔案不存在",
+      "solution": "執行: cloudflared tunnel login 並複製憑證"
+    },
+    {
+      "severity": "WARN",
+      "issue": "Tunnel ID 未設定",
+      "solution": "編輯 cloudflared/config.yml，將 <tunnel-id> 替換為實際 ID"
+    },
+    {
+      "severity": "WARN",
+      "issue": "4 個域名無法解析",
+      "solution": "確認 DNS 路由已設定: cloudflared tunnel route dns list"
+    },
+    {
+      "severity": "WARN",
+      "issue": "4 個服務無法連接",
+      "solution": "檢查 Cloudflare Tunnel 配置和容器日誌"
+    }
+  ]
+}

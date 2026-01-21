@@ -1,0 +1,408 @@
+{
+  "year": 2026,
+  "generated_at": "2026-01-17T02:01:32.920020",
+  "statistics": {
+    "total": 49,
+    "annual": 5,
+    "quarterly": 8,
+    "monthly": 36,
+    "by_category": {
+      "年度文件": 5,
+      "季度文件": 8,
+      "月度文件": 36
+    },
+    "by_status": {
+      "已建立": 1,
+      "待建立": 48
+    }
+  },
+  "documents": [
+    {
+      "type": "年度工作計畫",
+      "file": "02_年度工作計畫_2026.md",
+      "due_date": "2026-01-31",
+      "status": "已建立",
+      "category": "年度文件"
+    },
+    {
+      "type": "年度決算",
+      "file": "financial/財務_年度決算_2025.md",
+      "due_date": "2026-03-31",
+      "status": "待建立",
+      "category": "年度文件"
+    },
+    {
+      "type": "年度預算",
+      "file": "financial/財務_年度預算_2027.md",
+      "due_date": "2026-11-30",
+      "status": "待建立",
+      "category": "年度文件"
+    },
+    {
+      "type": "年度工作報告",
+      "file": "reports/報告_年度工作報告_2026.md",
+      "due_date": "2026-12-31",
+      "status": "待建立",
+      "category": "年度文件"
+    },
+    {
+      "type": "會員名冊",
+      "file": "organization/組織_會員名冊_2026.md",
+      "due_date": "2026-01-31",
+      "status": "待建立",
+      "category": "年度文件"
+    },
+    {
+      "type": "季度工作進度報告",
+      "file": "reports/報告_季度工作進度_2026Q1.md",
+      "due_date": "2026-04-15",
+      "status": "待建立",
+      "category": "季度文件",
+      "quarter": 1
+    },
+    {
+      "type": "季度財務報表",
+      "file": "financial/財務_季度財務報表_2026Q1.md",
+      "due_date": "2026-04-15",
+      "status": "待建立",
+      "category": "季度文件",
+      "quarter": 1
+    },
+    {
+      "type": "季度工作進度報告",
+      "file": "reports/報告_季度工作進度_2026Q2.md",
+      "due_date": "2026-07-15",
+      "status": "待建立",
+      "category": "季度文件",
+      "quarter": 2
+    },
+    {
+      "type": "季度財務報表",
+      "file": "financial/財務_季度財務報表_2026Q2.md",
+      "due_date": "2026-07-15",
+      "status": "待建立",
+      "category": "季度文件",
+      "quarter": 2
+    },
+    {
+      "type": "季度工作進度報告",
+      "file": "reports/報告_季度工作進度_2026Q3.md",
+      "due_date": "2026-10-15",
+      "status": "待建立",
+      "category": "季度文件",
+      "quarter": 3
+    },
+    {
+      "type": "季度財務報表",
+      "file": "financial/財務_季度財務報表_2026Q3.md",
+      "due_date": "2026-10-15",
+      "status": "待建立",
+      "category": "季度文件",
+      "quarter": 3
+    },
+    {
+      "type": "季度工作進度報告",
+      "file": "reports/報告_季度工作進度_2026Q4.md",
+      "due_date": "2027-01-15",
+      "status": "待建立",
+      "category": "季度文件",
+      "quarter": 4
+    },
+    {
+      "type": "季度財務報表",
+      "file": "financial/財務_季度財務報表_2026Q4.md",
+      "due_date": "2027-01-15",
+      "status": "待建立",
+      "category": "季度文件",
+      "quarter": 4
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202601.md",
+      "due_date": "2026-01-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 1
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260115_理監事會會議.md",
+      "due_date": "2026-01-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 1
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202601.md",
+      "due_date": "2026-01-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 1
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202602.md",
+      "due_date": "2026-02-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 2
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260215_理監事會會議.md",
+      "due_date": "2026-02-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 2
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202602.md",
+      "due_date": "2026-02-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 2
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202603.md",
+      "due_date": "2026-03-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 3
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260315_理監事會會議.md",
+      "due_date": "2026-03-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 3
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202603.md",
+      "due_date": "2026-03-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 3
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202604.md",
+      "due_date": "2026-04-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 4
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260415_理監事會會議.md",
+      "due_date": "2026-04-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 4
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202604.md",
+      "due_date": "2026-04-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 4
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202605.md",
+      "due_date": "2026-05-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 5
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260515_理監事會會議.md",
+      "due_date": "2026-05-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 5
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202605.md",
+      "due_date": "2026-05-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 5
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202606.md",
+      "due_date": "2026-06-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 6
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260615_理監事會會議.md",
+      "due_date": "2026-06-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 6
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202606.md",
+      "due_date": "2026-06-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 6
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202607.md",
+      "due_date": "2026-07-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 7
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260715_理監事會會議.md",
+      "due_date": "2026-07-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 7
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202607.md",
+      "due_date": "2026-07-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 7
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202608.md",
+      "due_date": "2026-08-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 8
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260815_理監事會會議.md",
+      "due_date": "2026-08-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 8
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202608.md",
+      "due_date": "2026-08-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 8
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202609.md",
+      "due_date": "2026-09-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 9
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20260915_理監事會會議.md",
+      "due_date": "2026-09-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 9
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202609.md",
+      "due_date": "2026-09-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 9
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202610.md",
+      "due_date": "2026-10-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 10
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20261015_理監事會會議.md",
+      "due_date": "2026-10-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 10
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202610.md",
+      "due_date": "2026-10-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 10
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202611.md",
+      "due_date": "2026-11-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 11
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20261115_理監事會會議.md",
+      "due_date": "2026-11-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 11
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202611.md",
+      "due_date": "2026-11-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 11
+    },
+    {
+      "type": "財務月報表",
+      "file": "financial/財務_月報表_202612.md",
+      "due_date": "2026-12-05",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 12
+    },
+    {
+      "type": "理監事會會議記錄",
+      "file": "meetings/meeting_20261215_理監事會會議.md",
+      "due_date": "2026-12-22",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 12
+    },
+    {
+      "type": "工作執行月報",
+      "file": "reports/報告_工作執行月報_202612.md",
+      "due_date": "2026-12-25",
+      "status": "待建立",
+      "category": "月度文件",
+      "month": 12
+    }
+  ]
+}

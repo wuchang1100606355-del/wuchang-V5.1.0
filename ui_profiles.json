@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "profiles": [
+    {
+      "id": "ops_admin",
+      "label": "維運/管理（Ops/Admin）",
+      "default_node_id": "platform",
+      "visible_sections": ["map", "chat", "jobs", "targets", "dns", "actions", "runlog", "audit", "docs"],
+      "agent_policy": {
+        "mode_default": "command",
+        "allow_cloud_chat": false,
+        "allow_job_create": true,
+        "allow_high_risk_execute_local": false
+      }
+    },
+    {
+      "id": "org_association",
+      "label": "協會（治理/對外）",
+      "default_node_id": "org_association",
+      "visible_sections": ["map", "chat", "jobs", "dns", "runlog", "docs"],
+      "agent_policy": {
+        "mode_default": "command",
+        "allow_cloud_chat": true,
+        "allow_job_create": true,
+        "allow_high_risk_execute_local": false
+      }
+    },
+    {
+      "id": "org_fund",
+      "label": "基金池（仁義店）",
+      "default_node_id": "org_fund",
+      "visible_sections": ["map", "chat", "jobs", "runlog", "docs"],
+      "agent_policy": {
+        "mode_default": "command",
+        "allow_cloud_chat": false,
+        "allow_job_create": true,
+        "allow_high_risk_execute_local": false
+      }
+    },
+    {
+      "id": "org_sponsor",
+      "label": "贊助方（重新店）",
+      "default_node_id": "org_sponsor",
+      "visible_sections": ["map", "chat", "jobs", "runlog", "docs"],
+      "agent_policy": {
+        "mode_default": "command",
+        "allow_cloud_chat": false,
+        "allow_job_create": true,
+        "allow_high_risk_execute_local": false
+      }
+    },
+    {
+      "id": "device_kiosk",
+      "label": "設備端（只讀看板/Kiosk）",
+      "default_node_id": "devices",
+      "visible_sections": ["map", "dns", "runlog"],
+      "agent_policy": {
+        "mode_default": "command",
+        "allow_cloud_chat": false,
+        "allow_job_create": false,
+        "allow_high_risk_execute_local": false
+      }
+    },
+    {
+      "id": "qa_monitor",
+      "label": "系統監察 / 品保營運測試（低門檻）",
+      "default_node_id": "platform",
+      "visible_sections": ["map", "jobs", "runlog", "audit", "verify", "docs"],
+      "agent_policy": {
+        "mode_default": "command",
+        "allow_cloud_chat": false,
+        "allow_job_create": true,
+        "allow_high_risk_execute_local": false
+      }
+    },
+    {
+      "id": "public_readonly",
+      "label": "公開視圖（只讀）",
+      "default_node_id": "domain",
+      "visible_sections": ["map", "docs"],
+      "agent_policy": {
+        "mode_default": "command",
+        "allow_cloud_chat": false,
+        "allow_job_create": false,
+        "allow_high_risk_execute_local": false
+      }
+    }
+  ]
+}
+

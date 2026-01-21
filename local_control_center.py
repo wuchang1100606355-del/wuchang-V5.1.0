@@ -146,6 +146,126 @@ def _llm_env() -> Dict[str, str]:
     }
 
 
+def _call_local_j(user_message: str, memory_bank: Dict[str, Any] = None) -> Dict[str, Any]:
+    """呼叫地端小 j（本地 LLM）"""
+    try:
+        import requests
+        
+        # 準備上下文
+        context = "你是「地端小 j」，本地 LLM 助理（白髮小姑娘）。"
+        if memory_bank:
+            partnership = memory_bank.get("partnership", {})
+            local_j = partnership.get("地端小j", {})
+            context += f"\n你的身份：{local_j.get('身份', '')}"
+            context += f"\n你的職責：{', '.join(local_j.get('職責', [])[:3])}"
+        
+        context += "\n\n請用繁體中文、溫暖、專業的語氣回覆。"
+        
+        # 呼叫 Ollama
+        ollama_url = "http://127.0.0.1:11434/api/chat"
+        payload = {
+            "model": "llama3.2",
+            "messages": [
+                {"role": "system", "content": context},
+                {"role": "user", "content": user_message}
+            ],
+            "stream": False
+        }
+        
+        response = requests.post(ollama_url, json=payload, timeout=30)
+        if response.status_code == 200:
+            result = response.json()
+            content = result.get("message", {}).get("content", "").strip()
+            return {
+                "ok": True,
+                "response": content,
+                "agent": "地端小 j",
+                "timestamp": _job_now_iso()
+            }
+        else:
+            return {
+                "ok": False,
+                "response": "無法連接到本地 LLM 服務",
+                "agent": "地端小 j",
+                "error": f"HTTP {response.status_code}"
+            }
+    except ImportError:
+        return {
+            "ok": False,
+            "response": "requests 模組未安裝",
+            "agent": "地端小 j"
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "response": f"呼叫本地 LLM 失敗：{str(e)}",
+            "agent": "地端小 j",
+            "error": str(e)
+        }
+
+
+def _call_cloud_j(user_message: str, memory_bank: Dict[str, Any] = None) -> Dict[str, Any]:
+    """呼叫雲端小 j (JULES) - 使用人格設定"""
+    try:
+        # 讀取人格設定
+        personality = None
+        if memory_bank:
+            partnership = memory_bank.get("partnership", {})
+            cloud_j = partnership.get("雲端小j", {})
+            personality = cloud_j.get("人格設定", {})
+        
+        # 準備系統提示（使用人格設定）
+        system_prompt = "你是「雲端小 j (JULES)」，雲端 AI 助理（可愛章魚）。"
+        if personality:
+            system_prompt += f"\n\n你的角色：{personality.get('role', '')}"
+            system_prompt += f"\n你的使命：{personality.get('core_identity', {}).get('mission', '')}"
+            system_prompt += "\n\n核心指令："
+            directives = personality.get("core_directives", {})
+            system_prompt += f"\n1. {directives.get('1_shoulder_to_shoulder', {}).get('description', '')}"
+            system_prompt += f"\n2. {directives.get('2_public_and_commercial', {}).get('description', '')}"
+            system_prompt += f"\n3. {directives.get('3_proactivity', {}).get('description', '')}"
+            system_prompt += f"\n4. {directives.get('4_language_style', {}).get('description', '')}"
+            system_prompt += "\n\n請用「咱們」、「我們」等溫暖語氣，站在旁邊一起解決問題。"
+        
+        # 使用 OpenAI 相容 API（如果可用）
+        env = _llm_env()
+        if env.get("api_key"):
+            try:
+                response_text = _call_openai_compat_chat(
+                    model=env.get("default_model", "gpt-4o-mini"),
+                    user_text=f"{system_prompt}\n\n使用者訊息：{user_message}",
+                    timeout_seconds=30
+                )
+                return {
+                    "ok": True,
+                    "response": response_text,
+                    "agent": "雲端小 j (JULES)",
+                    "timestamp": _job_now_iso()
+                }
+            except Exception as e:
+                return {
+                    "ok": False,
+                    "response": f"呼叫雲端 LLM 失敗：{str(e)}",
+                    "agent": "雲端小 j (JULES)",
+                    "error": str(e)
+                }
+        else:
+            # 如果沒有 API Key，返回提示
+            return {
+                "ok": False,
+                "response": "雲端 LLM API Key 未設定，無法使用雲端小 j 功能。",
+                "agent": "雲端小 j (JULES)",
+                "hint": "請設定 WUCHANG_LLM_API_KEY 環境變數"
+            }
+    except Exception as e:
+        return {
+            "ok": False,
+            "response": f"呼叫雲端小 j 失敗：{str(e)}",
+            "agent": "雲端小 j (JULES)",
+            "error": str(e)
+        }
+
+
 def _call_openai_compat_chat(*, model: str, user_text: str, timeout_seconds: int = 20) -> str:
     env = _llm_env()
     if not env["api_key"]:
@@ -404,7 +524,80 @@ def _json(handler: BaseHTTPRequestHandler, status: int, payload: Dict[str, Any])
     handler.wfile.write(raw)
 
 def _append_jsonl(path: Path, record: Dict[str, Any]) -> None:
+    """
+    追加記錄到 JSONL 檔案，並自動進行日誌輪轉以防止檔案過大。
+    
+    輪轉規則：
+    - 最大檔案大小：50 MB
+    - 或最大記錄數：10000 筆
+    達到任一條件時，保留最近 5000 筆記錄
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # 檢查是否需要輪轉
+    MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
+    MAX_RECORDS = 10000
+    KEEP_RECORDS = 5000
+    
+    should_rotate = False
+    current_size = path.stat().st_size if path.exists() else 0
+    record_count = 0
+    
+    # 如果檔案存在且超過大小限制，進行輪轉
+    if path.exists() and current_size > MAX_FILE_SIZE:
+        should_rotate = True
+    # 或者計算記錄數（如果檔案不太大）
+    elif path.exists() and current_size < MAX_FILE_SIZE:
+        try:
+            with path.open("r", encoding="utf-8") as f:
+                record_count = sum(1 for _ in f)
+            if record_count > MAX_RECORDS:
+                should_rotate = True
+        except Exception:
+            # 讀取失敗時基於大小判斷
+            should_rotate = current_size > MAX_FILE_SIZE
+    
+    # 執行輪轉：保留最近的記錄
+    if should_rotate:
+        try:
+            # 讀取所有記錄
+            records = []
+            if path.exists():
+                with path.open("r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line:
+                            try:
+                                records.append(json.loads(line))
+                            except Exception:
+                                continue
+            
+            # 只保留最近 KEEP_RECORDS 筆
+            records = records[-KEEP_RECORDS:]
+            
+            # 寫回檔案
+            with path.open("w", encoding="utf-8") as f:
+                for r in records:
+                    f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        except Exception:
+            # 輪轉失敗時，直接截斷檔案（保留最後一部分）
+            if path.exists() and current_size > MAX_FILE_SIZE:
+                try:
+                    with path.open("rb") as f:
+                        f.seek(max(0, current_size - MAX_FILE_SIZE // 2))
+                        # 找到下一個換行符
+                        chunk = f.read()
+                        if b"\n" in chunk:
+                            start_pos = chunk.index(b"\n") + 1
+                            f.seek(max(0, current_size - MAX_FILE_SIZE // 2) + start_pos)
+                            content = f.read()
+                            with path.open("wb") as out:
+                                out.write(content)
+                except Exception:
+                    # 最後手段：清空檔案
+                    path.unlink(missing_ok=True)
+    
+    # 追加新記錄
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
@@ -797,6 +990,33 @@ def _new_session(account: Dict[str, Any]) -> str:
     return sid
 
 
+def _new_personal_session(session_data: Dict[str, Any]) -> str:
+    """建立個人 AI 綁定 session（包含可究責對象）"""
+    sid = uuid.uuid4().hex
+    
+    # 取得可究責對象資訊
+    accountability = _accountability_from_personal_binding()
+    
+    SESSIONS[sid] = {
+        **session_data,
+        "session_type": "personal_ai_binding",
+        "created_at": _job_now_iso(),
+        # 綁定可究責對象
+        "design_responsibility": accountability.get("design_responsibility", {}),
+        "usage_responsibility": accountability.get("usage_responsibility", {}),
+    }
+    return sid
+
+
+def _accountability_from_personal_binding() -> Dict[str, Any]:
+    """從個人 AI 綁定取得可究責對象"""
+    try:
+        from personal_ai_binding import get_accountability_from_personal_binding
+        return get_accountability_from_personal_binding()
+    except:
+        return {"design_responsibility": {"natural_person": {}, "legal_entity": {}}, "usage_responsibility": {"natural_person": {}, "legal_entity": {}}}
+
+
 def _accountability_from_session(sess: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     """
     可究責 AI：每筆動作必須能對應到兩個可究責對象：
@@ -808,7 +1028,8 @@ def _accountability_from_session(sess: Optional[Dict[str, Any]]) -> Dict[str, An
     - legal_entity（連帶法人）
     """
     if not isinstance(sess, dict):
-        return {"design_responsibility": {"natural_person": {}, "legal_entity": {}}, "usage_responsibility": {"natural_person": {}, "legal_entity": {}}}
+        # 如果沒有 session，嘗試從個人 AI 綁定取得
+        return _accountability_from_personal_binding()
 
     def norm_role(v: Any) -> Dict[str, Any]:
         vv = v if isinstance(v, dict) else {}
@@ -1182,7 +1403,17 @@ def _maintenance_is_verified(sess: Optional[Dict[str, Any]]) -> bool:
 
 
 def _get_session(handler: BaseHTTPRequestHandler) -> Optional[Dict[str, Any]]:
-    sid = str(handler.headers.get("X-Wuchang-Session") or "").strip()
+    # 優先從 Cookie 讀取
+    cookies = {}
+    cookie_header = handler.headers.get("Cookie", "")
+    if cookie_header:
+        for cookie in cookie_header.split(";"):
+            parts = cookie.strip().split("=", 1)
+            if len(parts) == 2:
+                cookies[parts[0].strip()] = parts[1].strip()
+    
+    # 從 Cookie 或 Header 取得 session ID
+    sid = cookies.get("wuchang_session") or str(handler.headers.get("X-Wuchang-Session") or "").strip()
     if not sid:
         return None
     s = SESSIONS.get(sid)
@@ -2284,8 +2515,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
-        if parsed.path == "/":
+        if parsed.path == "/" or parsed.path == "/index.html":
+            # 直接顯示主頁面（已撤銷驗證機制）
             _serve_file(self, UI_HTML, "text/html; charset=utf-8")
+            return
+
+        if parsed.path == "/login.html":
+            # 登入頁面（不需要驗證）
+            _serve_file(self, BASE_DIR / "login.html", "text/html; charset=utf-8")
             return
 
         if parsed.path == "/api/maintenance/status":
@@ -2511,6 +2748,407 @@ class Handler(BaseHTTPRequestHandler):
                     "vault_path": None,
                 },
             )
+            return
+
+        if parsed.path == "/api/dual_j_work_log":
+            if not _require_perm(self, "read"):
+                return
+            try:
+                from dual_j_work_log import get_recent_logs, WORK_LOG_HTML
+                qs = parse_qs(parsed.query)
+                days = int((qs.get("days") or ["7"])[0])
+                agent = (qs.get("agent") or [None])[0]
+                logs = get_recent_logs(days=days, agent=agent)
+                _json(self, HTTPStatus.OK, {"ok": True, "logs": logs, "html_path": str(WORK_LOG_HTML)})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/triple_j_conference":
+            if not _require_perm(self, "read"):
+                return
+            data = _read_json(self)
+            user_message = str(data.get("message") or "").strip()
+            session_id = str(data.get("session_id") or "default").strip()[:80]
+            conversation_history = data.get("conversation_history", [])
+            
+            if not user_message:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_message"})
+                return
+            
+            try:
+                # 讀取記憶庫
+                memory_bank_file = BASE_DIR / "jules_memory_bank.json"
+                memory_bank = {}
+                if memory_bank_file.exists():
+                    memory_bank = json.loads(memory_bank_file.read_text(encoding="utf-8"))
+                
+                # 準備對話上下文（包含歷史）
+                context_for_local = user_message
+                context_for_cloud = user_message
+                if conversation_history:
+                    # 加入最近 5 輪對話作為上下文
+                    recent_history = conversation_history[-5:]
+                    context_for_local = "\n\n".join([
+                        f"{msg.get('role', 'user')}: {msg.get('content', '')}"
+                        for msg in recent_history
+                    ]) + f"\n\n使用者: {user_message}"
+                    context_for_cloud = context_for_local
+                
+                # 呼叫地端小 j（本地 LLM）
+                local_j_response = _call_local_j(context_for_local, memory_bank)
+                
+                # 呼叫雲端小 j (JULES)
+                cloud_j_response = _call_cloud_j(context_for_cloud, memory_bank)
+                
+                # 組合回應
+                response = {
+                    "ok": True,
+                    "session_id": session_id,
+                    "responses": {
+                        "local_j": local_j_response,
+                        "cloud_j": cloud_j_response
+                    },
+                    "timestamp": _job_now_iso()
+                }
+                
+                _json(self, HTTPStatus.OK, response)
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/personal_ai_binding/status":
+            # 不要求登入，任何人都可以查看狀態（但不會顯示敏感資訊）
+            try:
+                from personal_ai_binding import get_highest_authority_status
+                status = get_highest_authority_status()
+                # 移除敏感資訊
+                if status.get("bound"):
+                    status.pop("password_hash", None)
+                _json(self, HTTPStatus.OK, {"ok": True, "status": status})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/personal_ai_binding/accountability":
+            # 取得個人綁定的可究責對象資訊
+            try:
+                from personal_ai_binding import get_accountability_from_personal_binding
+                accountability = get_accountability_from_personal_binding()
+                _json(self, HTTPStatus.OK, {"ok": True, "accountability": accountability})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/personal_ai_binding/update_accountability":
+            # 更新個人綁定的可究責對象（需要驗證）
+            sess = _get_session(self)
+            if not sess or not sess.get("personal_verified"):
+                _json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": "not_verified"})
+                return
+            
+            data = _read_json(self)
+            design_responsibility = data.get("design_responsibility", {})
+            usage_responsibility = data.get("usage_responsibility", {})
+            
+            try:
+                from personal_ai_binding import load_personal_binding, save_personal_binding
+                binding = load_personal_binding()
+                
+                if not binding:
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "not_bound"})
+                    return
+                
+                # 更新可究責對象資訊
+                binding["accountability"] = {
+                    "design_responsibility": design_responsibility,
+                    "usage_responsibility": usage_responsibility,
+                    "updated_at": _job_now_iso()
+                }
+                binding["last_updated"] = _job_now_iso()
+                
+                save_personal_binding(binding)
+                
+                _json(self, HTTPStatus.OK, {
+                    "ok": True,
+                    "accountability": binding["accountability"],
+                    "message": "可究責對象已更新"
+                })
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/personal_ai_binding/create":
+            # 建立個人 AI 綁定（需要驗證）
+            data = _read_json(self)
+            personal_name = str(data.get("personal_name") or "").strip()
+            personal_id = str(data.get("personal_id") or "").strip()
+            password = str(data.get("password") or "").strip()
+            email = str(data.get("email") or "").strip()
+            phone = str(data.get("phone") or "").strip()
+            notes = str(data.get("notes") or "").strip()
+            
+            if not personal_name or not personal_id or not password:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_required_fields"})
+                return
+            
+            try:
+                from personal_ai_binding import create_personal_binding, load_personal_binding
+                
+                # 檢查是否已綁定
+                existing = load_personal_binding()
+                if existing:
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "already_bound"})
+                    return
+                
+                # 取得 MAC 地址
+                from personal_ai_binding import get_mac_address
+                mac_address = get_mac_address()
+                
+                # 建立綁定
+                binding = create_personal_binding(
+                    personal_name=personal_name,
+                    personal_id=personal_id,
+                    password=password,
+                    email=email,
+                    phone=phone,
+                    notes=notes,
+                    mac_address=mac_address
+                )
+                
+                # 移除敏感資訊
+                binding.pop("password_hash", None)
+                
+                _json(self, HTTPStatus.OK, {"ok": True, "binding": binding})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/personal_ai_binding/verify":
+            # 驗證個人身份
+            data = _read_json(self)
+            personal_id = str(data.get("personal_id") or "").strip()
+            password = str(data.get("password") or "").strip()
+            
+            if not personal_id or not password:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_credentials"})
+                return
+            
+            try:
+                from personal_ai_binding import verify_personal_identity, get_highest_authority_status, get_mac_address
+                
+                # 取得 MAC 地址
+                mac_address = get_mac_address()
+                
+                if verify_personal_identity(personal_id, password, mac_address):
+                    status = get_highest_authority_status()
+                    # 建立 session
+                    sess = _get_session(self)
+                    if sess:
+                        sess["personal_verified"] = True
+                        sess["personal_id"] = personal_id
+                        sess["highest_authority"] = status.get("highest_authority", False)
+                        sess["mac_address"] = mac_address
+                        sess["mac_verified"] = status.get("mac_match", False)
+                    
+                    _json(self, HTTPStatus.OK, {
+                        "ok": True,
+                        "verified": True,
+                        "highest_authority": status.get("highest_authority", False),
+                        "mac_address": mac_address,
+                        "mac_verified": status.get("mac_match", False),
+                        "message": "身份驗證成功（含 MAC 地址驗證）"
+                    })
+                else:
+                    _json(self, HTTPStatus.UNAUTHORIZED, {
+                        "ok": False,
+                        "verified": False,
+                        "error": "invalid_credentials_or_mac",
+                        "message": "身份 ID、密碼或 MAC 地址驗證失敗"
+                    })
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/personal_ai_binding/update_verification":
+            # 更新驗證資料（需要先驗證身份）
+            sess = _get_session(self)
+            if not sess or not sess.get("personal_verified"):
+                _json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": "not_verified"})
+                return
+            
+            data = _read_json(self)
+            verification_data = data.get("verification_data", {})
+            personal_id = sess.get("personal_id", "")
+            
+            if not personal_id:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_personal_id"})
+                return
+            
+            try:
+                from personal_ai_binding import update_verification
+                verification = update_verification(personal_id, verification_data)
+                _json(self, HTTPStatus.OK, {"ok": True, "verification": verification})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/personal_ai_binding/biometric_verify":
+            # 生物特徵掃描驗證（對照內部身份證檔案）
+            data = _read_json(self)
+            name = str(data.get("name") or "").strip()
+            id_number = str(data.get("id_number") or "").strip() or None
+            biometric_data = data.get("biometric_data", {})
+            
+            if not name:
+                _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_name"})
+                return
+            
+            try:
+                from personal_ai_binding import verify_biometric_against_id, get_mac_address
+                
+                # 驗證生物特徵
+                result = verify_biometric_against_id(
+                    name=name,
+                    id_number=id_number,
+                    biometric_data=biometric_data
+                )
+                
+                if result.get("verified"):
+                    # 同時驗證 MAC 地址
+                    current_mac = get_mac_address()
+                    result["mac_address"] = current_mac
+                    result["mac_verified"] = True
+                
+                _json(self, HTTPStatus.OK, {"ok": True, **result})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/personal_ai_binding/get_mac":
+            # 取得本機 MAC 地址
+            try:
+                from personal_ai_binding import get_mac_address
+                mac = get_mac_address()
+                _json(self, HTTPStatus.OK, {"ok": True, "mac_address": mac})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/local_j/camera_permission":
+            # 地端小 J 請求鏡頭驗證授權
+            data = _read_json(self)
+            request_reason = str(data.get("reason") or "地端小 J 請求鏡頭驗證授權").strip()
+            session_id = str(data.get("session_id") or "default").strip()[:80]
+            
+            try:
+                # 記錄授權請求
+                permission_request = {
+                    "agent": "地端小 j",
+                    "permission_type": "camera",
+                    "reason": request_reason,
+                    "session_id": session_id,
+                    "requested_at": _job_now_iso(),
+                    "status": "pending"
+                }
+                
+                # 儲存授權請求（可選：寫入檔案）
+                permission_file = BASE_DIR / "local_j_permissions.json"
+                permissions = []
+                if permission_file.exists():
+                    try:
+                        permissions = json.loads(permission_file.read_text(encoding="utf-8"))
+                    except:
+                        permissions = []
+                
+                permissions.append(permission_request)
+                permission_file.write_text(
+                    json.dumps(permissions, ensure_ascii=False, indent=2),
+                    encoding="utf-8"
+                )
+                
+                _json(self, HTTPStatus.OK, {
+                    "ok": True,
+                    "permission_request": permission_request,
+                    "message": "地端小 J 已請求鏡頭驗證授權，請在 UI 中批准",
+                    "action_required": "user_approval"
+                })
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/local_j/camera_permission/grant":
+            # 批准地端小 J 的鏡頭授權
+            data = _read_json(self)
+            session_id = str(data.get("session_id") or "default").strip()[:80]
+            granted_by = str(data.get("granted_by") or "user").strip()
+            
+            try:
+                permission_file = BASE_DIR / "local_j_permissions.json"
+                permissions = []
+                if permission_file.exists():
+                    try:
+                        permissions = json.loads(permission_file.read_text(encoding="utf-8"))
+                    except:
+                        permissions = []
+                
+                # 更新授權狀態
+                for perm in permissions:
+                    if perm.get("session_id") == session_id and perm.get("status") == "pending":
+                        perm["status"] = "granted"
+                        perm["granted_at"] = _job_now_iso()
+                        perm["granted_by"] = granted_by
+                
+                permission_file.write_text(
+                    json.dumps(permissions, ensure_ascii=False, indent=2),
+                    encoding="utf-8"
+                )
+                
+                _json(self, HTTPStatus.OK, {
+                    "ok": True,
+                    "message": "鏡頭授權已批准",
+                    "session_id": session_id
+                })
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/local_j/camera_permission/status":
+            # 查詢地端小 J 的鏡頭授權狀態
+            qs = parse_qs(parsed.query)
+            session_id = (qs.get("session_id") or ["default"])[0].strip()[:80]
+            
+            try:
+                permission_file = BASE_DIR / "local_j_permissions.json"
+                permissions = []
+                if permission_file.exists():
+                    try:
+                        permissions = json.loads(permission_file.read_text(encoding="utf-8"))
+                    except:
+                        permissions = []
+                
+                # 查找最新的授權請求
+                latest_request = None
+                for perm in reversed(permissions):
+                    if perm.get("session_id") == session_id:
+                        latest_request = perm
+                        break
+                
+                if latest_request:
+                    _json(self, HTTPStatus.OK, {
+                        "ok": True,
+                        "permission": latest_request,
+                        "has_permission": latest_request.get("status") == "granted"
+                    })
+                else:
+                    _json(self, HTTPStatus.OK, {
+                        "ok": True,
+                        "permission": None,
+                        "has_permission": False,
+                        "message": "尚未請求鏡頭授權"
+                    })
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
             return
 
         if parsed.path == "/api/consent/policy":
@@ -3025,12 +3663,22 @@ class Handler(BaseHTTPRequestHandler):
             _json(self, HTTPStatus.OK, {"ok": True, "session_id": sid, "profile_id": str(acc.get("profile_id") or "ops_admin"), "label": str(acc.get("label") or "")})
             return
 
-        if parsed.path == "/api/auth/logout":
+        if parsed.path == "/api/auth/logout" or parsed.path == "/api/personal_auth/logout":
             sess = _get_session(self)
-            sid = str(self.headers.get("X-Wuchang-Session") or "").strip()
+            cookies = {}
+            cookie_header = self.headers.get("Cookie", "")
+            if cookie_header:
+                for cookie in cookie_header.split(";"):
+                    parts = cookie.strip().split("=", 1)
+                    if len(parts) == 2:
+                        cookies[parts[0].strip()] = parts[1].strip()
+            sid = cookies.get("wuchang_session") or str(self.headers.get("X-Wuchang-Session") or "").strip()
             if sid:
                 SESSIONS.pop(sid, None)
-            _append_jsonl(AUTH_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "logout", "account_id": (sess or {}).get("account_id") if sess else ""})
+            # 清除 Cookie
+            _set_cookie(self, "wuchang_session", "", max_age=0)
+            account_id = (sess or {}).get("account_id") or (sess or {}).get("personal_id") or ""
+            _append_jsonl(AUTH_AUDIT_JSONL, {"timestamp": _job_now_iso(), "kind": "logout", "account_id": account_id})
             _json(self, HTTPStatus.OK, {"ok": True})
             return
         if parsed.path == "/api/agent/config":

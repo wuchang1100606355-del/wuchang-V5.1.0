@@ -1,0 +1,298 @@
+{
+  "knowledge_base_updates": {
+    "version": "1.0",
+    "last_updated": "2026-01-17T01:51:11.978062",
+    "updates": [
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "組織文件",
+        "title": "協會章程",
+        "file": "01_協會章程.md",
+        "description": "依據人民團體法、社區發展工作要點制定協會章程",
+        "keywords": [
+          "章程",
+          "組織",
+          "法規",
+          "人民團體法",
+          "社區發展工作要點"
+        ],
+        "related_documents": [
+          "AGENT_CONSTITUTION.md",
+          "ASSET_INVENTORY.md"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "計畫文件",
+        "title": "113年度工作計畫",
+        "file": "02_年度工作計畫_2026.md",
+        "description": "113年度（2026年）工作計畫，包含現況分析、工作目標、執行計畫、預算編列",
+        "keywords": [
+          "年度工作計畫",
+          "2026",
+          "工作目標",
+          "預算"
+        ],
+        "related_documents": [
+          "wuchang_community_analysis.json",
+          "wuchang_community_knowledge_base.json"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "規範文件",
+        "title": "補助申請作業規範",
+        "file": "03_補助申請作業規範.md",
+        "description": "補助申請作業規範與流程，包含申請資格、申請流程、審查標準、核銷作業",
+        "keywords": [
+          "補助申請",
+          "作業規範",
+          "申請流程",
+          "核銷"
+        ],
+        "related_documents": [
+          "02_年度工作計畫_2026.md",
+          "04_財務管理規範.md"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "規範文件",
+        "title": "財務管理規範",
+        "file": "04_財務管理規範.md",
+        "description": "財務管理規範與流程，包含收入管理、支出管理、財務報表、補助款管理",
+        "keywords": [
+          "財務管理",
+          "預算",
+          "決算",
+          "核銷",
+          "財務報表"
+        ],
+        "related_documents": [
+          "02_年度工作計畫_2026.md",
+          "03_補助申請作業規範.md"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "流程文件",
+        "title": "自動化行政工作流程",
+        "file": "05_自動化行政工作流程.md",
+        "description": "自動化行政工作流程設計，包含年度工作流程、補助申請流程、活動執行流程",
+        "keywords": [
+          "自動化",
+          "工作流程",
+          "行政作業",
+          "AI程序"
+        ],
+        "related_documents": [
+          "08_公文處理與行政營運組織.md",
+          "10_AI程序演練腳本.md"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "系統文件",
+        "title": "知識庫更新與註記",
+        "file": "06_知識庫更新與註記.md",
+        "description": "知識庫更新機制與重要事項註記，包含法規合規事項、行政作業事項、財務管理事項",
+        "keywords": [
+          "知識庫",
+          "更新機制",
+          "重要事項",
+          "法規合規"
+        ],
+        "related_documents": [
+          "wuchang_community_knowledge_base.json",
+          "wuchang_community_knowledge_index.json"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "系統文件",
+        "title": "系統行事曆與提醒",
+        "file": "07_系統行事曆與提醒.md",
+        "description": "系統行事曆與提醒機制，包含重要時程、提醒機制、自動化提醒系統",
+        "keywords": [
+          "行事曆",
+          "提醒機制",
+          "時程管理",
+          "Google Calendar"
+        ],
+        "related_documents": [
+          "11_系統行事曆設定.json"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "組織文件",
+        "title": "公文處理與行政營運組織",
+        "file": "08_公文處理與行政營運組織.md",
+        "description": "公文處理流程與行政營運組織架構，包含收文流程、發文流程、組織架構、職責分工",
+        "keywords": [
+          "公文處理",
+          "行政組織",
+          "組織架構",
+          "職責分工"
+        ],
+        "related_documents": [
+          "01_協會章程.md",
+          "05_自動化行政工作流程.md"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "系統文件",
+        "title": "系統營運檔案總覽",
+        "file": "09_系統營運檔案總覽.md",
+        "description": "系統營運檔案總覽，包含檔案結構、系統整合架構、自動化工作流程、知識庫整合",
+        "keywords": [
+          "系統營運",
+          "檔案總覽",
+          "系統架構",
+          "自動化"
+        ],
+        "related_documents": [
+          "所有行政文件"
+        ]
+      },
+      {
+        "date": "2026-01-15",
+        "type": "新增",
+        "category": "系統文件",
+        "title": "AI程序演練腳本",
+        "file": "10_AI程序演練腳本.md",
+        "description": "AI程序演練腳本，包含演練目標、演練場景、演練執行、演練結果評估",
+        "keywords": [
+          "AI程序",
+          "演練腳本",
+          "自動化測試",
+          "系統驗證"
+        ],
+        "related_documents": [
+          "05_自動化行政工作流程.md",
+          "08_公文處理與行政營運組織.md"
+        ]
+      },
+      {
+        "date": "2026-01-17T01:50:12.204977",
+        "type": "新增",
+        "category": "組織文件",
+        "title": "協會章程",
+        "file": "01_協會章程.md",
+        "description": "依據人民團體法、社區發展工作要點制定協會章程"
+      },
+      {
+        "date": "2026-01-17T01:50:12.204989",
+        "type": "新增",
+        "category": "計畫文件",
+        "title": "113年度工作計畫",
+        "file": "02_年度工作計畫_2026.md",
+        "description": "113年度（2026年）工作計畫"
+      },
+      {
+        "date": "2026-01-17T01:51:11.978047",
+        "type": "新增",
+        "category": "組織文件",
+        "title": "協會章程",
+        "file": "01_協會章程.md",
+        "description": "依據人民團體法、社區發展工作要點制定協會章程"
+      },
+      {
+        "date": "2026-01-17T01:51:11.978058",
+        "type": "新增",
+        "category": "計畫文件",
+        "title": "113年度工作計畫",
+        "file": "02_年度工作計畫_2026.md",
+        "description": "113年度（2026年）工作計畫"
+      }
+    ],
+    "important_notes": [
+      {
+        "category": "法規合規",
+        "note": "社區發展工作要點（2025年7月1日生效）已取代社區發展工作綱要，需定期檢視章程是否符合最新規範",
+        "priority": "high",
+        "reminder_date": "2026-07-01"
+      },
+      {
+        "category": "行政作業",
+        "note": "年度工作計畫需於每年1月31日前提交主管機關",
+        "priority": "high",
+        "reminder_date": "2026-01-01"
+      },
+      {
+        "category": "行政作業",
+        "note": "年度決算需於每年3月31日前提交主管機關",
+        "priority": "high",
+        "reminder_date": "2026-03-01"
+      },
+      {
+        "category": "財務管理",
+        "note": "預算編列需於每年11月30日前完成",
+        "priority": "high",
+        "reminder_date": "2026-11-01"
+      },
+      {
+        "category": "財務管理",
+        "note": "財務月報表需於每月5日前完成",
+        "priority": "medium",
+        "recurring": "monthly"
+      },
+      {
+        "category": "補助申請",
+        "note": "需注意各項補助申請時程，系統將自動監控並提醒",
+        "priority": "high",
+        "monitoring": true
+      },
+      {
+        "category": "系統營運",
+        "note": "所有行政文件需與系統歷史文件脈絡相通，需建立文件關聯關係",
+        "priority": "medium",
+        "ongoing": true
+      },
+      {
+        "category": "系統營運",
+        "note": "需定期進行AI程序演練，確保系統正常運作",
+        "priority": "medium",
+        "reminder_date": "2026-03-01"
+      }
+    ],
+    "document_relationships": {
+      "01_協會章程.md": [
+        "AGENT_CONSTITUTION.md",
+        "ASSET_INVENTORY.md",
+        "02_年度工作計畫_2026.md"
+      ],
+      "02_年度工作計畫_2026.md": [
+        "wuchang_community_analysis.json",
+        "wuchang_community_knowledge_base.json",
+        "03_補助申請作業規範.md",
+        "04_財務管理規範.md"
+      ],
+      "03_補助申請作業規範.md": [
+        "02_年度工作計畫_2026.md",
+        "04_財務管理規範.md",
+        "05_自動化行政工作流程.md"
+      ],
+      "04_財務管理規範.md": [
+        "02_年度工作計畫_2026.md",
+        "03_補助申請作業規範.md",
+        "AGENT_CONSTITUTION.md"
+      ],
+      "05_自動化行政工作流程.md": [
+        "08_公文處理與行政營運組織.md",
+        "06_知識庫更新與註記.md",
+        "07_系統行事曆與提醒.md"
+      ]
+    }
+  }
+}

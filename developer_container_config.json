@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "developer": {
+    "name": "開發者",
+    "workspace_root": "C:\\wuchang V5.1.0\\wuchang-V5.1.0",
+    "environment": "development",
+    "features": {
+      "neural_network": true,
+      "google_tasks": true,
+      "encrypted_storage": true,
+      "pii_storage": false,
+      "authorization": true,
+      "file_sync": true
+    }
+  },
+  "workspace": {
+    "local_root": "C:\\wuchang V5.1.0\\wuchang-V5.1.0",
+    "sync_profiles": [
+      "kb",
+      "rules"
+    ],
+    "backup_enabled": true,
+    "auto_sync": false
+  },
+  "development": {
+    "debug_mode": true,
+    "log_level": "DEBUG",
+    "test_mode": false,
+    "mock_services": false
+  },
+  "network": {
+    "vpn_enabled": true,
+    "vpn_network": "10.8.0.0/24",
+    "local_network_discovery": true,
+    "file_sharing_enabled": true
+  },
+  "tools": {
+    "python_version": "3.14.0",
+    "required_packages": [
+      "requests",
+      "cryptography",
+      "google-auth",
+      "google-auth-oauthlib",
+      "google-api-python-client"
+    ]
+  }
+}

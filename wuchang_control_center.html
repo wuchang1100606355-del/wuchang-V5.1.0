@@ -2,23 +2,168 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>本機中控台（兩機互動）- wuchang.life</title>
   <style>
+    :root {
+      --screen-mode: 1; /* 1, 2, 3 螢幕模式 */
+      --screen-width-1: 100vw;
+      --screen-width-2: 50vw;
+      --screen-width-3: 33.333vw;
+    }
+    
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 20px;
+      padding: 0;
       min-height: 100vh;
+      overflow-x: auto;
     }
-    .container {
+    
+    /* 多螢幕模式容器 */
+    .multi-screen-container {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+      transition: all 0.3s ease;
+    }
+    
+    .screen-panel {
+      flex: 1;
+      min-width: 0;
+      padding: 20px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100vh;
+    }
+    
+    /* 單螢幕模式 */
+    body[data-screens="1"] .multi-screen-container {
+      flex-direction: column;
+    }
+    body[data-screens="1"] .screen-panel {
+      width: 100%;
       max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    /* 雙螢幕模式 */
+    body[data-screens="2"] .multi-screen-container {
+      flex-direction: row;
+    }
+    body[data-screens="2"] .screen-panel {
+      width: 50%;
+      border-right: 2px solid rgba(255,255,255,0.2);
+    }
+    body[data-screens="2"] .screen-panel:last-child {
+      border-right: none;
+    }
+    
+    /* 三螢幕模式 */
+    body[data-screens="3"] .multi-screen-container {
+      flex-direction: row;
+    }
+    body[data-screens="3"] .screen-panel {
+      width: 33.333%;
+      border-right: 2px solid rgba(255,255,255,0.2);
+    }
+    body[data-screens="3"] .screen-panel:last-child {
+      border-right: none;
+    }
+    
+    .container {
+      max-width: 100%;
       margin: 0 auto;
       background: white;
       border-radius: 15px;
       padding: 26px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      min-height: calc(100vh - 40px);
+    }
+    
+    /* 螢幕模式切換器 */
+    .screen-mode-selector {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .screen-mode-selector button {
+      padding: 8px 12px;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .screen-mode-selector button:hover {
+      background: #667eea;
+      color: white;
+    }
+    .screen-mode-selector button.active {
+      background: #667eea;
+      color: white;
+    }
+    .screen-mode-selector .fullscreen-btn {
+      margin-left: 8px;
+      padding: 8px 14px;
+      border-left: 2px solid #e9ecef;
+      border-radius: 0;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+    }
+    .screen-mode-selector .fullscreen-btn.active {
+      background: #28a745;
+      border-color: #28a745;
+      color: white;
+    }
+    .screen-mode-selector .fullscreen-btn:hover {
+      background: #28a745;
+      border-color: #28a745;
+      color: white;
+    }
+    
+    /* 全螢幕模式樣式 */
+    body.fullscreen {
+      overflow: hidden;
+    }
+    body.fullscreen .screen-mode-selector {
+      top: 10px;
+      right: 10px;
+    }
+    body.fullscreen .multi-screen-container {
+      height: 100vh;
+    }
+    body.fullscreen .screen-panel {
+      height: 100vh;
+      padding: 10px;
+    }
+    body.fullscreen .container {
+      min-height: calc(100vh - 20px);
+      border-radius: 10px;
+    }
+    
+    /* 第二個螢幕樣式 */
+    body[data-screen-index="2"] {
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+    
+    body[data-screen-index="2"] .screen-mode-selector {
+      display: none; /* 第二個螢幕隱藏控制按鈕 */
     }
     h1 { color: #333; text-align: center; margin-bottom: 8px; font-size: 2em; }
     .subtitle { text-align: center; color: #666; margin-bottom: 18px; }
@@ -132,7 +277,253 @@
     }
     textarea { min-height: 140px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 900px) { .row { grid-template-columns: 1fr; } }
+    
+    /* 響應式設計：根據螢幕模式調整 */
+    @media (max-width: 900px) { 
+      .row { grid-template-columns: 1fr; }
+      body[data-screens="2"] .screen-panel,
+      body[data-screens="3"] .screen-panel {
+        width: 100% !important;
+        border-right: none !important;
+      }
+      body[data-screens="2"] .multi-screen-container,
+      body[data-screens="3"] .multi-screen-container {
+        flex-direction: column !important;
+      }
+    }
+    
+    /* 手機響應式設計 */
+    @media (max-width: 768px) {
+      body {
+        padding: 0;
+        font-size: 14px;
+      }
+      
+      .screen-mode-selector {
+        top: 10px;
+        right: 10px;
+        padding: 8px;
+        flex-wrap: wrap;
+        max-width: calc(100vw - 20px);
+      }
+      
+      .screen-mode-selector button {
+        padding: 6px 10px;
+        font-size: 11px;
+        flex: 1;
+        min-width: 60px;
+      }
+      
+      .screen-panel {
+        padding: 10px;
+        height: 100vh;
+      }
+      
+      .container {
+        padding: 15px;
+        border-radius: 10px;
+        min-height: calc(100vh - 20px);
+      }
+      
+      h1 {
+        font-size: 1.5em;
+        margin-bottom: 6px;
+      }
+      
+      .subtitle {
+        font-size: 0.9em;
+        margin-bottom: 12px;
+      }
+      
+      .banner {
+        padding: 10px;
+        font-size: 0.85em;
+        margin-bottom: 12px;
+      }
+      
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+      }
+      
+      .card h2 {
+        font-size: 1em;
+        margin-bottom: 8px;
+      }
+      
+      .stats {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      
+      .stat {
+        padding: 12px;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      
+      label {
+        font-size: 0.9em;
+        margin: 8px 0 4px;
+      }
+      
+      input, textarea, select {
+        padding: 8px 10px;
+        font-size: 14px;
+        border-radius: 8px;
+      }
+      
+      button {
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+        min-height: 44px; /* 觸控友善 */
+      }
+      
+      .btns {
+        gap: 8px;
+        margin-top: 10px;
+      }
+      
+      .chat {
+        border-radius: 10px;
+      }
+      
+      .chat-head {
+        padding: 10px;
+      }
+      
+      .chat-head .title {
+        font-size: 0.95em;
+      }
+      
+      .chat-head .sub {
+        font-size: 11px;
+      }
+      
+      .chat-body {
+        padding: 10px;
+        max-height: 300px;
+      }
+      
+      .chat-foot {
+        padding: 10px;
+      }
+      
+      .chat-row {
+        gap: 8px;
+      }
+      
+      .chat-row input {
+        padding: 10px;
+        font-size: 14px;
+        min-height: 44px;
+      }
+      
+      .msg {
+        margin: 8px 0;
+        gap: 8px;
+      }
+      
+      .msg .role {
+        width: 50px;
+        font-size: 0.85em;
+      }
+      
+      .msg .bubble {
+        padding: 8px 10px;
+        font-size: 0.9em;
+      }
+      
+      .log {
+        padding: 10px;
+        font-size: 11px;
+        min-height: 150px;
+      }
+      
+      .muted {
+        font-size: 0.85em;
+      }
+      
+      .small {
+        font-size: 11px;
+      }
+      
+      .smallhint {
+        font-size: 11px;
+        margin-top: 6px;
+      }
+      
+      /* 觸控優化 */
+      button, .chip, .jobitem {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+      }
+      
+      /* 隱藏不必要的元素在小螢幕 */
+      .maint-banner {
+        max-width: calc(100vw - 20px);
+        left: 10px;
+        bottom: 10px;
+        padding: 8px 10px;
+        font-size: 0.85em;
+      }
+    }
+    
+    /* 超小螢幕（手機直向） */
+    @media (max-width: 480px) {
+      .screen-mode-selector {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 10px;
+        width: calc(100% - 20px);
+      }
+      
+      .screen-mode-selector button {
+        font-size: 10px;
+        padding: 5px 8px;
+      }
+      
+      h1 {
+        font-size: 1.3em;
+      }
+      
+      .container {
+        padding: 12px;
+      }
+      
+      .card {
+        padding: 10px;
+      }
+      
+      button {
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+    }
+    
+    /* 寬螢幕優化 */
+    @media (min-width: 1920px) {
+      body[data-screens="2"] .screen-panel {
+        width: 50%;
+      }
+      body[data-screens="3"] .screen-panel {
+        width: 33.333%;
+      }
+    }
+    
+    /* 超寬螢幕（三螢幕）優化 */
+    @media (min-width: 3840px) {
+      .container {
+        max-width: 1280px;
+      }
+    }
 
     .btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
     button {
@@ -454,8 +845,19 @@
     .cc-breadcrumb .mono { font-weight: 900; }
   </style>
 </head>
-<body>
-  <div class="container">
+<body data-screens="1">
+  <!-- 螢幕模式切換器 -->
+  <div class="screen-mode-selector">
+    <button data-screens="1" class="active" title="單螢幕模式">1 螢幕</button>
+    <button data-screens="2" title="雙螢幕模式">2 螢幕</button>
+    <button data-screens="3" title="三螢幕模式">3 螢幕</button>
+    <button class="fullscreen-btn" id="fullscreenToggle" title="全螢幕模式">⛶ 全螢幕</button>
+    <button class="fullscreen-btn" id="dualScreenBtn" title="在兩個螢幕上分別打開全螢幕視窗">🖥️ 雙螢幕全螢幕</button>
+  </div>
+  
+  <div class="multi-screen-container">
+    <div class="screen-panel">
+      <div class="container">
     <h1>本機中控台（兩機互動）</h1>
     <div class="subtitle">把「本機 ↔ 伺服器」互動狀態與稽核集中在同一頁（繁中）</div>
 
@@ -885,6 +1287,173 @@
               <button class="chip" id="ljClear" type="button">清空對話</button>
             </div>
             <div class="smallhint" id="ljVoiceHint"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card wide" data-section="personal_ai_binding">
+        <h2>🔐 個人身份驗證與最高權限 AI 綁定</h2>
+        <div class="muted">
+          將最高權限 AI 綁定到您的個人身份，開啟驗證填寫功能。
+        </div>
+
+        <div id="personalBindingStatus" style="margin-top: 12px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+          <div class="muted">載入中...</div>
+        </div>
+
+        <div id="personalBindingForm" style="display: none; margin-top: 12px;">
+          <div class="row">
+            <div>
+              <label>姓名 *</label>
+              <input type="text" id="personalName" placeholder="請輸入您的姓名" />
+            </div>
+            <div>
+              <label>身份 ID *</label>
+              <input type="text" id="personalId" placeholder="請輸入身份識別碼" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>密碼 *</label>
+              <input type="password" id="personalPassword" placeholder="請設定密碼" />
+            </div>
+            <div>
+              <label>確認密碼 *</label>
+              <input type="password" id="personalPasswordConfirm" placeholder="請再次輸入密碼" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Email</label>
+              <input type="email" id="personalEmail" placeholder="選填：您的 Email" />
+            </div>
+            <div>
+              <label>電話</label>
+              <input type="tel" id="personalPhone" placeholder="選填：您的電話" />
+            </div>
+          </div>
+          <div>
+            <label>備註</label>
+            <textarea id="personalNotes" placeholder="選填：其他說明" rows="3"></textarea>
+          </div>
+          <div class="btns" style="margin-top: 12px;">
+            <button id="btnCreateBinding" class="primary">建立個人 AI 綁定</button>
+            <button id="btnCancelBinding" class="secondary">取消</button>
+          </div>
+        </div>
+
+        <div id="personalVerificationForm" style="display: none; margin-top: 12px;">
+          <h3 style="margin-bottom: 12px;">身份驗證</h3>
+          <div class="row">
+            <div>
+              <label>身份 ID *</label>
+              <input type="text" id="verifyPersonalId" placeholder="請輸入身份識別碼" />
+            </div>
+            <div>
+              <label>密碼 *</label>
+              <input type="password" id="verifyPassword" placeholder="請輸入密碼" />
+            </div>
+          </div>
+          <div class="btns" style="margin-top: 12px;">
+            <button id="btnVerifyIdentity" class="primary">驗證身份</button>
+          </div>
+        </div>
+
+        <div id="personalVerificationData" style="display: none; margin-top: 12px;">
+          <h3 style="margin-bottom: 12px;">驗證資料填寫</h3>
+          <div class="muted" style="margin-bottom: 12px;">
+            請填寫以下驗證資料以完成最高權限 AI 綁定
+          </div>
+          <div>
+            <label>驗證資料（JSON 格式）</label>
+            <textarea id="verificationData" placeholder='{"key": "value"}' rows="10" style="font-family: monospace;"></textarea>
+          </div>
+          <div class="btns" style="margin-top: 12px;">
+            <button id="btnSaveVerification" class="primary">儲存驗證資料</button>
+          </div>
+        </div>
+
+        <div id="biometricVerification" style="display: none; margin-top: 12px;">
+          <h3 style="margin-bottom: 12px;">🔐 生物特徵掃描驗證</h3>
+          <div class="muted" style="margin-bottom: 12px;">
+            使用筆電鏡頭進行生物特徵掃描，對照內部身份證檔案（江政隆）
+          </div>
+          
+          <div style="margin-bottom: 12px;">
+            <label>姓名 *</label>
+            <input type="text" id="biometricName" placeholder="請輸入姓名（例如：江政隆）" value="江政隆" />
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label>身份證號碼（選填）</label>
+            <input type="text" id="biometricIdNumber" placeholder="選填：身份證號碼" />
+          </div>
+          
+          <div style="margin-bottom: 12px;">
+            <label>本機唯一碼（MAC 地址）</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="biometricMacAddress" readonly style="flex: 1;" />
+              <button id="btnGetMacAddress" class="secondary">取得 MAC</button>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 12px;">
+            <label>生物特徵掃描</label>
+            <div style="background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; padding: 20px; text-align: center;">
+              <video id="biometricVideo" autoplay playsinline style="max-width: 100%; max-height: 300px; display: none; border-radius: 8px;"></video>
+              <canvas id="biometricCanvas" style="display: none;"></canvas>
+              <div id="biometricPlaceholder">
+                <div style="font-size: 3em; margin-bottom: 10px;">📷</div>
+                <div class="muted">點擊下方按鈕開始掃描</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="btns" style="margin-top: 12px;">
+            <button id="btnStartBiometricScan" class="primary">開始生物特徵掃描</button>
+            <button id="btnStopBiometricScan" class="secondary" style="display: none;">停止掃描</button>
+            <button id="btnVerifyBiometric" class="primary" style="display: none;">驗證生物特徵</button>
+          </div>
+          
+          <div id="biometricResult" style="margin-top: 12px; padding: 12px; border-radius: 8px; display: none;"></div>
+        </div>
+      </div>
+
+      <div class="card wide" data-section="triple_j_conference">
+        <h2>🤝 三人對話會議室：使用者 + 地端小 j + 雲端小 j (JULES)</h2>
+        <div class="muted">
+          與地端小 j（本地 LLM）和雲端小 j (JULES) 同時對話，共同討論和解決問題。
+          <strong>當前議題：全系統設定為何無法全球可見？如何改善？</strong>
+        </div>
+
+        <div class="chat" style="margin-top:12px;">
+          <div class="chat-head">
+            <div class="title">三人對話會議室</div>
+            <div class="sub">
+              地端小 j（白髮小姑娘）負責本地分析和技術細節，雲端小 j (JULES)（可愛章魚）負責策略和整體規劃。
+            </div>
+          </div>
+          <div class="chat-body" id="tripleJMessages" style="max-height: 500px;">
+            <div class="msg system">
+              <div class="role">系統</div>
+              <div class="bubble">
+                <strong>會議室已開啟</strong><br/>
+                參與者：<br/>
+                • 使用者（你）<br/>
+                • 地端小 j（本地 LLM 助理）<br/>
+                • 雲端小 j (JULES)（雲端 AI 助理）<br/><br/>
+                <strong>當前議題：全系統設定為何無法全球可見？如何改善？</strong>
+              </div>
+            </div>
+          </div>
+          <div class="chat-foot">
+            <div class="chat-row">
+              <input id="tripleJInput" placeholder="輸入訊息，地端小 j 和雲端小 j 會同時回應..." />
+              <button id="tripleJSend" class="primary">送出</button>
+              <button id="tripleJClear" class="secondary">清空</button>
+            </div>
+            <div class="smallhint" style="margin-top:8px;">
+              提示：地端小 j 使用本地 LLM（Ollama），雲端小 j 使用雲端 LLM（需設定 API Key）
+            </div>
           </div>
         </div>
       </div>
@@ -1978,6 +2547,9 @@
       try { uiApplyProfile(); } catch (e) {}
       try { await maintenanceRefresh(); } catch (e) {}
       try { await designModeRefresh(); } catch (e) {}
+      try {
+        loadPersonalBindingStatus();
+      } catch (e) {}
     }
 
     // 自動輪詢：程序驗證（不依賴語言模型）
@@ -3075,6 +3647,289 @@
     $("ljLoadModels").addEventListener("click", () => ljLoadModels().catch(e => logRun(String(e))));
     $("ljSaveConfig").addEventListener("click", () => ljSaveConfig().catch(e => logRun(String(e))));
 
+    // ===== 三人對話會議室 =====
+    let tripleJSessionId = null;
+    let tripleJConversationHistory = [];
+
+    function tripleJSessionIdFunc() {
+      if (!tripleJSessionId) {
+        const k = "wuchang_triple_j_session_id";
+        let v = localStorage.getItem(k);
+        if (!v) {
+          v = Math.random().toString(16).slice(2) + Date.now().toString(16);
+          localStorage.setItem(k, v);
+        }
+        tripleJSessionId = v;
+      }
+      return tripleJSessionId;
+    }
+
+    function tripleJAdd(role, text, agent = null) {
+      const box = $("tripleJMessages");
+      if (!box) return;
+      const div = document.createElement("div");
+      div.className = "msg " + (role === "user" ? "user" : "assistant");
+      
+      let roleLabel = role === "user" ? "你" : (agent || "系統");
+      if (agent === "地端小 j") {
+        roleLabel = "地端小 j";
+        div.style.borderLeft = "3px solid #667eea";
+      } else if (agent === "雲端小 j (JULES)") {
+        roleLabel = "雲端小 j";
+        div.style.borderLeft = "3px solid #764ba2";
+      }
+      
+      div.innerHTML = `<div class="role">${roleLabel}</div><div class="bubble"></div>`;
+      div.querySelector(".bubble").textContent = String(text || "");
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function tripleJSend(text) {
+      const t = String(text || "").trim();
+      if (!t) return;
+      const input = $("tripleJInput");
+      if (input) input.value = "";
+      
+      // 顯示使用者訊息
+      tripleJAdd("user", t);
+      tripleJConversationHistory.push({ role: "user", content: t });
+      
+      // 顯示載入中
+      const loadingDiv = document.createElement("div");
+      loadingDiv.className = "msg assistant";
+      loadingDiv.innerHTML = '<div class="role">系統</div><div class="bubble">地端小 j 和雲端小 j 正在思考...</div>';
+      const box = $("tripleJMessages");
+      if (box) {
+        box.appendChild(loadingDiv);
+        box.scrollTop = box.scrollHeight;
+      }
+      
+      try {
+        const { data } = await fetchJson("/api/triple_j_conference", {
+          method: "POST",
+          body: JSON.stringify({
+            message: t,
+            session_id: tripleJSessionIdFunc(),
+            conversation_history: tripleJConversationHistory.slice(-10)
+          })
+        });
+        
+        // 移除載入中
+        if (loadingDiv.parentNode) loadingDiv.remove();
+        
+        if (data && data.ok) {
+          const responses = data.responses || {};
+          
+          // 顯示地端小 j 回應
+          if (responses.local_j && responses.local_j.ok) {
+            const localJResponse = responses.local_j.response;
+            tripleJAdd("assistant", localJResponse, "地端小 j");
+            tripleJConversationHistory.push({ role: "assistant", content: localJResponse, agent: "地端小 j" });
+            
+            // 檢查地端小 j 是否請求鏡頭授權
+            if (localJResponse.includes("鏡頭") || localJResponse.includes("攝像頭") || localJResponse.includes("camera") || 
+                localJResponse.includes("授權") || localJResponse.includes("權限")) {
+              // 自動請求鏡頭授權
+              requestLocalJCameraPermission();
+            }
+          } else if (responses.local_j) {
+            tripleJAdd("assistant", `地端小 j：${responses.local_j.response || "無法回應"}`, "地端小 j");
+          }
+          
+          // 顯示雲端小 j 回應
+          if (responses.cloud_j && responses.cloud_j.ok) {
+            tripleJAdd("assistant", responses.cloud_j.response, "雲端小 j (JULES)");
+            tripleJConversationHistory.push({ role: "assistant", content: responses.cloud_j.response, agent: "雲端小 j (JULES)" });
+          } else if (responses.cloud_j) {
+            tripleJAdd("assistant", `雲端小 j：${responses.cloud_j.response || "無法回應"}`, "雲端小 j (JULES)");
+          }
+        } else {
+          tripleJAdd("assistant", `錯誤：${(data && data.error) || "未知錯誤"}`, "系統");
+        }
+      } catch (e) {
+        if (loadingDiv.parentNode) loadingDiv.remove();
+        tripleJAdd("assistant", `發生錯誤：${String(e)}`, "系統");
+      }
+    }
+
+    // 地端小 J 鏡頭授權功能
+    let localJCameraPermissionStatus = null;
+    
+    async function requestLocalJCameraPermission() {
+      try {
+        const { data } = await fetchJson("/api/local_j/camera_permission", {
+          method: "POST",
+          body: JSON.stringify({
+            reason: "地端小 J 請求鏡頭驗證授權",
+            session_id: tripleJSessionIdFunc()
+          })
+        });
+        
+        if (data?.ok) {
+          localJCameraPermissionStatus = data.permission_request;
+          // 顯示授權請求通知
+          const permissionDiv = document.createElement("div");
+          permissionDiv.className = "msg assistant";
+          permissionDiv.style.background = "#fff3cd";
+          permissionDiv.style.border = "2px solid #ffc107";
+          permissionDiv.style.borderRadius = "8px";
+          permissionDiv.style.padding = "12px";
+          permissionDiv.style.margin = "8px 0";
+          permissionDiv.innerHTML = `
+            <div class="role" style="color: #856404; font-weight: bold;">🔐 地端小 J 鏡頭授權請求</div>
+            <div class="bubble" style="color: #856404;">
+              <p>地端小 J 請求使用鏡頭進行驗證</p>
+              <p style="font-size: 0.9em; margin-top: 8px;">原因：${data.permission_request?.reason || "地端小 J 請求鏡頭驗證授權"}</p>
+              <div style="margin-top: 12px;">
+                <button id="btnGrantCameraPermission" class="primary" style="margin-right: 8px;">✅ 批准授權</button>
+                <button id="btnDenyCameraPermission" class="secondary">❌ 拒絕</button>
+              </div>
+            </div>
+          `;
+          
+          const box = $("tripleJMessages");
+          if (box) {
+            box.appendChild(permissionDiv);
+            box.scrollTop = box.scrollHeight;
+            
+            // 綁定按鈕事件
+            $("btnGrantCameraPermission")?.addEventListener("click", () => grantLocalJCameraPermission());
+            $("btnDenyCameraPermission")?.addEventListener("click", () => {
+              permissionDiv.remove();
+              tripleJAdd("assistant", "已拒絕地端小 J 的鏡頭授權請求", "系統");
+            });
+          }
+        }
+      } catch (e) {
+        console.error("請求鏡頭授權失敗:", e);
+      }
+    }
+    
+    async function grantLocalJCameraPermission() {
+      try {
+        const { data } = await fetchJson("/api/local_j/camera_permission/grant", {
+          method: "POST",
+          body: JSON.stringify({
+            session_id: tripleJSessionIdFunc(),
+            granted_by: "user"
+          })
+        });
+        
+        if (data?.ok) {
+          tripleJAdd("assistant", "✅ 已批准地端小 J 的鏡頭授權，現在可以進行生物特徵驗證", "系統");
+          
+          // 自動啟動生物特徵掃描
+          setTimeout(() => {
+            if ($("biometricVerification")) {
+              $("biometricVerification").style.display = "block";
+              if ($("btnStartBiometricScan")) {
+                $("btnStartBiometricScan").click();
+              }
+            }
+          }, 500);
+        }
+      } catch (e) {
+        tripleJAdd("assistant", `批准授權失敗：${String(e)}`, "系統");
+      }
+    }
+    
+    async function checkLocalJCameraPermissionStatus() {
+      try {
+        const { data } = await fetchJson(`/api/local_j/camera_permission/status?session_id=${encodeURIComponent(tripleJSessionIdFunc())}`);
+        if (data?.ok) {
+          localJCameraPermissionStatus = data.permission;
+          return data.has_permission;
+        }
+      } catch (e) {
+        console.error("查詢授權狀態失敗:", e);
+      }
+      return false;
+    }
+    
+    // 手動請求鏡頭授權按鈕（可選）
+    function addCameraPermissionButton() {
+      const tripleJSection = document.querySelector('[data-section="triple_j_conference"]');
+      if (tripleJSection) {
+        const button = document.createElement("button");
+        button.className = "secondary";
+        button.textContent = "📷 地端小 J 請求鏡頭授權";
+        button.title = "讓地端小 J 請求使用鏡頭進行驗證";
+        button.style.marginLeft = "8px";
+        button.addEventListener("click", () => {
+          requestLocalJCameraPermission();
+          tripleJAdd("user", "請地端小j領取鏡頭驗證授權", "你");
+        });
+        
+        const inputContainer = $("tripleJInput")?.parentElement;
+        if (inputContainer) {
+          inputContainer.appendChild(button);
+        }
+      }
+    }
+    
+    const tripleJSendBtn = $("tripleJSend");
+    if (tripleJSendBtn) {
+      tripleJSendBtn.addEventListener("click", () => {
+        const input = $("tripleJInput");
+        if (input) {
+          const text = input.value.trim();
+          if (text) tripleJSend(text).catch(e => console.error(e));
+        }
+      });
+    }
+
+    // 初始化：加入鏡頭授權按鈕
+    addCameraPermissionButton();
+    
+    // 檢查現有授權狀態
+    checkLocalJCameraPermissionStatus().then(hasPermission => {
+      if (hasPermission) {
+        tripleJAdd("assistant", "✅ 地端小 J 已獲得鏡頭授權", "系統");
+      }
+    });
+    
+    const tripleJInput = $("tripleJInput");
+    if (tripleJInput) {
+      tripleJInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          const text = e.target.value.trim();
+          if (text) tripleJSend(text).catch(e => console.error(e));
+        }
+      });
+    }
+
+    const tripleJClearBtn = $("tripleJClear");
+    if (tripleJClearBtn) {
+      tripleJClearBtn.addEventListener("click", () => {
+        const box = $("tripleJMessages");
+        if (box) {
+          box.innerHTML = `
+            <div class="msg system">
+              <div class="role">系統</div>
+              <div class="bubble">
+                <strong>會議室已開啟</strong><br/>
+                參與者：<br/>
+                • 使用者（你）<br/>
+                • 地端小 j（本地 LLM 助理）<br/>
+                • 雲端小 j (JULES)（雲端 AI 助理）<br/><br/>
+                <strong>當前議題：全系統設定為何無法全球可見？如何改善？</strong>
+              </div>
+            </div>
+          `;
+        }
+        tripleJConversationHistory = [];
+      });
+    }
+
+    // 自動發送初始問題
+    setTimeout(() => {
+      if (tripleJConversationHistory.length === 0 && $("tripleJMessages")) {
+        tripleJSend("目前全系統設定為何無法全球可見？請分析問題並提出改善方案。").catch(e => console.error(e));
+      }
+    }, 2000);
+
     // 帳號登入/登出
     $("btnLogin").addEventListener("click", () => authLogin().catch(e => logRun(String(e))));
     $("btnLogout").addEventListener("click", () => authLogout().catch(e => logRun(String(e))));
@@ -3100,9 +3955,426 @@
 
     // 初始：未同意先禁用不可識別資料操作（待 consentRefresh/登入後更新）
     try { nonidSetEnabled(false); } catch (e) {}
+
+    // ===== 個人 AI 綁定 =====
+    async function loadPersonalBindingStatus() {
+      try {
+        const { data } = await fetchJson("/api/personal_ai_binding/status");
+        const statusDiv = $("personalBindingStatus");
+        const formDiv = $("personalBindingForm");
+        const verifyFormDiv = $("personalVerificationForm");
+        const verifyDataDiv = $("personalVerificationData");
+        
+        if (data?.ok && data?.status?.bound) {
+          const status = data.status;
+          const macMatch = status.mac_match !== false;
+          statusDiv.innerHTML = `
+            <div style="color: #28a745; font-weight: bold; margin-bottom: 8px;">
+              ✅ 已綁定個人身份
+            </div>
+            <div style="font-size: 0.9em;">
+              <div><strong>姓名：</strong>${status.personal_name || ''}</div>
+              <div><strong>身份 ID：</strong>${status.personal_id || ''}</div>
+              <div><strong>最高權限：</strong>${status.highest_authority ? '是' : '否'}</div>
+              <div><strong>MAC 地址：</strong>${status.mac_address || '未設定'}</div>
+              <div><strong>MAC 驗證：</strong>${macMatch ? '✅ 通過' : '❌ 不匹配'}</div>
+              <div><strong>綁定時間：</strong>${status.created_at || ''}</div>
+            </div>
+            <div style="margin-top: 12px;">
+              <button id="btnShowVerifyForm" class="secondary">填寫驗證資料</button>
+              <button id="btnShowBiometric" class="secondary" style="margin-left: 8px;">生物特徵掃描</button>
+            </div>
+          `;
+          formDiv.style.display = "none";
+          
+          // 檢查是否已驗證
+          const sess = window.__auth?.session || {};
+          if (sess.personal_verified) {
+            verifyDataDiv.style.display = "block";
+            verifyFormDiv.style.display = "none";
+          } else {
+            verifyFormDiv.style.display = "block";
+            verifyDataDiv.style.display = "none";
+          }
+          
+          $("btnShowVerifyForm")?.addEventListener("click", () => {
+            verifyFormDiv.style.display = "block";
+          });
+          
+          $("btnShowBiometric")?.addEventListener("click", () => {
+            $("biometricVerification").style.display = "block";
+            getMacAddress();
+          });
+        } else {
+          statusDiv.innerHTML = `
+            <div style="color: #6c757d; margin-bottom: 12px;">
+              ❌ 尚未綁定個人身份
+            </div>
+            <div class="muted" style="margin-bottom: 12px;">
+              請填寫以下資料以建立個人 AI 綁定
+            </div>
+          `;
+          formDiv.style.display = "block";
+          verifyFormDiv.style.display = "none";
+          verifyDataDiv.style.display = "none";
+        }
+      } catch (e) {
+        $("personalBindingStatus").innerHTML = `
+          <div style="color: #dc3545;">
+            ❌ 載入狀態失敗：${String(e)}
+          </div>
+        `;
+      }
+    }
+
+    async function createPersonalBinding() {
+      const personalName = $("personalName").value.trim();
+      const personalId = $("personalId").value.trim();
+      const password = $("personalPassword").value;
+      const passwordConfirm = $("personalPasswordConfirm").value;
+      const email = $("personalEmail").value.trim();
+      const phone = $("personalPhone").value.trim();
+      const notes = $("personalNotes").value.trim();
+      
+      if (!personalName || !personalId || !password) {
+        alert("請填寫必填欄位（姓名、身份 ID、密碼）");
+        return;
+      }
+      
+      if (password !== passwordConfirm) {
+        alert("密碼與確認密碼不一致");
+        return;
+      }
+      
+      try {
+        const { data } = await fetchJson("/api/personal_ai_binding/create", {
+          method: "POST",
+          body: JSON.stringify({
+            personal_name: personalName,
+            personal_id: personalId,
+            password: password,
+            email: email,
+            phone: phone,
+            notes: notes
+          })
+        });
+        
+        if (data?.ok) {
+          alert("✅ 個人 AI 綁定建立成功！");
+          loadPersonalBindingStatus();
+        } else {
+          alert(`❌ 建立失敗：${data?.error || "未知錯誤"}`);
+        }
+      } catch (e) {
+        alert(`❌ 發生錯誤：${String(e)}`);
+      }
+    }
+
+    async function verifyPersonalIdentity() {
+      const personalId = $("verifyPersonalId").value.trim();
+      const password = $("verifyPassword").value;
+      
+      if (!personalId || !password) {
+        alert("請填寫身份 ID 和密碼");
+        return;
+      }
+      
+      try {
+        const { data } = await fetchJson("/api/personal_ai_binding/verify", {
+          method: "POST",
+          body: JSON.stringify({
+            personal_id: personalId,
+            password: password
+          })
+        });
+        
+        if (data?.ok && data?.verified) {
+          alert("✅ 身份驗證成功！");
+          $("personalVerificationForm").style.display = "none";
+          $("personalVerificationData").style.display = "block";
+          loadPersonalBindingStatus();
+        } else {
+          alert(`❌ 驗證失敗：${data?.error || "身份 ID 或密碼錯誤"}`);
+        }
+      } catch (e) {
+        alert(`❌ 發生錯誤：${String(e)}`);
+      }
+    }
+
+    async function saveVerificationData() {
+      const verificationDataText = $("verificationData").value.trim();
+      
+      if (!verificationDataText) {
+        alert("請填寫驗證資料");
+        return;
+      }
+      
+      let verificationData;
+      try {
+        verificationData = JSON.parse(verificationDataText);
+      } catch (e) {
+        alert(`❌ JSON 格式錯誤：${String(e)}`);
+        return;
+      }
+      
+      try {
+        const { data } = await fetchJson("/api/personal_ai_binding/update_verification", {
+          method: "POST",
+          body: JSON.stringify({
+            verification_data: verificationData
+          })
+        });
+        
+        if (data?.ok) {
+          alert("✅ 驗證資料儲存成功！");
+        } else {
+          alert(`❌ 儲存失敗：${data?.error || "未知錯誤"}`);
+        }
+      } catch (e) {
+        alert(`❌ 發生錯誤：${String(e)}`);
+      }
+    }
+
+    // 綁定事件
+    $("btnCreateBinding")?.addEventListener("click", () => createPersonalBinding().catch(e => alert(String(e))));
+    $("btnCancelBinding")?.addEventListener("click", () => {
+      $("personalBindingForm").style.display = "none";
+      loadPersonalBindingStatus();
+    });
+    $("btnVerifyIdentity")?.addEventListener("click", () => verifyPersonalIdentity().catch(e => alert(String(e))));
+    $("btnSaveVerification")?.addEventListener("click", () => saveVerificationData().catch(e => alert(String(e))));
+
+    // 初始載入
+    loadPersonalBindingStatus();
   </script>
 
   <div id="maintBanner" class="maint-banner hidden">（本系統未經原設計者做定期維護，可能存在風險）</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 螢幕模式切換與面板管理
+    (function() {
+      const multiScreenContainer = document.querySelector('.multi-screen-container');
+      const firstPanel = document.querySelector('.screen-panel');
+      const fullscreenBtn = document.getElementById('fullscreenToggle');
+      
+      function createPanels(count) {
+        // 清除現有面板（保留第一個）
+        while (multiScreenContainer.children.length > 1) {
+          multiScreenContainer.removeChild(multiScreenContainer.lastChild);
+        }
+        
+        // 複製面板
+        for (let i = 1; i < count; i++) {
+          const newPanel = firstPanel.cloneNode(true);
+          newPanel.classList.add('screen-panel');
+          multiScreenContainer.appendChild(newPanel);
+        }
+      }
+      
+      function switchScreenMode(mode) {
+        const count = parseInt(mode);
+        document.body.setAttribute('data-screens', mode);
+        localStorage.setItem('wuchang_screen_mode', mode);
+        
+        if (count > 1) {
+          createPanels(count);
+        } else {
+          // 單螢幕模式：移除多餘面板
+          while (multiScreenContainer.children.length > 1) {
+            multiScreenContainer.removeChild(multiScreenContainer.lastChild);
+          }
+        }
+      }
+      
+      // 全螢幕功能
+      function toggleFullscreen() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+          // 進入全螢幕
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+          }
+          document.body.classList.add('fullscreen');
+          fullscreenBtn.textContent = '⛶ 退出全螢幕';
+          fullscreenBtn.classList.add('active');
+        } else {
+          // 退出全螢幕
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+          document.body.classList.remove('fullscreen');
+          fullscreenBtn.textContent = '⛶ 全螢幕';
+          fullscreenBtn.classList.remove('active');
+        }
+      }
+      
+      // 監聽全螢幕狀態變化
+      document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+          document.body.classList.remove('fullscreen');
+          fullscreenBtn.textContent = '⛶ 全螢幕';
+          fullscreenBtn.classList.remove('active');
+        }
+      });
+      document.addEventListener('webkitfullscreenchange', () => {
+        if (!document.webkitFullscreenElement) {
+          document.body.classList.remove('fullscreen');
+          fullscreenBtn.textContent = '⛶ 全螢幕';
+          fullscreenBtn.classList.remove('active');
+        }
+      });
+      document.addEventListener('msfullscreenchange', () => {
+        if (!document.msFullscreenElement) {
+          document.body.classList.remove('fullscreen');
+          fullscreenBtn.textContent = '⛶ 全螢幕';
+          fullscreenBtn.classList.remove('active');
+        }
+      });
+      
+      // 初始化
+      const savedMode = localStorage.getItem('wuchang_screen_mode') || '1';
+      switchScreenMode(savedMode);
+      
+      // 螢幕模式按鈕事件
+      const screenButtons = document.querySelectorAll('.screen-mode-selector button[data-screens]');
+      screenButtons.forEach(btn => {
+        if (btn.getAttribute('data-screens') === savedMode) {
+          btn.classList.add('active');
+        }
+        btn.addEventListener('click', () => {
+          const mode = btn.getAttribute('data-screens');
+          switchScreenMode(mode);
+          screenButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+      
+      // 全螢幕按鈕事件
+      // 雙螢幕全螢幕模式
+      function openDualScreenFullscreen() {
+        const url = window.location.href.split('?')[0];
+        const screen2Url = url + '?screen=2';
+        
+        // 打開第二個螢幕的視窗（定位到第二個螢幕）
+        // 嘗試將視窗定位到主螢幕右側（第二個螢幕位置）
+        const leftPos = screen.width; // 主螢幕寬度，第二個螢幕應該在右側
+        const screen2Window = window.open(
+          screen2Url,
+          'screen2',
+          `width=${screen.width},height=${screen.height},left=${leftPos},top=0,fullscreen=yes`
+        );
+        
+        if (screen2Window) {
+          // 延遲後進入全螢幕
+          setTimeout(() => {
+            if (screen2Window.document) {
+              screen2Window.document.documentElement.requestFullscreen?.() ||
+              screen2Window.document.documentElement.webkitRequestFullscreen?.() ||
+              screen2Window.document.documentElement.msRequestFullscreen?.();
+            }
+          }, 1000);
+          
+          // 當前視窗也進入全螢幕
+          setTimeout(() => {
+            toggleFullscreen();
+          }, 500);
+        } else {
+          alert('無法打開第二個視窗，請檢查瀏覽器的彈出視窗阻擋設定');
+        }
+      }
+      
+      // 檢測 URL 參數，判斷是否為第二個螢幕
+      const urlParams = new URLSearchParams(window.location.search);
+      const isScreen2 = urlParams.get('screen') === '2';
+      
+      if (isScreen2) {
+        // 第二個螢幕：自動進入全螢幕
+        document.body.setAttribute('data-screen-index', '2');
+        setTimeout(() => {
+          toggleFullscreen();
+        }, 500);
+      } else {
+        // 第一個螢幕：顯示雙螢幕按鈕
+        const dualScreenBtn = document.createElement('button');
+        dualScreenBtn.className = 'fullscreen-btn';
+        dualScreenBtn.id = 'dualScreenBtn';
+        dualScreenBtn.textContent = '🖥️ 雙螢幕全螢幕';
+        dualScreenBtn.title = '在兩個螢幕上分別打開全螢幕視窗';
+        dualScreenBtn.style.marginLeft = '8px';
+        
+        const screenModeSelector = document.querySelector('.screen-mode-selector');
+        if (screenModeSelector && fullscreenBtn) {
+          fullscreenBtn.parentNode.insertBefore(dualScreenBtn, fullscreenBtn.nextSibling);
+          dualScreenBtn.addEventListener('click', openDualScreenFullscreen);
+        }
+      }
+      
+      if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        // 鍵盤快捷鍵：F11 或 Ctrl+Enter（僅桌面）
+        if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'F11' || (e.ctrlKey && e.key === 'Enter')) {
+              e.preventDefault();
+              toggleFullscreen();
+            }
+          });
+        }
+      }
+      
+      // 手機優化：自動調整螢幕模式
+      function detectMobile() {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isSmallScreen = window.innerWidth <= 768;
+        
+        if (isMobile || isSmallScreen) {
+          // 手機自動切換為單螢幕模式
+          switchScreenMode('1');
+          const screenButtons = document.querySelectorAll('.screen-mode-selector button[data-screens]');
+          screenButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-screens') === '1') {
+              btn.classList.add('active');
+            }
+          });
+          
+          // 隱藏多螢幕切換按鈕（手機不需要）
+          screenButtons.forEach(btn => {
+            if (btn.getAttribute('data-screens') !== '1') {
+              btn.style.display = 'none';
+            }
+          });
+        } else {
+          // 桌面顯示所有按鈕
+          const screenButtons = document.querySelectorAll('.screen-mode-selector button[data-screens]');
+          screenButtons.forEach(btn => {
+            btn.style.display = '';
+          });
+        }
+      }
+      
+      // 初始檢測
+      detectMobile();
+      
+      // 視窗大小變化時重新檢測
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(detectMobile, 250);
+      });
+    })();
+  </script>
 </body>
 </html>
 

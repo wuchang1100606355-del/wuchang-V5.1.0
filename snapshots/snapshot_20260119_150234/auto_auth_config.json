@@ -1,0 +1,8 @@
+{
+  "account_id": "your_account_id",
+  "pin": "your_pin",
+  "auto_approve": false,
+  "default_permission": "full_agent",
+  "default_ttl_hours": 24,
+  "note": "將此檔案重新命名為 auto_auth_config.json 並填入實際值"
+}

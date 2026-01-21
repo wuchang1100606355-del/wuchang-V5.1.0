@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-01-20 02:59:19.308900",
+  "results": {
+    "system_dependencies": {
+      "docker": true,
+      "python": true,
+      "pip": true
+    },
+    "python_packages": {
+      "requests": true,
+      "urllib3": true,
+      "Flask": true,
+      "google-auth": true,
+      "google-auth-oauthlib": true,
+      "google-auth-httplib2": true,
+      "google-api-python-client": true
+    },
+    "docker_images": {
+      "odoo:17.0": true,
+      "postgres:15": true,
+      "cloudflare/cloudflared:latest": true
+    },
+    "odoo_modules": {
+      "status": true
+    },
+    "file_structure": {
+      "docker-compose.unified.yml": true,
+      "docker-compose.cloud.yml": true,
+      "requirements.txt": true,
+      "backup_to_gdrive.py": true,
+      "cloud_deployment.py": true,
+      "local_storage": true,
+      "cloudflared": true,
+      "wuchang_os/addons": true
+    }
+  }
+}

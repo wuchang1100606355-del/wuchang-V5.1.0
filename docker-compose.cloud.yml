@@ -1,0 +1,69 @@
+# Docker Compose 配置 - 雲端部署方案
+# 包含 Cloudflare Tunnel 外網訪問
+# 本機和伺服器共用同一套 Google Drive 儲存
+
+version: '3.8'
+
+services:
+  # Cloudflare Tunnel - 外網訪問
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: wuchang-cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    volumes:
+      - ./cloudflared/config.yml:/etc/cloudflared/config.yml:ro
+      - ./cloudflared/credentials.json:/etc/cloudflared/credentials.json:ro
+    networks:
+      - wuchang-network
+    depends_on:
+      - wuchang-web
+
+  # Odoo ERP 系統
+  wuchang-web:
+    image: odoo:17.0
+    container_name: wuchang-web
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      # 共享資料（Google Drive 自動同步）
+      - J:/共用雲端硬碟/五常雲端空間/containers/data/odoo:/var/lib/odoo
+      - J:/共用雲端硬碟/五常雲端空間/containers/uploads:/var/lib/odoo/filestore
+      - J:/共用雲端硬碟/五常雲端空間/containers/logs/odoo:/var/log/odoo
+      - J:/共用雲端硬碟/五常雲端空間/containers/config:/config:ro
+      # 本地儲存（各主機獨立）
+      - C:/wuchang V5.1.0/wuchang-V5.1.0/local_storage/data/other:/var/lib/other
+      - ./wuchang_os/addons:/mnt/extra-addons
+    restart: unless-stopped
+    environment:
+      - GDRIVE_SHARED_PATH=J:/共用雲端硬碟/五常雲端空間
+    networks:
+      - wuchang-network
+
+  # PostgreSQL 資料庫
+  db:
+    image: postgres:15
+    container_name: wuchang-db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    volumes:
+      # ⚠️ 資料庫必須使用本地儲存，不能使用 Google Drive 同步資料夾
+      - C:/wuchang V5.1.0/wuchang-V5.1.0/local_storage/database/data:/var/lib/postgresql/data
+      # 備份目錄（會定期同步到 Google Drive）
+      - C:/wuchang V5.1.0/wuchang-V5.1.0/local_storage/database/backups:/backups
+      # 共享備份目錄（只讀）
+      - J:/共用雲端硬碟/五常雲端空間/backups/database:/shared_backups:ro
+    restart: unless-stopped
+    networks:
+      - wuchang-network
+
+networks:
+  wuchang-network:
+    driver: bridge
+
+volumes:
+  # 不需要 named volumes，直接使用路徑

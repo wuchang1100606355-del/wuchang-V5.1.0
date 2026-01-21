@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-01-19T14:00:17+0800",
+  "stopped_services": [
+    "控制中心",
+    "Little J Hub"
+  ],
+  "restarted_services": [
+    "控制中心",
+    "Little J Hub"
+  ],
+  "all_services_ok": false
+}

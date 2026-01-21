@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-01-19T14:20:50+0800",
+  "local_dir": "C:\\wuchang V5.1.0\\wuchang-V5.1.0",
+  "server_dir": null,
+  "server_accessible": false,
+  "profiles": {
+    "kb": {
+      "files": [
+        "wuchang_community_knowledge_index.json",
+        "wuchang_community_context_compact.md"
+      ],
+      "summary": {
+        "total": 2,
+        "only_local": 2,
+        "only_server": 0,
+        "different": 0,
+        "same": 0,
+        "local_error": 0,
+        "server_error": 0
+      },
+      "details": [
+        {
+          "filename": "wuchang_community_knowledge_index.json",
+          "status": "only_local",
+          "local": {
+            "exists": true,
+            "size": 190006,
+            "mtime": "2026-01-15T19:37:03+0800",
+            "sha256": "d292c0a77de7135fbc497539a22bb3f8"
+          },
+          "server": {
+            "exists": false,
+            "size": 0,
+            "mtime": "",
+            "sha256": ""
+          }
+        },
+        {
+          "filename": "wuchang_community_context_compact.md",
+          "status": "only_local",
+          "local": {
+            "exists": true,
+            "size": 1457,
+            "mtime": "2026-01-15T19:37:03+0800",
+            "sha256": "7a929940f4532c706c9ed162e8914ef6"
+          },
+          "server": {
+            "exists": false,
+            "size": 0,
+            "mtime": "",
+            "sha256": ""
+          }
+        }
+      ]
+    },
+    "rules": {
+      "files": [
+        "AGENT_CONSTITUTION.md",
+        "RISK_ACTION_SOP.md",
+        "risk_gate.py",
+        "safe_sync_push.py",
+        "api_community_data.py"
+      ],
+      "summary": {
+        "total": 5,
+        "only_local": 5,
+        "only_server": 0,
+        "different": 0,
+        "same": 0,
+        "local_error": 0,
+        "server_error": 0
+      },
+      "details": [
+        {
+          "filename": "AGENT_CONSTITUTION.md",
+          "status": "only_local",
+          "local": {
+            "exists": true,
+            "size": 7239,
+            "mtime": "2026-01-17T03:25:01+0800",
+            "sha256": "67d9e0255f257e3dd9c44e48afd5b1c8"
+          },
+          "server": {
+            "exists": false,
+            "size": 0,
+            "mtime": "",
+            "sha256": ""
+          }
+        },
+        {
+          "filename": "RISK_ACTION_SOP.md",
+          "status": "only_local",
+          "local": {
+            "exists": true,
+            "size": 6985,
+            "mtime": "2026-01-16T02:15:38+0800",
+            "sha256": "58796bd27e7bd666b32019be0f2c4fff"
+          },
+          "server": {
+            "exists": false,
+            "size": 0,
+            "mtime": "",
+            "sha256": ""
+          }
+        },
+        {
+          "filename": "risk_gate.py",
+          "status": "only_local",
+          "local": {
+            "exists": true,
+            "size": 4530,
+            "mtime": "2026-01-16T02:11:52+0800",
+            "sha256": "f6b65fbc6699fcbcc91374e42c41b723"
+          },
+          "server": {
+            "exists": false,
+            "size": 0,
+            "mtime": "",
+            "sha256": ""
+          }
+        },
+        {
+          "filename": "safe_sync_push.py",
+          "status": "only_local",
+          "local": {
+            "exists": true,
+            "size": 7225,
+            "mtime": "2026-01-16T02:15:33+0800",
+            "sha256": "b53a32d4ef77fc62744d31bd91768fb8"
+          },
+          "server": {
+            "exists": false,
+            "size": 0,
+            "mtime": "",
+            "sha256": ""
+          }
+        },
+        {
+          "filename": "api_community_data.py",
+          "status": "only_local",
+          "local": {
+            "exists": true,
+            "size": 5440,
+            "mtime": "2026-01-16T17:20:36+0800",
+            "sha256": "6ba91710a37fb39c231af8d9c9d4f7be"
+          },
+          "server": {
+            "exists": false,
+            "size": 0,
+            "mtime": "",
+            "sha256": ""
+          }
+        }
+      ]
+    }
+  }
+}

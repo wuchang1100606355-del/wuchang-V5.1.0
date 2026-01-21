@@ -1,18 +1,24 @@
 {
   "knowledge_base_version": "2.0",
-  "last_updated": "2026-01-15",
+  "last_updated": "2026-01-17T01:55:20.362226",
   "community_name": "新北市三重區五常社區發展協會轄區",
   "scope": {
-    "villages": ["五常里", "五順里", "仁忠里"],
+    "villages": [
+      "五常里",
+      "五順里",
+      "仁忠里"
+    ],
     "description": "五常社區發展協會服務範圍"
   },
-  
   "geographic_analysis": {
     "location": {
       "city": "新北市",
       "district": "三重區",
       "strategic_value": "三重區通往台北市士林、北投地區的重要門戶，鄰近重陽橋",
-      "nearby_projects": ["銀新未來城", "仁義重劃區"]
+      "nearby_projects": [
+        "銀新未來城",
+        "仁義重劃區"
+      ]
     },
     "boundaries": {
       "renyi_redevelopment_area": {
@@ -50,7 +56,12 @@
         "yuanxin_2nd_street": "重劃區內新闢的標準寬度道路，設有完整人行道",
         "traditional_alleyways": {
           "description": "仁義街XX巷、仁愛街XX巷",
-          "characteristics": ["路幅通常不足6米", "缺乏人行道", "常遭機車與路霸佔用", "消防救災的高風險區"]
+          "characteristics": [
+            "路幅通常不足6米",
+            "缺乏人行道",
+            "常遭機車與路霸佔用",
+            "消防救災的高風險區"
+          ]
         }
       },
       "dangerous_intersections": [
@@ -59,7 +70,6 @@
       ]
     }
   },
-  
   "housing_analysis": {
     "total_households": {
       "wuchang": 2092,
@@ -161,7 +171,6 @@
       }
     }
   },
-  
   "demographics": {
     "total_population": {
       "year_113": 12524,
@@ -220,13 +229,17 @@
         "aging_index": 163.12,
         "dependency_ratio": 45.2,
         "status": "高齡瀕危社區",
-        "needs": ["長照據點", "無障礙設施", "醫療巡迴服務"]
+        "needs": [
+          "長照據點",
+          "無障礙設施",
+          "醫療巡迴服務"
+        ]
       },
       "community_average": {
         "children_0_14": 11.51,
-        "working_age_15_64": 72.00,
+        "working_age_15_64": 72.0,
         "elderly_65_plus": 15.92,
-        "aging_index": 138.30,
+        "aging_index": 138.3,
         "dependency_ratio": 38.1,
         "trend": "扶養比逐年上升（108年35% → 111年38.1%）"
       }
@@ -247,7 +260,6 @@
       "家庭經濟支柱的負擔日益沉重"
     ]
   },
-  
   "commercial_ecosystem": {
     "total_businesses": 90,
     "physical_stores": 38,
@@ -270,7 +282,10 @@
       "retail": {
         "count": 3,
         "percentage": 8,
-        "examples": ["全聯", "美廉社"],
+        "examples": [
+          "全聯",
+          "美廉社"
+        ],
         "description": "中小型超市，提供生鮮食品"
       },
       "professional_services": {
@@ -287,12 +302,18 @@
       "other": {
         "count": 2,
         "percentage": 5,
-        "types": ["彩券行"]
+        "types": [
+          "彩券行"
+        ]
       },
       "institutions": {
         "count": 3,
         "percentage": 8,
-        "types": ["金融機構", "診所", "書局"]
+        "types": [
+          "金融機構",
+          "診所",
+          "書局"
+        ]
       }
     },
     "challenges": {
@@ -312,7 +333,6 @@
       }
     }
   },
-  
   "transportation": {
     "road_conditions": {
       "bottlenecks": [
@@ -379,7 +399,6 @@
       }
     }
   },
-  
   "social_enterprise_solutions": {
     "community_service_team": {
       "organization": "五常物業規劃顧問股份有限公司",
@@ -409,7 +428,6 @@
       ]
     }
   },
-  
   "strategic_recommendations": {
     "population": {
       "priority": "針對仁忠里進行重點式的長照資源投放",
@@ -427,21 +445,32 @@
     },
     "vision": "成為新北市「新舊共融」的示範場域"
   },
-  
   "system_integration_points": {
     "ui_design": {
       "elderly_friendly": {
         "target": "19.3% 老年人口（仁忠里）",
-        "features": ["大字體模式", "高對比度", "簡化操作流程"]
+        "features": [
+          "大字體模式",
+          "高對比度",
+          "簡化操作流程"
+        ]
       },
       "dual_entry": {
         "entry_a_merchant": {
           "target": "60% 居住在無電梯公寓的長者",
-          "features": ["大字體模式", "外送優先顯示", "步行距離標示"]
+          "features": [
+            "大字體模式",
+            "外送優先顯示",
+            "步行距離標示"
+          ]
         },
         "entry_b_category": {
           "target": "35.5% 高學歷族群 + 11.8% 青少年",
-          "features": ["視覺體驗", "探索樂趣", "AI生成圖片"]
+          "features": [
+            "視覺體驗",
+            "探索樂趣",
+            "AI生成圖片"
+          ]
         }
       }
     },
@@ -468,7 +497,11 @@
         "target_group": "19.3% 老年人口",
         "mechanism": "純幸福幣購買（現金價0元）",
         "benefit": "創造「尊嚴救助」模式",
-        "activities": ["擔任志工", "協助巡守", "參與社區活動"]
+        "activities": [
+          "擔任志工",
+          "協助巡守",
+          "參與社區活動"
+        ]
       },
       "time_complement": {
         "idle_period": "下午2點至4點",
@@ -488,13 +521,12 @@
       }
     }
   },
-  
   "key_statistics": {
     "total_households": 4891,
     "total_population": 12524,
     "average_household_size": 2.56,
     "elderly_percentage": 15.92,
-    "aging_index": 138.30,
+    "aging_index": 138.3,
     "motorcycles_estimated": 5800,
     "public_motorcycle_parking": 60,
     "parking_shortage_ratio": "96.7%缺口",
@@ -504,7 +536,6 @@
     "hoa_count_current": 32,
     "hoa_count_projected": 50
   },
-  
   "critical_insights": [
     "區域正處於極端的二元發展狀態：新興重劃區 vs 傳統舊市區",
     "仁忠里老化指數高達163.12%，為高齡瀕危社區",
@@ -512,5 +543,53 @@
     "商業數位化程度為零，存在巨大轉型機會",
     "新舊社區物業管理斷層，AI智能系統可提供解決方案",
     "社區專勤隊模式可同時解決人口老化、商業轉型與交通問題"
-  ]
+  ],
+  "administrative_documents": {
+    "charter": {
+      "title": "協會章程",
+      "file": "01_協會章程.md",
+      "category": "組織文件",
+      "description": "依據人民團體法、社區發展工作要點制定協會章程",
+      "keywords": [
+        "章程",
+        "組織",
+        "法規"
+      ],
+      "related_documents": [
+        "AGENT_CONSTITUTION.md"
+      ],
+      "last_updated": "2026-01-17T01:51:11.976616"
+    },
+    "annual_plan_2026": {
+      "title": "113年度工作計畫",
+      "file": "02_年度工作計畫_2026.md",
+      "category": "計畫文件",
+      "description": "113年度（2026年）工作計畫",
+      "keywords": [
+        "年度工作計畫",
+        "2026"
+      ],
+      "related_documents": [
+        "wuchang_community_analysis.json"
+      ],
+      "last_updated": "2026-01-17T01:51:11.976644"
+    },
+    "meeting_20260117": {
+      "title": "理監事會會議會議記錄",
+      "file": "association_operational_files\\meetings\\meeting_20260117_理監事會會議.md",
+      "category": "會議文件",
+      "description": "2026年01月17日 理監事會會議會議記錄",
+      "keywords": [
+        "會議記錄",
+        "理監事會",
+        "2026-01-17"
+      ],
+      "related_documents": [
+        "08_公文處理與行政營運組織.md"
+      ],
+      "meeting_date": "2026-01-17",
+      "meeting_type": "理監事會會議",
+      "last_updated": "2026-01-17T01:55:20.362218"
+    }
+  }
 }

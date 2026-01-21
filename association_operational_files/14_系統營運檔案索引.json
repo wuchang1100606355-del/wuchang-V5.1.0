@@ -1,0 +1,193 @@
+{
+  "association_operational_files_index": {
+    "version": "1.0",
+    "last_updated": "2026-01-15",
+    "association_name": "新北市三重區五常社區發展協會",
+    "files": [
+      {
+        "id": "charter",
+        "file": "01_協會章程.md",
+        "category": "組織文件",
+        "title": "協會章程",
+        "description": "依據人民團體法、社區發展工作要點制定協會章程",
+        "keywords": ["章程", "組織", "法規", "人民團體法", "社區發展工作要點"],
+        "related_files": ["AGENT_CONSTITUTION.md", "ASSET_INVENTORY.md"],
+        "compliance": {
+          "人民團體法": true,
+          "社區發展工作要點": true,
+          "主管機關規範": true
+        }
+      },
+      {
+        "id": "annual_plan_2026",
+        "file": "02_年度工作計畫_2026.md",
+        "category": "計畫文件",
+        "title": "113年度工作計畫",
+        "description": "113年度（2026年）工作計畫，包含現況分析、工作目標、執行計畫、預算編列",
+        "keywords": ["年度工作計畫", "2026", "工作目標", "預算", "活動"],
+        "related_files": ["wuchang_community_analysis.json", "wuchang_community_knowledge_base.json"],
+        "compliance": {
+          "社區發展工作要點": true,
+          "主管機關規範": true
+        }
+      },
+      {
+        "id": "grant_application",
+        "file": "03_補助申請作業規範.md",
+        "category": "規範文件",
+        "title": "補助申請作業規範",
+        "description": "補助申請作業規範與流程，包含申請資格、申請流程、審查標準、核銷作業",
+        "keywords": ["補助申請", "作業規範", "申請流程", "核銷"],
+        "related_files": ["02_年度工作計畫_2026.md", "04_財務管理規範.md"],
+        "compliance": {
+          "補助計畫規定": true,
+          "主管機關規範": true
+        }
+      },
+      {
+        "id": "financial_management",
+        "file": "04_財務管理規範.md",
+        "category": "規範文件",
+        "title": "財務管理規範",
+        "description": "財務管理規範與流程，包含收入管理、支出管理、財務報表、補助款管理",
+        "keywords": ["財務管理", "預算", "決算", "核銷", "財務報表"],
+        "related_files": ["02_年度工作計畫_2026.md", "03_補助申請作業規範.md", "AGENT_CONSTITUTION.md"],
+        "compliance": {
+          "會計法": true,
+          "人民團體法": true,
+          "主管機關規範": true
+        }
+      },
+      {
+        "id": "automation_workflow",
+        "file": "05_自動化行政工作流程.md",
+        "category": "流程文件",
+        "title": "自動化行政工作流程",
+        "description": "自動化行政工作流程設計，包含年度工作流程、補助申請流程、活動執行流程",
+        "keywords": ["自動化", "工作流程", "行政作業", "AI程序"],
+        "related_files": ["08_公文處理與行政營運組織.md", "10_AI程序演練腳本.md"],
+        "compliance": {
+          "系統設計規範": true
+        }
+      },
+      {
+        "id": "knowledge_base_updates",
+        "file": "06_知識庫更新與註記.md",
+        "category": "系統文件",
+        "title": "知識庫更新與註記",
+        "description": "知識庫更新機制與重要事項註記，包含法規合規事項、行政作業事項、財務管理事項",
+        "keywords": ["知識庫", "更新機制", "重要事項", "法規合規"],
+        "related_files": ["wuchang_community_knowledge_base.json", "wuchang_community_knowledge_index.json", "12_知識庫更新記錄.json"],
+        "compliance": {
+          "知識庫管理規範": true
+        }
+      },
+      {
+        "id": "calendar_system",
+        "file": "07_系統行事曆與提醒.md",
+        "category": "系統文件",
+        "title": "系統行事曆與提醒",
+        "description": "系統行事曆與提醒機制，包含重要時程、提醒機制、自動化提醒系統",
+        "keywords": ["行事曆", "提醒機制", "時程管理", "Google Calendar"],
+        "related_files": ["11_系統行事曆設定.json"],
+        "compliance": {
+          "時程管理規範": true
+        }
+      },
+      {
+        "id": "document_processing",
+        "file": "08_公文處理與行政營運組織.md",
+        "category": "組織文件",
+        "title": "公文處理與行政營運組織",
+        "description": "公文處理流程與行政營運組織架構，包含收文流程、發文流程、組織架構、職責分工",
+        "keywords": ["公文處理", "行政組織", "組織架構", "職責分工"],
+        "related_files": ["01_協會章程.md", "05_自動化行政工作流程.md"],
+        "compliance": {
+          "公文處理規範": true,
+          "組織管理規範": true
+        }
+      },
+      {
+        "id": "system_overview",
+        "file": "09_系統營運檔案總覽.md",
+        "category": "系統文件",
+        "title": "系統營運檔案總覽",
+        "description": "系統營運檔案總覽，包含檔案結構、系統整合架構、自動化工作流程、知識庫整合",
+        "keywords": ["系統營運", "檔案總覽", "系統架構", "自動化"],
+        "related_files": ["所有行政文件"],
+        "compliance": {
+          "系統管理規範": true
+        }
+      },
+      {
+        "id": "ai_demo_script",
+        "file": "10_AI程序演練腳本.md",
+        "category": "系統文件",
+        "title": "AI程序演練腳本",
+        "description": "AI程序演練腳本，包含演練目標、演練場景、演練執行、演練結果評估",
+        "keywords": ["AI程序", "演練腳本", "自動化測試", "系統驗證"],
+        "related_files": ["05_自動化行政工作流程.md", "08_公文處理與行政營運組織.md", "association_automation_system.py"],
+        "compliance": {
+          "系統測試規範": true
+        }
+      },
+      {
+        "id": "calendar_config",
+        "file": "11_系統行事曆設定.json",
+        "category": "設定檔案",
+        "title": "系統行事曆設定",
+        "description": "系統行事曆設定（JSON格式），包含重要時程、提醒機制、通知設定",
+        "keywords": ["行事曆", "設定", "時程", "提醒"],
+        "related_files": ["07_系統行事曆與提醒.md"],
+        "compliance": {
+          "系統設定規範": true
+        }
+      },
+      {
+        "id": "kb_update_record",
+        "file": "12_知識庫更新記錄.json",
+        "category": "設定檔案",
+        "title": "知識庫更新記錄",
+        "description": "知識庫更新記錄（JSON格式），包含更新歷史、重要事項註記、文件關聯關係",
+        "keywords": ["知識庫", "更新記錄", "重要事項", "文件關聯"],
+        "related_files": ["06_知識庫更新與註記.md", "wuchang_community_knowledge_base.json"],
+        "compliance": {
+          "知識庫管理規範": true
+        }
+      },
+      {
+        "id": "system_integration",
+        "file": "13_系統整合與AI程序說明.md",
+        "category": "系統文件",
+        "title": "系統整合與AI程序說明",
+        "description": "系統整合架構與AI程序說明，包含系統模組、AI功能、自動化流程、知識庫整合",
+        "keywords": ["系統整合", "AI程序", "自動化", "知識庫"],
+        "related_files": ["association_automation_system.py", "所有行政文件"],
+        "compliance": {
+          "系統整合規範": true
+        }
+      }
+    ],
+    "compliance_status": {
+      "人民團體法": "符合",
+      "社區發展工作要點": "符合",
+      "主管機關規範": "符合",
+      "補助計畫規定": "符合",
+      "系統設計規範": "符合"
+    },
+    "system_integration": {
+      "knowledge_base": "已整合",
+      "calendar_system": "已整合",
+      "document_management": "已整合",
+      "workflow_automation": "已整合",
+      "ai_programs": "已整合"
+    },
+    "historical_document_links": {
+      "AGENT_CONSTITUTION.md": "組織憲法、治理原則",
+      "ASSET_INVENTORY.md": "資產盤點、組織資訊",
+      "wuchang_community_analysis.json": "社區分析數據",
+      "wuchang_community_knowledge_base.json": "知識庫主檔案",
+      "accounts_policy.json": "帳號政策、權限管理"
+    }
+  }
+}

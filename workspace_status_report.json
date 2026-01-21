@@ -1,0 +1,102 @@
+{
+  "ok": false,
+  "timestamp": "2026-01-19T13:49:30+0800",
+  "checks": [
+    {
+      "name": "system_db_dir",
+      "ok": false,
+      "path": "",
+      "env": "WUCHANG_SYSTEM_DB_DIR (recommended)"
+    },
+    {
+      "name": "workspace_outdir",
+      "ok": false,
+      "path": "",
+      "env": "WUCHANG_WORKSPACE_OUTDIR"
+    },
+    {
+      "name": "pii_outdir",
+      "ok": false,
+      "path": "",
+      "env": "WUCHANG_PII_OUTDIR (optional)"
+    },
+    {
+      "name": "exchange_dir",
+      "ok": false,
+      "path": "",
+      "env": "WUCHANG_WORKSPACE_EXCHANGE_DIR (optional)"
+    },
+    {
+      "name": "odoo_cache_dir",
+      "ok": true,
+      "path": "",
+      "env": "WUCHANG_ODOO_CACHE_DIR (optional)",
+      "note": "Odoo 快取區（非權威資料）"
+    },
+    {
+      "name": "accounts_policy",
+      "ok": false,
+      "path": "",
+      "hint": "請把 accounts_policy.json 放到 Drive 同步夾，或用 WUCHANG_ACCOUNTS_PATH 指定"
+    },
+    {
+      "name": "workspace_matching",
+      "ok": false,
+      "path": "",
+      "hint": "請把 workspace_matching.json 放到 Drive 同步夾，或用 WUCHANG_WORKSPACE_MATCHING_PATH 指定"
+    },
+    {
+      "name": "pii_contacts_identifiable",
+      "ok": true,
+      "path": "",
+      "note": "可選：第一次存才會生成"
+    },
+    {
+      "name": "pii_contacts_non_identifiable",
+      "ok": true,
+      "path": "",
+      "note": "可選：第一次存才會生成"
+    },
+    {
+      "name": "consent_receipts",
+      "ok": true,
+      "path": "",
+      "note": "可選：第一次同意才會生成"
+    },
+    {
+      "name": "account_profiles_non_identifiable",
+      "ok": true,
+      "path": "",
+      "note": "可選：第一次存才會生成"
+    },
+    {
+      "name": "vouchers_store",
+      "ok": true,
+      "path": "",
+      "note": "可選：第一次建立票券才會生成"
+    },
+    {
+      "name": "device_tasks_dir",
+      "ok": true,
+      "path": "",
+      "note": "可選：第一次建立設備任務才會生成"
+    },
+    {
+      "name": "device_results_dir",
+      "ok": true,
+      "path": "",
+      "note": "可選：第一次設備回覆才會生成"
+    }
+  ],
+  "warnings": [],
+  "missing": [],
+  "suggested_powershell": [
+    "setx WUCHANG_SYSTEM_DB_DIR \"C:\\Users\\<你>\\Google Drive\\五常_中控\"",
+    "setx WUCHANG_WORKSPACE_OUTDIR \"C:\\Users\\<你>\\Google Drive\\五常_中控\\artifacts\"",
+    "setx WUCHANG_WORKSPACE_EXCHANGE_DIR \"C:\\Users\\<你>\\Google Drive\\五常_中控\\exchange\"",
+    "setx WUCHANG_PII_OUTDIR \"C:\\Users\\<你>\\Google Drive\\五常_中控\\vault\"",
+    "setx WUCHANG_ACCOUNTS_PATH \"C:\\Users\\<你>\\Google Drive\\五常_中控\\config\\accounts_policy.json\"",
+    "setx WUCHANG_WORKSPACE_MATCHING_PATH \"C:\\Users\\<你>\\Google Drive\\五常_中控\\config\\workspace_matching.json\"",
+    "setx WUCHANG_ODOO_CACHE_DIR \"D:\\odoo_cache\\wuchang\"  # 可選：快取區"
+  ]
+}

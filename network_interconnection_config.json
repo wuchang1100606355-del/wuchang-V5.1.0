@@ -1,0 +1,16 @@
+{
+  "server_ddns": "coffeeLofe.asuscomm.com",
+  "server_ip": "10.8.0.1",
+  "server_share": "\\\\HOME-COMMPUT\\wuchang V5.1.0",
+  "health_url": "https://coffeeLofe.asuscomm.com:8443/health",
+  "hub_url": "",
+  "hub_token": "",
+  "vpn": {
+    "enabled": true,
+    "server": "coffeeLofe.asuscomm.com"
+  },
+  "local_ip": "10.8.0.6",
+  "hostname": "LUNGsMSI",
+  "vpn_connected": true,
+  "timestamp": "2026-01-19T13:18:17+0800"
+}
