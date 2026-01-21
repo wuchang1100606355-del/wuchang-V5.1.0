@@ -4,7 +4,7 @@ storage_change_log.jsonl
 accountable_person_authorizations.json
 encrypted_storage_config.json
 
-# Google OAuth 憑證（敏感資訊，不得提交）
+# Google API 憑證檔案（敏感資訊，不得提交）
 google_credentials.json
 google_token.json
 
