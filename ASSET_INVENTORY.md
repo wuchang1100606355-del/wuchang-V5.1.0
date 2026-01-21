@@ -36,8 +36,14 @@
 - `104.199.144.93`：Google Cloud（含 `pos/...`）
 
 ### C2. 路由器與 DDNS
-- 路由器：ASUS RT-BE86U
-- 遠端管理：`https://CoffeeLoge.asuscomm.com:8443`（DDNS 解析至 `220.135.21.74`）
+- **路由器**：ASUS RT-BE86U
+- **遠端管理**：`https://CoffeeLoge.asuscomm.com:8443`（DDNS 解析至 `220.135.21.74`）
+- **設備所有權**：重新店（設備捐助）
+- **購入日期**：2025-05-01
+- **購入金額**：7,950 元（對應重新店捐款）
+- **網路服務**：中華電信 1G 光纖網路
+- **月費**：1,399 元/月（對應重新店捐款）
+- **會計記錄**：`association_operational_files/financial/設備購入記錄_路由器.json`
 
 ### C3. 本機入口層（重要：會影響你對「部署狀態」的判讀）
 - 證據：`C:\Windows\System32\drivers\etc\hosts`

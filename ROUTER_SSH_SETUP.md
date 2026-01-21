@@ -63,6 +63,12 @@ Host router-external
     User admin
     IdentityFile ~/.ssh/id_ed25519_router
     Port 22
+
+Host router-65433
+    HostName 220.135.21.74
+    User admin
+    IdentityFile ~/.ssh/id_ed25519_router
+    Port 65433
 ```
 
 設定後可直接使用：
@@ -70,7 +76,12 @@ Host router-external
 ssh router
 # 或
 ssh router-external
+# 或使用端口 65433
+ssh router-65433
 ```
+
+**注意**：使用端口 65433 需要在路由器上設定端口轉發：
+- 外部端口：65433 → 內部端口：22（SSH）
 
 ## 🔒 安全注意事項
 
