@@ -56,24 +56,13 @@ STANDARD_CONTAINERS = [
 
 
 def log(message: str, level: str = "INFO"):
-    """記錄協作日誌（自動輪轉以防止檔案過大）"""
+    """記錄協作日誌"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_entry = f"[{timestamp}] [{level}] {message}\n"
     
     print(log_entry.strip())
     
     try:
-        # 檢查日誌檔案大小，超過 10MB 時進行輪轉
-        MAX_LOG_SIZE = 10 * 1024 * 1024  # 10 MB
-        if COLLABORATION_LOG_FILE.exists():
-            file_size = COLLABORATION_LOG_FILE.stat().st_size
-            if file_size > MAX_LOG_SIZE:
-                # 輪轉：將當前日誌備份為 .old
-                old_log = COLLABORATION_LOG_FILE.with_suffix('.log.old')
-                if old_log.exists():
-                    old_log.unlink()
-                COLLABORATION_LOG_FILE.rename(old_log)
-        
         with open(COLLABORATION_LOG_FILE, "a", encoding="utf-8") as f:
             f.write(log_entry)
     except:
@@ -852,24 +841,13 @@ STANDARD_CONTAINERS = [
 
 
 def log(message: str, level: str = "INFO"):
-    """記錄協作日誌（自動輪轉以防止檔案過大）"""
+    """記錄協作日誌"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_entry = f"[{timestamp}] [{level}] {message}\n"
     
     print(log_entry.strip())
     
     try:
-        # 檢查日誌檔案大小，超過 10MB 時進行輪轉
-        MAX_LOG_SIZE = 10 * 1024 * 1024  # 10 MB
-        if COLLABORATION_LOG_FILE.exists():
-            file_size = COLLABORATION_LOG_FILE.stat().st_size
-            if file_size > MAX_LOG_SIZE:
-                # 輪轉：將當前日誌備份為 .old
-                old_log = COLLABORATION_LOG_FILE.with_suffix('.log.old')
-                if old_log.exists():
-                    old_log.unlink()
-                COLLABORATION_LOG_FILE.rename(old_log)
-        
         with open(COLLABORATION_LOG_FILE, "a", encoding="utf-8") as f:
             f.write(log_entry)
     except:
