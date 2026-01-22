@@ -477,7 +477,20 @@ def main():
     print("\n" + "=" * 70)
     print(report)
     print("=" * 70)
+    
+    return report_file
 
 
 if __name__ == "__main__":
-    main()
+    report_path = main()
+    
+    # 自動歸檔到雲端歷史資料庫
+    if report_path:
+        try:
+            from cloud_history_database import archive_health_report
+            if archive_health_report(report_path):
+                print(f"\n✅ 健康報告已自動歸檔到雲端歷史資料庫")
+        except ImportError:
+            print(f"\n⚠️  無法匯入 cloud_history_database 模組")
+        except Exception as e:
+            print(f"\n⚠️  歸檔失敗: {e}")

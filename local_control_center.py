@@ -403,6 +403,9 @@ def _suggest_authz_permissions(text: str) -> List[str]:
     # 路由器 / LAN 設備
     if "路由器" in t or "router" in t or "lan" in t or "設備控制" in t:
         add("router_admin")
+    # 雙網卡管理
+    if "雙網卡" in t or "dual.*nic" in t or "dual_nic" in t or "雙身份" in t or "server.*identity" in t:
+        add("dual_nic_admin")
     # 網域 / DNS 設定
     if "dns" in t or "網域" in t or "domain" in t or "憑證" in t:
         add("dns_admin")
@@ -424,13 +427,21 @@ def _suggest_authz_items(text: str) -> List[Dict[str, Any]]:
         "vm_control": 20 * 60,  # 20 分
         "server_system_control": 20 * 60,  # 20 分（系統管理員級）
         "container_control": 10 * 60,
-        "router_admin": 10 * 60,
+        "router_admin": None,  # 永久有效（地端小J專用）
+        "odoo_admin": None,  # 永久有效（地端小J專用 - 內部應用程式模組總管）
+        "dual_nic_management": None,  # 永久有效（地端小J專用 - 雙網卡管理）
         "dns_admin": 10 * 60,
         "browser_control": 10 * 60,
     }
     items: List[Dict[str, Any]] = []
     for p in perms:
-        items.append({"permission": p, "ttl_seconds": int(ttl_map.get(p, 3600))})
+        ttl = ttl_map.get(p, 3600)
+        # 如果 TTL 為 None，表示永久有效，不設定 ttl_seconds 或設為極大值
+        if ttl is None:
+            # 永久有效：設為 999999999 秒（約 31.7 年）或使用特殊標記
+            items.append({"permission": p, "ttl_seconds": 999999999, "permanent": True})
+        else:
+            items.append({"permission": p, "ttl_seconds": int(ttl)})
     return items
 
 

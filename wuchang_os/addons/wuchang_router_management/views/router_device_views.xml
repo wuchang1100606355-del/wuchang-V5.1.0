@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_router_device_tree" model="ir.ui.view">
+        <field name="name">router.device.tree</field>
+        <field name="model">router.device</field>
+        <field name="arch" type="xml">
+            <tree string="連接設備">
+                <field name="name"/>
+                <field name="router_id"/>
+                <field name="ip_address"/>
+                <field name="mac_address"/>
+                <field name="device_type"/>
+                <field name="is_server"/>
+                <field name="server_identity"/>
+                <field name="status"/>
+                <field name="last_seen"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_router_device_form" model="ir.ui.view">
+        <field name="name">router.device.form</field>
+        <field name="model">router.device</field>
+        <field name="arch" type="xml">
+            <form string="連接設備">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="router_id"/>
+                            <field name="ip_address"/>
+                            <field name="mac_address"/>
+                        </group>
+                        <group>
+                            <field name="device_type"/>
+                            <field name="is_server"/>
+                            <field name="server_identity"/>
+                            <field name="status"/>
+                            <field name="last_seen"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="signal_strength" attrs="{'invisible': [('device_type', '!=', 'wireless')]}"/>
+                        <field name="connected_time"/>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="備註資訊..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_router_device" model="ir.actions.act_window">
+        <field name="name">連接設備</field>
+        <field name="res_model">router.device</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'default_status': 'online'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                沒有連接設備
+            </p>
+            <p>
+                從路由器同步設備列表以查看連接的設備
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_router_management"
+              name="路由器管理"
+              sequence="100"
+              web_icon="wuchang_router_management,static/description/icon.png"/>
+    
+    <menuitem id="menu_router_router"
+              name="路由器"
+              parent="menu_router_management"
+              action="action_router_router"
+              sequence="10"/>
+    
+    <menuitem id="menu_router_device"
+              name="連接設備"
+              parent="menu_router_management"
+              action="action_router_device"
+              sequence="20"/>
+    
+    <menuitem id="menu_server_identity"
+              name="伺服器身份"
+              parent="menu_router_management"
+              action="action_server_identity"
+              sequence="30"/>
+    
+    <menuitem id="menu_router_port_forwarding"
+              name="端口轉發"
+              parent="menu_router_management"
+              action="action_router_port_forwarding"
+              sequence="40"/>
+</odoo>

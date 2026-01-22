@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_router_port_forwarding_tree" model="ir.ui.view">
+        <field name="name">router.port.forwarding.tree</field>
+        <field name="model">router.port.forwarding</field>
+        <field name="arch" type="xml">
+            <tree string="端口轉發規則">
+                <field name="name"/>
+                <field name="router_id"/>
+                <field name="external_port"/>
+                <field name="internal_ip"/>
+                <field name="internal_port"/>
+                <field name="protocol"/>
+                <field name="enabled"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_router_port_forwarding_form" model="ir.ui.view">
+        <field name="name">router.port.forwarding.form</field>
+        <field name="model">router.port.forwarding</field>
+        <field name="arch" type="xml">
+            <form string="端口轉發規則">
+                <header>
+                    <button name="action_apply_to_router" string="應用到路由器" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="router_id"/>
+                            <field name="external_port"/>
+                            <field name="internal_port"/>
+                        </group>
+                        <group>
+                            <field name="internal_ip"/>
+                            <field name="protocol"/>
+                            <field name="enabled"/>
+                            <field name="server_identity_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="規則描述..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_router_port_forwarding" model="ir.actions.act_window">
+        <field name="name">端口轉發</field>
+        <field name="res_model">router.port.forwarding</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'default_enabled': True, 'default_protocol': 'TCP'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                建立端口轉發規則
+            </p>
+            <p>
+                管理路由器的端口轉發規則，將外部端口轉發到內部 IP 和端口
+            </p>
+        </field>
+    </record>
+</odoo>

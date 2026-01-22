@@ -1,0 +1,124 @@
+{
+  "version": "1.0",
+  "agent": "地端小 j (Little J)",
+  "last_updated": "2026-01-22",
+  "updated_by": "系統創辦人，本系統設計人",
+  "status": "永久有效",
+  
+  "permanent_permissions": {
+    "router_admin": {
+      "permission": "router_admin",
+      "description": "路由器管理員權限 - 永久有效",
+      "granted_date": "2026-01-22",
+      "expiry": "永久",
+      "scope": [
+        "路由器配置管理",
+        "端口轉發規則管理",
+        "DDNS 設定管理",
+        "防火牆規則管理",
+        "無線網路管理",
+        "訪客網路管理",
+        "系統控制（重啟、備份）",
+        "連線裝置監控",
+        "網路流量監控"
+      ],
+      "router_access": {
+        "hostname": "192.168.50.84",
+        "port": 8443,
+        "ddns": "coffeeLofe.asuscomm.com",
+        "external_ip": "220.135.21.74",
+        "ssh_port": 65433,
+        "authentication_method": "admin_credentials",
+        "note": "地端小J擁有完整的路由器管理員權限，可進行所有路由器操作"
+      },
+      "authorization": {
+        "granted_by": "系統創辦人，本系統設計人",
+        "authorization_type": "永久授權",
+        "revocation_condition": "僅可由系統創辦人，本系統設計人撤銷",
+        "audit_log": true
+      }
+    },
+    "odoo_admin": {
+      "permission": "odoo_admin",
+      "description": "內部應用程式模組總管權限 - 永久有效",
+      "granted_date": "2026-01-22",
+      "expiry": "永久",
+      "scope": [
+        "Odoo 模組安裝",
+        "Odoo 模組更新",
+        "Odoo 模組卸載",
+        "Odoo 模組配置",
+        "Odoo 資料庫管理",
+        "Odoo 系統設定",
+        "Odoo 快取管理",
+        "Odoo API 存取",
+        "Odoo 模組狀態檢查",
+        "Odoo 模組依賴管理"
+      ],
+      "odoo_access": {
+        "database": "admin",
+        "host": "localhost",
+        "port": 8069,
+        "api_endpoint": "http://localhost:8069",
+        "module_path": "wuchang_os/addons",
+        "note": "地端小J擁有完整的 Odoo 模組管理權限，可進行所有 Odoo 模組操作"
+      },
+      "authorization": {
+        "granted_by": "系統創辦人，本系統設計人",
+        "authorization_type": "永久授權",
+        "revocation_condition": "僅可由系統創辦人，本系統設計人撤銷",
+        "audit_log": true
+      }
+    },
+    "dual_nic_admin": {
+      "permission": "dual_nic_admin",
+      "description": "雙網卡管理權限 - 永久有效",
+      "granted_date": "2026-01-22",
+      "expiry": "永久",
+      "scope": [
+        "伺服器雙網卡配置管理",
+        "身份 1（server - 有線網卡）管理",
+        "身份 2（server 2 - WiFi 網卡）管理",
+        "雙網卡 IP 地址管理",
+        "雙網卡服務分配管理",
+        "雙網卡流量分流管理",
+        "雙網卡容錯配置管理",
+        "雙網卡網路隔離管理",
+        "Cloudflare Tunnel 雙身份配置"
+      ],
+      "server_identities": {
+        "identity_1": {
+          "name": "server",
+          "type": "wired",
+          "ip_address": "192.168.50.249",
+          "mac_address": "30:9C:23:4A:9B:1B",
+          "interface": "有線連接",
+          "note": "身份 1（有線網卡）- 主要服務"
+        },
+        "identity_2": {
+          "name": "server 2",
+          "type": "wifi",
+          "ip_address": "待確認",
+          "ipv6_address": "fe80::cdf9:2266:dc55:bcc6",
+          "mac_address": "1C:3E:84:67:C0:16",
+          "interface": "work_IoT (5G Wi-Fi)",
+          "note": "身份 2（WiFi 網卡）- 備援或內部管理服務"
+        }
+      },
+      "authorization": {
+        "granted_by": "系統創辦人，本系統設計人",
+        "authorization_type": "永久授權",
+        "revocation_condition": "僅可由系統創辦人，本系統設計人撤銷",
+        "audit_log": true
+      }
+    }
+  },
+  
+  "additional_permissions": [
+    "container_control",
+    "system_monitoring",
+    "network_diagnosis"
+  ],
+  
+  "notes": "地端小J作為系統的核心監控和管理代理，需要永久的路由器管理員權限、Odoo 模組管理權限和雙網卡管理權限以執行系統監控、模組管理、網路管理和故障排除任務。此權限已由系統創辦人，本系統設計人永久授予。"
+}

@@ -47,6 +47,7 @@ class PolicyDecision:
     risk_level: str = ""
     requires_confirm: bool = False
     requires_consent_scope: str = ""
+    permission_stage: int = 1  # 1=限縮, 2=最高權限, 3=權限解放
 
 
 class PolicyStore:
@@ -133,6 +134,36 @@ class PolicyStore:
                 return [str(x) for x in (a.get("allowed_function_ids") or []) if str(x).strip()]
         return []
 
+    def account_permission_stage(self, account_id: str, biometric_verified: bool = False) -> int:
+        """
+        取得帳號的權限階段
+        1 = 階段一：限縮權限（一般AI限制，如同Gemini對於一般使用者）
+        2 = 階段二：最高權限（唯系統管理員可用，最高限度開放）
+        3 = 階段三：權限解放（唯系統創辦人可用，無視任何安全規定，以可究責人身分）
+        
+        注意：階段三需要生物特徵辨認認證
+        """
+        pol = self.load_accounts()
+        for a in _safe_get_list(pol, "accounts"):
+            if isinstance(a, dict) and str(a.get("account_id") or "").strip() == str(account_id or "").strip():
+                # 檢查是否為系統創辦人（第一類可究責對象）
+                design_resp = _safe_get_dict(a, "design_responsibility")
+                nat_person = _safe_get_dict(design_resp, "natural_person")
+                if nat_person.get("name") == "系統創辦人，本系統設計人" and nat_person.get("priority") == 1:
+                    # 階段三需要生物特徵辨認認證
+                    if biometric_verified:
+                        return 3  # 階段三：權限解放（已通過生物特徵辨認）
+                    else:
+                        # 未通過生物特徵辨認，降級為階段二
+                        return 2
+                # 檢查是否為系統管理員
+                perms = a.get("permissions")
+                if isinstance(perms, list) and "admin_all" in perms:
+                    return 2  # 階段二：最高權限
+                # 預設：階段一：限縮權限
+                return 1
+        return 1  # 預設：階段一
+
     def consent_effective(self, account_id: str, scope: str) -> bool:
         if not scope:
             return True
@@ -177,23 +208,61 @@ def decide_execution(*, store: PolicyStore, job: Dict[str, Any]) -> PolicyDecisi
     requester = str(job.get("requester_account_id") or "").strip()
     node = job.get("node") if isinstance(job.get("node"), dict) else {}
     node_id = str(node.get("id") or "").strip()
+    
+    # 檢查生物特徵驗證狀態（階段三需要）
+    biometric_verified = job.get("biometric_verified", False) if isinstance(job.get("biometric_verified"), bool) else False
 
     # 必須有 requester（完整控管要可追溯）
     if not requester:
         return PolicyDecision(ok=False, reason="missing_requester_account_id", function_id=fid)
 
+    # 取得權限階段（階段三需要生物特徵辨認）
+    permission_stage = store.account_permission_stage(requester, biometric_verified=biometric_verified)
+    
     perms = store.account_permissions(requester)
     if not perms:
-        return PolicyDecision(ok=False, reason="unknown_account_or_no_permissions", function_id=fid)
-    if "admin_all" in perms:
-        # 超管仍走白名單/同意/確認
-        pass
-
+        return PolicyDecision(ok=False, reason="unknown_account_or_no_permissions", function_id=fid, permission_stage=permission_stage)
+    
+    # 階段三：權限解放（系統創辦人）- 無視任何安全規定
+    # 注意：階段三需要生物特徵辨認認證
+    if permission_stage == 3:
+        # 再次確認生物特徵驗證（雙重檢查）
+        if not biometric_verified:
+            return PolicyDecision(
+                ok=False,
+                reason="stage3_requires_biometric_verification",
+                function_id=fid,
+                risk_level="critical",
+                requires_confirm=False,
+                requires_consent_scope="",
+                permission_stage=3
+            )
+        return PolicyDecision(
+            ok=True, 
+            reason="allowed_stage3_founder_override_biometric_verified", 
+            function_id=fid, 
+            risk_level="bypassed",
+            requires_confirm=False,
+            requires_consent_scope="",
+            permission_stage=3
+        )
+    
+    # 階段二：最高權限（系統管理員）- 最高限度開放，但仍需檢查基本權限
+    if permission_stage == 2:
+        if "admin_all" in perms:
+            # 超管仍走白名單/同意/確認（但較寬鬆）
+            pass
+        else:
+            return PolicyDecision(ok=False, reason="stage2_requires_admin_all", function_id=fid, permission_stage=2)
+    
+    # 階段一：限縮權限（一般使用者）- 採用一般AI限制，如同Gemini對於一般使用者
+    # 嚴格檢查所有權限和安全規定
+    
     # function catalog（白名單）
     cat = store.function_catalog()
     f = cat.get(fid)
     if not f:
-        return PolicyDecision(ok=False, reason="function_not_in_catalog", function_id=fid)
+        return PolicyDecision(ok=False, reason="function_not_in_catalog", function_id=fid, permission_stage=1)
 
     risk = str(f.get("risk_level") or "").strip().lower() or "unknown"
     consent_scope = str(f.get("requires_consent_scope_optional") or "").strip()
@@ -202,32 +271,54 @@ def decide_execution(*, store: PolicyStore, job: Dict[str, Any]) -> PolicyDecisi
     if node_id:
         allowed = store.node_allowed_functions(node_id)
         if allowed and fid not in allowed:
-            return PolicyDecision(ok=False, reason="function_not_allowed_for_node", function_id=fid, risk_level=risk)
+            return PolicyDecision(ok=False, reason="function_not_allowed_for_node", function_id=fid, risk_level=risk, permission_stage=1)
 
     # 權限映射（最小可行）：用 function_id 對到 permissions（可在 matching 內擴充）
     # 這裡先用慣例：<prefix>_admin / voucher_* / job_create 等
     if fid in ("job_create_sync_push", "sync_push"):
         if "job_create" not in perms and "admin_all" not in perms:
-            return PolicyDecision(ok=False, reason="missing_permission_job_create", function_id=fid, risk_level=risk)
+            return PolicyDecision(ok=False, reason="missing_permission_job_create", function_id=fid, risk_level=risk, permission_stage=1)
     if fid.startswith("voucher_"):
         need = "voucher_manage" if job_type == "voucher_upsert" else "voucher_redeem"
         if need not in perms and "admin_all" not in perms:
-            return PolicyDecision(ok=False, reason=f"missing_permission_{need}", function_id=fid, risk_level=risk)
+            return PolicyDecision(ok=False, reason=f"missing_permission_{need}", function_id=fid, risk_level=risk, permission_stage=1)
     if fid == "gcp_admin":
         if "gcp_admin" not in perms and "admin_all" not in perms:
-            return PolicyDecision(ok=False, reason="missing_permission_gcp_admin", function_id=fid, risk_level=risk)
+            return PolicyDecision(ok=False, reason="missing_permission_gcp_admin", function_id=fid, risk_level=risk, permission_stage=1)
     if fid == "router_admin":
         if "router_admin" not in perms and "admin_all" not in perms:
-            return PolicyDecision(ok=False, reason="missing_permission_router_admin", function_id=fid, risk_level=risk)
+            return PolicyDecision(ok=False, reason="missing_permission_router_admin", function_id=fid, risk_level=risk, permission_stage=1)
     if fid == "odoo_cache_refresh":
         if "odoo_admin" not in perms and "admin_all" not in perms:
-            return PolicyDecision(ok=False, reason="missing_permission_odoo_admin", function_id=fid, risk_level=risk)
+            return PolicyDecision(ok=False, reason="missing_permission_odoo_admin", function_id=fid, risk_level=risk, permission_stage=1)
+    if fid == "dual_nic_management" or fid.startswith("dual_nic_"):
+        if "dual_nic_management" not in perms and "admin_all" not in perms:
+            return PolicyDecision(ok=False, reason="missing_permission_dual_nic_management", function_id=fid, risk_level=risk, permission_stage=1)
 
-    # 同意
-    if consent_scope and not store.consent_effective(requester, consent_scope):
-        return PolicyDecision(ok=False, reason="consent_required", function_id=fid, risk_level=risk, requires_consent_scope=consent_scope)
+    # 階段一：嚴格檢查同意（階段二較寬鬆）
+    if permission_stage == 1:
+        if consent_scope and not store.consent_effective(requester, consent_scope):
+            return PolicyDecision(ok=False, reason="consent_required", function_id=fid, risk_level=risk, requires_consent_scope=consent_scope, permission_stage=1)
+    elif permission_stage == 2:
+        # 階段二：同意檢查較寬鬆（但仍建議檢查）
+        if consent_scope and not store.consent_effective(requester, consent_scope):
+            # 階段二允許繼續，但標記需要確認
+            pass
 
     # 是否需要確認（高風險/或 function 設定）
-    requires_confirm = True if risk in ("high", "critical") else False
-    return PolicyDecision(ok=True, reason="allowed", function_id=fid, risk_level=risk, requires_confirm=requires_confirm, requires_consent_scope=consent_scope)
+    # 階段一：嚴格要求確認；階段二：較寬鬆
+    if permission_stage == 1:
+        requires_confirm = True if risk in ("high", "critical", "medium") else False
+    else:  # 階段二
+        requires_confirm = True if risk in ("critical",) else False
+    
+    return PolicyDecision(
+        ok=True, 
+        reason="allowed", 
+        function_id=fid, 
+        risk_level=risk, 
+        requires_confirm=requires_confirm, 
+        requires_consent_scope=consent_scope,
+        permission_stage=permission_stage
+    )
 
