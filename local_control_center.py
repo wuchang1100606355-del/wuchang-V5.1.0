@@ -2663,6 +2663,66 @@ class Handler(BaseHTTPRequestHandler):
                 _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
             return
 
+        # 雙J協作：檔案比對與同步（自動替換DNS）
+        if parsed.path == "/api/dual_j/file_sync":
+            if not _require_perm(self, "workspace_write"):
+                return
+            try:
+                import subprocess
+                data = _read_json(self) if self.command == "POST" else {}
+                
+                files = data.get("files") if isinstance(data.get("files"), list) else None
+                server_dir = data.get("server_dir") or os.getenv("WUCHANG_COPY_TO", "")
+                health_url = data.get("health_url") or os.getenv("WUCHANG_HEALTH_URL", "")
+                dry_run = data.get("dry_run", False)
+                
+                if not server_dir:
+                    _json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": "missing_server_dir", "hint": "provide server_dir or set WUCHANG_COPY_TO"})
+                    return
+                
+                # 執行雙J檔案同步
+                cmd = [sys.executable, str(BASE_DIR / "dual_j_file_sync_with_dns_replace.py")]
+                if files:
+                    cmd.extend(["--files", *files])
+                if server_dir:
+                    cmd.extend(["--server-dir", server_dir])
+                if health_url:
+                    cmd.extend(["--health-url", health_url])
+                if dry_run:
+                    cmd.append("--dry-run")
+                
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=300, cwd=BASE_DIR)
+                
+                # 解析輸出
+                output_lines = result.stdout.split('\n')
+                sync_report_file = None
+                for line in output_lines:
+                    if "同步報告已儲存" in line or "sync_report" in line:
+                        # 嘗試提取報告檔案路徑
+                        import re
+                        match = re.search(r'sync_report_\d+_\d+\.json', line)
+                        if match:
+                            sync_report_file = BASE_DIR / match.group()
+                
+                # 讀取報告（如果存在）
+                report = None
+                if sync_report_file and sync_report_file.exists():
+                    try:
+                        report = json.loads(sync_report_file.read_text(encoding="utf-8"))
+                    except:
+                        pass
+                
+                _json(self, HTTPStatus.OK, {
+                    "ok": result.returncode == 0,
+                    "exit_code": result.returncode,
+                    "stdout": result.stdout,
+                    "stderr": result.stderr,
+                    "report": report
+                })
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
         if parsed.path == "/api/audit/tail":
             if not _require_perm(self, "read"):
                 return
