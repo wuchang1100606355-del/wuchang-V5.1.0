@@ -1,0 +1,316 @@
+{
+  "snapshot_id": "snapshot_20260122_232202",
+  "timestamp": "20260122_232202",
+  "created_at": "2026-01-22T23:22:02.500191",
+  "purpose": "雲端資料推送後回滾點",
+  "backed_up_files": [
+    "accounts_policy.json",
+    "auto_auth_config.json",
+    "network_interconnection_config.json",
+    "jules_memory_bank.json",
+    "little_j_permanent_permissions.json",
+    "jules_personality_profile.json",
+    "internal_id_records.json",
+    "wuchang_community_boundary.geojson",
+    "wuchang_community_knowledge_index.json",
+    "wuchang_community_context_compact.md",
+    "google_credentials.json",
+    "google_token.json",
+    ".secrets.json",
+    "AGENT_CONSTITUTION.md",
+    "RISK_ACTION_SOP.md",
+    "risk_gate.py",
+    "safe_sync_push.py",
+    "little_j_policy.py",
+    "api_community_data.py",
+    "local_control_center.py",
+    "environment_calibration_report.json",
+    "env_vars.example.json",
+    "cloudflared\\config.yml",
+    "cloudflared\\credentials.json",
+    "certs\\ssh\\router_public_key.pub",
+    "wuchang_os\\addons\\wuchang_biometric_identity\\__manifest__.py",
+    "wuchang_os\\addons\\wuchang_router_management\\__manifest__.py",
+    "wuchang_os\\addons\\wuchang_biometric_identity\\__init__.py",
+    "wuchang_os\\addons\\wuchang_biometric_identity\\__manifest__.py",
+    "wuchang_os\\addons\\wuchang_router_management\\__init__.py",
+    "wuchang_os\\addons\\wuchang_router_management\\__manifest__.py",
+    "wuchang_os\\addons\\wuchang_router_management\\controllers\\router_controller.py",
+    "wuchang_os\\addons\\wuchang_router_management\\controllers\\__init__.py",
+    "wuchang_os\\addons\\wuchang_router_management\\models\\router.py",
+    "wuchang_os\\addons\\wuchang_router_management\\models\\router_device.py",
+    "wuchang_os\\addons\\wuchang_router_management\\models\\router_port_forwarding.py",
+    "wuchang_os\\addons\\wuchang_router_management\\models\\server_identity.py",
+    "wuchang_os\\addons\\wuchang_router_management\\models\\__init__.py",
+    "wuchang_os\\addons\\wuchang_biometric_identity\\controllers\\biometric_controller.py",
+    "wuchang_os\\addons\\wuchang_biometric_identity\\controllers\\__init__.py",
+    "wuchang_os\\addons\\wuchang_biometric_identity\\models\\biometric_identity.py",
+    "wuchang_os\\addons\\wuchang_biometric_identity\\models\\biometric_verification.py",
+    "wuchang_os\\addons\\wuchang_biometric_identity\\models\\__init__.py"
+  ],
+  "skipped_files": [],
+  "file_count": 43,
+  "file_hashes": {
+    "accounts_policy.json": {
+      "path": "accounts_policy.json",
+      "hash": "f7460ca6d1f2020be237abecef703f9c2768aee414f572ec4207444d606257b3",
+      "size": 3139,
+      "mtime": "2026-01-22T21:25:54.158113"
+    },
+    "auto_auth_config.json": {
+      "path": "auto_auth_config.json",
+      "hash": "9c17f97cb8d9252b269a8bc26d4eccc3c0ecf3cbf64c47e3a72c304c804a4511",
+      "size": 239,
+      "mtime": "2026-01-19T11:51:48.884650"
+    },
+    "network_interconnection_config.json": {
+      "path": "network_interconnection_config.json",
+      "hash": "564236f4448d05ed63de0b0a825496f8cc40c67faf642a12c5027dbfeeb6068b",
+      "size": 438,
+      "mtime": "2026-01-19T13:19:47.291324"
+    },
+    "jules_memory_bank.json": {
+      "path": "jules_memory_bank.json",
+      "hash": "17c8b41bf9d796ddadfe59acaa47fd8b14ed25796145195a9d17ead053903ab6",
+      "size": 32498,
+      "mtime": "2026-01-22T21:25:54.158113"
+    },
+    "little_j_permanent_permissions.json": {
+      "path": "little_j_permanent_permissions.json",
+      "hash": "b6cd16d64067385bc0745854c93ca031787bba5ffc513ace23e07fcc484f239a",
+      "size": 4488,
+      "mtime": "2026-01-22T21:25:54.158113"
+    },
+    "jules_personality_profile.json": {
+      "path": "jules_personality_profile.json",
+      "hash": "9df290d6e75a305c84899fb7c8259995b4fb49d5cd7461eae4f7f4d5a45718cd",
+      "size": 4074,
+      "mtime": "2026-01-22T05:31:33.064367"
+    },
+    "internal_id_records.json": {
+      "path": "internal_id_records.json",
+      "hash": "87945575aeac22b6ef63f0f9d761db6fda8a3010d690eb43460aa925683b6164",
+      "size": 925,
+      "mtime": "2026-01-22T05:32:56.186988"
+    },
+    "wuchang_community_boundary.geojson": {
+      "path": "wuchang_community_boundary.geojson",
+      "hash": "46d2d5ae373e4c311b9bd06ccc92483b105141bfc3db3b29ca41b8b87e9ff261",
+      "size": 7850,
+      "mtime": "2026-01-22T05:31:17.758067"
+    },
+    "wuchang_community_knowledge_index.json": {
+      "path": "wuchang_community_knowledge_index.json",
+      "hash": "d292c0a77de7135fbc497539a22bb3f85ad43699e5639f182b7ad92cd4c89a77",
+      "size": 190006,
+      "mtime": "2026-01-15T19:37:03.838490"
+    },
+    "wuchang_community_context_compact.md": {
+      "path": "wuchang_community_context_compact.md",
+      "hash": "7a929940f4532c706c9ed162e8914ef6a5e8f9bd89d83c531a2781bbaddc8b38",
+      "size": 1457,
+      "mtime": "2026-01-15T19:37:03.838490"
+    },
+    "google_credentials.json": {
+      "path": "google_credentials.json",
+      "hash": "0cca566eed719be608af91c9478afc1fb4a22e04f9606bccff1e578e4da51f8d",
+      "size": 409,
+      "mtime": "2026-01-19T16:42:04.153000"
+    },
+    "google_token.json": {
+      "path": "google_token.json",
+      "hash": "3fd2d741b6dace83dab5415300b94280b70799c516ed88e0da70e8ab9a3e4d54",
+      "size": 734,
+      "mtime": "2026-01-22T14:53:47.143387"
+    },
+    ".secrets.json": {
+      "path": ".secrets.json",
+      "hash": "92b17827ee6fa7ea38d5788c0ce584f64eb054e7f88b2651724e762029327c04",
+      "size": 414,
+      "mtime": "2026-01-20T02:53:52.568296"
+    },
+    "AGENT_CONSTITUTION.md": {
+      "path": "AGENT_CONSTITUTION.md",
+      "hash": "1efeb396f30b25078a62af8c28c2712337d71d1656c03868625980fc2872abad",
+      "size": 7663,
+      "mtime": "2026-01-22T08:55:57.849244"
+    },
+    "RISK_ACTION_SOP.md": {
+      "path": "RISK_ACTION_SOP.md",
+      "hash": "58796bd27e7bd666b32019be0f2c4fffcaf822f86888dad33a973f9084b7a866",
+      "size": 6985,
+      "mtime": "2026-01-16T02:15:38.377759"
+    },
+    "risk_gate.py": {
+      "path": "risk_gate.py",
+      "hash": "f6b65fbc6699fcbcc91374e42c41b7234db48a46826b7285e91e6b98a1a9e00a",
+      "size": 4530,
+      "mtime": "2026-01-16T02:11:52.846102"
+    },
+    "safe_sync_push.py": {
+      "path": "safe_sync_push.py",
+      "hash": "b53a32d4ef77fc62744d31bd91768fb80030f4cd742b60f68af517e6d9533aef",
+      "size": 7225,
+      "mtime": "2026-01-16T02:15:33.258841"
+    },
+    "little_j_policy.py": {
+      "path": "little_j_policy.py",
+      "hash": "a8b88cf2d7562c8504b3fa3a46c541e39423eb10cd983e4cd70359b31f12490d",
+      "size": 13868,
+      "mtime": "2026-01-22T21:25:54.158113"
+    },
+    "api_community_data.py": {
+      "path": "api_community_data.py",
+      "hash": "6ba91710a37fb39c231af8d9c9d4f7be8bebe1759c9012b0991d849b79899249",
+      "size": 5440,
+      "mtime": "2026-01-16T17:20:36.307948"
+    },
+    "local_control_center.py": {
+      "path": "local_control_center.py",
+      "hash": "336f044d35e4d8dcd58f72c60e5cdc5f05a14e072ceb14702f0346db1c108c1f",
+      "size": 231526,
+      "mtime": "2026-01-22T21:25:54.158113"
+    },
+    "environment_calibration_report.json": {
+      "path": "environment_calibration_report.json",
+      "hash": "7223223dd41b030fc53d31253a34a46b359a730028064fb63e8428dfce74bc4a",
+      "size": 897,
+      "mtime": "2026-01-19T14:10:42.217763"
+    },
+    "env_vars.example.json": {
+      "path": "env_vars.example.json",
+      "hash": "273f07eec7508ca8e1d85445c5bf6ed81a6c3333d3c09a4b742259cafb173cee",
+      "size": 1420,
+      "mtime": "2026-01-19T07:44:25.107434"
+    },
+    "cloudflared\\config.yml": {
+      "path": "cloudflared\\config.yml",
+      "hash": "4704e3f7dabe2f378858427e672168ef949072cdc32317e34292ba8424c5e07f",
+      "size": 1330,
+      "mtime": "2026-01-22T15:02:09.704512"
+    },
+    "cloudflared\\credentials.json": {
+      "path": "cloudflared\\credentials.json",
+      "hash": "134c9144f175b66020237f34a34fb1bb7967623e2f8a342798451262227984d1",
+      "size": 175,
+      "mtime": "2026-01-22T14:31:45.782738"
+    },
+    "certs\\ssh\\router_public_key.pub": {
+      "path": "certs\\ssh\\router_public_key.pub",
+      "hash": "809fe2d152123c1b7f253c0f59cc5c816c0672110bb7f70a2978b3133e120637",
+      "size": 110,
+      "mtime": "2026-01-22T07:01:54.245934"
+    },
+    "wuchang_os\\addons\\wuchang_biometric_identity\\__manifest__.py": {
+      "path": "wuchang_os\\addons\\wuchang_biometric_identity\\__manifest__.py",
+      "hash": "d6803fd243d956f13c255cf2945120d9fccc96ebcaf7d2cb47414326e57378f0",
+      "size": 1118,
+      "mtime": "2026-01-22T21:25:54.158771"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\__manifest__.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\__manifest__.py",
+      "hash": "b09a3bfb28d307f866a1d69b14dd0f926fc295ebdb2aa7dbf9d50a5197f030d5",
+      "size": 1146,
+      "mtime": "2026-01-22T21:25:54.156490"
+    },
+    "wuchang_os\\addons\\wuchang_biometric_identity\\__init__.py": {
+      "path": "wuchang_os\\addons\\wuchang_biometric_identity\\__init__.py",
+      "hash": "3ac9b9ab0195768118a9933a8d0fa743ce4c0f821f1b58b6fb1dc8fd9cd0651a",
+      "size": 76,
+      "mtime": "2026-01-22T21:25:54.158771"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\__init__.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\__init__.py",
+      "hash": "3ac9b9ab0195768118a9933a8d0fa743ce4c0f821f1b58b6fb1dc8fd9cd0651a",
+      "size": 76,
+      "mtime": "2026-01-22T21:25:54.151820"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\controllers\\router_controller.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\controllers\\router_controller.py",
+      "hash": "1168a2ad712fd23f7029ccf6d7277c8c3ec21adb6865cee16422e18d9318de3b",
+      "size": 4134,
+      "mtime": "2026-01-22T21:25:54.156490"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\controllers\\__init__.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\controllers\\__init__.py",
+      "hash": "3114244cbf7ac99f6f91b5813f5f1095441c41d757518b60965b325cff37d46b",
+      "size": 60,
+      "mtime": "2026-01-22T21:25:54.156490"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\models\\router.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\models\\router.py",
+      "hash": "31c601d29062b3f7f6971d5c227466449608f590ff5f430cf287f641d0a1a5a7",
+      "size": 9634,
+      "mtime": "2026-01-22T21:25:54.151820"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\models\\router_device.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\models\\router_device.py",
+      "hash": "42dd0a906f10d38b76c1bdd83e8169a3cc26fc597356e756153b7f7a1eeb64f4",
+      "size": 3149,
+      "mtime": "2026-01-22T21:25:54.156490"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\models\\router_port_forwarding.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\models\\router_port_forwarding.py",
+      "hash": "dc4cc5a75d726f9528be95613a4b06bfee69231227fbfeac48ce99999b40e771",
+      "size": 3589,
+      "mtime": "2026-01-22T21:25:54.152569"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\models\\server_identity.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\models\\server_identity.py",
+      "hash": "0f9267640079c79abe2a086881d59ff1cc5395f7a4631e7a1e47a099e86e848b",
+      "size": 2239,
+      "mtime": "2026-01-22T21:25:54.156490"
+    },
+    "wuchang_os\\addons\\wuchang_router_management\\models\\__init__.py": {
+      "path": "wuchang_os\\addons\\wuchang_router_management\\models\\__init__.py",
+      "hash": "3b0aa8238d070559360f86633baee8a156a2c2a349080785d4b1bb9c32d35f96",
+      "size": 147,
+      "mtime": "2026-01-22T21:25:54.151820"
+    },
+    "wuchang_os\\addons\\wuchang_biometric_identity\\controllers\\biometric_controller.py": {
+      "path": "wuchang_os\\addons\\wuchang_biometric_identity\\controllers\\biometric_controller.py",
+      "hash": "9d1edf1443d7e6ac20bd55d0717ab7ad53cd05eb5b6197266749ad4f1c57b566",
+      "size": 3989,
+      "mtime": "2026-01-22T21:25:54.158771"
+    },
+    "wuchang_os\\addons\\wuchang_biometric_identity\\controllers\\__init__.py": {
+      "path": "wuchang_os\\addons\\wuchang_biometric_identity\\controllers\\__init__.py",
+      "hash": "85021c813be6e05b34c2a0720d4a8c50e1dadd10500448169e92daf6c944f53f",
+      "size": 63,
+      "mtime": "2026-01-22T21:25:54.158771"
+    },
+    "wuchang_os\\addons\\wuchang_biometric_identity\\models\\biometric_identity.py": {
+      "path": "wuchang_os\\addons\\wuchang_biometric_identity\\models\\biometric_identity.py",
+      "hash": "a7defc7b8d6b208cf45243f8df8537ed4a9f88f3f176c0ab09fad37573c18447",
+      "size": 4396,
+      "mtime": "2026-01-22T21:25:54.170618"
+    },
+    "wuchang_os\\addons\\wuchang_biometric_identity\\models\\biometric_verification.py": {
+      "path": "wuchang_os\\addons\\wuchang_biometric_identity\\models\\biometric_verification.py",
+      "hash": "081a9331df4da685ada0b72074b73bda1180416bae772f4ae86670d41a71f58a",
+      "size": 2912,
+      "mtime": "2026-01-22T21:25:54.158771"
+    },
+    "wuchang_os\\addons\\wuchang_biometric_identity\\models\\__init__.py": {
+      "path": "wuchang_os\\addons\\wuchang_biometric_identity\\models\\__init__.py",
+      "hash": "14579def50415224d90102af22953ca254afb4051408fcc4a86a5786b9876079",
+      "size": 99,
+      "mtime": "2026-01-22T21:25:54.158771"
+    }
+  },
+  "environment_variables": [
+    "WUCHANG_HEALTH_URL",
+    "WUCHANG_COPY_TO",
+    "WUCHANG_DEV_MODE",
+    "PATH"
+  ],
+  "git_info": {
+    "branch": "commit",
+    "commit": "d569d03c1917",
+    "status": "M cloud_bidirectional_sync.py\n?? create_rollback_point.py\n?? snapshots/snapshot_20260122_232202/"
+  },
+  "system_info": {
+    "platform": "win32",
+    "python_version": "3.14.0"
+  }
+}

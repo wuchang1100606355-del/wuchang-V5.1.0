@@ -1,0 +1,36 @@
+{
+  "unified_storage": {
+    "enabled": true,
+    "type": "google_drive",
+    "path": "J:\\共用雲端硬碟\\五常雲端空間",
+    "description": "本機和伺服器共用同一套 Google Drive 儲存"
+  },
+  "shared_paths": {
+    "containers": "J:\\共用雲端硬碟\\五常雲端空間\\containers",
+    "backups": "J:\\共用雲端硬碟\\五常雲端空間\\backups",
+    "config": "J:\\共用雲端硬碟\\五常雲端空間\\containers\\config"
+  },
+  "local_paths": {
+    "database_data": "C:\\wuchang V5.1.0\\wuchang-V5.1.0\\local_storage\\database\\data",
+    "database_backups": "C:\\wuchang V5.1.0\\wuchang-V5.1.0\\local_storage\\database\\backups"
+  },
+  "hosts": {
+    "local": {
+      "name": "LUNGSMSI",
+      "ip": "10.8.0.6",
+      "gdrive_path": "J:\\共用雲端硬碟\\五常雲端空間"
+    },
+    "server": {
+      "name": "HOME-COMMPUT",
+      "ip": "10.8.0.1",
+      "gdrive_path": "需要伺服器也安裝 Google Drive 並同步到相同路徑"
+    }
+  },
+  "notes": [
+    "本機和伺服器都使用同一個 Google Drive 路徑",
+    "Google Drive 會自動同步，無需手動複製",
+    "資料庫使用本地儲存，避免版本衝突",
+    "共享資料（上傳檔案、配置）會自動同步",
+    "備份會自動同步到 Google Drive"
+  ]
+}

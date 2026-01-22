@@ -1,0 +1,42 @@
+{
+  "timestamp": "1768862164.9375498",
+  "containers": {
+    "wuchangv510-caddy-1": {
+      "running": true,
+      "status": "wuchangv510-caddy-1\tUp 2 hours",
+      "description": "Caddy 反向代理"
+    },
+    "wuchangv510-cloudflared-1": {
+      "running": true,
+      "status": "wuchangv510-cloudflared-1\tUp 2 hours",
+      "description": "Cloudflare Tunnel"
+    },
+    "wuchangv510-wuchang-web-1": {
+      "running": true,
+      "status": "wuchangv510-wuchang-web-1\tUp 2 hours",
+      "description": "Odoo ERP"
+    },
+    "wuchangv510-db-1": {
+      "running": true,
+      "status": "wuchangv510-db-1\tUp 2 hours",
+      "description": "PostgreSQL 資料庫"
+    },
+    "wuchangv510-portainer-1": {
+      "running": true,
+      "status": "wuchangv510-portainer-1\tUp 2 hours",
+      "description": "Portainer"
+    },
+    "wuchangv510-uptime-kuma-1": {
+      "running": true,
+      "status": "wuchangv510-uptime-kuma-1\tUp 2 hours (healthy)",
+      "description": "Uptime Kuma"
+    }
+  },
+  "cloudflared": {
+    "config": false,
+    "credentials": false
+  },
+  "caddy": {
+    "config": false
+  }
+}

@@ -1,0 +1,552 @@
+{
+  "timestamp": "2026-01-22T08:32:14.326283",
+  "summary": {
+    "total_files_need_change": 125,
+    "total_dns_occurrences": 381,
+    "dns_types": {
+      "127.0.0.1": {
+        "files_count": 58,
+        "total_occurrences": 146
+      },
+      "localhost": {
+        "files_count": 46,
+        "total_occurrences": 132
+      },
+      "192.168.50.84": {
+        "files_count": 21,
+        "total_occurrences": 103
+      }
+    }
+  },
+  "files": {
+    "127.0.0.1": [
+      {
+        "file": "ACCOUNTABLE_PERSON_AUTHORIZATION.md",
+        "count": 4
+      },
+      {
+        "file": "accountable_person_authorization_api.py",
+        "count": 2
+      },
+      {
+        "file": "ADMIN_ACCOUNT_SENSOR.md",
+        "count": 2
+      },
+      {
+        "file": "AGENT_CONSTITUTION.md",
+        "count": 1
+      },
+      {
+        "file": "ASSET_INVENTORY.md",
+        "count": 1
+      },
+      {
+        "file": "AUTHORIZATION_GUIDE.md",
+        "count": 8
+      },
+      {
+        "file": "auto_authorize_and_execute.py",
+        "count": 1
+      },
+      {
+        "file": "auto_resolve_sync_with_full_auth.py",
+        "count": 1
+      },
+      {
+        "file": "call_little_j_for_credentials.py",
+        "count": 3
+      },
+      {
+        "file": "check_cloud_deployment.py",
+        "count": 2
+      },
+      {
+        "file": "check_google_task_progress.py",
+        "count": 1
+      },
+      {
+        "file": "check_server_connection.py",
+        "count": 4
+      },
+      {
+        "file": "check_system_update_status.py",
+        "count": 3
+      },
+      {
+        "file": "demo_security_ack_server.py",
+        "count": 5
+      },
+      {
+        "file": "DEPLOYMENT_GUIDE.md",
+        "count": 2
+      },
+      {
+        "file": "diagnose_control_center.py",
+        "count": 2
+      },
+      {
+        "file": "DNS_CHANGE_LIST.md",
+        "count": 9
+      },
+      {
+        "file": "dns_change_list_20260122_082158.json",
+        "count": 2
+      },
+      {
+        "file": "DNS_REPLACEMENT_POLICY.md",
+        "count": 3
+      },
+      {
+        "file": "DUAL_J_FILE_SYNC_GUIDE.md",
+        "count": 8
+      },
+      {
+        "file": "dual_j_file_sync_with_dns_replace.py",
+        "count": 1
+      },
+      {
+        "file": "dual_j_full_deployment.py",
+        "count": 5
+      },
+      {
+        "file": "fix_control_center_conflict.py",
+        "count": 3
+      },
+      {
+        "file": "full_agent_setup_credentials_complete.py",
+        "count": 1
+      },
+      {
+        "file": "full_uninstall_and_restart.py",
+        "count": 2
+      },
+      {
+        "file": "get_google_task_from_url.py",
+        "count": 1
+      },
+      {
+        "file": "GET_GOOGLE_TASK_NOW.md",
+        "count": 4
+      },
+      {
+        "file": "get_jules_task.py",
+        "count": 1
+      },
+      {
+        "file": "GOOGLE_TASKS_QUICK_SETUP.md",
+        "count": 3
+      },
+      {
+        "file": "grant_full_agent_and_setup_credentials.py",
+        "count": 1
+      },
+      {
+        "file": "grant_little_j_full_agent_for_credentials.py",
+        "count": 1
+      },
+      {
+        "file": "JULES_TASK_ACCESS_GUIDE.md",
+        "count": 1
+      },
+      {
+        "file": "little_j_full_auto_credentials_setup.py",
+        "count": 1
+      },
+      {
+        "file": "LITTLE_J_HUB.md",
+        "count": 1
+      },
+      {
+        "file": "little_j_hub_server.py",
+        "count": 2
+      },
+      {
+        "file": "little_j_jules_container_collaboration.py",
+        "count": 2
+      },
+      {
+        "file": "local_control_center.py",
+        "count": 5
+      },
+      {
+        "file": "LOCAL_MACHINE_FIXED_IP_GUIDE.md",
+        "count": 1
+      },
+      {
+        "file": "open_dual_screen_fullscreen.py",
+        "count": 1
+      },
+      {
+        "file": "open_ui_dual_screen.py",
+        "count": 1
+      },
+      {
+        "file": "PERCEPTION_PERMANENT_AUTHORIZATION.md",
+        "count": 4
+      },
+      {
+        "file": "read_workspace_status.py",
+        "count": 1
+      },
+      {
+        "file": "request_full_agent.py",
+        "count": 1
+      },
+      {
+        "file": "request_server_push_and_restart.py",
+        "count": 4
+      },
+      {
+        "file": "SERVER_AUTO_DEPLOY.md",
+        "count": 3
+      },
+      {
+        "file": "server_auto_deploy.py",
+        "count": 4
+      },
+      {
+        "file": "server_side_webpage_inventory.md",
+        "count": 2
+      },
+      {
+        "file": "setup_network_interconnection.py",
+        "count": 1
+      },
+      {
+        "file": "system_architecture.html",
+        "count": 1
+      },
+      {
+        "file": "system_deployment_status.py",
+        "count": 3
+      },
+      {
+        "file": "system_health_check.py",
+        "count": 3
+      },
+      {
+        "file": "system_issues_report.json",
+        "count": 4
+      },
+      {
+        "file": "SYSTEM_NEURAL_NETWORK.md",
+        "count": 3
+      },
+      {
+        "file": "system_neural_network.py",
+        "count": 4
+      },
+      {
+        "file": "test_google_task_url.py",
+        "count": 1
+      },
+      {
+        "file": "wuchang_control_center.html",
+        "count": 3
+      },
+      {
+        "file": "snapshots\\snapshot_20260119_150234\\AGENT_CONSTITUTION.md",
+        "count": 1
+      },
+      {
+        "file": "test_server_dir\\AGENT_CONSTITUTION.md",
+        "count": 1
+      }
+    ],
+    "localhost": [
+      {
+        "file": "apply_pos_attributes_configuration.py",
+        "count": 1
+      },
+      {
+        "file": "check_deployment.py",
+        "count": 1
+      },
+      {
+        "file": "check_internal_ports.py",
+        "count": 4
+      },
+      {
+        "file": "check_module_installation.py",
+        "count": 1
+      },
+      {
+        "file": "check_pos_systems.py",
+        "count": 1
+      },
+      {
+        "file": "cloud_deployment.py",
+        "count": 1
+      },
+      {
+        "file": "CLOUD_DEPLOYMENT_GUIDE.md",
+        "count": 6
+      },
+      {
+        "file": "CONTAINER_MANAGEMENT_GUIDE.md",
+        "count": 3
+      },
+      {
+        "file": "DEPLOYMENT_STATUS.md",
+        "count": 5
+      },
+      {
+        "file": "diagnose_access_issues.py",
+        "count": 1
+      },
+      {
+        "file": "DNS_CHANGE_LIST.md",
+        "count": 5
+      },
+      {
+        "file": "dns_change_list_20260122_082158.json",
+        "count": 9
+      },
+      {
+        "file": "DNS_REPLACEMENT_POLICY.md",
+        "count": 2
+      },
+      {
+        "file": "DNS_SETUP_STATUS.md",
+        "count": 7
+      },
+      {
+        "file": "domain_deployment_helper.py",
+        "count": 2
+      },
+      {
+        "file": "DOMAIN_DEPLOYMENT_PLAN.md",
+        "count": 8
+      },
+      {
+        "file": "DUAL_J_FILE_SYNC_GUIDE.md",
+        "count": 3
+      },
+      {
+        "file": "dual_j_file_sync_with_dns_replace.py",
+        "count": 8
+      },
+      {
+        "file": "dual_j_full_deployment.py",
+        "count": 13
+      },
+      {
+        "file": "execute_post_deployment.py",
+        "count": 1
+      },
+      {
+        "file": "execute_recommended_tasks.py",
+        "count": 2
+      },
+      {
+        "file": "EXTERNAL_ACCESS_SETUP.md",
+        "count": 3
+      },
+      {
+        "file": "FIX_ACCESS_ISSUES_GUIDE.md",
+        "count": 2
+      },
+      {
+        "file": "generate_health_report.py",
+        "count": 5
+      },
+      {
+        "file": "HOMEPAGE_DNS_SETUP.md",
+        "count": 2
+      },
+      {
+        "file": "HOMEPAGE_WUCHANG_LIFE_SETUP.md",
+        "count": 1
+      },
+      {
+        "file": "LOCAL_MACHINE_FIXED_IP_GUIDE.md",
+        "count": 1
+      },
+      {
+        "file": "MAP_3D_INTEGRATION.md",
+        "count": 3
+      },
+      {
+        "file": "MODULE_INSTALLATION_COMPLETE.md",
+        "count": 2
+      },
+      {
+        "file": "MODULE_INSTALLATION_FINAL_REPORT.md",
+        "count": 1
+      },
+      {
+        "file": "MODULE_INSTALLATION_REPORT.md",
+        "count": 1
+      },
+      {
+        "file": "MODULE_INSTALLATION_SUMMARY.md",
+        "count": 2
+      },
+      {
+        "file": "ODOO_MODULES_STATUS.md",
+        "count": 1
+      },
+      {
+        "file": "POST_DEPLOYMENT_CHECKLIST.md",
+        "count": 1
+      },
+      {
+        "file": "POS_ATTRIBUTES_CONFIGURATION_COMPLETE.md",
+        "count": 1
+      },
+      {
+        "file": "POS_ATTRIBUTES_IMPLEMENTATION_GUIDE.md",
+        "count": 1
+      },
+      {
+        "file": "POS_MENU_CHECK_REPORT.md",
+        "count": 1
+      },
+      {
+        "file": "POS_NAME_UPDATE_REPORT.md",
+        "count": 1
+      },
+      {
+        "file": "POS_SYSTEMS_REPORT.md",
+        "count": 1
+      },
+      {
+        "file": "POS_SYSTEMS_SUMMARY.md",
+        "count": 1
+      },
+      {
+        "file": "RECOMMENDED_TASKS_EXECUTION_REPORT.md",
+        "count": 2
+      },
+      {
+        "file": "SECURITY_CHECKLIST.md",
+        "count": 1
+      },
+      {
+        "file": "system_architecture.html",
+        "count": 1
+      },
+      {
+        "file": "WUCHANG_COMMUNITY_ANALYSIS.md",
+        "count": 3
+      },
+      {
+        "file": "健康報告\\健康報告_20260121_224928.md",
+        "count": 5
+      },
+      {
+        "file": "健康報告\\健康報告_20260122_015830.md",
+        "count": 5
+      }
+    ],
+    "192.168.50.84": [
+      {
+        "file": "DNS_CHANGE_LIST.md",
+        "count": 3
+      },
+      {
+        "file": "dns_change_list_20260122_082158.json",
+        "count": 2
+      },
+      {
+        "file": "DNS_REPLACEMENT_POLICY.md",
+        "count": 2
+      },
+      {
+        "file": "DUAL_J_FILE_SYNC_GUIDE.md",
+        "count": 1
+      },
+      {
+        "file": "dual_j_full_deployment.py",
+        "count": 5
+      },
+      {
+        "file": "import_router_config.py",
+        "count": 1
+      },
+      {
+        "file": "jules_memory_bank.json",
+        "count": 2
+      },
+      {
+        "file": "LOCAL_MACHINE_FIXED_IP_GUIDE.md",
+        "count": 7
+      },
+      {
+        "file": "local_machine_fixed_ip_setup.py",
+        "count": 2
+      },
+      {
+        "file": "ROUTER_API_COMPLETE_GUIDE.md",
+        "count": 13
+      },
+      {
+        "file": "router_api_controller.py",
+        "count": 2
+      },
+      {
+        "file": "ROUTER_API_DOCUMENTATION.md",
+        "count": 3
+      },
+      {
+        "file": "router_api_explorer.py",
+        "count": 2
+      },
+      {
+        "file": "ROUTER_CONFIG_IMPORT_GUIDE.md",
+        "count": 1
+      },
+      {
+        "file": "router_full_control.py",
+        "count": 2
+      },
+      {
+        "file": "ROUTER_FULL_CONTROL_GUIDE.md",
+        "count": 1
+      },
+      {
+        "file": "router_integration.py",
+        "count": 1
+      },
+      {
+        "file": "router_mount_management.py",
+        "count": 1
+      },
+      {
+        "file": "ROUTER_PORT_65433_SETUP.md",
+        "count": 2
+      },
+      {
+        "file": "wuchang_control_center.html",
+        "count": 1
+      },
+      {
+        "file": "router_api_docs\\router_api_discovery.json",
+        "count": 49
+      }
+    ]
+  },
+  "replacement_rules": {
+    "(?<![\\w\\.-])127\\.0\\.0\\.1(?![\\w\\.-])": "wuchang.life",
+    "(?<![\\w\\.-])localhost(?![\\w\\.-])": "wuchang.life",
+    "(?<![\\w\\.-])192\\.168\\.50\\.84(?![\\w\\.-])": "wuchang.life",
+    "http://127\\.0\\.0\\.1(?![\\w\\.-])": "https://wuchang.life",
+    "http://localhost(?![\\w\\.-])": "https://wuchang.life",
+    "https://127\\.0\\.0\\.1(?![\\w\\.-])": "https://wuchang.life",
+    "https://localhost(?![\\w\\.-])": "https://wuchang.life",
+    "http://192\\.168\\.50\\.84(?![\\w\\.-])": "https://wuchang.life",
+    "https://192\\.168\\.50\\.84(?![\\w\\.-])": "https://wuchang.life",
+    "(?<![\\w\\.-])127\\.0\\.0\\.1:(\\d+)(?![\\w\\.-])": "wuchang.life:\\1",
+    "(?<![\\w\\.-])localhost:(\\d+)(?![\\w\\.-])": "wuchang.life:\\1",
+    "(?<![\\w\\.-])192\\.168\\.50\\.84:(\\d+)(?![\\w\\.-])": "wuchang.life:\\1",
+    "http://127\\.0\\.0\\.1:8788(?![\\w\\.-])": "https://admin.wuchang.life",
+    "http://localhost:8788(?![\\w\\.-])": "https://admin.wuchang.life",
+    "http://192\\.168\\.50\\.84:8788(?![\\w\\.-])": "https://admin.wuchang.life",
+    "http://127\\.0\\.0\\.1:5000(?![\\w\\.-])": "https://ui.wuchang.life",
+    "http://localhost:5000(?![\\w\\.-])": "https://ui.wuchang.life",
+    "http://192\\.168\\.50\\.84:5000(?![\\w\\.-])": "https://ui.wuchang.life",
+    "http://127\\.0\\.0\\.1:8069(?![\\w\\.-])": "https://odoo.wuchang.life",
+    "http://localhost:8069(?![\\w\\.-])": "https://odoo.wuchang.life",
+    "http://192\\.168\\.50\\.84:8069(?![\\w\\.-])": "https://odoo.wuchang.life"
+  }
+}

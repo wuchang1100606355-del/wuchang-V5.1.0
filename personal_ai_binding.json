@@ -1,0 +1,17 @@
+{
+  "personal_name": "江政隆",
+  "personal_id": "chiang_cheng_lung_001",
+  "password_hash": "add79daa6065a64eec9d1dd7c2ce5122bb5f46173c9677fa1bd52485d727341a",
+  "email": "",
+  "phone": "",
+  "notes": "協會總幹事，最高權限使用者",
+  "mac_address": "00:15:5d:93:13:a3",
+  "highest_authority": true,
+  "ai_binding": {
+    "local_j": true,
+    "cloud_j": true,
+    "binding_date": "2026-01-20T16:58:40.025236"
+  },
+  "created_at": "2026-01-20T16:58:40.025262",
+  "last_updated": "2026-01-20T16:58:40.025266"
+}

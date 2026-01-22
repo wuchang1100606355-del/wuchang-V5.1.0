@@ -1,0 +1,50 @@
+{
+  "description": "五常系統環境變數配置",
+  "variables": {
+    "WUCHANG_HEALTH_URL": {
+      "description": "伺服器健康檢查 URL",
+      "example": "https://wuchang.life/health",
+      "value": ""
+    },
+    "WUCHANG_COPY_TO": {
+      "description": "伺服器接收資料夾路徑（SMB/掛載磁碟）",
+      "example": "\\\\SERVER\\share\\wuchang",
+      "value": ""
+    },
+    "WUCHANG_HUB_URL": {
+      "description": "Little J Hub 服務器 URL",
+      "example": "https://hub.wuchang.life",
+      "value": ""
+    },
+    "WUCHANG_HUB_TOKEN": {
+      "description": "Little J Hub 認證 Token",
+      "example": "your_token_here",
+      "value": ""
+    },
+    "WUCHANG_SYSTEM_DB_DIR": {
+      "description": "系統資料庫目錄",
+      "example": "C:\\wuchang\\db",
+      "value": ""
+    },
+    "WUCHANG_WORKSPACE_OUTDIR": {
+      "description": "工作空間輸出目錄",
+      "example": "C:\\wuchang\\output",
+      "value": ""
+    },
+    "WUCHANG_PII_OUTDIR": {
+      "description": "個資輸出目錄",
+      "example": "C:\\wuchang\\pii",
+      "value": ""
+    },
+    "WUCHANG_PII_ENABLED": {
+      "description": "是否啟用個資處理功能",
+      "example": "true",
+      "value": ""
+    },
+    "WUCHANG_PII_STORAGE_DEVICE": {
+      "description": "個資儲存裝置 ID",
+      "example": "usb_001",
+      "value": ""
+    }
+  }
+}

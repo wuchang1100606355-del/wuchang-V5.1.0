@@ -1,0 +1,595 @@
+{
+  "knowledge_base_version": "2.0",
+  "last_updated": "2026-01-17T01:55:20.362226",
+  "community_name": "新北市三重區五常社區發展協會轄區",
+  "scope": {
+    "villages": [
+      "五常里",
+      "五順里",
+      "仁忠里"
+    ],
+    "description": "五常社區發展協會服務範圍"
+  },
+  "geographic_analysis": {
+    "location": {
+      "city": "新北市",
+      "district": "三重區",
+      "strategic_value": "三重區通往台北市士林、北投地區的重要門戶，鄰近重陽橋",
+      "nearby_projects": [
+        "銀新未來城",
+        "仁義重劃區"
+      ]
+    },
+    "boundaries": {
+      "renyi_redevelopment_area": {
+        "description": "仁義重劃區（主要位於五常里）",
+        "east_boundary": "環河北路邊界（不含道路），緊鄰淡水河堤外便道",
+        "west_boundary": "仁愛街邊界（不含道路）及乙種工業區分區線",
+        "north_boundary": "仁義街143巷、五華街1巷既成道路邊界外緣",
+        "south_boundary": "高速公路（國道一號）邊界（不含道路）"
+      },
+      "traditional_community": {
+        "wuchang_old": "仁義街單號側的傳統公寓群，仁義街143巷以南的密集住宅區",
+        "wushun": "仁義街與五華街交夾的內側區塊，五華街雙號巷弄（如五華街57巷以南）",
+        "renzhong": "區域的西側與南側邊緣，緊鄰仁愛街與自強路五段，巷弄更為狹窄曲折"
+      }
+    },
+    "road_system": {
+      "major_arteries": {
+        "renyi_street": {
+          "role": "貫穿全境的中軸線",
+          "status": "已拓寬，承擔重劃區主要進出車流",
+          "traffic_issue": "目前有8個以上大型營建工地同時施工，服務水準大幅下降"
+        },
+        "wuhua_street": {
+          "role": "傳統商業活動最密集的街道",
+          "feature": "公車路線匯集",
+          "commercial_density": "高"
+        },
+        "huanhe_north_road": {
+          "role": "聯外快速道路",
+          "note": "不直接服務社區內部短程交通"
+        }
+      },
+      "secondary_roads": {
+        "yuanxin_1st_street": "重劃區內新闢的標準寬度道路，設有完整人行道",
+        "yuanxin_2nd_street": "重劃區內新闢的標準寬度道路，設有完整人行道",
+        "traditional_alleyways": {
+          "description": "仁義街XX巷、仁愛街XX巷",
+          "characteristics": [
+            "路幅通常不足6米",
+            "缺乏人行道",
+            "常遭機車與路霸佔用",
+            "消防救災的高風險區"
+          ]
+        }
+      },
+      "dangerous_intersections": [
+        "仁義街與集賢路口",
+        "仁義街沿線巷口"
+      ]
+    }
+  },
+  "housing_analysis": {
+    "total_households": {
+      "wuchang": 2092,
+      "wushun": 1520,
+      "renzhong": 1279,
+      "total": 4891,
+      "average_household_size": 2.56
+    },
+    "population_trends": {
+      "year_108": {
+        "wuchang": 4360,
+        "wushun": 4050,
+        "renzhong": 3344,
+        "total": 11754
+      },
+      "year_111": {
+        "wuchang": 5378,
+        "wushun": 3970,
+        "renzhong": 3260,
+        "total": 12608
+      },
+      "year_113": {
+        "wuchang": 5249,
+        "wushun": 4021,
+        "renzhong": 3254,
+        "total": 12524
+      },
+      "growth_analysis": {
+        "wuchang_growth": "108-111年成長23%，受益於重劃區建案",
+        "wushun_stagnant": "人口數幾乎水平甚至微幅下降",
+        "renzhong_decline": "從3344人降至3254人，人口流失持續"
+      }
+    },
+    "building_types": {
+      "redevelopment_area": {
+        "location": "五常里內的重劃區",
+        "building_type": "15-20層以上RC結構大樓",
+        "age": "5年以內新成屋，甚至包含大量預售屋",
+        "representative_buildings": [
+          {
+            "name": "仁仁愛",
+            "age": 4,
+            "households": 112
+          }
+        ],
+        "market_price": {
+          "per_ping": "70-80萬/坪",
+          "total_price_range": "2000-3500萬",
+          "target_market": "台北市外溢的高收入族群"
+        },
+        "large_community": {
+          "households": 1297,
+          "description": "超大型社區預售案"
+        }
+      },
+      "old_community": {
+        "location": "五順里、仁忠里及五常里舊區",
+        "building_type": "4-5層樓的無電梯公寓",
+        "age": "普遍超過30年，部分達到40年以上",
+        "average_age": "高於三重區平均34年",
+        "structural_issues": [
+          "加強磚造或早期RC結構",
+          "耐震係數多不符合現行標準",
+          "缺乏停車位",
+          "缺乏消防撒水系統",
+          "缺乏無障礙設施"
+        ],
+        "representative_buildings": [
+          {
+            "name": "常勝江山社區",
+            "address": "仁義街161號",
+            "age": 28,
+            "households": 154,
+            "description": "舊市區中少數具有規模的中古大樓社區"
+          }
+        ],
+        "market_price": {
+          "per_ping": "50-60萬/坪",
+          "price_gap": "與重劃區形成顯著的價格斷層"
+        }
+      }
+    },
+    "property_management": {
+      "current_hoa_count": 32,
+      "projected_hoa_count": 50,
+      "timeline": "三年內",
+      "challenges": {
+        "old_communities": [
+          "設備老化",
+          "人力成本上升",
+          "管理費收入難以支撐合法勞基法工時人力",
+          "保全員多為高工時、低薪資的非典型勞動"
+        ],
+        "new_communities": [
+          "戶數少（80-100戶），單位分攤成本極高",
+          "物業費用高漲"
+        ],
+        "technology_gap": "0%的社區採用AI或無人保全系統"
+      }
+    }
+  },
+  "demographics": {
+    "total_population": {
+      "year_113": 12524,
+      "breakdown": {
+        "wuchang": 5249,
+        "wushun": 4021,
+        "renzhong": 3254
+      }
+    },
+    "age_structure": {
+      "wuchang": {
+        "children_0_14": {
+          "count": 627,
+          "percentage": 9.4
+        },
+        "working_age_15_64": {
+          "count": 3962,
+          "percentage": 73.6
+        },
+        "elderly_65_plus": {
+          "count": 720,
+          "percentage": 13.4
+        },
+        "aging_index": 114.83,
+        "dependency_ratio": 34.0
+      },
+      "wushun": {
+        "children_0_14": {
+          "count": 445,
+          "percentage": 11.2
+        },
+        "working_age_15_64": {
+          "count": 2241,
+          "percentage": 56.4
+        },
+        "elderly_65_plus": {
+          "count": 667,
+          "percentage": 16.8
+        },
+        "aging_index": 149.89,
+        "dependency_ratio": 38.2
+      },
+      "renzhong": {
+        "children_0_14": {
+          "count": 385,
+          "percentage": 11.8
+        },
+        "working_age_15_64": {
+          "count": 2909,
+          "percentage": 89.2
+        },
+        "elderly_65_plus": {
+          "count": 628,
+          "percentage": 19.3
+        },
+        "aging_index": 163.12,
+        "dependency_ratio": 45.2,
+        "status": "高齡瀕危社區",
+        "needs": [
+          "長照據點",
+          "無障礙設施",
+          "醫療巡迴服務"
+        ]
+      },
+      "community_average": {
+        "children_0_14": 11.51,
+        "working_age_15_64": 72.0,
+        "elderly_65_plus": 15.92,
+        "aging_index": 138.3,
+        "dependency_ratio": 38.1,
+        "trend": "扶養比逐年上升（108年35% → 111年38.1%）"
+      }
+    },
+    "gender_structure": {
+      "year_111": {
+        "male": 6814,
+        "female": 7108,
+        "difference": 294,
+        "note": "女多於男，與三重區整體趨勢一致",
+        "elderly_ratio": "獨居老人女性約為男性的1.6倍"
+      }
+    },
+    "key_insights": [
+      "五常里內部存在劇烈的貧富與世代差距",
+      "仁忠里為典型的高齡瀕危社區",
+      "整個社區的老化指數（138.3%）遠高於人口替代水準",
+      "家庭經濟支柱的負擔日益沉重"
+    ]
+  },
+  "commercial_ecosystem": {
+    "total_businesses": 90,
+    "physical_stores": 38,
+    "business_distribution": {
+      "restaurants": {
+        "count": 18,
+        "percentage": 47,
+        "breakdown": {
+          "breakfast_shops": 8,
+          "snack_shops": "其餘",
+          "lunch_boxes": "包含"
+        },
+        "insight": "典型通勤住宅區，居民外食需求集中在早晨時段"
+      },
+      "convenience_stores": {
+        "count": 9,
+        "percentage": 24,
+        "description": "超高密度的便利商店網絡，部分取代了傳統雜貨店的功能"
+      },
+      "retail": {
+        "count": 3,
+        "percentage": 8,
+        "examples": [
+          "全聯",
+          "美廉社"
+        ],
+        "description": "中小型超市，提供生鮮食品"
+      },
+      "professional_services": {
+        "count": 6,
+        "percentage": 16,
+        "breakdown": {
+          "self_service_laundry": 2,
+          "traditional_laundry": 1,
+          "computer_stores": 2,
+          "appliance_stores": 2
+        },
+        "insight": "反映舊公寓缺乏曬衣空間及家電維修需求"
+      },
+      "other": {
+        "count": 2,
+        "percentage": 5,
+        "types": [
+          "彩券行"
+        ]
+      },
+      "institutions": {
+        "count": 3,
+        "percentage": 8,
+        "types": [
+          "金融機構",
+          "診所",
+          "書局"
+        ]
+      }
+    },
+    "challenges": {
+      "digital_gap": {
+        "status": "0家商店完成完整的數位轉型",
+        "attempting": "僅1家早餐店嘗試中",
+        "impact": "無法對接外送平台或進行數位行銷"
+      },
+      "breakfast_economy": {
+        "description": "高比例的早餐店反映了社區的「臥城」特性",
+        "issue": "日間商業活動低迷，許多店面面臨離峰時段閒置"
+      },
+      "alleyway_economy": {
+        "location": "仁義商圈",
+        "restaurants": 12,
+        "issue": "多位於狹小巷弄，車輛難以臨停，嚴重限制了外帶客群的增長"
+      }
+    }
+  },
+  "transportation": {
+    "road_conditions": {
+      "bottlenecks": [
+        "仁義街沿線目前有8個以上大型營建工地同時施工",
+        "施工圍籬佔用車道",
+        "大型工程車輛進出",
+        "道路服務水準大幅下降"
+      ],
+      "dangerous_intersections": [
+        "仁義街與集賢路口",
+        "仁義街沿線巷口"
+      ],
+      "risk_factors": [
+        "視線死角多",
+        "機車與大型重機具混流",
+        "事故頻傳"
+      ]
+    },
+    "motorcycle_parking": {
+      "ownership_rate": {
+        "new_taipei_city": 54.8,
+        "description": "新北市機車持有率極高，約54.8%的居民外出使用私人機動運具"
+      },
+      "estimated_total": {
+        "calculation": "4,900戶 × 1.2輛/戶",
+        "result": "約5,800輛以上"
+      },
+      "supply_shortage": {
+        "roadside_parking": {
+          "availability": "極其有限",
+          "issue": "常遭長期佔用"
+        },
+        "off_street_parking": {
+          "name": "仁信段平面停車場",
+          "motorcycle_spaces": 60,
+          "car_spaces": 291,
+          "description": "政府利用重劃區未開發土地設置",
+          "assessment": "面對數千輛的潛在需求，這60個公共車位僅是杯水車薪"
+        },
+        "redevelopment_parking": {
+          "regulation": "新建案依規定需設置停車位（1汽車位配1機車位）",
+          "restriction": "僅供該社區住戶使用，並不對外開放",
+          "result": "機車溢出至巷弄，佔用消防通道與人行空間"
+        }
+      },
+      "consequences": [
+        "嚴重的行人安全隱患",
+        "鄰里糾紛",
+        "消防通道被佔用"
+      ]
+    },
+    "public_transportation": {
+      "mrt_circular_line": {
+        "status": "施工中",
+        "station": "Y23站",
+        "location": "五華街與集賢路口附近",
+        "impact": "施工圍籬進一步壓縮了五常社區北側的交通動線",
+        "period": "交通黑暗期"
+      },
+      "bus_network": {
+        "location": "五華街",
+        "density": "密集的公車路線",
+        "challenge": "對於居住在仁忠里深處的老年人來說，步行至站牌的距離（First/Last Mile）仍是一大負擔"
+      }
+    }
+  },
+  "social_enterprise_solutions": {
+    "community_service_team": {
+      "organization": "五常物業規劃顧問股份有限公司",
+      "concept": "將社區的劣勢轉化為優勢",
+      "target_population": "中高齡退休人士（55-65歲）",
+      "benefits": [
+        "解決長者的經濟安全問題",
+        "提供在地的人力資源"
+      ],
+      "services": [
+        "區域聯合銷售平台",
+        "短程外送（步行或自行車）",
+        "協助90家在地商家數位轉型",
+        "將早餐店的閒置產能對接給社區居民"
+      ],
+      "advantages": [
+        "避開了仁義商圈的交通癱瘓與停車問題",
+        "不需要機車停車位"
+      ]
+    },
+    "ai_property_management": {
+      "model": "AI智能系統 + 機動巡邏",
+      "approach": "由中央控制中心（AI）取代各社區的夜間保全，並由專勤隊進行機動巡邏",
+      "benefits": [
+        "大幅降低舊社區的管理費負擔",
+        "解決缺工問題"
+      ]
+    }
+  },
+  "strategic_recommendations": {
+    "population": {
+      "priority": "針對仁忠里進行重點式的長照資源投放",
+      "reason": "老化指數高達163.12%，為高齡瀕危社區"
+    },
+    "transportation": {
+      "short_term": "嚴格執法清除巷弄路霸",
+      "long_term": "評估增設立體機車停車塔的可行性",
+      "note": "在捷運完工前需採取措施"
+    },
+    "economy": {
+      "priority": "推動在地商家的數位化與社區互助經濟",
+      "goal": "避免舊市區商業凋零",
+      "approach": "社區發展協會的積極介入與社會企業模式的運作"
+    },
+    "vision": "成為新北市「新舊共融」的示範場域"
+  },
+  "system_integration_points": {
+    "ui_design": {
+      "elderly_friendly": {
+        "target": "19.3% 老年人口（仁忠里）",
+        "features": [
+          "大字體模式",
+          "高對比度",
+          "簡化操作流程"
+        ]
+      },
+      "dual_entry": {
+        "entry_a_merchant": {
+          "target": "60% 居住在無電梯公寓的長者",
+          "features": [
+            "大字體模式",
+            "外送優先顯示",
+            "步行距離標示"
+          ]
+        },
+        "entry_b_category": {
+          "target": "35.5% 高學歷族群 + 11.8% 青少年",
+          "features": [
+            "視覺體驗",
+            "探索樂趣",
+            "AI生成圖片"
+          ]
+        }
+      }
+    },
+    "food_dollars_strategy": {
+      "bento_kun": {
+        "role": "辦公室守護者",
+        "target": "巷弄內數百家小型公司（工程、貿易、科技行）",
+        "feature": "企業訂閱制",
+        "market_size": "90家商業機構中的B2B客戶"
+      },
+      "shao_bing_tuan_zi": {
+        "role": "社區活力大使",
+        "integration": "結合宮廟與社區活動",
+        "mechanism": "發放實體或虛擬的「團子幣」"
+      },
+      "coffee_elf": {
+        "role": "巷弄探險家",
+        "feature": "打卡賺幣機制",
+        "target": "挖掘隱藏版咖啡或茶飲店"
+      }
+    },
+    "happiness_coin": {
+      "social_welfare": {
+        "target_group": "19.3% 老年人口",
+        "mechanism": "純幸福幣購買（現金價0元）",
+        "benefit": "創造「尊嚴救助」模式",
+        "activities": [
+          "擔任志工",
+          "協助巡守",
+          "參與社區活動"
+        ]
+      },
+      "time_complement": {
+        "idle_period": "下午2點至4點",
+        "target": "退休長者活動時間",
+        "product": "下午茶套餐（燒餅、豆漿）"
+      }
+    },
+    "logistics": {
+      "curbside_pickup": {
+        "reason": "停車困難（5,800輛機車 vs 60個公共車位）",
+        "feature": "免下車取餐，GPS觸發通知"
+      },
+      "walking_delivery": {
+        "radius": 500,
+        "advantage": "避開交通癱瘓與停車問題",
+        "workers": "社區專勤隊（中高齡退休人士）"
+      }
+    }
+  },
+  "key_statistics": {
+    "total_households": 4891,
+    "total_population": 12524,
+    "average_household_size": 2.56,
+    "elderly_percentage": 15.92,
+    "aging_index": 138.3,
+    "motorcycles_estimated": 5800,
+    "public_motorcycle_parking": 60,
+    "parking_shortage_ratio": "96.7%缺口",
+    "total_businesses": 90,
+    "physical_stores": 38,
+    "digital_transformation_rate": 0,
+    "hoa_count_current": 32,
+    "hoa_count_projected": 50
+  },
+  "critical_insights": [
+    "區域正處於極端的二元發展狀態：新興重劃區 vs 傳統舊市區",
+    "仁忠里老化指數高達163.12%，為高齡瀕危社區",
+    "機車停車供需嚴重失衡（5,800輛 vs 60個公共車位）",
+    "商業數位化程度為零，存在巨大轉型機會",
+    "新舊社區物業管理斷層，AI智能系統可提供解決方案",
+    "社區專勤隊模式可同時解決人口老化、商業轉型與交通問題"
+  ],
+  "administrative_documents": {
+    "charter": {
+      "title": "協會章程",
+      "file": "01_協會章程.md",
+      "category": "組織文件",
+      "description": "依據人民團體法、社區發展工作要點制定協會章程",
+      "keywords": [
+        "章程",
+        "組織",
+        "法規"
+      ],
+      "related_documents": [
+        "AGENT_CONSTITUTION.md"
+      ],
+      "last_updated": "2026-01-17T01:51:11.976616"
+    },
+    "annual_plan_2026": {
+      "title": "113年度工作計畫",
+      "file": "02_年度工作計畫_2026.md",
+      "category": "計畫文件",
+      "description": "113年度（2026年）工作計畫",
+      "keywords": [
+        "年度工作計畫",
+        "2026"
+      ],
+      "related_documents": [
+        "wuchang_community_analysis.json"
+      ],
+      "last_updated": "2026-01-17T01:51:11.976644"
+    },
+    "meeting_20260117": {
+      "title": "理監事會會議會議記錄",
+      "file": "association_operational_files\\meetings\\meeting_20260117_理監事會會議.md",
+      "category": "會議文件",
+      "description": "2026年01月17日 理監事會會議會議記錄",
+      "keywords": [
+        "會議記錄",
+        "理監事會",
+        "2026-01-17"
+      ],
+      "related_documents": [
+        "08_公文處理與行政營運組織.md"
+      ],
+      "meeting_date": "2026-01-17",
+      "meeting_type": "理監事會會議",
+      "last_updated": "2026-01-17T01:55:20.362218"
+    }
+  }
+}

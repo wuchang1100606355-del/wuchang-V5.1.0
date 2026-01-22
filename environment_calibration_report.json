@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-01-19T14:10:42+0800",
+  "local_environment": {
+    "WUCHANG_HEALTH_URL": "https://coffeeLofe.asuscomm.com:8443/health",
+    "WUCHANG_COPY_TO": "\\\\HOME-COMMPUT\\wuchang V5.1.0",
+    "WUCHANG_DEV_MODE": "true"
+  },
+  "server_environment": {},
+  "comparison": {
+    "local_only": {
+      "WUCHANG_HEALTH_URL": "https://coffeeLofe.asuscomm.com:8443/health",
+      "WUCHANG_COPY_TO": "\\\\HOME-COMMPUT\\wuchang V5.1.0",
+      "WUCHANG_DEV_MODE": "true"
+    },
+    "server_only": {},
+    "different": {},
+    "same": {},
+    "missing_critical": []
+  },
+  "calibration_suggestions": {
+    "local": [],
+    "server": [
+      "設定伺服器端 WUCHANG_HEALTH_URL = https://coffeeLofe.asuscomm.com:8443/health",
+      "設定伺服器端 WUCHANG_COPY_TO = \\\\HOME-COMMPUT\\wuchang V5.1.0",
+      "設定伺服器端 WUCHANG_DEV_MODE = true"
+    ]
+  }
+}

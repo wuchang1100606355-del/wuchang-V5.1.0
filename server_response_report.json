@@ -1,0 +1,147 @@
+{
+  "timestamp": "2026-01-19T12:16:38+0800",
+  "server_ip": "10.8.0.1",
+  "server_ddns": "coffeeLofe.asuscomm.com",
+  "tests": {
+    "port_scan": [
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 22,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 80,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 443,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 8788,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 8799,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 8443,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 8888,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 3306,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 5432,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      },
+      {
+        "success": false,
+        "host": "10.8.0.1",
+        "port": 8080,
+        "reachable": false,
+        "response_time_ms": null,
+        "error": "連接失敗 (錯誤碼: 10035)"
+      }
+    ],
+    "http_requests": [
+      {
+        "success": false,
+        "url": "http://10.8.0.1:8788/",
+        "method": "GET",
+        "reachable": false,
+        "error": "連接錯誤（服務可能未運行）"
+      },
+      {
+        "success": false,
+        "url": "http://10.8.0.1:8788/health",
+        "method": "GET",
+        "reachable": false,
+        "error": "連接錯誤（服務可能未運行）"
+      },
+      {
+        "success": false,
+        "url": "http://10.8.0.1:8799/",
+        "method": "GET",
+        "reachable": false,
+        "error": "連接錯誤（服務可能未運行）"
+      },
+      {
+        "success": false,
+        "url": "http://10.8.0.1:8799/health",
+        "method": "GET",
+        "reachable": false,
+        "error": "連接錯誤（服務可能未運行）"
+      },
+      {
+        "success": false,
+        "url": "http://10.8.0.1:80/",
+        "method": "GET",
+        "reachable": false,
+        "error": "連接錯誤（服務可能未運行）"
+      },
+      {
+        "success": false,
+        "url": "https://10.8.0.1:8443/",
+        "method": "GET",
+        "reachable": false,
+        "error": "連接錯誤（服務可能未運行）"
+      },
+      {
+        "success": false,
+        "url": "https://coffeeLofe.asuscomm.com:8443/",
+        "method": "GET",
+        "reachable": false,
+        "error": "連接錯誤（服務可能未運行）"
+      },
+      {
+        "success": false,
+        "url": "https://coffeeLofe.asuscomm.com:8443/health",
+        "method": "GET",
+        "reachable": false,
+        "error": "連接錯誤（服務可能未運行）"
+      }
+    ]
+  }
+}

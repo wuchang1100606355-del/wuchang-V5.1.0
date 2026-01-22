@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-01-19T13:55:07+0800",
+  "total_steps": 4,
+  "completed_steps": 0,
+  "completion_rate": "0/4",
+  "steps": [
+    {
+      "step": "網路共享連接",
+      "status": "pending",
+      "timestamp": "2026-01-19T13:55:05+0800"
+    },
+    {
+      "step": "伺服器連接",
+      "status": "pending",
+      "timestamp": "2026-01-19T13:55:07+0800"
+    },
+    {
+      "step": "工作區配置",
+      "status": "pending",
+      "timestamp": "2026-01-19T13:55:07+0800"
+    },
+    {
+      "step": "環境變數",
+      "status": "pending",
+      "timestamp": "2026-01-19T13:55:07+0800"
+    }
+  ]
+}

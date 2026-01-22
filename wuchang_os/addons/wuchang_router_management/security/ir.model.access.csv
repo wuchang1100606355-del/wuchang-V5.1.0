@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_router_router_user,router.router.user,model_router_router,base.group_user,1,1,1,1
+access_router_device_user,router.device.user,model_router_device,base.group_user,1,1,1,1
+access_router_port_forwarding_user,router.port.forwarding.user,model_router_port_forwarding,base.group_user,1,1,1,1
+access_server_identity_user,server.identity.user,model_server_identity,base.group_user,1,1,1,1

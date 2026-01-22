@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>五常控制中心 - 登入</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      padding: 40px;
+      width: 100%;
+      max-width: 450px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      color: #333;
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 8px;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+      margin-top: 12px;
+    }
+    .btn-secondary:hover {
+      background: #e0e0e0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .error {
+      background: #fee;
+      color: #c33;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+    .success {
+      background: #efe;
+      color: #3c3;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+    .biometric-section {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #e0e0e0;
+    }
+    .biometric-toggle {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .biometric-toggle input {
+      width: auto;
+      margin-right: 8px;
+    }
+    .biometric-video {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 8px;
+      margin: 12px 0;
+      display: none;
+    }
+    .biometric-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .biometric-controls button {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      color: #666;
+      margin-top: 12px;
+    }
+    .mac-info {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 12px;
+      color: #666;
+    }
+    .mac-info strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>🔐 五常控制中心</h1>
+    <div class="subtitle">個人 AI 綁定登入</div>
+    
+    <div id="errorMsg" class="error"></div>
+    <div id="successMsg" class="success"></div>
+    
+    <div class="mac-info">
+      <strong>本機唯一碼（MAC）：</strong><span id="macAddress">載入中...</span>
+    </div>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label>身份 ID *</label>
+        <input type="text" id="personalId" required placeholder="請輸入您的身份 ID" />
+      </div>
+      
+      <div class="form-group">
+        <label>密碼 *</label>
+        <input type="password" id="password" required placeholder="請輸入密碼" />
+      </div>
+      
+      <div class="biometric-section">
+        <div class="biometric-toggle">
+          <input type="checkbox" id="useBiometric" />
+          <label for="useBiometric" style="margin: 0;">使用生物特徵掃描（選填）</label>
+        </div>
+        
+        <div id="biometricControls" style="display: none;">
+          <video id="biometricVideo" class="biometric-video" autoplay playsinline></video>
+          <div class="biometric-controls">
+            <button type="button" id="btnStartScan" class="btn-secondary">開始掃描</button>
+            <button type="button" id="btnStopScan" class="btn-secondary" style="display: none;">停止掃描</button>
+          </div>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn" id="btnLogin">登入</button>
+    </form>
+    
+    <div class="loading" id="loading">登入中...</div>
+  </div>
+
+  <script>
+    let biometricStream = null;
+    let biometricVideo = null;
+    let biometricCanvas = null;
+    let biometricData = null;
+
+    // 取得 MAC 地址
+    async function loadMacAddress() {
+      try {
+        const res = await fetch("/api/personal_ai_binding/get_mac");
+        const data = await res.json();
+        if (data?.ok) {
+          document.getElementById("macAddress").textContent = data.mac_address || "無法取得";
+        }
+      } catch (e) {
+        document.getElementById("macAddress").textContent = "無法取得";
+      }
+    }
+
+    // 生物特徵掃描
+    document.getElementById("useBiometric")?.addEventListener("change", (e) => {
+      const controls = document.getElementById("biometricControls");
+      if (e.target.checked) {
+        controls.style.display = "block";
+      } else {
+        controls.style.display = "none";
+        stopBiometricScan();
+      }
+    });
+
+    document.getElementById("btnStartScan")?.addEventListener("click", async () => {
+      try {
+        const video = document.getElementById("biometricVideo");
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
+        });
+        
+        biometricStream = stream;
+        biometricVideo = video;
+        video.srcObject = stream;
+        video.style.display = "block";
+        
+        document.getElementById("btnStartScan").style.display = "none";
+        document.getElementById("btnStopScan").style.display = "inline-block";
+      } catch (e) {
+        alert(`無法啟動攝像頭：${String(e)}\n\n請確認已允許瀏覽器使用攝像頭權限。`);
+      }
+    });
+
+    document.getElementById("btnStopScan")?.addEventListener("click", () => {
+      stopBiometricScan();
+    });
+
+    function stopBiometricScan() {
+      if (biometricStream) {
+        biometricStream.getTracks().forEach(track => track.stop());
+        biometricStream = null;
+      }
+      const video = document.getElementById("biometricVideo");
+      if (video) {
+        video.srcObject = null;
+        video.style.display = "none";
+      }
+      document.getElementById("btnStartScan").style.display = "inline-block";
+      document.getElementById("btnStopScan").style.display = "none";
+      biometricData = null;
+    }
+
+    // 擷取生物特徵
+    function captureBiometric() {
+      if (!biometricVideo || !biometricVideo.srcObject) {
+        return null;
+      }
+      
+      const canvas = document.createElement("canvas");
+      canvas.width = biometricVideo.videoWidth;
+      canvas.height = biometricVideo.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(biometricVideo, 0, 0);
+      
+      return {
+        image_data: canvas.toDataURL("image/jpeg", 0.8),
+        timestamp: new Date().toISOString(),
+        scan_type: "face_recognition"
+      };
+    }
+
+    // 登入表單
+    document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const personalId = document.getElementById("personalId").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const useBiometric = document.getElementById("useBiometric").checked;
+      
+      if (!personalId || !password) {
+        showError("請填寫身份 ID 和密碼");
+        return;
+      }
+      
+      const errorDiv = document.getElementById("errorMsg");
+      const successDiv = document.getElementById("successMsg");
+      const loadingDiv = document.getElementById("loading");
+      const btnLogin = document.getElementById("btnLogin");
+      
+      errorDiv.style.display = "none";
+      successDiv.style.display = "none";
+      loadingDiv.style.display = "block";
+      btnLogin.disabled = true;
+      
+      try {
+        // 擷取生物特徵（如果啟用）
+        let bioData = null;
+        if (useBiometric) {
+          bioData = captureBiometric();
+          if (!bioData) {
+            showError("請先開始生物特徵掃描");
+            loadingDiv.style.display = "none";
+            btnLogin.disabled = false;
+            return;
+          }
+        }
+        
+        const res = await fetch("/api/personal_auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            personal_id: personalId,
+            password: password,
+            use_biometric: useBiometric,
+            biometric_data: bioData
+          })
+        });
+        
+        const data = await res.json();
+        
+        if (data?.ok) {
+          successDiv.textContent = "登入成功，正在跳轉...";
+          successDiv.style.display = "block";
+          
+          // 等待一下後跳轉
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 500);
+        } else {
+          showError(data?.message || data?.error || "登入失敗");
+          loadingDiv.style.display = "none";
+          btnLogin.disabled = false;
+        }
+      } catch (e) {
+        showError(`登入錯誤：${String(e)}`);
+        loadingDiv.style.display = "none";
+        btnLogin.disabled = false;
+      }
+    });
+
+    function showError(msg) {
+      const errorDiv = document.getElementById("errorMsg");
+      errorDiv.textContent = msg;
+      errorDiv.style.display = "block";
+    }
+
+    // 初始載入
+    loadMacAddress();
+  </script>
+</body>
+</html>

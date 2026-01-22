@@ -1,0 +1,273 @@
+{
+  "exploration_date": "2026-01-22 07:39:31",
+  "router_url": "https://192.168.50.84:8443",
+  "logged_in": false,
+  "common_endpoints": [
+    {
+      "endpoint": "/appGet.cgi",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /appGet.cgi (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B84980>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/appGet.cgi?hook=get_wireless_client()",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /appGet.cgi?hook=get_wireless_client() (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B94050>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/appGet.cgi?hook=get_client_list()",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /appGet.cgi?hook=get_client_list() (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B94550>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/appGet.cgi?hook=get_wan_status()",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /appGet.cgi?hook=get_wan_status() (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B947D0>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/appGet.cgi?hook=get_lan_status()",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /appGet.cgi?hook=get_lan_status() (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B94A50>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/appGet.cgi?hook=get_system_info()",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /appGet.cgi?hook=get_system_info() (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B94E10>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/appGet.cgi?hook=get_firmware_info()",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /appGet.cgi?hook=get_firmware_info() (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B95090>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/appSet.cgi",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /appSet.cgi (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B94CD0>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/apply.cgi",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /apply.cgi (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B95450>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/apply_sec.cgi",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /apply_sec.cgi (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B956D0>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/login.cgi",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /login.cgi (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B95950>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/logout.cgi",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /logout.cgi (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B95BD0>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/apply.cgi?action_mode=restore",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /apply.cgi?action_mode=restore (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B95E50>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/apply.cgi?action_mode=backup",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /apply.cgi?action_mode=backup (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B96210>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Main_Login.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Main_Login.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B965D0>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/index.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /index.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B96850>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Main_Status_Content.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Main_Status_Content.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B96AD0>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Advanced_System_Content.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Advanced_System_Content.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B96E90>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Advanced_WAN_Content.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Advanced_WAN_Content.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x00000252592F7ED0>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Advanced_LAN_Content.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Advanced_LAN_Content.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x00000252592F7C50>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Advanced_Wireless_Content.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Advanced_Wireless_Content.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x00000252592F7610>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Advanced_Firewall_Content.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Advanced_Firewall_Content.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x00000252592F6210>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Advanced_VPN_Content.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Advanced_VPN_Content.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B96C10>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    },
+    {
+      "endpoint": "/Advanced_SettingBackup_Content.asp",
+      "method": "GET",
+      "status_code": null,
+      "response_time": null,
+      "content_type": null,
+      "response_size": null,
+      "success": false,
+      "error": "HTTPSConnectionPool(host='192.168.50.84', port=8443): Max retries exceeded with url: /Advanced_SettingBackup_Content.asp (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000025259B965D0>, 'Connection to 192.168.50.84 timed out. (connect timeout=10)'))",
+      "sample_response": null
+    }
+  ],
+  "discovered_endpoints": [],
+  "api_documentation": {}
+}

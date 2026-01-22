@@ -1,0 +1,14 @@
+{
+  "bounds": {
+    "north": 25.1,
+    "south": 25.08,
+    "east": 121.45,
+    "west": 121.43,
+    "center_lat": 25.09,
+    "center_lng": 121.44,
+    "zoom_level": 16
+  },
+  "zoom_level": 16,
+  "tiles_count": 0,
+  "download_time": "C:\\wuchang V5.1.0\\wuchang-V5.1.0"
+}

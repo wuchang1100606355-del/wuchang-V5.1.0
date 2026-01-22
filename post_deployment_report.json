@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-01-20T02:46:48.347141",
+  "summary": {
+    "total": 6,
+    "passed": 5,
+    "failed": 1
+  },
+  "results": {
+    "容器狀態檢查": {
+      "status": false,
+      "message": "9/10 個容器運行中",
+      "priority": "高",
+      "timestamp": "2026-01-20T02:46:47.735877"
+    },
+    "服務連接檢查": {
+      "status": true,
+      "message": "Odoo 服務正常",
+      "priority": "高",
+      "timestamp": "2026-01-20T02:46:47.978131"
+    },
+    "資料庫健康檢查": {
+      "status": true,
+      "message": "資料庫連接正常 (wuchangv510-db-1)",
+      "priority": "高",
+      "timestamp": "2026-01-20T02:46:48.195822"
+    },
+    "Google Drive 儲存檢查": {
+      "status": true,
+      "message": "Google Drive 儲存正常",
+      "priority": "高",
+      "timestamp": "2026-01-20T02:46:48.221501"
+    },
+    "備份設定檢查": {
+      "status": true,
+      "message": "備份腳本可用",
+      "priority": "高",
+      "timestamp": "2026-01-20T02:46:48.347088"
+    },
+    "安全設定檢查": {
+      "status": true,
+      "message": "請手動檢查密碼和 API 金鑰設定",
+      "priority": "高",
+      "timestamp": "2026-01-20T02:46:48.347106"
+    }
+  }
+}

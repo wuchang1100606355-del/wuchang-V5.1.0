@@ -1,0 +1,181 @@
+{
+  "system": {
+    "name": "Wuchang OS",
+    "version": "1.0",
+    "environment": {
+      "docker_compose": "wuchang_os/docker-compose.yml",
+      "odoo_conf": "wuchang_os/config/odoo.conf",
+      "addons_path": "/mnt/extra-addons"
+    },
+    "modules": [
+      {
+        "name": "wuchang_core",
+        "models": [
+          {
+            "name": "res.partner",
+            "extends": true,
+            "fields": [
+              {"name":"is_wuchang_resident","type":"boolean"},
+              {"name":"role_type","type":"selection","values":["association","corporation","merchant","volunteer","resident"]},
+              {"name":"anonymized_token","type":"char","readonly":true}
+            ]
+          },
+          {"name":"wuchang.design.asset","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"asset_type","type":"selection","values":["fig","sketch","xd","ttf","otf","ase","pdf"],"required":true},
+            {"name":"version","type":"char"},
+            {"name":"file","type":"binary","attachment":true,"required":true},
+            {"name":"filename","type":"char"},
+            {"name":"description","type":"text"},
+            {"name":"active","type":"boolean","default":true},
+            {"name":"is_latest","type":"boolean","default":true}
+          ]},
+          {"name":"wuchang.design.token","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"category","type":"selection","values":["color","font","motion","spacing","size"],"required":true},
+            {"name":"value","type":"char","required":true},
+            {"name":"version","type":"char"},
+            {"name":"description","type":"text"},
+            {"name":"active","type":"boolean","default":true}
+          ]},
+          {"name":"wuchang.collab.space","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"description","type":"text"},
+            {"name":"owner_id","type":"many2one","target":"res.partner","required":true},
+            {"name":"member_ids","type":"many2many","target":"res.partner"},
+            {"name":"space_type","type":"selection","values":["property_gm","community_gm","finance"],"required":true},
+            {"name":"active","type":"boolean","default":true}
+          ]},
+          {"name":"wuchang.access.key","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"holder_id","type":"many2one","target":"res.partner","required":true},
+            {"name":"space_id","type":"many2one","target":"wuchang.collab.space"},
+            {"name":"fingerprint","type":"char","readonly":true},
+            {"name":"masked_key","type":"char","readonly":true},
+            {"name":"expire_at","type":"datetime"},
+            {"name":"status","type":"selection","values":["active","revoked","expired"],"default":"active"}
+          ]},
+          {"name":"wuchang.google.account","fields":[
+            {"name":"partner_id","type":"many2one","target":"res.partner","required":true},
+            {"name":"email","type":"char","required":true},
+            {"name":"account_type","type":"selection","values":["personal","public_welfare","community_gm"],"required":true},
+            {"name":"verified","type":"boolean","default":false},
+            {"name":"note","type":"text"}
+          ]},
+          {"name":"wuchang.ai.agent","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"agent_type","type":"selection","values":["meeting","finance","ops"],"default":"meeting"},
+            {"name":"capabilities","type":"char"},
+            {"name":"active","type":"boolean","default":true}
+          ]},
+          {"name":"wuchang.ai.meeting.policy","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"rules","type":"text"},
+            {"name":"approval_required","type":"boolean","default":true},
+            {"name":"supports_independent3","type":"boolean","default":true},
+            {"name":"supports_joint6","type":"boolean","default":true}
+          ]},
+          {"name":"wuchang.ai.meeting","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"host_id","type":"many2one","target":"res.partner","required":true},
+            {"name":"space_id","type":"many2one","target":"wuchang.collab.space"},
+            {"name":"policy_id","type":"many2one","target":"wuchang.ai.meeting.policy"},
+            {"name":"scheduled_at","type":"datetime"},
+            {"name":"state","type":"selection","values":["planned","running","done"],"default":"planned"},
+            {"name":"agenda","type":"text"},
+            {"name":"minutes","type":"text"},
+            {"name":"decisions","type":"text"},
+            {"name":"human_ids","type":"many2many","target":"res.partner"},
+            {"name":"ai_agent_ids","type":"many2many","target":"wuchang.ai.agent"},
+            {"name":"human_count","type":"integer","compute":true},
+            {"name":"ai_count","type":"integer","compute":true},
+            {"name":"session_ids","type":"one2many","target":"wuchang.ai.meeting.session"},
+            {"name":"final_decision_holder_id","type":"many2one","target":"res.partner"},
+            {"name":"final_decision","type":"text"}
+          ],
+          "actions":[
+            {"name":"action_start","guard":"human_ids==3 && ai_agent_ids==3"},
+            {"name":"action_finish"},
+            {"name":"action_create_independent3","requires":"policy.supports_independent3"},
+            {"name":"action_create_joint6","requires":"policy.supports_joint6"}
+          ]},
+          {"name":"wuchang.ai.meeting.session","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"meeting_id","type":"many2one","target":"wuchang.ai.meeting","required":true},
+            {"name":"mode","type":"selection","values":["independent3","joint6"],"required":true},
+            {"name":"state","type":"selection","values":["planned","running","done"],"default":"planned"},
+            {"name":"human_ids","type":"many2many","target":"res.partner"},
+            {"name":"ai_agent_ids","type":"many2many","target":"wuchang.ai.agent"},
+            {"name":"total_count","type":"integer","compute":true}
+          ],
+          "actions":[
+            {"name":"action_start","guard":"(mode=='independent3' && total_count==3) || (mode=='joint6' && total_count==6)"},
+            {"name":"action_finish"}
+          ]}
+        ],
+        "controllers": [
+          {"route":"/wuchang/design/tokens","type":"json","auth":"user"},
+          {"route":"/wuchang/design/assets","type":"json","auth":"user","params":["asset_type"]}
+        ],
+        "menus": [
+          {"id":"menu_wuchang_design_root","name":"設計系統","parent":"menu_wuchang_root"},
+          {"id":"menu_wuchang_collab_root","name":"協作與會議","parent":"menu_wuchang_root"}
+        ]
+      },
+      {
+        "name": "wuchang_finance",
+        "models": [
+          {"name":"wuchang.fund.pool","fields":[
+            {"name":"name","type":"char","default":"社區永續基金"},
+            {"name":"total_amount","type":"float","readonly":true},
+            {"name":"last_updated","type":"datetime","default":"now"},
+            {"name":"source_type","type":"selection","values":["commercial_return","donation","subsidy","founder_gift"]}
+          ],
+          "methods":[{"name":"action_inject_funds","params":["amount","source"]}]},
+          {"name":"sale.order","extends":true,"fields":[
+            {"name":"transaction_mode","type":"selection","values":["commercial","donation","hybrid"],"default":"commercial"}
+          ]},
+          {"name":"wuchang.cost.item","fields":[
+            {"name":"name","type":"char","required":true},
+            {"name":"supplier_name","type":"char"},
+            {"name":"supplier_partner_id","type":"many2one","target":"res.partner"},
+            {"name":"supplier_vat","type":"char"},
+            {"name":"supplier_tel","type":"char"},
+            {"name":"supplier_address","type":"char"},
+            {"name":"spec","type":"char"},
+            {"name":"quantity","type":"float","default":1.0},
+            {"name":"unit_price","type":"float"},
+            {"name":"currency_id","type":"many2one","target":"res.currency","default":"company.currency"},
+            {"name":"total_cost","type":"monetary","compute":true,"currency_field":"currency_id"},
+            {"name":"certificate_type","type":"selection","values":["none","invoice","receipt"],"default":"none"},
+            {"name":"note","type":"text"}
+          ]},
+          {"name":"wuchang.finance.strategy","fields":[
+            {"name":"name","type":"char","default":"策略建議"},
+            {"name":"context_note","type":"text"},
+            {"name":"suggestion","type":"text"},
+            {"name":"state","type":"selection","values":["draft","proposed","applied"],"default":"draft"}
+          ],
+          "methods":[{"name":"action_generate"}]}
+        ],
+        "security_groups": [
+          {"id":"wuchang_finance.group_wuchang_finance_manager","name":"Wuchang Finance Manager"}
+        ],
+        "menus": [
+          {"id":"menu_wuchang_root","name":"五常社區 OS"},
+          {"id":"menu_wuchang_fund_pool","name":"基金池管理","parent":"menu_wuchang_root","action":"action_wuchang_fund_pool"}
+        ],
+        "access_rules": [
+          {"model":"wuchang.fund.pool","group":"base.group_user","perm":["read","write","create","unlink"]},
+          {"model":"wuchang.cost.item","group":"base.group_user","perm":["read","write","create","unlink"]},
+          {"model":"wuchang.finance.strategy","group":"wuchang_finance.group_wuchang_finance_manager","perm":["read","write","create","unlink"]}
+        ]
+      }
+    ],
+    "style": {
+      "css_tokens": ["--paper-ivory","--ink-black","--earth-brown","--forest-green","--sky-blue","--clay-red"],
+      "classes": ["hw-title","hw-body","paper-card","motion-write","ink-brush"],
+      "icons": ["icon-brush","icon-paper","icon-pen"]
+    }
+  }
+}

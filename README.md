@@ -75,6 +75,38 @@ info = router.get_router_info(verify_cert=False)
 1. **域名修正**: 原輸入為 `coffeeLofe.asuscomm.comm`，已修正為 `coffeeLofe.asuscomm.com`
 2. **證書**: 使用 IP 地址連接時，SSL 證書驗證會失敗（因為證書是為域名簽發的），這是正常現象
 3. **端口**: 默認使用 8443（HTTPS），如果路由器使用其他端口，請修改 `port` 參數
+
+---
+
+## 本機中控台：帳號號碼 → 權限（RBAC）
+
+你可以用「帳號號碼」決定這個帳號能做什麼（例如：能不能看/改個資、能不能建命令單、能不能寫入 Workspace、能不能改小J模型設定）。
+
+### 1) 放置位置（建議靠 Google Workspace）
+
+- 把 `accounts_policy.json` 放到你的 Google Drive 同步資料夾（也就是你設定的 `WUCHANG_WORKSPACE_OUTDIR`，或另設 `WUCHANG_PII_OUTDIR`）
+- 檔名固定：`accounts_policy.json`
+
+你可以先從 repo 內的範例複製：
+- `accounts_policy.example.json` →（複製成）`accounts_policy.json`
+
+### 2) 環境變數（可選）
+
+- `WUCHANG_ACCOUNTS_PATH`：若你要放在別的路徑，可以用這個指定完整檔案路徑
+
+### 3) UI 行為
+
+- 若偵測到 `accounts_policy.json` 存在且有 accounts，代表「已啟用帳號政策」：
+  - 未登入：多數操作會被禁止（例如：PII/建單/寫入/模型設定等）
+  - 已登入：依 `permissions` 決定可做事項，並鎖定對應 `profile_id` 的介面
+
+### 4) 目前受保護的項目（伺服器端強制）
+
+- PII（管理員聯繫保險庫）：`pii_read` / `pii_write`
+- 命令單：`job_create` / `job_manage`
+- 小J 模型設定：`agent_config`
+- 寫入 Workspace：`workspace_write`
+- 本機直接高風險推送（若仍要用）：`high_risk_execute_local`
 4. **防火牆**: 確保防火牆允許連接到路由器端口
 
 ## 常見端口

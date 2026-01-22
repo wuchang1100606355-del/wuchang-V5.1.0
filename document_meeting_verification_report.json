@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-01-20T03:12:48.427162",
+  "results": {
+    "google_workspace": {
+      "credentials": true,
+      "token": true,
+      "api_access": false
+    },
+    "document_system": {
+      "document_file": true,
+      "process_defined": true,
+      "integration": true
+    },
+    "meeting_system": {
+      "demo_script": true,
+      "meeting_files": true,
+      "format_correct": true
+    },
+    "compliance": {
+      "compliance_file": true,
+      "pii_policy": true,
+      "data_storage": false
+    }
+  }
+}

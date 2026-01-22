@@ -1,29 +1,29 @@
+# 硬編碼記錄檔案（包含敏感資訊，不得提交到版本控制系統）
+device_registry.json
+storage_change_log.jsonl
+accountable_person_authorizations.json
+encrypted_storage_config.json
+
+# Google API 憑證檔案（敏感資訊，不得提交）
+google_credentials.json
+google_token.json
+
+# 個資相關檔案
+*.encrypted
+pii_*.json
+
+# 系統日誌
+*.log
+*.jsonl
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual Environment
-venv/
-ENV/
 env/
+venv/
 .venv
 
 # IDE
@@ -31,20 +31,7 @@ env/
 .idea/
 *.swp
 *.swo
-*~
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Project specific
-*.log
-*.tmp
-
-# Certificates (sensitive - do not commit)
-certs/
-*.pem
-*.key
-*.crt
-*.cert
-cert_key.tar

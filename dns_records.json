@@ -1,0 +1,155 @@
+{
+  "domain": "wuchang.life",
+  "records": {
+    "@": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["35.185.167.23", "220.135.21.74"],
+      "description": "根域名"
+    },
+    "verify": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["35.201.170.114"],
+      "description": "驗證服務"
+    },
+    "pm": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["104.199.144.93"],
+      "description": "項目管理"
+    },
+    "shop": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["220.135.21.74"],
+      "description": "商店"
+    },
+    "www": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["220.135.21.74"],
+      "description": "WWW 子域名"
+    },
+    "ui": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["220.135.21.74"],
+      "description": "Web UI 管理界面（靜態 IP）"
+    },
+    "admin": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["35.201.170.114"],
+      "description": "管理後台"
+    },
+    "hj": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["104.199.144.93"],
+      "description": "HJ 服務"
+    },
+    "pos": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["104.199.144.93"],
+      "description": "POS 系統"
+    },
+    "butler": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["35.201.170.114"],
+      "description": "Butler 服務"
+    },
+    "ft": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["35.201.170.114"],
+      "description": "FT 服務"
+    },
+    "core": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["35.201.170.114"],
+      "description": "核心服務"
+    },
+    "vs": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["35.201.170.114"],
+      "description": "VS 服務"
+    },
+    "odoo": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["35.185.167.23"],
+      "description": "Odoo 系統"
+    },
+    "housing": {
+      "type": "A",
+      "ttl": 300,
+      "values": ["104.199.144.93"],
+      "description": "Housing 服務"
+    },
+    "solcz6ij6vlf": {
+      "type": "CNAME",
+      "ttl": 300,
+      "values": ["gv-dw3nomjrkb6lc5.dv.googlehosted.com"],
+      "description": "Google 驗證"
+    }
+  },
+  "txt_records": {
+    "@": {
+      "type": "TXT",
+      "ttl": 300,
+      "values": ["OpenAI"],
+      "description": "根域名 TXT 記錄"
+    },
+    "_acme-challenge": {
+      "type": "TXT",
+      "ttl": 300,
+      "values": ["BW_lNnWnQBjgAsUQBDzFOl6A0dWrZMrXHezOaZChVCM"],
+      "description": "Let's Encrypt 驗證"
+    },
+    "_acme-challenge.www": {
+      "type": "TXT",
+      "ttl": 300,
+      "values": ["CoHODTpwaKuM-hdioAqt6x6tM8-2HPNzjEJa2eOKbDo"],
+      "description": "WWW Let's Encrypt 驗證"
+    }
+  },
+  "mx_records": {
+    "@": {
+      "type": "MX",
+      "ttl": 1800,
+      "priority": 1,
+      "values": ["smtp.google.com"],
+      "description": "Google 郵件服務器"
+    }
+  },
+  "ip_mapping": {
+    "35.185.167.23": {
+      "services": ["根域名", "Odoo"],
+      "location": "未知"
+    },
+    "220.135.21.74": {
+      "services": ["根域名", "Shop", "WWW"],
+      "location": "路由器/本地服務器"
+    },
+    "35.201.170.114": {
+      "services": ["Verify", "Admin", "Butler", "FT", "Core", "VS"],
+      "location": "Google Cloud"
+    },
+    "104.199.144.93": {
+      "services": ["PM", "HJ", "POS", "Housing"],
+      "location": "Google Cloud"
+    }
+  },
+  "verification_status": {
+    "dns_propagation": "pending",
+    "http_accessibility": "pending",
+    "ssl_certificates": "pending"
+  },
+  "last_updated": "2026-01-15T14:30:00Z",
+  "notes": "DNS 記錄配置，用於 AI 自動修改和管理"
+}

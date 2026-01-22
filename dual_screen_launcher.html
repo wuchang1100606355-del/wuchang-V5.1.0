@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>雙螢幕啟動器 - 五常控制中心</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+    .screen-info {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    .screen-item {
+      padding: 12px;
+      margin-bottom: 8px;
+      background: white;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+    }
+    .screen-item:last-child {
+      margin-bottom: 0;
+    }
+    .screen-label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .screen-details {
+      font-size: 12px;
+      color: #666;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 12px;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+    .status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+    .status.success {
+      background: #d1e7dd;
+      color: #0f5132;
+      border: 1px solid #badbcc;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #842029;
+      border: 1px solid #f5c2c7;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖥️ 雙螢幕啟動器</h1>
+    <div class="subtitle">在兩個螢幕上分別打開全螢幕控制中心</div>
+    
+    <div class="screen-info">
+      <div class="screen-label">偵測到的螢幕：</div>
+      <div id="screenList"></div>
+    </div>
+    
+    <button class="btn" id="btnLaunchDualScreen">啟動雙螢幕模式</button>
+    <button class="btn btn-secondary" id="btnCloseAll">關閉所有視窗</button>
+    
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    let openedWindows = [];
+
+    // 偵測螢幕資訊
+    function detectScreens() {
+      const screens = [];
+      
+      // 使用 Screen API
+      if (window.screen) {
+        screens.push({
+          id: 'primary',
+          label: '主螢幕',
+          width: window.screen.width,
+          height: window.screen.height,
+          availWidth: window.screen.availWidth,
+          availHeight: window.screen.availHeight,
+          left: window.screen.left || 0,
+          top: window.screen.top || 0
+        });
+      }
+      
+      // 嘗試使用 Multi-Screen Window Placement API（如果可用）
+      if ('getScreenDetails' in window) {
+        window.getScreenDetails().then(screenDetails => {
+          screenDetails.screens.forEach((screen, index) => {
+            screens.push({
+              id: `screen_${index}`,
+              label: index === 0 ? '主螢幕' : `螢幕 ${index + 1}`,
+              width: screen.width,
+              height: screen.height,
+              availWidth: screen.availWidth,
+              availHeight: screen.availHeight,
+              left: screen.left,
+              top: screen.top
+            });
+          });
+          updateScreenList(screens);
+        }).catch(() => {
+          // 如果不支援，使用基本資訊
+          updateScreenList(screens);
+        });
+      } else {
+        // 基本模式：假設有兩個螢幕（主螢幕 + 第二螢幕）
+        screens.push({
+          id: 'screen_2',
+          label: '第二螢幕（預設）',
+          width: window.screen.width,
+          height: window.screen.height,
+          availWidth: window.screen.availWidth,
+          availHeight: window.screen.availHeight,
+          left: window.screen.width, // 假設第二螢幕在主螢幕右側
+          top: 0
+        });
+        updateScreenList(screens);
+      }
+      
+      return screens;
+    }
+
+    function updateScreenList(screens) {
+      const list = document.getElementById('screenList');
+      if (screens.length === 0) {
+        list.innerHTML = '<div class="screen-item">無法偵測螢幕資訊</div>';
+        return;
+      }
+      
+      list.innerHTML = screens.map(screen => `
+        <div class="screen-item">
+          <div class="screen-label">${screen.label}</div>
+          <div class="screen-details">
+            解析度: ${screen.width} × ${screen.height}<br>
+            可用區域: ${screen.availWidth} × ${screen.availHeight}<br>
+            位置: (${screen.left}, ${screen.top})
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 在指定螢幕上打開全螢幕視窗
+    function openFullscreenOnScreen(screenIndex, screenInfo) {
+      const url = window.location.origin + '/';
+      const features = [
+        'fullscreen=yes',
+        `width=${screenInfo.availWidth}`,
+        `height=${screenInfo.availHeight}`,
+        `left=${screenInfo.left}`,
+        `top=${screenInfo.top}`,
+        'menubar=no',
+        'toolbar=no',
+        'location=no',
+        'status=no',
+        'resizable=yes',
+        'scrollbars=yes'
+      ].join(',');
+      
+      const win = window.open(url, `wuchang_screen_${screenIndex}`, features);
+      
+      if (win) {
+        openedWindows.push(win);
+        
+        // 等待視窗載入後進入全螢幕
+        win.addEventListener('load', () => {
+          setTimeout(() => {
+            try {
+              if (win.document.documentElement.requestFullscreen) {
+                win.document.documentElement.requestFullscreen();
+              } else if (win.document.documentElement.webkitRequestFullscreen) {
+                win.document.documentElement.webkitRequestFullscreen();
+              } else if (win.document.documentElement.msRequestFullscreen) {
+                win.document.documentElement.msRequestFullscreen();
+              }
+            } catch (e) {
+              console.warn('無法進入全螢幕:', e);
+            }
+          }, 500);
+        });
+      }
+      
+      return win;
+    }
+
+    // 啟動雙螢幕模式
+    async function launchDualScreen() {
+      const statusDiv = document.getElementById('status');
+      statusDiv.style.display = 'none';
+      
+      try {
+        // 偵測螢幕
+        const screens = detectScreens();
+        
+        if (screens.length < 2) {
+          // 如果只偵測到一個螢幕，使用預設配置
+          screens.push({
+            id: 'screen_2',
+            label: '第二螢幕（預設）',
+            width: window.screen.width,
+            height: window.screen.height,
+            availWidth: window.screen.availWidth,
+            availHeight: window.screen.availHeight,
+            left: window.screen.width,
+            top: 0
+          });
+        }
+        
+        // 在主螢幕上打開第一個視窗
+        const screen1 = screens[0];
+        const win1 = openFullscreenOnScreen(1, screen1);
+        
+        // 等待一下再打開第二個視窗
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // 在第二螢幕上打開第二個視窗
+        const screen2 = screens[1] || screens[0];
+        const win2 = openFullscreenOnScreen(2, {
+          ...screen2,
+          left: screen2.left || window.screen.width
+        });
+        
+        if (win1 && win2) {
+          showStatus('success', '✅ 已啟動雙螢幕模式！兩個視窗已分別打開。');
+        } else {
+          showStatus('error', '❌ 無法打開視窗，請檢查瀏覽器彈出視窗設定。');
+        }
+      } catch (e) {
+        showStatus('error', `❌ 發生錯誤：${String(e)}`);
+      }
+    }
+
+    // 關閉所有視窗
+    function closeAllWindows() {
+      openedWindows.forEach(win => {
+        try {
+          if (win && !win.closed) {
+            win.close();
+          }
+        } catch (e) {
+          console.warn('無法關閉視窗:', e);
+        }
+      });
+      openedWindows = [];
+      showStatus('success', '已關閉所有視窗');
+    }
+
+    function showStatus(type, message) {
+      const statusDiv = document.getElementById('status');
+      statusDiv.className = `status ${type}`;
+      statusDiv.textContent = message;
+      statusDiv.style.display = 'block';
+    }
+
+    // 事件綁定
+    document.getElementById('btnLaunchDualScreen').addEventListener('click', launchDualScreen);
+    document.getElementById('btnCloseAll').addEventListener('click', closeAllWindows);
+
+    // 初始載入
+    detectScreens();
+  </script>
+</body>
+</html>

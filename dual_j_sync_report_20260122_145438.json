@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-01-22T14:54:38.305510",
+  "files_to_sync": [
+    "cloudflared/config.yml",
+    "cloudflared/credentials.json"
+  ],
+  "local_files_count": 2,
+  "sync_results": {
+    "success": [],
+    "failed": [
+      "cloudflared/config.yml",
+      "cloudflared/credentials.json"
+    ],
+    "total_replacements": 0,
+    "files_processed": [
+      "cloudflared/config.yml",
+      "cloudflared/credentials.json"
+    ]
+  },
+  "dns_replacements": 0,
+  "server_path": "\\\\HOME-COMMPUT\\wuchang V5.1.0",
+  "health_url": "https://coffeeLofe.asuscomm.com:8443/health"
+}

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>雙 j 工作日誌 - wuchang.life</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.2em;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .stat-card h3 {
+      font-size: 2em;
+      margin-bottom: 5px;
+    }
+    .stat-card p {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+    .log-entry {
+      background: #f8f9fa;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      transition: transform 0.2s;
+    }
+    .log-entry:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .log-agent {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #667eea;
+    }
+    .log-time {
+      color: #666;
+      font-size: 0.9em;
+    }
+    .log-type {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      margin-right: 10px;
+    }
+    .log-description {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+    .log-status {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: bold;
+    }
+    .status-completed {
+      background: #28a745;
+      color: white;
+    }
+    .status-failed {
+      background: #dc3545;
+      color: white;
+    }
+    .status-in_progress {
+      background: #ffc107;
+      color: #333;
+    }
+    .log-result {
+      margin-top: 10px;
+      padding: 10px;
+      background: #e9ecef;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .filter-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+    .filter-btn.active {
+      background: #667eea;
+      color: white;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    .empty-state-icon {
+      font-size: 4em;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤝 雙 j 工作日誌</h1>
+    <p class="subtitle">地端小 j 與雲端小 j (JULES) 協作記錄</p>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <h3>32</h3>
+        <p>今日工作記錄</p>
+      </div>
+      <div class="stat-card">
+        <h3>25</h3>
+        <p>地端小 j 記錄</p>
+      </div>
+      <div class="stat-card">
+        <h3>9</h3>
+        <p>雲端小 j 記錄</p>
+      </div>
+      <div class="stat-card">
+        <h3>18</h3>
+        <p>已完成工作</p>
+      </div>
+    </div>
+    
+    <div class="filter-buttons">
+      <button class="filter-btn active" onclick="filterLogs('all')">全部</button>
+      <button class="filter-btn" onclick="filterLogs('地端小 j')">地端小 j</button>
+      <button class="filter-btn" onclick="filterLogs('雲端小 j (JULES)')">雲端小 j</button>
+      <button class="filter-btn" onclick="filterLogs('completed')">已完成</button>
+      <button class="filter-btn" onclick="filterLogs('failed')">失敗</button>
+    </div>
+    
+    <div id="log-container">
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">檔案同步</span>
+          </div>
+          <span class="log-time">2026-01-22 14:54:38</span>
+        </div>
+        <div class="log-description">檔案同步完成</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">成功同步 0 個檔案，替換 0 處DNS</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">檔案比對</span>
+          </div>
+          <span class="log-time">2026-01-22 14:54:38</span>
+        </div>
+        <div class="log-description">檔案比對完成</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">成功同步 0 個檔案，替換 0 處DNS</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">檔案同步</span>
+          </div>
+          <span class="log-time">2026-01-22 14:54:15</span>
+        </div>
+        <div class="log-description">準備同步 2 個檔案到伺服器，將自動替換本機DNS為伺服器DNS</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">檔案比對</span>
+          </div>
+          <span class="log-time">2026-01-22 14:54:11</span>
+        </div>
+        <div class="log-description">開始比對本機與伺服器檔案</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">檔案同步</span>
+          </div>
+          <span class="log-time">2026-01-22 14:53:48</span>
+        </div>
+        <div class="log-description">準備同步 2 個檔案到伺服器，將自動替換本機DNS為伺服器DNS</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">檔案比對</span>
+          </div>
+          <span class="log-time">2026-01-22 14:53:38</span>
+        </div>
+        <div class="log-description">開始比對本機與伺服器檔案</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">DNS 和證書檢查</span>
+          </div>
+          <span class="log-time">2026-01-22 14:02:20</span>
+        </div>
+        <div class="log-description">檢查 DNS 傳播和 SSL 證書狀態</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">DNS 已傳播，SSL 證書待 Cloudflare Tunnel 配置完成後自動簽發</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">DNS 設定</span>
+          </div>
+          <span class="log-time">2026-01-22 09:18:05</span>
+        </div>
+        <div class="log-description">確認網域商為 Squarespace 並建立 DNS 設定指南</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">已建立 Squarespace DNS 設定指南和範本</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">DNS 合規檢查</span>
+          </div>
+          <span class="log-time">2026-01-22 09:07:27</span>
+        </div>
+        <div class="log-description">檢查 DNS 設定是否符合 Google 非營利組織規範</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">DNS 合規率 33%，2/6 項目完全合規</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">合規檢查</span>
+          </div>
+          <span class="log-time">2026-01-22 09:05:47</span>
+        </div>
+        <div class="log-description">執行 Google 非營利組織合規檢查</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">合規率 20%，2/10 項目完全合規</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">Cloudflare Tunnel 配置</span>
+          </div>
+          <span class="log-time">2026-01-22 09:04:17</span>
+        </div>
+        <div class="log-description">建立手動配置指南和範本檔案</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">已建立完整的手動配置檔案和範本</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">合規缺口分析</span>
+          </div>
+          <span class="log-time">2026-01-22 09:01:19</span>
+        </div>
+        <div class="log-description">更新 wuchang.life 首頁全球可見與 Google 非營利組織合規缺口分析進度報告</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">已建立進度報告，當前完成率 11%</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">系統規定</span>
+          </div>
+          <span class="log-time">2026-01-22 08:55:53</span>
+        </div>
+        <div class="log-description">將雲端歷史資料庫措施列為系統工作規定</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">已更新 jules_memory_bank.json 和 AGENT_CONSTITUTION.md</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">雲端歷史資料庫</span>
+          </div>
+          <span class="log-time">2026-01-22 08:53:44</span>
+        </div>
+        <div class="log-description">建立雲端歷史資料庫並歸檔現有檔案</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">成功建立資料庫結構並歸檔 19 個檔案</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">磁碟清理</span>
+          </div>
+          <span class="log-time">2026-01-22 08:47:49</span>
+        </div>
+        <div class="log-description">磁碟清理完成</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">成功釋放 9.765 GB 空間</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">磁碟清理</span>
+          </div>
+          <span class="log-time">2026-01-22 08:46:42</span>
+        </div>
+        <div class="log-description">執行Docker深度清理</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">Docker深度清理完成</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">磁碟清理</span>
+          </div>
+          <span class="log-time">2026-01-22 08:45:45</span>
+        </div>
+        <div class="log-description">執行安全磁碟清理</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">清理 3 個項目，釋放 0.00 GB</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">磁碟清理</span>
+          </div>
+          <span class="log-time">2026-01-22 08:44:56</span>
+        </div>
+        <div class="log-description">執行安全磁碟清理</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">清理 0 個項目，釋放 0.00 GB</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">系統健康檢查</span>
+          </div>
+          <span class="log-time">2026-01-22 08:36:17</span>
+        </div>
+        <div class="log-description">執行系統健康度檢查</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">健康檢查完成，發現2個需要關注的問題</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="failed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">全面部署執行</span>
+          </div>
+          <span class="log-time">2026-01-22 08:33:56</span>
+        </div>
+        <div class="log-description">部署執行完成（健康檢查失敗）</div>
+        <div>
+          <span class="log-status status-failed">❌ 失敗</span>
+        </div>
+
+        <div class="log-result">健康檢查URL無法連接</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">全面部署準備</span>
+          </div>
+          <span class="log-time">2026-01-22 08:33:56</span>
+        </div>
+        <div class="log-description">部署檔案準備完成</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">已準備21個檔案，替換25處DNS，保護機制正常運作</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="failed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">全面部署執行</span>
+          </div>
+          <span class="log-time">2026-01-22 08:33:35</span>
+        </div>
+        <div class="log-description">部署執行失敗</div>
+        <div>
+          <span class="log-status status-failed">❌ 失敗</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">全面部署執行</span>
+          </div>
+          <span class="log-time">2026-01-22 08:33:12</span>
+        </div>
+        <div class="log-description">開始執行全面部署</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">全面部署準備</span>
+          </div>
+          <span class="log-time">2026-01-22 08:33:12</span>
+        </div>
+        <div class="log-description">開始準備全面部署</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">全面部署準備</span>
+          </div>
+          <span class="log-time">2026-01-22 08:32:45</span>
+        </div>
+        <div class="log-description">開始準備全面部署</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">全面部署啟動</span>
+          </div>
+          <span class="log-time">2026-01-22 08:32:29</span>
+        </div>
+        <div class="log-description">開始執行雙J協作全面部署</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">全面部署準備</span>
+          </div>
+          <span class="log-time">2026-01-22 08:32:14</span>
+        </div>
+        <div class="log-description">開始準備全面部署</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">全面部署準備</span>
+          </div>
+          <span class="log-time">2026-01-22 08:21:58</span>
+        </div>
+        <div class="log-description">開始準備全面部署</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">檔案同步</span>
+          </div>
+          <span class="log-time">2026-01-22 08:14:24</span>
+        </div>
+        <div class="log-description">準備同步 3 個檔案到伺服器，將自動替換本機DNS為伺服器DNS</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">檔案比對</span>
+          </div>
+          <span class="log-time">2026-01-22 08:14:18</span>
+        </div>
+        <div class="log-description">開始比對本機與伺服器檔案</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">檔案同步</span>
+          </div>
+          <span class="log-time">2026-01-22 08:12:35</span>
+        </div>
+        <div class="log-description">準備同步 2 個檔案到伺服器，將自動替換本機DNS為伺服器DNS</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="in_progress">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">檔案比對</span>
+          </div>
+          <span class="log-time">2026-01-22 08:12:27</span>
+        </div>
+        <div class="log-description">開始比對本機與伺服器檔案</div>
+        <div>
+          <span class="log-status status-in_progress">🔄 進行中</span>
+        </div>
+
+      </div>
+
+      <div class="log-entry" data-agent="雲端小 j (JULES)" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">雲端小 j (JULES)</span>
+            <span class="log-type">任務執行</span>
+          </div>
+          <span class="log-time">2026-01-20 16:26:15</span>
+        </div>
+        <div class="log-description">執行容器維護任務</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">容器狀態已恢復正常</div>
+
+      </div>
+
+      <div class="log-entry" data-agent="地端小 j" data-status="completed">
+        <div class="log-header">
+          <div>
+            <span class="log-agent">地端小 j</span>
+            <span class="log-type">監控檢查</span>
+          </div>
+          <span class="log-time">2026-01-20 16:26:15</span>
+        </div>
+        <div class="log-description">每小時容器狀態檢查完成</div>
+        <div>
+          <span class="log-status status-completed">✅ 已完成</span>
+        </div>
+
+        <div class="log-result">9 個標準容器全部運行中，系統健康度 100%</div>
+
+      </div>
+
+    </div>
+  </div>
+  
+  <script>
+    function filterLogs(filter) {
+      const entries = document.querySelectorAll('.log-entry');
+      const buttons = document.querySelectorAll('.filter-btn');
+      
+      // 更新按鈕狀態
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.trim() === (filter === 'all' ? '全部' : 
+            filter === 'completed' ? '已完成' : 
+            filter === 'failed' ? '失敗' : filter)) {
+          btn.classList.add('active');
+        }
+      });
+      
+      // 過濾日誌
+      entries.forEach(entry => {
+        if (filter === 'all') {
+          entry.style.display = 'block';
+        } else if (filter === 'completed' || filter === 'failed') {
+          entry.style.display = entry.dataset.status === filter ? 'block' : 'none';
+        } else {
+          entry.style.display = entry.dataset.agent === filter ? 'block' : 'none';
+        }
+      });
+    }
+    
+    // 自動刷新（每 30 秒）
+    setInterval(() => {
+      location.reload();
+    }, 30000);
+  </script>
+</body>
+</html>

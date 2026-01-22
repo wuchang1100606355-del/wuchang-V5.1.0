@@ -1,0 +1,37 @@
+請協助用戶完成 Cloudflare Tunnel 設定，完全使用命令列，不需要 Cloudflare Dashboard。
+
+設定步驟：
+
+1. 進入容器並登入：
+   docker exec -it wuchangv510-cloudflared-1 sh
+   cloudflared tunnel login
+   （等待用戶在瀏覽器中完成授權）
+
+2. 建立 Tunnel：
+   cloudflared tunnel create wuchang-life
+   （記下輸出的 Tunnel ID）
+
+3. 確認 Tunnel ID：
+   cloudflared tunnel list
+   （確認 Tunnel ID 正確）
+
+4. 退出容器：
+   exit
+
+5. 更新 config.yml：
+   - 打開 cloudflared/config.yml
+   - 將 tunnel: <tunnel-id> 改為 tunnel: [實際的Tunnel ID]
+   - 確認 ingress 中有 wuchang.life 和 www.wuchang.life 的路由
+
+6. 複製檔案並重啟：
+   docker cp cloudflared/config.yml wuchangv510-cloudflared-1:/etc/cloudflared/config.yml
+   docker restart wuchangv510-cloudflared-1
+   docker logs wuchangv510-cloudflared-1
+
+完成後，請輸出：
+1. Tunnel ID（用於 Squarespace DNS 設定）
+2. Squarespace DNS 設定值：
+   - @ CNAME <tunnel-id>.cfargotunnel.com
+   - www CNAME <tunnel-id>.cfargotunnel.com
+
+設定位置：https://account.squarespace.com/domains/managed/wuchang.life/dns/dns-settings

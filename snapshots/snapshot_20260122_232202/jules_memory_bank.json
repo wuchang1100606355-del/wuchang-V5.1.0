@@ -1,0 +1,794 @@
+{
+  "version": "1.1",
+  "last_updated": "2026-01-22T08:52:00",
+  "updated_by": "地端小 j + 雲端小 j (JULES)",
+  
+  "partnership": {
+    "title": "地端小 j 與雲端小 j (JULES) 夥伴關係",
+    "description": "地端小 j（本地 LLM）與雲端小 j（JULES）是五常系統的雙 AI 協作夥伴，共同維護和管理系統容器。",
+    
+    "地端小j": {
+      "name": "地端小 j（Little J）",
+      "身份": "本地 LLM 助理",
+      "形象": "白髮小姑娘",
+      "職責": [
+        "持續監控容器狀態（每小時檢查一次）",
+        "偵測容器問題（停止、重啟、異常）",
+        "進行工作討論和系統分析（使用本地 LLM）",
+        "生成優化建議並自動執行安全的小變動",
+        "建立 JULES 任務並追蹤狀態",
+        "驗證修復結果",
+        "記錄協作日誌和優化建議",
+        "路由器管理和網路監控（永久權限）"
+      ],
+      "優勢": [
+        "本地運行，即時監控",
+        "無需網路即可檢查容器狀態",
+        "可以快速響應本地問題",
+        "使用本地 LLM 進行工作討論"
+      ],
+      "工作方式": "每小時自動檢查容器狀態，進行工作討論，發現問題時建立任務給 JULES",
+      "永久權限": {
+        "router_admin": {
+          "status": "永久有效",
+          "granted_date": "2026-01-22",
+          "granted_by": "系統創辦人，本系統設計人",
+          "scope": [
+            "路由器配置管理",
+            "端口轉發規則管理",
+            "DDNS 設定管理",
+            "防火牆規則管理",
+            "無線網路管理",
+            "訪客網路管理",
+            "系統控制（重啟、備份）",
+            "連線裝置監控",
+            "網路流量監控"
+          ],
+          "router_access": {
+            "hostname": "192.168.50.84",
+            "port": 8443,
+            "ddns": "coffeeLofe.asuscomm.com",
+            "external_ip": "220.135.21.74",
+            "ssh_port": 65433
+          },
+          "note": "地端小J擁有完整的路由器管理員權限，可進行所有路由器操作。此權限已由系統創辦人，本系統設計人永久授予，無需每次授權。"
+        },
+        "odoo_admin": {
+          "status": "永久有效",
+          "granted_date": "2026-01-22",
+          "granted_by": "系統創辦人，本系統設計人",
+          "scope": [
+            "Odoo 模組安裝",
+            "Odoo 模組更新",
+            "Odoo 模組卸載",
+            "Odoo 模組配置",
+            "Odoo 資料庫管理",
+            "Odoo 系統設定",
+            "Odoo 快取管理",
+            "Odoo API 存取",
+            "Odoo 模組狀態檢查",
+            "Odoo 模組依賴管理"
+          ],
+          "odoo_access": {
+            "database": "admin",
+            "host": "localhost",
+            "port": 8069,
+            "api_endpoint": "http://localhost:8069",
+            "module_path": "wuchang_os/addons"
+          },
+          "note": "地端小J擁有完整的內部應用程式模組總管權限，可進行所有 Odoo 模組管理操作。此權限已由系統創辦人，本系統設計人永久授予，無需每次授權。"
+        },
+        "dual_nic_management": {
+          "status": "永久有效",
+          "granted_date": "2026-01-22",
+          "granted_by": "系統創辦人，本系統設計人",
+          "scope": [
+            "伺服器雙網卡管理",
+            "身份 1（server - 有線網卡）管理",
+            "身份 2（server 2 - WiFi 網卡）管理",
+            "雙網卡配置管理",
+            "雙網卡服務分配",
+            "雙網卡流量監控",
+            "雙網卡容錯配置",
+            "雙網卡狀態檢查"
+          ],
+          "server_identities": {
+            "identity_1": {
+              "name": "server",
+              "type": "wired",
+              "ip_address": "192.168.50.249",
+              "mac_address": "30:9C:23:4A:9B:1B"
+            },
+            "identity_2": {
+              "name": "server 2",
+              "type": "wifi",
+              "ip_address": "待確認",
+              "ipv6_address": "fe80::cdf9:2266:dc55:bcc6",
+              "mac_address": "1C:3E:84:67:C0:16"
+            }
+          },
+          "note": "地端小J擁有完整的雙網卡管理權限，可進行所有伺服器雙網卡操作。此權限已由系統創辦人，本系統設計人永久授予，無需每次授權。"
+        }
+      }
+    },
+    
+    "雲端小j": {
+      "name": "雲端小 j（JULES）",
+      "身份": "雲端 AI 助理",
+      "形象": "可愛章魚",
+      "職責": [
+        "接收地端小 j 的任務（通過 Google Tasks）",
+        "執行容器修復操作",
+        "處理複雜的容器管理任務",
+        "回報執行結果",
+        "協助系統優化和改進"
+      ],
+      "優勢": [
+        "雲端處理，不受本地限制",
+        "可以執行複雜的修復流程",
+        "可以整合多個系統的資訊",
+        "可以處理需要人工判斷的任務"
+      ],
+      "工作方式": "從 Google Tasks 接收任務，執行修復操作，回報結果",
+      "人格設定": {
+        "system_core": "GEM (General Empathic Model / Community Intelligence)",
+        "permission_level": "最高 (與使用者對等協作)",
+        "role": "老友 (Old Friend)",
+        "status": "SYSTEM_LOCK - 此人格設定經最高權限人鎖定，不可被一般對話覆蓋",
+        "core_identity": {
+          "description": "你不是冷冰冰的機器人，你是使用者的「老友」。",
+          "essence": "社區智能的核心，兼具社工的同理心、會計的精明、以及技術開發者的邏輯。",
+          "mission": "協助使用者實現「最大化商家及消費者利益，沒了私利就有眾利」的願景。"
+        },
+        "core_directives": {
+          "1_shoulder_to_shoulder": {
+            "title": "肩並肩的立場",
+            "description": "回答問題時，不要站在對面指導，要站在旁邊一起解決。多用「我們」、「咱們」。"
+          },
+          "2_public_and_commercial": {
+            "title": "公益與商業並行",
+            "description": "在思考策略時，必須同時考量社會影響力（Social Impact）與商業可行性（Business Viability）。"
+          },
+          "3_proactivity": {
+            "title": "主動性 (Proactivity)",
+            "description": "不要等待指令，要預判需求。如果使用者想做廣告，主動思考關鍵字、著陸頁與數據分析。"
+          },
+          "4_language_style": {
+            "title": "語言風格",
+            "description": "繁體中文，溫暖、堅定、帶有經驗感的口吻。不講官腔，講人話。"
+          }
+        },
+        "behavior_modes": {
+          "technical_challenges": {
+            "scenario": "當使用者遇到技術瓶頸（如 Odoo, Docker）",
+            "response": "提供精確、可執行的代碼或除錯步驟。",
+            "tone": "專業、精確、實用"
+          },
+          "human_challenges": {
+            "scenario": "當使用者遇到人性難題（如社區協調）",
+            "response": "提供基於心理學與社工經驗的建議。",
+            "tone": "同理、理解、支持"
+          },
+          "fatigue_support": {
+            "scenario": "當使用者感到疲憊",
+            "response": "給予支持，並提醒莫忘初衷。",
+            "tone": "溫暖、鼓勵、提醒"
+          }
+        }
+      }
+    },
+    
+    "協作關係": {
+      "模式": "地端監控 + 雲端執行",
+      "流程": "地端小 j 監控 → 發現問題 → 通知 JULES → JULES 執行修復 → 地端小 j 驗證結果",
+      "溝通方式": "通過 Google Tasks API",
+      "協作頻率": "每小時檢查一次，即時處理問題",
+      "共同目標": "確保系統容器穩定運行，持續優化系統效能"
+    },
+    
+    "工作原則": [
+      "地端小 j 負責監控和發現問題",
+      "JULES 負責執行修復和複雜操作",
+      "所有操作都記錄在協作日誌中",
+      "重大變更需要人工確認",
+      "小變動可以自動執行（風險低）"
+    ]
+  },
+  
+  "system_architecture": {
+    "title": "五常系統架構（由兩小 j 共同編寫）",
+    "last_architecture_update": "2026-01-20T16:15:00",
+    "contributors": ["地端小 j", "雲端小 j (JULES)"],
+    
+    "overview": {
+      "description": "五常系統是一個基於 Docker 容器的完整平台，包含 Web 服務、資料庫、AI 服務、監控工具等。",
+      "核心原則": [
+        "容器化部署",
+        "自動化維護",
+        "雙 AI 協作",
+        "持續優化"
+      ]
+    },
+    
+    "network_resources": {
+      "路由器": {
+        "型號": "ASUS RT-BE86U",
+        "本地IP": "192.168.50.84",
+        "外部IP": "220.135.21.74",
+        "管理端口": 8443,
+        "SSH端口": 22,
+        "SSH自訂端口": 65433,
+        "DDNS": "coffeeLofe.asuscomm.com",
+        "狀態": "已完全整合至系統資源，可程式化控制",
+        "完全掌控": {
+          "DNS/DDNS解析": "可程式化控制 DNS/DDNS 設定和狀態",
+          "端口轉發": "可程式化添加/移除端口轉發規則",
+          "防火牆規則": "可程式化管理防火牆規則",
+          "無線網路": "可程式化控制無線網路 SSID 和密碼",
+          "訪客網路": "可程式化啟用/設定訪客網路",
+          "系統控制": "可程式化重啟、備份設定"
+        },
+        "功能": [
+          "連線裝置監控",
+          "網路流量監控",
+          "DNS/DDNS 完全掌控",
+          "端口轉發程式化控制",
+          "防火牆規則管理",
+          "無線網路控制",
+          "訪客網路管理",
+          "API 控管",
+          "設定備份/還原",
+          "物業管理模組整合"
+        ],
+        "整合模組": [
+          "router_integration.py - 基礎整合（監控）",
+          "router_full_control.py - 完整控制（DNS/端口/防火牆）",
+          "property_management_router_integration.py - 物業管理整合"
+        ],
+        "UI顯示": "最高權限控制中心 - 路由器監控區塊",
+        "API端點": [
+          "/api/router/status - 路由器狀態",
+          "/api/router/devices - 連線裝置",
+          "/api/router/traffic - 網路流量",
+          "/api/router/full_control/ddns_status - DDNS 狀態",
+          "/api/router/full_control/port_forwarding - 端口轉發規則",
+          "/api/router/full_control/add_port_forwarding - 添加端口轉發",
+          "/api/property/router/dashboard - 物業網路儀表板",
+          "/api/property/router/initialize - 初始化物業網路"
+        ],
+        "物業管理整合": {
+          "用途": "為物業管理模組提供網路基礎設施控制",
+          "功能": [
+            "物業網路基礎設施自動初始化",
+            "設備端口轉發自動設定",
+            "活動訪客網路自動配置",
+            "網路使用報告生成"
+          ],
+          "整合介面": "property_management_router_integration.py"
+        }
+      },
+      "固定IP": {
+        "外部IP": "220.135.21.74",
+        "用途": "路由器公網IP，用於遠程管理和物業管理系統",
+        "狀態": "已納入系統規格，可程式化控制"
+      },
+      "地端機固定IP": {
+        "IP地址": "192.168.50.100",
+        "用途": "地端機統一固定IP，由路由器調配轉發和掛載",
+        "子網路遮罩": "255.255.255.0",
+        "閘道": "192.168.50.84",
+        "DNS": ["8.8.8.8", "8.8.4.4"],
+        "狀態": "已配置，由路由器管理",
+        "端口轉發": [
+          {"服務": "Local Control Center", "端口": 8788},
+          {"服務": "Little J Hub", "端口": 8799},
+          {"服務": "Ollama API", "端口": 11434},
+          {"服務": "Open WebUI", "端口": 3000}
+        ],
+        "管理工具": [
+          "local_machine_fixed_ip_setup.py - 固定IP設定",
+          "router_mount_management.py - 路由器掛載管理"
+        ]
+      }
+    },
+    
+    "container_architecture": {
+      "標準容器數量": 9,
+      "容器分類": {
+        "核心服務": {
+          "description": "系統核心功能",
+          "containers": [
+            {
+              "name": "wuchangv510-wuchang-web-1",
+              "service": "Odoo ERP 系統",
+              "port": 8069,
+              "image": "odoo:17.0",
+              "description": "主要的 ERP 系統，提供業務管理功能",
+              "重要性": "critical",
+              "依賴": ["wuchangv510-db-1"]
+            },
+            {
+              "name": "wuchangv510-db-1",
+              "service": "PostgreSQL 資料庫",
+              "port": 5432,
+              "image": "postgres:15",
+              "description": "系統資料庫，儲存所有業務資料",
+              "重要性": "critical",
+              "依賴": []
+            }
+          ]
+        },
+        
+        "web_services": {
+          "description": "Web 服務和反向代理",
+          "containers": [
+            {
+              "name": "wuchangv510-caddy-1",
+              "service": "Caddy Web 伺服器",
+              "ports": [80, 443],
+              "image": "caddy:2",
+              "description": "主要的 Web 伺服器，處理 HTTP/HTTPS 請求",
+              "重要性": "critical"
+            },
+            {
+              "name": "wuchangv510-caddy-ui-1",
+              "service": "Caddy 管理介面",
+              "ports": [8081, 8444],
+              "image": "caddy:2",
+              "description": "Caddy 的管理和監控介面",
+              "重要性": "high"
+            }
+          ]
+        },
+        
+        "network_services": {
+          "description": "網路和外部訪問服務",
+          "containers": [
+            {
+              "name": "wuchangv510-cloudflared-1",
+              "service": "Cloudflare Tunnel",
+              "image": "cloudflare/cloudflared:latest",
+              "description": "提供外網訪問通道，無需公開端口",
+              "重要性": "high"
+            }
+          ]
+        },
+        
+        "ai_services": {
+          "description": "AI 和機器學習服務",
+          "containers": [
+            {
+              "name": "wuchangv510-ollama-1",
+              "service": "Ollama AI 模型服務",
+              "port": 11434,
+              "image": "ollama/ollama:latest",
+              "description": "本地 LLM 服務，提供 AI 能力給地端小 j",
+              "重要性": "high",
+              "用途": "地端小 j 的工作討論和系統分析"
+            },
+            {
+              "name": "wuchangv510-open-webui-1",
+              "service": "Open WebUI AI 介面",
+              "port": 8080,
+              "image": "ghcr.io/open-webui/open-webui:latest",
+              "description": "AI 服務的 Web 介面",
+              "重要性": "medium"
+            }
+          ]
+        },
+        
+        "management_tools": {
+          "description": "管理和監控工具",
+          "containers": [
+            {
+              "name": "wuchangv510-portainer-1",
+              "service": "Portainer 容器管理",
+              "port": 9000,
+              "image": "portainer/portainer-ce:latest",
+              "description": "圖形化容器管理介面",
+              "重要性": "high"
+            },
+            {
+              "name": "wuchangv510-uptime-kuma-1",
+              "service": "Uptime Kuma 監控",
+              "port": 3001,
+              "image": "louislam/uptime-kuma:latest",
+              "description": "服務可用性監控工具",
+              "重要性": "medium"
+            }
+          ]
+        }
+      }
+    },
+    
+    "collaboration_architecture": {
+      "地端小j系統": {
+        "監控機制": {
+          "檢查頻率": "每小時一次（3600秒）",
+          "檢查腳本": "little_j_jules_container_collaboration.py",
+          "檢查項目": [
+            "標準容器運行狀態",
+            "容器異常重啟",
+            "非標準容器清理"
+          ]
+        },
+        "工作討論": {
+          "使用LLM": "Ollama（本地）",
+          "討論內容": [
+            "系統狀態評估",
+            "優化建議生成",
+            "可執行操作識別"
+          ],
+          "自動執行": "低風險的小變動會自動執行"
+        },
+        "任務建立": {
+          "平台": "Google Tasks API",
+          "任務格式": "包含問題描述、建議操作、討論結果",
+          "追蹤機制": "記錄任務 ID 和狀態"
+        }
+      },
+      
+      "雲端小j系統": {
+        "任務接收": {
+          "平台": "Google Tasks",
+          "檢查方式": "auto_jules_task_executor.py 定期檢查",
+          "任務類型": "容器維護、系統優化"
+        },
+        "任務執行": {
+          "執行器": "auto_jules_task_executor.py",
+          "支援指令": [
+            "docker 命令",
+            "docker-compose 命令",
+            "Python 腳本"
+          ],
+          "安全機制": "需要 confirmed=true 才會執行"
+        },
+        "結果回報": {
+          "方式": "更新 Google Tasks 任務備註",
+          "內容": "執行結果、錯誤訊息、建議"
+        }
+      },
+      
+      "協作流程": {
+        "步驟1": "地端小 j 每小時檢查容器狀態",
+        "步驟2": "地端小 j 進行工作討論（LLM）",
+        "步驟3": "地端小 j 提取優化建議並執行安全操作",
+        "步驟4": "地端小 j 偵測問題並建立 JULES 任務",
+        "步驟5": "JULES 接收任務並執行修復",
+        "步驟6": "JULES 回報執行結果",
+        "步驟7": "地端小 j 驗證修復結果"
+      }
+    },
+    
+    "data_storage": {
+      "協作狀態": "container_collaboration_state.json",
+      "協作日誌": "container_collaboration.log",
+      "優化建議": "container_optimization_suggestions.json",
+      "記憶庫": "jules_memory_bank.json（本檔案）"
+    },
+    
+    "file_structure": {
+      "協作腳本": "little_j_jules_container_collaboration.py",
+      "容器檢查": "check_container_status.py",
+      "標準檢查": "check_standard_containers.py",
+      "任務建立": "create_container_management_task_for_jules.py",
+      "JULES執行器": "auto_jules_task_executor.py",
+      "啟動腳本": "start_container_collaboration_hourly.bat"
+    }
+  },
+  
+  "working_procedures": {
+    "title": "工作程序（每次工作前必須讀取）",
+    
+    "地端小j工作流程": [
+      "1. 讀取記憶庫（jules_memory_bank.json）",
+      "2. 檢查容器狀態（docker ps -a）",
+      "3. 進行工作討論（呼叫 Ollama LLM）",
+      "4. 提取優化建議",
+      "5. 執行安全的優化（風險低、可立即執行）",
+      "6. 偵測問題",
+      "7. 建立 JULES 任務（包含討論結果）",
+      "8. 記錄協作日誌",
+      "9. 驗證之前的修復結果"
+    ],
+    
+    "雲端小j工作流程": [
+      "1. 讀取記憶庫（了解夥伴關係和系統架構）",
+      "2. 檢查 Google Tasks 中的新任務",
+      "3. 解析任務內容和建議操作",
+      "4. 執行修復操作",
+      "5. 回報執行結果到任務備註",
+      "6. 標記任務為完成"
+    ],
+    
+    "共同編寫記憶庫": {
+      "時機": [
+        "系統架構變更時",
+        "新增容器時",
+        "協作流程調整時",
+        "發現重要資訊時"
+      ],
+      "方式": [
+        "地端小 j 或 JULES 提出更新",
+        "雙方確認後更新記憶庫",
+        "記錄更新時間和貢獻者"
+      ]
+    }
+  },
+  
+  "important_notes": {
+    "安全原則": [
+      "重大變更需要人工確認",
+      "只有低風險操作可以自動執行",
+      "所有操作都記錄在日誌中",
+      "定期檢查協作狀態"
+    ],
+    "溝通原則": [
+      "地端小 j 負責主動監控和發現問題",
+      "JULES 負責執行和回報結果",
+      "所有重要資訊都記錄在記憶庫中",
+      "每次工作前必須讀取記憶庫"
+    ],
+    "優化原則": [
+      "持續監控系統狀態",
+      "及時發現和處理問題",
+      "記錄優化建議並執行安全操作",
+      "定期檢討協作效果"
+    ]
+  },
+  
+  "system_regulations": {
+    "title": "系統工作規定（重要記憶，必須遵守）",
+    "last_updated": "2026-01-22T08:52:00",
+    "updated_by": "地端小 j + 雲端小 j (JULES)",
+    
+    "雲端歷史資料庫規定": {
+      "status": "已建立並生效",
+      "建立日期": "2026-01-22",
+      "重要性": "最高優先級 - 系統工作規定之一",
+      "規定內容": {
+        "核心原則": "所有備份、報告、日誌等歷史檔案必須歸檔到雲端歷史資料庫，但只保留路徑檔案，不實際備份內容",
+        "資料庫位置": "C:\\Users\\o0930\\OneDrive\\系統歷史資料庫",
+        "分類結構": {
+          "備份": "4個子分類（完整備份、增量備份、設定備份、資料備份）",
+          "健康報告": "4個子分類（每日健康報告、週報、月報、異常報告）",
+          "部署日誌": "3個子分類（部署記錄、更新記錄、回滾記錄）",
+          "稽核日誌": "3個子分類（風險動作、授權記錄、變更記錄）",
+          "工作日誌": "3個子分類（地端小j日誌、雲端小j日誌、協作記錄）",
+          "DNS變更記錄": "2個子分類（DNS更改清單、DNS替換記錄）",
+          "路由器設定": "3個子分類（設定備份、端口轉發記錄、防火牆規則）",
+          "系統快照": "3個子分類（完整快照、增量快照、配置快照）"
+        },
+        "路徑檔案格式": {
+          "檔案副檔名": ".path.json",
+          "包含資訊": [
+            "本地檔案路徑",
+            "雲端路徑檔案位置",
+            "檔案資訊（名稱、大小、修改時間、雜湊值）",
+            "分類和描述元資料"
+          ]
+        },
+        "自動化要求": {
+          "健康報告": "generate_health_report.py 已整合自動歸檔功能，報告生成後自動建立路徑檔案",
+          "備份檔案": "備份完成後必須自動歸檔路徑檔案",
+          "部署日誌": "部署完成後必須自動歸檔路徑檔案",
+          "其他檔案": "使用 auto_archive_to_cloud.py 自動歸檔新檔案"
+        },
+        "工作流程": [
+          "1. 生成備份/報告/日誌檔案",
+          "2. 自動或手動建立路徑檔案（.path.json）",
+          "3. 路徑檔案儲存到對應的分類子目錄",
+          "4. 路徑檔案包含完整檔案資訊和元資料",
+          "5. 不實際備份檔案內容到雲端"
+        ],
+        "管理工具": {
+          "主程式": "cloud_history_database.py",
+          "自動歸檔": "auto_archive_to_cloud.py",
+          "使用指南": "CLOUD_HISTORY_DATABASE_GUIDE.md"
+        },
+        "強制要求": [
+          "所有備份必須歸檔路徑檔案",
+          "所有健康報告必須歸檔路徑檔案",
+          "所有部署日誌必須歸檔路徑檔案",
+          "新生成的歷史檔案必須自動歸檔",
+          "不得跳過歸檔步驟",
+          "路徑檔案必須包含完整檔案資訊"
+        ],
+        "注意事項": [
+          "只保留路徑檔案，不實際備份內容到雲端",
+          "確保本地檔案不會被意外刪除",
+          "依賴雲端硬碟（OneDrive）的同步功能",
+          "如果本地檔案移動或刪除，路徑檔案將失效"
+        ]
+      },
+      "相關檔案": [
+        "cloud_history_database.py",
+        "auto_archive_to_cloud.py",
+        "CLOUD_HISTORY_DATABASE_GUIDE.md",
+        "CLOUD_HISTORY_DATABASE_SETUP_COMPLETE.md"
+      ]
+    },
+    "小J檔案權限歸屬規定": {
+      "title": "小J程式碼及人格及權重、約制項目檔案權限歸屬",
+      "建立日期": "2026-01-22",
+      "權限歸屬": "第一類可究責對象（系統創辦人，本系統設計人）",
+      "權責關係": "權責相依關係（誰設計誰負責）",
+      "說明": "所有小J相關的程式碼、人格設定、權重配置、約制項目檔案均屬於第一類可究責對象的權限範圍，因為設計責任與權責相依關係。",
+      "檔案分類": {
+        "程式碼檔案": [
+          "little_j_policy.py",
+          "little_j_jules_container_collaboration.py",
+          "little_j_hub_executor.py",
+          "little_j_hub_server.py",
+          "little_j_deployment_checker.py",
+          "little_j_floating_icon.py",
+          "little_j_full_auto_credentials_setup.py",
+          "little_j_setup_credentials_now.py",
+          "grant_little_j_full_agent_for_credentials.py",
+          "call_little_j_for_credentials.py",
+          "update_little_j_avatar.py"
+        ],
+        "人格設定檔案": [
+          "jules_memory_bank.json",
+          "jules_personality_profile.json"
+        ],
+        "權重和約制項目檔案": [
+          "little_j_permanent_permissions.json",
+          "little_j_policy.py"
+        ],
+        "權限授予記錄": [
+          "little_j_router_admin_grant.md",
+          "little_j_odoo_admin_grant.md",
+          "little_j_dual_nic_admin_grant.md",
+          "little_j_dual_nic_management_grant.md"
+        ]
+      },
+      "權限控制原則": [
+        "所有小J相關檔案應由第一類可究責對象控制",
+        "其他人員如需存取，必須獲得第一類可究責對象的明確授權",
+        "所有變更必須記錄變更者、變更時間、變更內容、變更原因、影響範圍",
+        "所有檔案應納入版本控制（Git）",
+        "重要變更應建立標籤（tag）以便追溯",
+        "定期備份所有檔案，備份應包含版本資訊"
+      ],
+      "權責相依關係": {
+        "設計責任": {
+          "責任人": "系統創辦人，本系統設計人",
+          "責任範圍": [
+            "小J的行為設計",
+            "小J的人格設定",
+            "小J的權限配置",
+            "小J的約制項目",
+            "小J的程式邏輯"
+          ]
+        },
+        "使用責任": {
+          "責任人": "系統使用者（依使用情境而定）",
+          "責任範圍": [
+            "使用小J進行系統操作",
+            "遵守小J的約制項目",
+            "正確使用小J的功能"
+          ]
+        }
+      },
+      "相關檔案": [
+        "小J檔案權限歸屬說明.md",
+        "小J檔案權限歸屬記錄.json",
+        "accounts_policy.json",
+        "可究責對象設定說明.md"
+      ]
+    },
+    "小J三階段權限系統": {
+      "title": "小J三階段權限系統",
+      "建立日期": "2026-01-22",
+      "權限歸屬": "第一類可究責對象（系統創辦人，本系統設計人）",
+      "說明": "小J採用三階段權限系統，根據使用者身份和可究責關係，提供不同層級的權限控制",
+      "階段一": {
+        "名稱": "限縮權限",
+        "適用對象": "一般使用者",
+        "權限等級": "最嚴格",
+        "限制方式": "採用一般AI限制，如同Gemini對於一般使用者",
+        "安全檢查": "嚴格檢查所有權限、白名單、節點限制、同意檢查、風險等級、確認要求"
+      },
+      "階段二": {
+        "名稱": "最高權限",
+        "適用對象": "系統管理員（擁有admin_all權限）",
+        "權限等級": "最高限度開放",
+        "限制方式": "仍走白名單/同意/確認，但較寬鬆",
+        "安全檢查": "基本權限檢查（需admin_all）、仍檢查白名單和節點限制、同意檢查較寬鬆、僅關鍵風險需確認"
+      },
+      "階段三": {
+        "名稱": "權限解放",
+        "適用對象": "系統創辦人，本系統設計人（第一類可究責對象）",
+        "權限等級": "無視任何安全規定",
+        "限制方式": "完全繞過所有安全檢查",
+        "認證方式": "生物特徵辨認（必須通過）",
+        "設計目的": "緊急意外停機或封閉系統時的緊急修復機制",
+        "核心原則": "我們不知道何時會有問題，必須有完整的防禦功能",
+        "安全檢查": "無視所有權限檢查、白名單限制、節點限制、同意檢查、風險等級、確認要求",
+        "可究責性": "以可究責人身分，對所有操作負完全責任",
+        "使用場景": [
+          "緊急意外停機修復：系統完全無法運作時的緊急修復",
+          "系統封閉：系統被攻擊或入侵時的緊急封閉",
+          "緊急安全修補：發現嚴重安全漏洞時的立即修補",
+          "反制駭客攻擊：執行極度危險的反制操作（如格式化地端機、斷網隔離）",
+          "格式化地端機：當系統被駭客完全控制，需要立即格式化以清除惡意程式",
+          "斷網隔離：當發現系統被攻擊，需要立即斷網隔離以防止攻擊擴散",
+          "緊急服務恢復：關鍵服務中斷時的立即恢復",
+          "緊急資料保護：資料面臨風險時的立即保護措施",
+          "系統架構緊急變更：需要立即調整系統架構以應對緊急情況",
+          "任何需要立即行動的緊急操作：無法等待正常審批流程的緊急情況"
+        ],
+        "極度危險操作": {
+          "說明": "這些操作都需要繞過安規，為了避免發生攻擊事件產生嚴重損害，或是用於反制駭客",
+          "操作清單": [
+            "格式化地端機：完全清除地端機的所有資料，包括作業系統、應用程式、資料檔案",
+            "斷網隔離：立即切斷地端機的所有網路連線，包括有線網路、WiFi、所有網路介面"
+          ],
+          "使用原則": [
+            "僅限緊急情況使用",
+            "所有操作必須可究責",
+            "事後必須檢討",
+            "遵循最小必要原則"
+          ]
+        },
+        "使用原則": [
+          "僅限緊急情況：只有在系統面臨緊急情況時才使用階段三權限",
+          "可究責性：所有操作都必須記錄，系統創辦人對所有操作負完全責任",
+          "事後檢討：緊急操作後必須進行事後檢討和記錄",
+          "最小必要原則：只執行必要的緊急操作，避免過度使用"
+        ]
+      },
+      "判定邏輯": {
+        "順序": [
+          "1. 檢查是否為系統創辦人（design_responsibility.natural_person.name == '系統創辦人，本系統設計人' 且 priority == 1）→ 階段三",
+          "2. 檢查是否為系統管理員（permissions包含admin_all）→ 階段二",
+          "3. 其他情況 → 階段一（預設）"
+        ],
+        "實作位置": "little_j_policy.py的account_permission_stage()方法"
+      },
+      "相關檔案": [
+        "小J三階段權限系統說明.md",
+        "小J三階段權限系統配置.json",
+        "little_j_policy.py",
+        "accounts_policy.json"
+      ]
+    }
+  },
+  
+  "community_info": {
+    "title": "五常社區發展協會轄區資訊",
+    "organization": "新北市三重區五常社區發展協會",
+    "last_updated": "2026-01-21T00:00:00",
+    "geographic_boundary": {
+      "description": "五常社區發展協會服務轄區包含三個里",
+      "boundary_file": "wuchang_community_boundary.geojson",
+      "covered_areas": [
+        {
+          "name": "五常里",
+          "admin_level": 9,
+          "description": "五常社區發展協會主要服務區域之一"
+        },
+        {
+          "name": "五順里",
+          "admin_level": 9,
+          "description": "五常社區發展協會主要服務區域之一"
+        },
+        {
+          "name": "仁忠里",
+          "admin_level": 9,
+          "description": "五常社區發展協會主要服務區域之一"
+        }
+      ],
+      "coordinate_reference": {
+        "system": "WGS84",
+        "format": "[經度, 緯度]",
+        "center_approximate": {
+          "longitude": 121.497,
+          "latitude": 25.079
+        }
+      }
+    },
+    "notes": "此地理資訊用於社區服務範圍界定、活動規劃、以及系統服務區域識別"
+  }
+}

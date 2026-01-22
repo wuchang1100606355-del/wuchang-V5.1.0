@@ -1,0 +1,38 @@
+# Cloudflare Tunnel 配置
+# 自動生成/更新時間: 2026-01-20
+# 
+# 使用前請：
+# 1. 將 <tunnel-id> 替換為實際的 Tunnel ID
+# 2. 確認 credentials.json 已正確配置
+# 3. 參考 MANUAL_SETUP_GUIDE.md 了解完整配置步驟
+
+tunnel: 837487dd-1536-43ec-a1c9-ee366a0aa4b7
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  # 首頁（根域名）- 使用伺服器內部 IP（路由器可接替）
+  - hostname: wuchang.life
+    service: http://192.168.50.249:80
+  
+  # 首頁（WWW 子域名）- 使用伺服器內部 IP（路由器可接替）
+  - hostname: www.wuchang.life
+    service: http://192.168.50.249:80
+  
+  # Odoo ERP 系統 - 使用伺服器內部 IP（路由器可接替）
+  - hostname: app.wuchang.org.tw
+    service: http://192.168.50.249:8069
+  
+  # Open WebUI (AI 介面) - 使用伺服器內部 IP（路由器可接替）
+  - hostname: ai.wuchang.org.tw
+    service: http://192.168.50.249:8080
+  
+  # Portainer (容器管理) - 使用伺服器內部 IP（路由器可接替）
+  - hostname: admin.wuchang.org.tw
+    service: http://192.168.50.249:9000
+  
+  # Uptime Kuma (監控) - 使用伺服器內部 IP（路由器可接替）
+  - hostname: monitor.wuchang.org.tw
+    service: http://192.168.50.249:3001
+  
+  # 預設規則（必須放在最後）
+  - service: http_status:404

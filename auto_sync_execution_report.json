@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-01-19T13:17:39+0800",
+  "steps": {
+    "control_center": {
+      "status": "ready"
+    },
+    "network_drive": {
+      "status": "completed"
+    },
+    "router_cert": {
+      "status": "skipped"
+    },
+    "network_setup": {
+      "status": "completed"
+    },
+    "authorization": {
+      "status": "warning",
+      "result": {
+        "success": false,
+        "warning": ""
+      }
+    },
+    "file_sync": {
+      "status": "partial",
+      "success": false
+    },
+    "verification": {
+      "success": true,
+      "output": "======================================================================\n連線狀態檢查\n======================================================================\n\n【VPN 連接狀態】\n  ✓ VPN 已連接\n  本機 IP: 10.8.0.6\n\n【伺服器連接測試】\n  目標伺服器: 10.8.0.1\n  ✗ TCP 連接失敗: 連接失敗\n  健康檢查 URL: https://coffeeLofe.asuscomm.com:8443/health\n  ✗ HTTP 連接失敗: 連接錯誤\n\n【環境變數配置】\n  ✓ 已設定 - WUCHANG_HEALTH_URL: https://coffeeLofe.asuscomm.com:8443/health\n  ✗ 未設定 - WUCHANG_COPY_TO\n  ✗ 未設定 - WUCHANG_HUB_URL\n  ✗ 未設定 - WUCHANG_HUB_TOKEN\n\n【整體連線狀態】\n  ⚠️  VPN 已連接，但伺服器連接失敗\n  ✓ VPN 連接正常\n  ✗ 伺服器連接失敗\n\n======================================================================\n",
+      "error": ""
+    }
+  }
+}

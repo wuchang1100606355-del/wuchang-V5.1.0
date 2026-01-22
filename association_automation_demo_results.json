@@ -1,0 +1,40 @@
+{
+  "demo_time": "2026-01-17T01:51:11.979153",
+  "scenarios": [
+    {
+      "success": true,
+      "scenario": "年度工作計畫生成",
+      "steps_completed": 5,
+      "compliance_check": "passed"
+    },
+    {
+      "success": true,
+      "scenario": "補助申請流程自動化",
+      "steps_completed": 7,
+      "automation_status": "working"
+    },
+    {
+      "success": true,
+      "scenario": "知識庫查詢",
+      "queries_tested": 5,
+      "results": {
+        "社區發展工作要點": 0,
+        "年度工作計畫": 1,
+        "補助申請": 0,
+        "財務管理": 0,
+        "五常社區發展協會": 0
+      }
+    },
+    {
+      "success": true,
+      "scenario": "行事曆提醒",
+      "upcoming_items": 1,
+      "reminders_generated": 1
+    }
+  ],
+  "summary": {
+    "total_scenarios": 4,
+    "successful_scenarios": 4,
+    "success_rate": 100.0
+  }
+}

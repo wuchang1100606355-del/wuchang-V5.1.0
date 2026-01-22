@@ -1,0 +1,15 @@
+{
+  "description": "執行完整部署流程：DNS配置、憑證驗證、外網訪問、健康報告",
+  "work_type": "雙J全面部署標準流程",
+  "steps": {
+    "certificate_verify": "pending",
+    "read_work_logs": "completed",
+    "dns_fix": "in_progress",
+    "health_report": "pending",
+    "container_check": "completed",
+    "external_access": "pending"
+  },
+  "agent": "雙J部署系統",
+  "status": "in_progress",
+  "timestamp": "2026-01-22T01:59:31"
+}
