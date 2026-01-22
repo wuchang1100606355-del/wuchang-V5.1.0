@@ -1,0 +1,8833 @@
+{
+  "index_version": "1.0",
+  "generated_at": "2026-01-15T19:37:03",
+  "source": "wuchang_community_knowledge_base.json",
+  "community_name": "新北市三重區五常社區發展協會轄區",
+  "items_count": 243,
+  "section_summaries": {
+    "knowledge_base_version": {
+      "top_keywords": [
+        "knowledge_base_version"
+      ],
+      "items": 1
+    },
+    "last_updated": {
+      "top_keywords": [
+        "last_updated",
+        "2026",
+        "01",
+        "15"
+      ],
+      "items": 4
+    },
+    "community_name": {
+      "top_keywords": [
+        "community_name",
+        "新北市三重區五常社區發展",
+        "新北",
+        "北市",
+        "市三",
+        "三重",
+        "重區",
+        "區五",
+        "五常",
+        "常社",
+        "社區",
+        "區發"
+      ],
+      "items": 12
+    },
+    "scope": {
+      "top_keywords": [
+        "scope",
+        "五常",
+        "villages",
+        "五常里",
+        "常里",
+        "五順里",
+        "五順",
+        "順里",
+        "仁忠里",
+        "仁忠",
+        "忠里",
+        "description"
+      ],
+      "items": 23
+    },
+    "geographic_analysis": {
+      "top_keywords": [
+        "geographic_analysis",
+        "road_system",
+        "boundaries",
+        "major_arteries",
+        "仁義",
+        "renyi_redevelopment_area",
+        "義街",
+        "location",
+        "重劃",
+        "secondary_roads",
+        "劃區",
+        "仁義街"
+      ],
+      "items": 281
+    },
+    "housing_analysis": {
+      "top_keywords": [
+        "housing_analysis",
+        "building_types",
+        "population_trends",
+        "old_community",
+        "redevelopment_area",
+        "representative_buildings",
+        "property_management",
+        "total_households",
+        "market_price",
+        "wuchang",
+        "wushun",
+        "renzhong"
+      ],
+      "items": 389
+    },
+    "demographics": {
+      "top_keywords": [
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "wuchang",
+        "wushun",
+        "count",
+        "percentage",
+        "children_0_14",
+        "working_age_15_64",
+        "elderly_65_plus",
+        "community_average",
+        "gender_structure"
+      ],
+      "items": 273
+    },
+    "commercial_ecosystem": {
+      "top_keywords": [
+        "commercial_ecosystem",
+        "business_distribution",
+        "challenges",
+        "restaurants",
+        "breakdown",
+        "professional_services",
+        "count",
+        "percentage",
+        "retail",
+        "convenience_stores",
+        "description",
+        "other"
+      ],
+      "items": 257
+    },
+    "transportation": {
+      "top_keywords": [
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "public_transportation",
+        "off_street_parking",
+        "mrt_circular_line",
+        "road_conditions",
+        "redevelopment_parking",
+        "bus_network",
+        "仁義",
+        "義街",
+        "仁義街"
+      ],
+      "items": 264
+    },
+    "social_enterprise_solutions": {
+      "top_keywords": [
+        "social_enterprise_solutions",
+        "community_service_team",
+        "ai_property_management",
+        "社區",
+        "區的",
+        "benefits",
+        "ai",
+        "organization",
+        "五常物業規劃顧問股份有限",
+        "五常",
+        "常物",
+        "物業"
+      ],
+      "items": 108
+    },
+    "strategic_recommendations": {
+      "top_keywords": [
+        "strategic_recommendations",
+        "transportation",
+        "economy",
+        "priority",
+        "population",
+        "針對仁忠里進行重點式的長",
+        "針對",
+        "對仁",
+        "仁忠",
+        "忠里",
+        "里進",
+        "進行"
+      ],
+      "items": 108
+    },
+    "system_integration_points": {
+      "top_keywords": [
+        "system_integration_points",
+        "food_dollars_strategy",
+        "happiness_coin",
+        "target",
+        "ui_design",
+        "logistics",
+        "dual_entry",
+        "bento_kun",
+        "social_welfare",
+        "features",
+        "模式",
+        "role"
+      ],
+      "items": 322
+    },
+    "key_statistics": {
+      "top_keywords": [
+        "key_statistics",
+        "total_households",
+        "4891",
+        "total_population",
+        "12524",
+        "average_household_size",
+        "56",
+        "elderly_percentage",
+        "15",
+        "92",
+        "aging_index",
+        "138"
+      ],
+      "items": 40
+    },
+    "critical_insights": {
+      "top_keywords": [
+        "critical_insights",
+        "vs",
+        "163",
+        "12",
+        "800",
+        "60",
+        "ai",
+        "區域正處於極端的二元發展",
+        "區域",
+        "域正",
+        "正處",
+        "處於"
+      ],
+      "items": 12
+    }
+  },
+  "items": [
+    {
+      "id": "kb_00001",
+      "section": "knowledge_base_version",
+      "path": "knowledge_base_version",
+      "title": "knowledge_base_version",
+      "snippet": "2.0",
+      "keywords": [
+        "knowledge_base_version"
+      ]
+    },
+    {
+      "id": "kb_00002",
+      "section": "last_updated",
+      "path": "last_updated",
+      "title": "last_updated",
+      "snippet": "2026-01-15",
+      "keywords": [
+        "last_updated",
+        "2026",
+        "01",
+        "15"
+      ]
+    },
+    {
+      "id": "kb_00003",
+      "section": "community_name",
+      "path": "community_name",
+      "title": "community_name",
+      "snippet": "新北市三重區五常社區發展協會轄區",
+      "keywords": [
+        "community_name",
+        "新北市三重區五常社區發展",
+        "新北",
+        "北市",
+        "市三",
+        "三重",
+        "重區",
+        "區五",
+        "五常",
+        "常社",
+        "社區",
+        "區發"
+      ]
+    },
+    {
+      "id": "kb_00004",
+      "section": "scope",
+      "path": "scope.villages",
+      "title": "villages",
+      "snippet": "['五常里', '五順里', '仁忠里']",
+      "keywords": [
+        "villages",
+        "scope",
+        "五常里",
+        "五常",
+        "常里",
+        "五順里",
+        "五順",
+        "順里",
+        "仁忠里",
+        "仁忠",
+        "忠里"
+      ]
+    },
+    {
+      "id": "kb_00005",
+      "section": "scope",
+      "path": "scope.description",
+      "title": "description",
+      "snippet": "五常社區發展協會服務範圍",
+      "keywords": [
+        "description",
+        "scope",
+        "五常社區發展協會服務範圍",
+        "五常",
+        "常社",
+        "社區",
+        "區發",
+        "發展",
+        "展協",
+        "協會",
+        "會服",
+        "服務"
+      ]
+    },
+    {
+      "id": "kb_00006",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.location.city",
+      "title": "city",
+      "snippet": "新北市",
+      "keywords": [
+        "city",
+        "geographic_analysis",
+        "location",
+        "新北市",
+        "新北",
+        "北市"
+      ]
+    },
+    {
+      "id": "kb_00007",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.location.district",
+      "title": "district",
+      "snippet": "三重區",
+      "keywords": [
+        "district",
+        "geographic_analysis",
+        "location",
+        "三重區",
+        "三重",
+        "重區"
+      ]
+    },
+    {
+      "id": "kb_00008",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.location.strategic_value",
+      "title": "strategic_value",
+      "snippet": "三重區通往台北市士林、北投地區的重要門戶，鄰近重陽橋",
+      "keywords": [
+        "strategic_value",
+        "geographic_analysis",
+        "location",
+        "三重區通往台北市士林",
+        "三重",
+        "重區",
+        "區通",
+        "通往",
+        "往台",
+        "台北",
+        "北市",
+        "市士"
+      ]
+    },
+    {
+      "id": "kb_00009",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.location.nearby_projects",
+      "title": "nearby_projects",
+      "snippet": "['銀新未來城', '仁義重劃區']",
+      "keywords": [
+        "nearby_projects",
+        "geographic_analysis",
+        "location",
+        "銀新未來城",
+        "銀新",
+        "新未",
+        "未來",
+        "來城",
+        "銀新未",
+        "新未來",
+        "未來城",
+        "銀新未來"
+      ]
+    },
+    {
+      "id": "kb_00010",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.boundaries.renyi_redevelopment_area.description",
+      "title": "description",
+      "snippet": "仁義重劃區（主要位於五常里）",
+      "keywords": [
+        "description",
+        "geographic_analysis",
+        "boundaries",
+        "renyi_redevelopment_area",
+        "仁義重劃區",
+        "仁義",
+        "義重",
+        "重劃",
+        "劃區",
+        "仁義重",
+        "義重劃",
+        "重劃區"
+      ]
+    },
+    {
+      "id": "kb_00011",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.boundaries.renyi_redevelopment_area.east_boundary",
+      "title": "east_boundary",
+      "snippet": "環河北路邊界（不含道路），緊鄰淡水河堤外便道",
+      "keywords": [
+        "east_boundary",
+        "geographic_analysis",
+        "boundaries",
+        "renyi_redevelopment_area",
+        "環河北路邊界",
+        "環河",
+        "河北",
+        "北路",
+        "路邊",
+        "邊界",
+        "環河北",
+        "河北路"
+      ]
+    },
+    {
+      "id": "kb_00012",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.boundaries.renyi_redevelopment_area.west_boundary",
+      "title": "west_boundary",
+      "snippet": "仁愛街邊界（不含道路）及乙種工業區分區線",
+      "keywords": [
+        "west_boundary",
+        "geographic_analysis",
+        "boundaries",
+        "renyi_redevelopment_area",
+        "仁愛街邊界",
+        "仁愛",
+        "愛街",
+        "街邊",
+        "邊界",
+        "仁愛街",
+        "愛街邊",
+        "街邊界"
+      ]
+    },
+    {
+      "id": "kb_00013",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.boundaries.renyi_redevelopment_area.north_boundary",
+      "title": "north_boundary",
+      "snippet": "仁義街143巷、五華街1巷既成道路邊界外緣",
+      "keywords": [
+        "north_boundary",
+        "143",
+        "geographic_analysis",
+        "boundaries",
+        "renyi_redevelopment_area",
+        "仁義街",
+        "仁義",
+        "義街",
+        "五華街",
+        "五華",
+        "華街",
+        "巷既成道路邊界外緣"
+      ]
+    },
+    {
+      "id": "kb_00014",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.boundaries.renyi_redevelopment_area.south_boundary",
+      "title": "south_boundary",
+      "snippet": "高速公路（國道一號）邊界（不含道路）",
+      "keywords": [
+        "south_boundary",
+        "geographic_analysis",
+        "boundaries",
+        "renyi_redevelopment_area",
+        "高速公路",
+        "高速",
+        "速公",
+        "公路",
+        "高速公",
+        "速公路",
+        "國道一號",
+        "國道"
+      ]
+    },
+    {
+      "id": "kb_00015",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.boundaries.traditional_community.wuchang_old",
+      "title": "wuchang_old",
+      "snippet": "仁義街單號側的傳統公寓群，仁義街143巷以南的密集住宅區",
+      "keywords": [
+        "wuchang_old",
+        "143",
+        "geographic_analysis",
+        "boundaries",
+        "traditional_community",
+        "仁義街單號側的傳統公寓群",
+        "仁義",
+        "義街",
+        "街單",
+        "單號",
+        "號側",
+        "側的"
+      ]
+    },
+    {
+      "id": "kb_00016",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.boundaries.traditional_community.wushun",
+      "title": "wushun",
+      "snippet": "仁義街與五華街交夾的內側區塊，五華街雙號巷弄（如五華街57巷以南）",
+      "keywords": [
+        "wushun",
+        "57",
+        "geographic_analysis",
+        "boundaries",
+        "traditional_community",
+        "仁義街與五華街交夾的內側",
+        "仁義",
+        "義街",
+        "街與",
+        "與五",
+        "五華",
+        "華街"
+      ]
+    },
+    {
+      "id": "kb_00017",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.boundaries.traditional_community.renzhong",
+      "title": "renzhong",
+      "snippet": "區域的西側與南側邊緣，緊鄰仁愛街與自強路五段，巷弄更為狹窄曲折",
+      "keywords": [
+        "renzhong",
+        "geographic_analysis",
+        "boundaries",
+        "traditional_community",
+        "區域的西側與南側邊緣",
+        "區域",
+        "域的",
+        "的西",
+        "西側",
+        "側與",
+        "與南",
+        "南側"
+      ]
+    },
+    {
+      "id": "kb_00018",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.major_arteries.renyi_street.role",
+      "title": "role",
+      "snippet": "貫穿全境的中軸線",
+      "keywords": [
+        "role",
+        "geographic_analysis",
+        "road_system",
+        "major_arteries",
+        "renyi_street",
+        "貫穿全境的中軸線",
+        "貫穿",
+        "穿全",
+        "全境",
+        "境的",
+        "的中",
+        "中軸"
+      ]
+    },
+    {
+      "id": "kb_00019",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.major_arteries.renyi_street.status",
+      "title": "status",
+      "snippet": "已拓寬，承擔重劃區主要進出車流",
+      "keywords": [
+        "status",
+        "geographic_analysis",
+        "road_system",
+        "major_arteries",
+        "renyi_street",
+        "已拓寬",
+        "已拓",
+        "拓寬",
+        "承擔重劃區主要進出車流",
+        "承擔",
+        "擔重",
+        "重劃"
+      ]
+    },
+    {
+      "id": "kb_00020",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.major_arteries.renyi_street.traffic_issue",
+      "title": "traffic_issue",
+      "snippet": "目前有8個以上大型營建工地同時施工，服務水準大幅下降",
+      "keywords": [
+        "traffic_issue",
+        "geographic_analysis",
+        "road_system",
+        "major_arteries",
+        "renyi_street",
+        "目前有",
+        "目前",
+        "前有",
+        "個以上大型營建工地同時施",
+        "個以",
+        "以上",
+        "上大"
+      ]
+    },
+    {
+      "id": "kb_00021",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.major_arteries.wuhua_street.role",
+      "title": "role",
+      "snippet": "傳統商業活動最密集的街道",
+      "keywords": [
+        "role",
+        "geographic_analysis",
+        "road_system",
+        "major_arteries",
+        "wuhua_street",
+        "傳統商業活動最密集的街道",
+        "傳統",
+        "統商",
+        "商業",
+        "業活",
+        "活動",
+        "動最"
+      ]
+    },
+    {
+      "id": "kb_00022",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.major_arteries.wuhua_street.feature",
+      "title": "feature",
+      "snippet": "公車路線匯集",
+      "keywords": [
+        "feature",
+        "geographic_analysis",
+        "road_system",
+        "major_arteries",
+        "wuhua_street",
+        "公車路線匯集",
+        "公車",
+        "車路",
+        "路線",
+        "線匯",
+        "匯集",
+        "公車路"
+      ]
+    },
+    {
+      "id": "kb_00023",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.major_arteries.wuhua_street.commercial_density",
+      "title": "commercial_density",
+      "snippet": "高",
+      "keywords": [
+        "commercial_density",
+        "geographic_analysis",
+        "road_system",
+        "major_arteries",
+        "wuhua_street"
+      ]
+    },
+    {
+      "id": "kb_00024",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.major_arteries.huanhe_north_road.role",
+      "title": "role",
+      "snippet": "聯外快速道路",
+      "keywords": [
+        "role",
+        "geographic_analysis",
+        "road_system",
+        "major_arteries",
+        "huanhe_north_road",
+        "聯外快速道路",
+        "聯外",
+        "外快",
+        "快速",
+        "速道",
+        "道路",
+        "聯外快"
+      ]
+    },
+    {
+      "id": "kb_00025",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.major_arteries.huanhe_north_road.note",
+      "title": "note",
+      "snippet": "不直接服務社區內部短程交通",
+      "keywords": [
+        "note",
+        "geographic_analysis",
+        "road_system",
+        "major_arteries",
+        "huanhe_north_road",
+        "不直接服務社區內部短程交",
+        "不直",
+        "直接",
+        "接服",
+        "服務",
+        "務社",
+        "社區"
+      ]
+    },
+    {
+      "id": "kb_00026",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.secondary_roads.yuanxin_1st_street",
+      "title": "yuanxin_1st_street",
+      "snippet": "重劃區內新闢的標準寬度道路，設有完整人行道",
+      "keywords": [
+        "yuanxin_1st_street",
+        "geographic_analysis",
+        "road_system",
+        "secondary_roads",
+        "重劃區內新闢的標準寬度道",
+        "重劃",
+        "劃區",
+        "區內",
+        "內新",
+        "新闢",
+        "闢的",
+        "的標"
+      ]
+    },
+    {
+      "id": "kb_00027",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.secondary_roads.yuanxin_2nd_street",
+      "title": "yuanxin_2nd_street",
+      "snippet": "重劃區內新闢的標準寬度道路，設有完整人行道",
+      "keywords": [
+        "yuanxin_2nd_street",
+        "geographic_analysis",
+        "road_system",
+        "secondary_roads",
+        "重劃區內新闢的標準寬度道",
+        "重劃",
+        "劃區",
+        "區內",
+        "內新",
+        "新闢",
+        "闢的",
+        "的標"
+      ]
+    },
+    {
+      "id": "kb_00028",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.secondary_roads.traditional_alleyways.description",
+      "title": "description",
+      "snippet": "仁義街XX巷、仁愛街XX巷",
+      "keywords": [
+        "description",
+        "xx",
+        "geographic_analysis",
+        "road_system",
+        "secondary_roads",
+        "traditional_alleyways",
+        "仁義街",
+        "仁義",
+        "義街",
+        "仁愛街",
+        "仁愛",
+        "愛街"
+      ]
+    },
+    {
+      "id": "kb_00029",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.secondary_roads.traditional_alleyways.characteristics",
+      "title": "characteristics",
+      "snippet": "['路幅通常不足6米', '缺乏人行道', '常遭機車與路霸佔用', '消防救災的高風險區']",
+      "keywords": [
+        "characteristics",
+        "geographic_analysis",
+        "road_system",
+        "secondary_roads",
+        "traditional_alleyways",
+        "路幅通常不足",
+        "路幅",
+        "幅通",
+        "通常",
+        "常不",
+        "不足",
+        "路幅通"
+      ]
+    },
+    {
+      "id": "kb_00030",
+      "section": "geographic_analysis",
+      "path": "geographic_analysis.road_system.dangerous_intersections",
+      "title": "dangerous_intersections",
+      "snippet": "['仁義街與集賢路口', '仁義街沿線巷口']",
+      "keywords": [
+        "dangerous_intersections",
+        "geographic_analysis",
+        "road_system",
+        "仁義街與集賢路口",
+        "仁義",
+        "義街",
+        "街與",
+        "與集",
+        "集賢",
+        "賢路",
+        "路口",
+        "仁義街"
+      ]
+    },
+    {
+      "id": "kb_00031",
+      "section": "housing_analysis",
+      "path": "housing_analysis.total_households.wuchang",
+      "title": "wuchang",
+      "snippet": "2092",
+      "keywords": [
+        "wuchang",
+        "2092",
+        "housing_analysis",
+        "total_households"
+      ]
+    },
+    {
+      "id": "kb_00032",
+      "section": "housing_analysis",
+      "path": "housing_analysis.total_households.wushun",
+      "title": "wushun",
+      "snippet": "1520",
+      "keywords": [
+        "wushun",
+        "1520",
+        "housing_analysis",
+        "total_households"
+      ]
+    },
+    {
+      "id": "kb_00033",
+      "section": "housing_analysis",
+      "path": "housing_analysis.total_households.renzhong",
+      "title": "renzhong",
+      "snippet": "1279",
+      "keywords": [
+        "renzhong",
+        "1279",
+        "housing_analysis",
+        "total_households"
+      ]
+    },
+    {
+      "id": "kb_00034",
+      "section": "housing_analysis",
+      "path": "housing_analysis.total_households.total",
+      "title": "total",
+      "snippet": "4891",
+      "keywords": [
+        "total",
+        "4891",
+        "housing_analysis",
+        "total_households"
+      ]
+    },
+    {
+      "id": "kb_00035",
+      "section": "housing_analysis",
+      "path": "housing_analysis.total_households.average_household_size",
+      "title": "average_household_size",
+      "snippet": "2.56",
+      "keywords": [
+        "average_household_size",
+        "56",
+        "housing_analysis",
+        "total_households"
+      ]
+    },
+    {
+      "id": "kb_00036",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_108.wuchang",
+      "title": "wuchang",
+      "snippet": "4360",
+      "keywords": [
+        "wuchang",
+        "4360",
+        "housing_analysis",
+        "population_trends",
+        "year_108"
+      ]
+    },
+    {
+      "id": "kb_00037",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_108.wushun",
+      "title": "wushun",
+      "snippet": "4050",
+      "keywords": [
+        "wushun",
+        "4050",
+        "housing_analysis",
+        "population_trends",
+        "year_108"
+      ]
+    },
+    {
+      "id": "kb_00038",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_108.renzhong",
+      "title": "renzhong",
+      "snippet": "3344",
+      "keywords": [
+        "renzhong",
+        "3344",
+        "housing_analysis",
+        "population_trends",
+        "year_108"
+      ]
+    },
+    {
+      "id": "kb_00039",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_108.total",
+      "title": "total",
+      "snippet": "11754",
+      "keywords": [
+        "total",
+        "11754",
+        "housing_analysis",
+        "population_trends",
+        "year_108"
+      ]
+    },
+    {
+      "id": "kb_00040",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_111.wuchang",
+      "title": "wuchang",
+      "snippet": "5378",
+      "keywords": [
+        "wuchang",
+        "5378",
+        "housing_analysis",
+        "population_trends",
+        "year_111"
+      ]
+    },
+    {
+      "id": "kb_00041",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_111.wushun",
+      "title": "wushun",
+      "snippet": "3970",
+      "keywords": [
+        "wushun",
+        "3970",
+        "housing_analysis",
+        "population_trends",
+        "year_111"
+      ]
+    },
+    {
+      "id": "kb_00042",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_111.renzhong",
+      "title": "renzhong",
+      "snippet": "3260",
+      "keywords": [
+        "renzhong",
+        "3260",
+        "housing_analysis",
+        "population_trends",
+        "year_111"
+      ]
+    },
+    {
+      "id": "kb_00043",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_111.total",
+      "title": "total",
+      "snippet": "12608",
+      "keywords": [
+        "total",
+        "12608",
+        "housing_analysis",
+        "population_trends",
+        "year_111"
+      ]
+    },
+    {
+      "id": "kb_00044",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_113.wuchang",
+      "title": "wuchang",
+      "snippet": "5249",
+      "keywords": [
+        "wuchang",
+        "5249",
+        "housing_analysis",
+        "population_trends",
+        "year_113"
+      ]
+    },
+    {
+      "id": "kb_00045",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_113.wushun",
+      "title": "wushun",
+      "snippet": "4021",
+      "keywords": [
+        "wushun",
+        "4021",
+        "housing_analysis",
+        "population_trends",
+        "year_113"
+      ]
+    },
+    {
+      "id": "kb_00046",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_113.renzhong",
+      "title": "renzhong",
+      "snippet": "3254",
+      "keywords": [
+        "renzhong",
+        "3254",
+        "housing_analysis",
+        "population_trends",
+        "year_113"
+      ]
+    },
+    {
+      "id": "kb_00047",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.year_113.total",
+      "title": "total",
+      "snippet": "12524",
+      "keywords": [
+        "total",
+        "12524",
+        "housing_analysis",
+        "population_trends",
+        "year_113"
+      ]
+    },
+    {
+      "id": "kb_00048",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.growth_analysis.wuchang_growth",
+      "title": "wuchang_growth",
+      "snippet": "108-111年成長23%，受益於重劃區建案",
+      "keywords": [
+        "wuchang_growth",
+        "108",
+        "111",
+        "23",
+        "housing_analysis",
+        "population_trends",
+        "growth_analysis",
+        "年成長",
+        "年成",
+        "成長",
+        "受益於重劃區建案",
+        "受益"
+      ]
+    },
+    {
+      "id": "kb_00049",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.growth_analysis.wushun_stagnant",
+      "title": "wushun_stagnant",
+      "snippet": "人口數幾乎水平甚至微幅下降",
+      "keywords": [
+        "wushun_stagnant",
+        "housing_analysis",
+        "population_trends",
+        "growth_analysis",
+        "人口數幾乎水平甚至微幅下",
+        "人口",
+        "口數",
+        "數幾",
+        "幾乎",
+        "乎水",
+        "水平",
+        "平甚"
+      ]
+    },
+    {
+      "id": "kb_00050",
+      "section": "housing_analysis",
+      "path": "housing_analysis.population_trends.growth_analysis.renzhong_decline",
+      "title": "renzhong_decline",
+      "snippet": "從3344人降至3254人，人口流失持續",
+      "keywords": [
+        "renzhong_decline",
+        "3344",
+        "3254",
+        "housing_analysis",
+        "population_trends",
+        "growth_analysis",
+        "人降至",
+        "人降",
+        "降至",
+        "人口流失持續",
+        "人口",
+        "口流"
+      ]
+    },
+    {
+      "id": "kb_00051",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.location",
+      "title": "location",
+      "snippet": "五常里內的重劃區",
+      "keywords": [
+        "location",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "五常里內的重劃區",
+        "五常",
+        "常里",
+        "里內",
+        "內的",
+        "的重",
+        "重劃",
+        "劃區"
+      ]
+    },
+    {
+      "id": "kb_00052",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.building_type",
+      "title": "building_type",
+      "snippet": "15-20層以上RC結構大樓",
+      "keywords": [
+        "building_type",
+        "15",
+        "20",
+        "rc",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "層以上",
+        "層以",
+        "以上",
+        "結構大樓",
+        "結構"
+      ]
+    },
+    {
+      "id": "kb_00053",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.age",
+      "title": "age",
+      "snippet": "5年以內新成屋，甚至包含大量預售屋",
+      "keywords": [
+        "age",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "年以內新成屋",
+        "年以",
+        "以內",
+        "內新",
+        "新成",
+        "成屋",
+        "年以內",
+        "以內新"
+      ]
+    },
+    {
+      "id": "kb_00054",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.representative_buildings[0].name",
+      "title": "name",
+      "snippet": "仁仁愛",
+      "keywords": [
+        "name",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "representative_buildings",
+        "仁仁愛",
+        "仁仁",
+        "仁愛"
+      ]
+    },
+    {
+      "id": "kb_00055",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.representative_buildings[0].age",
+      "title": "age",
+      "snippet": "4",
+      "keywords": [
+        "age",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "representative_buildings"
+      ]
+    },
+    {
+      "id": "kb_00056",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.representative_buildings[0].households",
+      "title": "households",
+      "snippet": "112",
+      "keywords": [
+        "households",
+        "112",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "representative_buildings"
+      ]
+    },
+    {
+      "id": "kb_00057",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.market_price.per_ping",
+      "title": "per_ping",
+      "snippet": "70-80萬/坪",
+      "keywords": [
+        "per_ping",
+        "70",
+        "80",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "market_price"
+      ]
+    },
+    {
+      "id": "kb_00058",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.market_price.total_price_range",
+      "title": "total_price_range",
+      "snippet": "2000-3500萬",
+      "keywords": [
+        "total_price_range",
+        "2000",
+        "3500",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "market_price"
+      ]
+    },
+    {
+      "id": "kb_00059",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.market_price.target_market",
+      "title": "target_market",
+      "snippet": "台北市外溢的高收入族群",
+      "keywords": [
+        "target_market",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "market_price",
+        "台北市外溢的高收入族群",
+        "台北",
+        "北市",
+        "市外",
+        "外溢",
+        "溢的",
+        "的高"
+      ]
+    },
+    {
+      "id": "kb_00060",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.large_community.households",
+      "title": "households",
+      "snippet": "1297",
+      "keywords": [
+        "households",
+        "1297",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "large_community"
+      ]
+    },
+    {
+      "id": "kb_00061",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.redevelopment_area.large_community.description",
+      "title": "description",
+      "snippet": "超大型社區預售案",
+      "keywords": [
+        "description",
+        "housing_analysis",
+        "building_types",
+        "redevelopment_area",
+        "large_community",
+        "超大型社區預售案",
+        "超大",
+        "大型",
+        "型社",
+        "社區",
+        "區預",
+        "預售"
+      ]
+    },
+    {
+      "id": "kb_00062",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.location",
+      "title": "location",
+      "snippet": "五順里、仁忠里及五常里舊區",
+      "keywords": [
+        "location",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "五順里",
+        "五順",
+        "順里",
+        "仁忠里及五常里舊區",
+        "仁忠",
+        "忠里",
+        "里及",
+        "及五"
+      ]
+    },
+    {
+      "id": "kb_00063",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.building_type",
+      "title": "building_type",
+      "snippet": "4-5層樓的無電梯公寓",
+      "keywords": [
+        "building_type",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "層樓的無電梯公寓",
+        "層樓",
+        "樓的",
+        "的無",
+        "無電",
+        "電梯",
+        "梯公",
+        "公寓"
+      ]
+    },
+    {
+      "id": "kb_00064",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.age",
+      "title": "age",
+      "snippet": "普遍超過30年，部分達到40年以上",
+      "keywords": [
+        "age",
+        "30",
+        "40",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "普遍超過",
+        "普遍",
+        "遍超",
+        "超過",
+        "普遍超",
+        "遍超過"
+      ]
+    },
+    {
+      "id": "kb_00065",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.average_age",
+      "title": "average_age",
+      "snippet": "高於三重區平均34年",
+      "keywords": [
+        "average_age",
+        "34",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "高於三重區平均",
+        "高於",
+        "於三",
+        "三重",
+        "重區",
+        "區平",
+        "平均"
+      ]
+    },
+    {
+      "id": "kb_00066",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.structural_issues",
+      "title": "structural_issues",
+      "snippet": "['加強磚造或早期RC結構', '耐震係數多不符合現行標準', '缺乏停車位', '缺乏消防撒水系統', '缺乏無障礙設施']",
+      "keywords": [
+        "structural_issues",
+        "rc",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "加強磚造或早期",
+        "加強",
+        "強磚",
+        "磚造",
+        "造或",
+        "或早",
+        "早期"
+      ]
+    },
+    {
+      "id": "kb_00067",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.representative_buildings[0].name",
+      "title": "name",
+      "snippet": "常勝江山社區",
+      "keywords": [
+        "name",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "representative_buildings",
+        "常勝江山社區",
+        "常勝",
+        "勝江",
+        "江山",
+        "山社",
+        "社區",
+        "常勝江"
+      ]
+    },
+    {
+      "id": "kb_00068",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.representative_buildings[0].address",
+      "title": "address",
+      "snippet": "仁義街161號",
+      "keywords": [
+        "address",
+        "161",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "representative_buildings",
+        "仁義街",
+        "仁義",
+        "義街"
+      ]
+    },
+    {
+      "id": "kb_00069",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.representative_buildings[0].age",
+      "title": "age",
+      "snippet": "28",
+      "keywords": [
+        "age",
+        "28",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "representative_buildings"
+      ]
+    },
+    {
+      "id": "kb_00070",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.representative_buildings[0].households",
+      "title": "households",
+      "snippet": "154",
+      "keywords": [
+        "households",
+        "154",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "representative_buildings"
+      ]
+    },
+    {
+      "id": "kb_00071",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.representative_buildings[0].description",
+      "title": "description",
+      "snippet": "舊市區中少數具有規模的中古大樓社區",
+      "keywords": [
+        "description",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "representative_buildings",
+        "舊市區中少數具有規模的中",
+        "舊市",
+        "市區",
+        "區中",
+        "中少",
+        "少數",
+        "數具"
+      ]
+    },
+    {
+      "id": "kb_00072",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.market_price.per_ping",
+      "title": "per_ping",
+      "snippet": "50-60萬/坪",
+      "keywords": [
+        "per_ping",
+        "50",
+        "60",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "market_price"
+      ]
+    },
+    {
+      "id": "kb_00073",
+      "section": "housing_analysis",
+      "path": "housing_analysis.building_types.old_community.market_price.price_gap",
+      "title": "price_gap",
+      "snippet": "與重劃區形成顯著的價格斷層",
+      "keywords": [
+        "price_gap",
+        "housing_analysis",
+        "building_types",
+        "old_community",
+        "market_price",
+        "與重劃區形成顯著的價格斷",
+        "與重",
+        "重劃",
+        "劃區",
+        "區形",
+        "形成",
+        "成顯"
+      ]
+    },
+    {
+      "id": "kb_00074",
+      "section": "housing_analysis",
+      "path": "housing_analysis.property_management.current_hoa_count",
+      "title": "current_hoa_count",
+      "snippet": "32",
+      "keywords": [
+        "current_hoa_count",
+        "32",
+        "housing_analysis",
+        "property_management"
+      ]
+    },
+    {
+      "id": "kb_00075",
+      "section": "housing_analysis",
+      "path": "housing_analysis.property_management.projected_hoa_count",
+      "title": "projected_hoa_count",
+      "snippet": "50",
+      "keywords": [
+        "projected_hoa_count",
+        "50",
+        "housing_analysis",
+        "property_management"
+      ]
+    },
+    {
+      "id": "kb_00076",
+      "section": "housing_analysis",
+      "path": "housing_analysis.property_management.timeline",
+      "title": "timeline",
+      "snippet": "三年內",
+      "keywords": [
+        "timeline",
+        "housing_analysis",
+        "property_management",
+        "三年內",
+        "三年",
+        "年內"
+      ]
+    },
+    {
+      "id": "kb_00077",
+      "section": "housing_analysis",
+      "path": "housing_analysis.property_management.challenges.old_communities",
+      "title": "old_communities",
+      "snippet": "['設備老化', '人力成本上升', '管理費收入難以支撐合法勞基法工時人力', '保全員多為高工時、低薪資的非典型勞動']",
+      "keywords": [
+        "old_communities",
+        "housing_analysis",
+        "property_management",
+        "challenges",
+        "設備老化",
+        "設備",
+        "備老",
+        "老化",
+        "設備老",
+        "備老化",
+        "人力成本上升",
+        "人力"
+      ]
+    },
+    {
+      "id": "kb_00078",
+      "section": "housing_analysis",
+      "path": "housing_analysis.property_management.challenges.new_communities",
+      "title": "new_communities",
+      "snippet": "['戶數少（80-100戶），單位分攤成本極高', '物業費用高漲']",
+      "keywords": [
+        "new_communities",
+        "80",
+        "100",
+        "housing_analysis",
+        "property_management",
+        "challenges",
+        "戶數少",
+        "戶數",
+        "數少",
+        "單位分攤成本極高",
+        "單位",
+        "位分"
+      ]
+    },
+    {
+      "id": "kb_00079",
+      "section": "housing_analysis",
+      "path": "housing_analysis.property_management.challenges.technology_gap",
+      "title": "technology_gap",
+      "snippet": "0%的社區採用AI或無人保全系統",
+      "keywords": [
+        "technology_gap",
+        "ai",
+        "housing_analysis",
+        "property_management",
+        "challenges",
+        "的社區採用",
+        "的社",
+        "社區",
+        "區採",
+        "採用",
+        "的社區",
+        "社區採"
+      ]
+    },
+    {
+      "id": "kb_00080",
+      "section": "demographics",
+      "path": "demographics.total_population.year_113",
+      "title": "year_113",
+      "snippet": "12524",
+      "keywords": [
+        "year_113",
+        "12524",
+        "demographics",
+        "total_population"
+      ]
+    },
+    {
+      "id": "kb_00081",
+      "section": "demographics",
+      "path": "demographics.total_population.breakdown.wuchang",
+      "title": "wuchang",
+      "snippet": "5249",
+      "keywords": [
+        "wuchang",
+        "5249",
+        "demographics",
+        "total_population",
+        "breakdown"
+      ]
+    },
+    {
+      "id": "kb_00082",
+      "section": "demographics",
+      "path": "demographics.total_population.breakdown.wushun",
+      "title": "wushun",
+      "snippet": "4021",
+      "keywords": [
+        "wushun",
+        "4021",
+        "demographics",
+        "total_population",
+        "breakdown"
+      ]
+    },
+    {
+      "id": "kb_00083",
+      "section": "demographics",
+      "path": "demographics.total_population.breakdown.renzhong",
+      "title": "renzhong",
+      "snippet": "3254",
+      "keywords": [
+        "renzhong",
+        "3254",
+        "demographics",
+        "total_population",
+        "breakdown"
+      ]
+    },
+    {
+      "id": "kb_00084",
+      "section": "demographics",
+      "path": "demographics.age_structure.wuchang.children_0_14.count",
+      "title": "count",
+      "snippet": "627",
+      "keywords": [
+        "count",
+        "627",
+        "demographics",
+        "age_structure",
+        "wuchang",
+        "children_0_14"
+      ]
+    },
+    {
+      "id": "kb_00085",
+      "section": "demographics",
+      "path": "demographics.age_structure.wuchang.children_0_14.percentage",
+      "title": "percentage",
+      "snippet": "9.4",
+      "keywords": [
+        "percentage",
+        "demographics",
+        "age_structure",
+        "wuchang",
+        "children_0_14"
+      ]
+    },
+    {
+      "id": "kb_00086",
+      "section": "demographics",
+      "path": "demographics.age_structure.wuchang.working_age_15_64.count",
+      "title": "count",
+      "snippet": "3962",
+      "keywords": [
+        "count",
+        "3962",
+        "demographics",
+        "age_structure",
+        "wuchang",
+        "working_age_15_64"
+      ]
+    },
+    {
+      "id": "kb_00087",
+      "section": "demographics",
+      "path": "demographics.age_structure.wuchang.working_age_15_64.percentage",
+      "title": "percentage",
+      "snippet": "73.6",
+      "keywords": [
+        "percentage",
+        "73",
+        "demographics",
+        "age_structure",
+        "wuchang",
+        "working_age_15_64"
+      ]
+    },
+    {
+      "id": "kb_00088",
+      "section": "demographics",
+      "path": "demographics.age_structure.wuchang.elderly_65_plus.count",
+      "title": "count",
+      "snippet": "720",
+      "keywords": [
+        "count",
+        "720",
+        "demographics",
+        "age_structure",
+        "wuchang",
+        "elderly_65_plus"
+      ]
+    },
+    {
+      "id": "kb_00089",
+      "section": "demographics",
+      "path": "demographics.age_structure.wuchang.elderly_65_plus.percentage",
+      "title": "percentage",
+      "snippet": "13.4",
+      "keywords": [
+        "percentage",
+        "13",
+        "demographics",
+        "age_structure",
+        "wuchang",
+        "elderly_65_plus"
+      ]
+    },
+    {
+      "id": "kb_00090",
+      "section": "demographics",
+      "path": "demographics.age_structure.wuchang.aging_index",
+      "title": "aging_index",
+      "snippet": "114.83",
+      "keywords": [
+        "aging_index",
+        "114",
+        "83",
+        "demographics",
+        "age_structure",
+        "wuchang"
+      ]
+    },
+    {
+      "id": "kb_00091",
+      "section": "demographics",
+      "path": "demographics.age_structure.wuchang.dependency_ratio",
+      "title": "dependency_ratio",
+      "snippet": "34.0",
+      "keywords": [
+        "dependency_ratio",
+        "34",
+        "demographics",
+        "age_structure",
+        "wuchang"
+      ]
+    },
+    {
+      "id": "kb_00092",
+      "section": "demographics",
+      "path": "demographics.age_structure.wushun.children_0_14.count",
+      "title": "count",
+      "snippet": "445",
+      "keywords": [
+        "count",
+        "445",
+        "demographics",
+        "age_structure",
+        "wushun",
+        "children_0_14"
+      ]
+    },
+    {
+      "id": "kb_00093",
+      "section": "demographics",
+      "path": "demographics.age_structure.wushun.children_0_14.percentage",
+      "title": "percentage",
+      "snippet": "11.2",
+      "keywords": [
+        "percentage",
+        "11",
+        "demographics",
+        "age_structure",
+        "wushun",
+        "children_0_14"
+      ]
+    },
+    {
+      "id": "kb_00094",
+      "section": "demographics",
+      "path": "demographics.age_structure.wushun.working_age_15_64.count",
+      "title": "count",
+      "snippet": "2241",
+      "keywords": [
+        "count",
+        "2241",
+        "demographics",
+        "age_structure",
+        "wushun",
+        "working_age_15_64"
+      ]
+    },
+    {
+      "id": "kb_00095",
+      "section": "demographics",
+      "path": "demographics.age_structure.wushun.working_age_15_64.percentage",
+      "title": "percentage",
+      "snippet": "56.4",
+      "keywords": [
+        "percentage",
+        "56",
+        "demographics",
+        "age_structure",
+        "wushun",
+        "working_age_15_64"
+      ]
+    },
+    {
+      "id": "kb_00096",
+      "section": "demographics",
+      "path": "demographics.age_structure.wushun.elderly_65_plus.count",
+      "title": "count",
+      "snippet": "667",
+      "keywords": [
+        "count",
+        "667",
+        "demographics",
+        "age_structure",
+        "wushun",
+        "elderly_65_plus"
+      ]
+    },
+    {
+      "id": "kb_00097",
+      "section": "demographics",
+      "path": "demographics.age_structure.wushun.elderly_65_plus.percentage",
+      "title": "percentage",
+      "snippet": "16.8",
+      "keywords": [
+        "percentage",
+        "16",
+        "demographics",
+        "age_structure",
+        "wushun",
+        "elderly_65_plus"
+      ]
+    },
+    {
+      "id": "kb_00098",
+      "section": "demographics",
+      "path": "demographics.age_structure.wushun.aging_index",
+      "title": "aging_index",
+      "snippet": "149.89",
+      "keywords": [
+        "aging_index",
+        "149",
+        "89",
+        "demographics",
+        "age_structure",
+        "wushun"
+      ]
+    },
+    {
+      "id": "kb_00099",
+      "section": "demographics",
+      "path": "demographics.age_structure.wushun.dependency_ratio",
+      "title": "dependency_ratio",
+      "snippet": "38.2",
+      "keywords": [
+        "dependency_ratio",
+        "38",
+        "demographics",
+        "age_structure",
+        "wushun"
+      ]
+    },
+    {
+      "id": "kb_00100",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.children_0_14.count",
+      "title": "count",
+      "snippet": "385",
+      "keywords": [
+        "count",
+        "385",
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "children_0_14"
+      ]
+    },
+    {
+      "id": "kb_00101",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.children_0_14.percentage",
+      "title": "percentage",
+      "snippet": "11.8",
+      "keywords": [
+        "percentage",
+        "11",
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "children_0_14"
+      ]
+    },
+    {
+      "id": "kb_00102",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.working_age_15_64.count",
+      "title": "count",
+      "snippet": "2909",
+      "keywords": [
+        "count",
+        "2909",
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "working_age_15_64"
+      ]
+    },
+    {
+      "id": "kb_00103",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.working_age_15_64.percentage",
+      "title": "percentage",
+      "snippet": "89.2",
+      "keywords": [
+        "percentage",
+        "89",
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "working_age_15_64"
+      ]
+    },
+    {
+      "id": "kb_00104",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.elderly_65_plus.count",
+      "title": "count",
+      "snippet": "628",
+      "keywords": [
+        "count",
+        "628",
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "elderly_65_plus"
+      ]
+    },
+    {
+      "id": "kb_00105",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.elderly_65_plus.percentage",
+      "title": "percentage",
+      "snippet": "19.3",
+      "keywords": [
+        "percentage",
+        "19",
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "elderly_65_plus"
+      ]
+    },
+    {
+      "id": "kb_00106",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.aging_index",
+      "title": "aging_index",
+      "snippet": "163.12",
+      "keywords": [
+        "aging_index",
+        "163",
+        "12",
+        "demographics",
+        "age_structure",
+        "renzhong"
+      ]
+    },
+    {
+      "id": "kb_00107",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.dependency_ratio",
+      "title": "dependency_ratio",
+      "snippet": "45.2",
+      "keywords": [
+        "dependency_ratio",
+        "45",
+        "demographics",
+        "age_structure",
+        "renzhong"
+      ]
+    },
+    {
+      "id": "kb_00108",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.status",
+      "title": "status",
+      "snippet": "高齡瀕危社區",
+      "keywords": [
+        "status",
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "高齡瀕危社區",
+        "高齡",
+        "齡瀕",
+        "瀕危",
+        "危社",
+        "社區",
+        "高齡瀕",
+        "齡瀕危"
+      ]
+    },
+    {
+      "id": "kb_00109",
+      "section": "demographics",
+      "path": "demographics.age_structure.renzhong.needs",
+      "title": "needs",
+      "snippet": "['長照據點', '無障礙設施', '醫療巡迴服務']",
+      "keywords": [
+        "needs",
+        "demographics",
+        "age_structure",
+        "renzhong",
+        "長照據點",
+        "長照",
+        "照據",
+        "據點",
+        "長照據",
+        "照據點",
+        "無障礙設施",
+        "無障"
+      ]
+    },
+    {
+      "id": "kb_00110",
+      "section": "demographics",
+      "path": "demographics.age_structure.community_average.children_0_14",
+      "title": "children_0_14",
+      "snippet": "11.51",
+      "keywords": [
+        "children_0_14",
+        "11",
+        "51",
+        "demographics",
+        "age_structure",
+        "community_average"
+      ]
+    },
+    {
+      "id": "kb_00111",
+      "section": "demographics",
+      "path": "demographics.age_structure.community_average.working_age_15_64",
+      "title": "working_age_15_64",
+      "snippet": "72.0",
+      "keywords": [
+        "working_age_15_64",
+        "72",
+        "demographics",
+        "age_structure",
+        "community_average"
+      ]
+    },
+    {
+      "id": "kb_00112",
+      "section": "demographics",
+      "path": "demographics.age_structure.community_average.elderly_65_plus",
+      "title": "elderly_65_plus",
+      "snippet": "15.92",
+      "keywords": [
+        "elderly_65_plus",
+        "15",
+        "92",
+        "demographics",
+        "age_structure",
+        "community_average"
+      ]
+    },
+    {
+      "id": "kb_00113",
+      "section": "demographics",
+      "path": "demographics.age_structure.community_average.aging_index",
+      "title": "aging_index",
+      "snippet": "138.3",
+      "keywords": [
+        "aging_index",
+        "138",
+        "demographics",
+        "age_structure",
+        "community_average"
+      ]
+    },
+    {
+      "id": "kb_00114",
+      "section": "demographics",
+      "path": "demographics.age_structure.community_average.dependency_ratio",
+      "title": "dependency_ratio",
+      "snippet": "38.1",
+      "keywords": [
+        "dependency_ratio",
+        "38",
+        "demographics",
+        "age_structure",
+        "community_average"
+      ]
+    },
+    {
+      "id": "kb_00115",
+      "section": "demographics",
+      "path": "demographics.age_structure.community_average.trend",
+      "title": "trend",
+      "snippet": "扶養比逐年上升（108年35% → 111年38.1%）",
+      "keywords": [
+        "trend",
+        "108",
+        "35",
+        "111",
+        "38",
+        "demographics",
+        "age_structure",
+        "community_average",
+        "扶養比逐年上升",
+        "扶養",
+        "養比",
+        "比逐"
+      ]
+    },
+    {
+      "id": "kb_00116",
+      "section": "demographics",
+      "path": "demographics.gender_structure.year_111.male",
+      "title": "male",
+      "snippet": "6814",
+      "keywords": [
+        "male",
+        "6814",
+        "demographics",
+        "gender_structure",
+        "year_111"
+      ]
+    },
+    {
+      "id": "kb_00117",
+      "section": "demographics",
+      "path": "demographics.gender_structure.year_111.female",
+      "title": "female",
+      "snippet": "7108",
+      "keywords": [
+        "female",
+        "7108",
+        "demographics",
+        "gender_structure",
+        "year_111"
+      ]
+    },
+    {
+      "id": "kb_00118",
+      "section": "demographics",
+      "path": "demographics.gender_structure.year_111.difference",
+      "title": "difference",
+      "snippet": "294",
+      "keywords": [
+        "difference",
+        "294",
+        "demographics",
+        "gender_structure",
+        "year_111"
+      ]
+    },
+    {
+      "id": "kb_00119",
+      "section": "demographics",
+      "path": "demographics.gender_structure.year_111.note",
+      "title": "note",
+      "snippet": "女多於男，與三重區整體趨勢一致",
+      "keywords": [
+        "note",
+        "demographics",
+        "gender_structure",
+        "year_111",
+        "女多於男",
+        "女多",
+        "多於",
+        "於男",
+        "女多於",
+        "多於男",
+        "與三重區整體趨勢一致",
+        "與三"
+      ]
+    },
+    {
+      "id": "kb_00120",
+      "section": "demographics",
+      "path": "demographics.gender_structure.year_111.elderly_ratio",
+      "title": "elderly_ratio",
+      "snippet": "獨居老人女性約為男性的1.6倍",
+      "keywords": [
+        "elderly_ratio",
+        "demographics",
+        "gender_structure",
+        "year_111",
+        "獨居老人女性約為男性的",
+        "獨居",
+        "居老",
+        "老人",
+        "人女",
+        "女性",
+        "性約",
+        "約為"
+      ]
+    },
+    {
+      "id": "kb_00121",
+      "section": "demographics",
+      "path": "demographics.key_insights",
+      "title": "key_insights",
+      "snippet": "['五常里內部存在劇烈的貧富與世代差距', '仁忠里為典型的高齡瀕危社區', '整個社區的老化指數（138.3%）遠高於人口替代水準', '家庭經濟支柱的負擔日益沉重']",
+      "keywords": [
+        "key_insights",
+        "138",
+        "demographics",
+        "五常里內部存在劇烈的貧富",
+        "五常",
+        "常里",
+        "里內",
+        "內部",
+        "部存",
+        "存在",
+        "在劇",
+        "劇烈"
+      ]
+    },
+    {
+      "id": "kb_00122",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.total_businesses",
+      "title": "total_businesses",
+      "snippet": "90",
+      "keywords": [
+        "total_businesses",
+        "90",
+        "commercial_ecosystem"
+      ]
+    },
+    {
+      "id": "kb_00123",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.physical_stores",
+      "title": "physical_stores",
+      "snippet": "38",
+      "keywords": [
+        "physical_stores",
+        "38",
+        "commercial_ecosystem"
+      ]
+    },
+    {
+      "id": "kb_00124",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.restaurants.count",
+      "title": "count",
+      "snippet": "18",
+      "keywords": [
+        "count",
+        "18",
+        "commercial_ecosystem",
+        "business_distribution",
+        "restaurants"
+      ]
+    },
+    {
+      "id": "kb_00125",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.restaurants.percentage",
+      "title": "percentage",
+      "snippet": "47",
+      "keywords": [
+        "percentage",
+        "47",
+        "commercial_ecosystem",
+        "business_distribution",
+        "restaurants"
+      ]
+    },
+    {
+      "id": "kb_00126",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.restaurants.breakdown.breakfast_shops",
+      "title": "breakfast_shops",
+      "snippet": "8",
+      "keywords": [
+        "breakfast_shops",
+        "commercial_ecosystem",
+        "business_distribution",
+        "restaurants",
+        "breakdown"
+      ]
+    },
+    {
+      "id": "kb_00127",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.restaurants.breakdown.snack_shops",
+      "title": "snack_shops",
+      "snippet": "其餘",
+      "keywords": [
+        "snack_shops",
+        "commercial_ecosystem",
+        "business_distribution",
+        "restaurants",
+        "breakdown",
+        "其餘"
+      ]
+    },
+    {
+      "id": "kb_00128",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.restaurants.breakdown.lunch_boxes",
+      "title": "lunch_boxes",
+      "snippet": "包含",
+      "keywords": [
+        "lunch_boxes",
+        "commercial_ecosystem",
+        "business_distribution",
+        "restaurants",
+        "breakdown",
+        "包含"
+      ]
+    },
+    {
+      "id": "kb_00129",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.restaurants.insight",
+      "title": "insight",
+      "snippet": "典型通勤住宅區，居民外食需求集中在早晨時段",
+      "keywords": [
+        "insight",
+        "commercial_ecosystem",
+        "business_distribution",
+        "restaurants",
+        "典型通勤住宅區",
+        "典型",
+        "型通",
+        "通勤",
+        "勤住",
+        "住宅",
+        "宅區",
+        "典型通"
+      ]
+    },
+    {
+      "id": "kb_00130",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.convenience_stores.count",
+      "title": "count",
+      "snippet": "9",
+      "keywords": [
+        "count",
+        "commercial_ecosystem",
+        "business_distribution",
+        "convenience_stores"
+      ]
+    },
+    {
+      "id": "kb_00131",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.convenience_stores.percentage",
+      "title": "percentage",
+      "snippet": "24",
+      "keywords": [
+        "percentage",
+        "24",
+        "commercial_ecosystem",
+        "business_distribution",
+        "convenience_stores"
+      ]
+    },
+    {
+      "id": "kb_00132",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.convenience_stores.description",
+      "title": "description",
+      "snippet": "超高密度的便利商店網絡，部分取代了傳統雜貨店的功能",
+      "keywords": [
+        "description",
+        "commercial_ecosystem",
+        "business_distribution",
+        "convenience_stores",
+        "超高密度的便利商店網絡",
+        "超高",
+        "高密",
+        "密度",
+        "度的",
+        "的便",
+        "便利",
+        "利商"
+      ]
+    },
+    {
+      "id": "kb_00133",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.retail.count",
+      "title": "count",
+      "snippet": "3",
+      "keywords": [
+        "count",
+        "commercial_ecosystem",
+        "business_distribution",
+        "retail"
+      ]
+    },
+    {
+      "id": "kb_00134",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.retail.percentage",
+      "title": "percentage",
+      "snippet": "8",
+      "keywords": [
+        "percentage",
+        "commercial_ecosystem",
+        "business_distribution",
+        "retail"
+      ]
+    },
+    {
+      "id": "kb_00135",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.retail.examples",
+      "title": "examples",
+      "snippet": "['全聯', '美廉社']",
+      "keywords": [
+        "examples",
+        "commercial_ecosystem",
+        "business_distribution",
+        "retail",
+        "全聯",
+        "美廉社",
+        "美廉",
+        "廉社"
+      ]
+    },
+    {
+      "id": "kb_00136",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.retail.description",
+      "title": "description",
+      "snippet": "中小型超市，提供生鮮食品",
+      "keywords": [
+        "description",
+        "commercial_ecosystem",
+        "business_distribution",
+        "retail",
+        "中小型超市",
+        "中小",
+        "小型",
+        "型超",
+        "超市",
+        "中小型",
+        "小型超",
+        "型超市"
+      ]
+    },
+    {
+      "id": "kb_00137",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.professional_services.count",
+      "title": "count",
+      "snippet": "6",
+      "keywords": [
+        "count",
+        "commercial_ecosystem",
+        "business_distribution",
+        "professional_services"
+      ]
+    },
+    {
+      "id": "kb_00138",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.professional_services.percentage",
+      "title": "percentage",
+      "snippet": "16",
+      "keywords": [
+        "percentage",
+        "16",
+        "commercial_ecosystem",
+        "business_distribution",
+        "professional_services"
+      ]
+    },
+    {
+      "id": "kb_00139",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.professional_services.breakdown.self_service_laundry",
+      "title": "self_service_laundry",
+      "snippet": "2",
+      "keywords": [
+        "self_service_laundry",
+        "commercial_ecosystem",
+        "business_distribution",
+        "professional_services",
+        "breakdown"
+      ]
+    },
+    {
+      "id": "kb_00140",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.professional_services.breakdown.traditional_laundry",
+      "title": "traditional_laundry",
+      "snippet": "1",
+      "keywords": [
+        "traditional_laundry",
+        "commercial_ecosystem",
+        "business_distribution",
+        "professional_services",
+        "breakdown"
+      ]
+    },
+    {
+      "id": "kb_00141",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.professional_services.breakdown.computer_stores",
+      "title": "computer_stores",
+      "snippet": "2",
+      "keywords": [
+        "computer_stores",
+        "commercial_ecosystem",
+        "business_distribution",
+        "professional_services",
+        "breakdown"
+      ]
+    },
+    {
+      "id": "kb_00142",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.professional_services.breakdown.appliance_stores",
+      "title": "appliance_stores",
+      "snippet": "2",
+      "keywords": [
+        "appliance_stores",
+        "commercial_ecosystem",
+        "business_distribution",
+        "professional_services",
+        "breakdown"
+      ]
+    },
+    {
+      "id": "kb_00143",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.professional_services.insight",
+      "title": "insight",
+      "snippet": "反映舊公寓缺乏曬衣空間及家電維修需求",
+      "keywords": [
+        "insight",
+        "commercial_ecosystem",
+        "business_distribution",
+        "professional_services",
+        "反映舊公寓缺乏曬衣空間及",
+        "反映",
+        "映舊",
+        "舊公",
+        "公寓",
+        "寓缺",
+        "缺乏",
+        "乏曬"
+      ]
+    },
+    {
+      "id": "kb_00144",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.other.count",
+      "title": "count",
+      "snippet": "2",
+      "keywords": [
+        "count",
+        "commercial_ecosystem",
+        "business_distribution",
+        "other"
+      ]
+    },
+    {
+      "id": "kb_00145",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.other.percentage",
+      "title": "percentage",
+      "snippet": "5",
+      "keywords": [
+        "percentage",
+        "commercial_ecosystem",
+        "business_distribution",
+        "other"
+      ]
+    },
+    {
+      "id": "kb_00146",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.other.types",
+      "title": "types",
+      "snippet": "['彩券行']",
+      "keywords": [
+        "types",
+        "commercial_ecosystem",
+        "business_distribution",
+        "other",
+        "彩券行",
+        "彩券",
+        "券行"
+      ]
+    },
+    {
+      "id": "kb_00147",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.institutions.count",
+      "title": "count",
+      "snippet": "3",
+      "keywords": [
+        "count",
+        "commercial_ecosystem",
+        "business_distribution",
+        "institutions"
+      ]
+    },
+    {
+      "id": "kb_00148",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.institutions.percentage",
+      "title": "percentage",
+      "snippet": "8",
+      "keywords": [
+        "percentage",
+        "commercial_ecosystem",
+        "business_distribution",
+        "institutions"
+      ]
+    },
+    {
+      "id": "kb_00149",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.business_distribution.institutions.types",
+      "title": "types",
+      "snippet": "['金融機構', '診所', '書局']",
+      "keywords": [
+        "types",
+        "commercial_ecosystem",
+        "business_distribution",
+        "institutions",
+        "金融機構",
+        "金融",
+        "融機",
+        "機構",
+        "金融機",
+        "融機構",
+        "診所",
+        "書局"
+      ]
+    },
+    {
+      "id": "kb_00150",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.challenges.digital_gap.status",
+      "title": "status",
+      "snippet": "0家商店完成完整的數位轉型",
+      "keywords": [
+        "status",
+        "commercial_ecosystem",
+        "challenges",
+        "digital_gap",
+        "家商店完成完整的數位轉型",
+        "家商",
+        "商店",
+        "店完",
+        "完成",
+        "成完",
+        "完整",
+        "整的"
+      ]
+    },
+    {
+      "id": "kb_00151",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.challenges.digital_gap.attempting",
+      "title": "attempting",
+      "snippet": "僅1家早餐店嘗試中",
+      "keywords": [
+        "attempting",
+        "commercial_ecosystem",
+        "challenges",
+        "digital_gap",
+        "家早餐店嘗試中",
+        "家早",
+        "早餐",
+        "餐店",
+        "店嘗",
+        "嘗試",
+        "試中",
+        "家早餐"
+      ]
+    },
+    {
+      "id": "kb_00152",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.challenges.digital_gap.impact",
+      "title": "impact",
+      "snippet": "無法對接外送平台或進行數位行銷",
+      "keywords": [
+        "impact",
+        "commercial_ecosystem",
+        "challenges",
+        "digital_gap",
+        "無法對接外送平台或進行數",
+        "無法",
+        "法對",
+        "對接",
+        "接外",
+        "外送",
+        "送平",
+        "平台"
+      ]
+    },
+    {
+      "id": "kb_00153",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.challenges.breakfast_economy.description",
+      "title": "description",
+      "snippet": "高比例的早餐店反映了社區的「臥城」特性",
+      "keywords": [
+        "description",
+        "commercial_ecosystem",
+        "challenges",
+        "breakfast_economy",
+        "高比例的早餐店反映了社區",
+        "高比",
+        "比例",
+        "例的",
+        "的早",
+        "早餐",
+        "餐店",
+        "店反"
+      ]
+    },
+    {
+      "id": "kb_00154",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.challenges.breakfast_economy.issue",
+      "title": "issue",
+      "snippet": "日間商業活動低迷，許多店面面臨離峰時段閒置",
+      "keywords": [
+        "issue",
+        "commercial_ecosystem",
+        "challenges",
+        "breakfast_economy",
+        "日間商業活動低迷",
+        "日間",
+        "間商",
+        "商業",
+        "業活",
+        "活動",
+        "動低",
+        "低迷"
+      ]
+    },
+    {
+      "id": "kb_00155",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.challenges.alleyway_economy.location",
+      "title": "location",
+      "snippet": "仁義商圈",
+      "keywords": [
+        "location",
+        "commercial_ecosystem",
+        "challenges",
+        "alleyway_economy",
+        "仁義商圈",
+        "仁義",
+        "義商",
+        "商圈",
+        "仁義商",
+        "義商圈"
+      ]
+    },
+    {
+      "id": "kb_00156",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.challenges.alleyway_economy.restaurants",
+      "title": "restaurants",
+      "snippet": "12",
+      "keywords": [
+        "restaurants",
+        "12",
+        "commercial_ecosystem",
+        "challenges",
+        "alleyway_economy"
+      ]
+    },
+    {
+      "id": "kb_00157",
+      "section": "commercial_ecosystem",
+      "path": "commercial_ecosystem.challenges.alleyway_economy.issue",
+      "title": "issue",
+      "snippet": "多位於狹小巷弄，車輛難以臨停，嚴重限制了外帶客群的增長",
+      "keywords": [
+        "issue",
+        "commercial_ecosystem",
+        "challenges",
+        "alleyway_economy",
+        "多位於狹小巷弄",
+        "多位",
+        "位於",
+        "於狹",
+        "狹小",
+        "小巷",
+        "巷弄",
+        "多位於"
+      ]
+    },
+    {
+      "id": "kb_00158",
+      "section": "transportation",
+      "path": "transportation.road_conditions.bottlenecks",
+      "title": "bottlenecks",
+      "snippet": "['仁義街沿線目前有8個以上大型營建工地同時施工', '施工圍籬佔用車道', '大型工程車輛進出', '道路服務水準大幅下降']",
+      "keywords": [
+        "bottlenecks",
+        "transportation",
+        "road_conditions",
+        "仁義街沿線目前有",
+        "仁義",
+        "義街",
+        "街沿",
+        "沿線",
+        "線目",
+        "目前",
+        "前有",
+        "仁義街"
+      ]
+    },
+    {
+      "id": "kb_00159",
+      "section": "transportation",
+      "path": "transportation.road_conditions.dangerous_intersections",
+      "title": "dangerous_intersections",
+      "snippet": "['仁義街與集賢路口', '仁義街沿線巷口']",
+      "keywords": [
+        "dangerous_intersections",
+        "transportation",
+        "road_conditions",
+        "仁義街與集賢路口",
+        "仁義",
+        "義街",
+        "街與",
+        "與集",
+        "集賢",
+        "賢路",
+        "路口",
+        "仁義街"
+      ]
+    },
+    {
+      "id": "kb_00160",
+      "section": "transportation",
+      "path": "transportation.road_conditions.risk_factors",
+      "title": "risk_factors",
+      "snippet": "['視線死角多', '機車與大型重機具混流', '事故頻傳']",
+      "keywords": [
+        "risk_factors",
+        "transportation",
+        "road_conditions",
+        "視線死角多",
+        "視線",
+        "線死",
+        "死角",
+        "角多",
+        "視線死",
+        "線死角",
+        "死角多",
+        "視線死角"
+      ]
+    },
+    {
+      "id": "kb_00161",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.ownership_rate.new_taipei_city",
+      "title": "new_taipei_city",
+      "snippet": "54.8",
+      "keywords": [
+        "new_taipei_city",
+        "54",
+        "transportation",
+        "motorcycle_parking",
+        "ownership_rate"
+      ]
+    },
+    {
+      "id": "kb_00162",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.ownership_rate.description",
+      "title": "description",
+      "snippet": "新北市機車持有率極高，約54.8%的居民外出使用私人機動運具",
+      "keywords": [
+        "description",
+        "54",
+        "transportation",
+        "motorcycle_parking",
+        "ownership_rate",
+        "新北市機車持有率極高",
+        "新北",
+        "北市",
+        "市機",
+        "機車",
+        "車持",
+        "持有"
+      ]
+    },
+    {
+      "id": "kb_00163",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.estimated_total.calculation",
+      "title": "calculation",
+      "snippet": "4,900戶 × 1.2輛/戶",
+      "keywords": [
+        "calculation",
+        "900",
+        "transportation",
+        "motorcycle_parking",
+        "estimated_total"
+      ]
+    },
+    {
+      "id": "kb_00164",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.estimated_total.result",
+      "title": "result",
+      "snippet": "約5,800輛以上",
+      "keywords": [
+        "result",
+        "800",
+        "transportation",
+        "motorcycle_parking",
+        "estimated_total",
+        "輛以上",
+        "輛以",
+        "以上"
+      ]
+    },
+    {
+      "id": "kb_00165",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.roadside_parking.availability",
+      "title": "availability",
+      "snippet": "極其有限",
+      "keywords": [
+        "availability",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "roadside_parking",
+        "極其有限",
+        "極其",
+        "其有",
+        "有限",
+        "極其有",
+        "其有限"
+      ]
+    },
+    {
+      "id": "kb_00166",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.roadside_parking.issue",
+      "title": "issue",
+      "snippet": "常遭長期佔用",
+      "keywords": [
+        "issue",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "roadside_parking",
+        "常遭長期佔用",
+        "常遭",
+        "遭長",
+        "長期",
+        "期佔",
+        "佔用",
+        "常遭長"
+      ]
+    },
+    {
+      "id": "kb_00167",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.off_street_parking.name",
+      "title": "name",
+      "snippet": "仁信段平面停車場",
+      "keywords": [
+        "name",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "off_street_parking",
+        "仁信段平面停車場",
+        "仁信",
+        "信段",
+        "段平",
+        "平面",
+        "面停",
+        "停車"
+      ]
+    },
+    {
+      "id": "kb_00168",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.off_street_parking.motorcycle_spaces",
+      "title": "motorcycle_spaces",
+      "snippet": "60",
+      "keywords": [
+        "motorcycle_spaces",
+        "60",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "off_street_parking"
+      ]
+    },
+    {
+      "id": "kb_00169",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.off_street_parking.car_spaces",
+      "title": "car_spaces",
+      "snippet": "291",
+      "keywords": [
+        "car_spaces",
+        "291",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "off_street_parking"
+      ]
+    },
+    {
+      "id": "kb_00170",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.off_street_parking.description",
+      "title": "description",
+      "snippet": "政府利用重劃區未開發土地設置",
+      "keywords": [
+        "description",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "off_street_parking",
+        "政府利用重劃區未開發土地",
+        "政府",
+        "府利",
+        "利用",
+        "用重",
+        "重劃",
+        "劃區"
+      ]
+    },
+    {
+      "id": "kb_00171",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.off_street_parking.assessment",
+      "title": "assessment",
+      "snippet": "面對數千輛的潛在需求，這60個公共車位僅是杯水車薪",
+      "keywords": [
+        "assessment",
+        "60",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "off_street_parking",
+        "面對數千輛的潛在需求",
+        "面對",
+        "對數",
+        "數千",
+        "千輛",
+        "輛的"
+      ]
+    },
+    {
+      "id": "kb_00172",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.redevelopment_parking.regulation",
+      "title": "regulation",
+      "snippet": "新建案依規定需設置停車位（1汽車位配1機車位）",
+      "keywords": [
+        "regulation",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "redevelopment_parking",
+        "新建案依規定需設置停車位",
+        "新建",
+        "建案",
+        "案依",
+        "依規",
+        "規定",
+        "定需"
+      ]
+    },
+    {
+      "id": "kb_00173",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.redevelopment_parking.restriction",
+      "title": "restriction",
+      "snippet": "僅供該社區住戶使用，並不對外開放",
+      "keywords": [
+        "restriction",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "redevelopment_parking",
+        "僅供該社區住戶使用",
+        "僅供",
+        "供該",
+        "該社",
+        "社區",
+        "區住",
+        "住戶"
+      ]
+    },
+    {
+      "id": "kb_00174",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.supply_shortage.redevelopment_parking.result",
+      "title": "result",
+      "snippet": "機車溢出至巷弄，佔用消防通道與人行空間",
+      "keywords": [
+        "result",
+        "transportation",
+        "motorcycle_parking",
+        "supply_shortage",
+        "redevelopment_parking",
+        "機車溢出至巷弄",
+        "機車",
+        "車溢",
+        "溢出",
+        "出至",
+        "至巷",
+        "巷弄"
+      ]
+    },
+    {
+      "id": "kb_00175",
+      "section": "transportation",
+      "path": "transportation.motorcycle_parking.consequences",
+      "title": "consequences",
+      "snippet": "['嚴重的行人安全隱患', '鄰里糾紛', '消防通道被佔用']",
+      "keywords": [
+        "consequences",
+        "transportation",
+        "motorcycle_parking",
+        "嚴重的行人安全隱患",
+        "嚴重",
+        "重的",
+        "的行",
+        "行人",
+        "人安",
+        "安全",
+        "全隱",
+        "隱患"
+      ]
+    },
+    {
+      "id": "kb_00176",
+      "section": "transportation",
+      "path": "transportation.public_transportation.mrt_circular_line.status",
+      "title": "status",
+      "snippet": "施工中",
+      "keywords": [
+        "status",
+        "transportation",
+        "public_transportation",
+        "mrt_circular_line",
+        "施工中",
+        "施工",
+        "工中"
+      ]
+    },
+    {
+      "id": "kb_00177",
+      "section": "transportation",
+      "path": "transportation.public_transportation.mrt_circular_line.station",
+      "title": "station",
+      "snippet": "Y23站",
+      "keywords": [
+        "station",
+        "y23",
+        "transportation",
+        "public_transportation",
+        "mrt_circular_line"
+      ]
+    },
+    {
+      "id": "kb_00178",
+      "section": "transportation",
+      "path": "transportation.public_transportation.mrt_circular_line.location",
+      "title": "location",
+      "snippet": "五華街與集賢路口附近",
+      "keywords": [
+        "location",
+        "transportation",
+        "public_transportation",
+        "mrt_circular_line",
+        "五華街與集賢路口附近",
+        "五華",
+        "華街",
+        "街與",
+        "與集",
+        "集賢",
+        "賢路",
+        "路口"
+      ]
+    },
+    {
+      "id": "kb_00179",
+      "section": "transportation",
+      "path": "transportation.public_transportation.mrt_circular_line.impact",
+      "title": "impact",
+      "snippet": "施工圍籬進一步壓縮了五常社區北側的交通動線",
+      "keywords": [
+        "impact",
+        "transportation",
+        "public_transportation",
+        "mrt_circular_line",
+        "施工圍籬進一步壓縮了五常",
+        "施工",
+        "工圍",
+        "圍籬",
+        "籬進",
+        "進一",
+        "一步",
+        "步壓"
+      ]
+    },
+    {
+      "id": "kb_00180",
+      "section": "transportation",
+      "path": "transportation.public_transportation.mrt_circular_line.period",
+      "title": "period",
+      "snippet": "交通黑暗期",
+      "keywords": [
+        "period",
+        "transportation",
+        "public_transportation",
+        "mrt_circular_line",
+        "交通黑暗期",
+        "交通",
+        "通黑",
+        "黑暗",
+        "暗期",
+        "交通黑",
+        "通黑暗",
+        "黑暗期"
+      ]
+    },
+    {
+      "id": "kb_00181",
+      "section": "transportation",
+      "path": "transportation.public_transportation.bus_network.location",
+      "title": "location",
+      "snippet": "五華街",
+      "keywords": [
+        "location",
+        "transportation",
+        "public_transportation",
+        "bus_network",
+        "五華街",
+        "五華",
+        "華街"
+      ]
+    },
+    {
+      "id": "kb_00182",
+      "section": "transportation",
+      "path": "transportation.public_transportation.bus_network.density",
+      "title": "density",
+      "snippet": "密集的公車路線",
+      "keywords": [
+        "density",
+        "transportation",
+        "public_transportation",
+        "bus_network",
+        "密集的公車路線",
+        "密集",
+        "集的",
+        "的公",
+        "公車",
+        "車路",
+        "路線",
+        "密集的"
+      ]
+    },
+    {
+      "id": "kb_00183",
+      "section": "transportation",
+      "path": "transportation.public_transportation.bus_network.challenge",
+      "title": "challenge",
+      "snippet": "對於居住在仁忠里深處的老年人來說，步行至站牌的距離（First/Last Mile）仍是一大負擔",
+      "keywords": [
+        "challenge",
+        "first",
+        "last",
+        "mile",
+        "transportation",
+        "public_transportation",
+        "bus_network",
+        "對於居住在仁忠里深處的老",
+        "對於",
+        "於居",
+        "居住",
+        "住在"
+      ]
+    },
+    {
+      "id": "kb_00184",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.community_service_team.organization",
+      "title": "organization",
+      "snippet": "五常物業規劃顧問股份有限公司",
+      "keywords": [
+        "organization",
+        "social_enterprise_solutions",
+        "community_service_team",
+        "五常物業規劃顧問股份有限",
+        "五常",
+        "常物",
+        "物業",
+        "業規",
+        "規劃",
+        "劃顧",
+        "顧問",
+        "問股"
+      ]
+    },
+    {
+      "id": "kb_00185",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.community_service_team.concept",
+      "title": "concept",
+      "snippet": "將社區的劣勢轉化為優勢",
+      "keywords": [
+        "concept",
+        "social_enterprise_solutions",
+        "community_service_team",
+        "將社區的劣勢轉化為優勢",
+        "將社",
+        "社區",
+        "區的",
+        "的劣",
+        "劣勢",
+        "勢轉",
+        "轉化",
+        "化為"
+      ]
+    },
+    {
+      "id": "kb_00186",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.community_service_team.target_population",
+      "title": "target_population",
+      "snippet": "中高齡退休人士（55-65歲）",
+      "keywords": [
+        "target_population",
+        "55",
+        "65",
+        "social_enterprise_solutions",
+        "community_service_team",
+        "中高齡退休人士",
+        "中高",
+        "高齡",
+        "齡退",
+        "退休",
+        "休人",
+        "人士"
+      ]
+    },
+    {
+      "id": "kb_00187",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.community_service_team.benefits",
+      "title": "benefits",
+      "snippet": "['解決長者的經濟安全問題', '提供在地的人力資源']",
+      "keywords": [
+        "benefits",
+        "social_enterprise_solutions",
+        "community_service_team",
+        "解決長者的經濟安全問題",
+        "解決",
+        "決長",
+        "長者",
+        "者的",
+        "的經",
+        "經濟",
+        "濟安",
+        "安全"
+      ]
+    },
+    {
+      "id": "kb_00188",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.community_service_team.services",
+      "title": "services",
+      "snippet": "['區域聯合銷售平台', '短程外送（步行或自行車）', '協助90家在地商家數位轉型', '將早餐店的閒置產能對接給社區居民']",
+      "keywords": [
+        "services",
+        "90",
+        "social_enterprise_solutions",
+        "community_service_team",
+        "區域聯合銷售平台",
+        "區域",
+        "域聯",
+        "聯合",
+        "合銷",
+        "銷售",
+        "售平",
+        "平台"
+      ]
+    },
+    {
+      "id": "kb_00189",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.community_service_team.advantages",
+      "title": "advantages",
+      "snippet": "['避開了仁義商圈的交通癱瘓與停車問題', '不需要機車停車位']",
+      "keywords": [
+        "advantages",
+        "social_enterprise_solutions",
+        "community_service_team",
+        "避開了仁義商圈的交通癱瘓",
+        "避開",
+        "開了",
+        "了仁",
+        "仁義",
+        "義商",
+        "商圈",
+        "圈的",
+        "的交"
+      ]
+    },
+    {
+      "id": "kb_00190",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.ai_property_management.model",
+      "title": "model",
+      "snippet": "AI智能系統 + 機動巡邏",
+      "keywords": [
+        "model",
+        "ai",
+        "social_enterprise_solutions",
+        "ai_property_management",
+        "智能系統",
+        "智能",
+        "能系",
+        "系統",
+        "智能系",
+        "能系統",
+        "機動巡邏",
+        "機動"
+      ]
+    },
+    {
+      "id": "kb_00191",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.ai_property_management.approach",
+      "title": "approach",
+      "snippet": "由中央控制中心（AI）取代各社區的夜間保全，並由專勤隊進行機動巡邏",
+      "keywords": [
+        "approach",
+        "ai",
+        "social_enterprise_solutions",
+        "ai_property_management",
+        "由中央控制中心",
+        "由中",
+        "中央",
+        "央控",
+        "控制",
+        "制中",
+        "中心",
+        "由中央"
+      ]
+    },
+    {
+      "id": "kb_00192",
+      "section": "social_enterprise_solutions",
+      "path": "social_enterprise_solutions.ai_property_management.benefits",
+      "title": "benefits",
+      "snippet": "['大幅降低舊社區的管理費負擔', '解決缺工問題']",
+      "keywords": [
+        "benefits",
+        "social_enterprise_solutions",
+        "ai_property_management",
+        "大幅降低舊社區的管理費負",
+        "大幅",
+        "幅降",
+        "降低",
+        "低舊",
+        "舊社",
+        "社區",
+        "區的",
+        "的管"
+      ]
+    },
+    {
+      "id": "kb_00193",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.population.priority",
+      "title": "priority",
+      "snippet": "針對仁忠里進行重點式的長照資源投放",
+      "keywords": [
+        "priority",
+        "strategic_recommendations",
+        "population",
+        "針對仁忠里進行重點式的長",
+        "針對",
+        "對仁",
+        "仁忠",
+        "忠里",
+        "里進",
+        "進行",
+        "行重",
+        "重點"
+      ]
+    },
+    {
+      "id": "kb_00194",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.population.reason",
+      "title": "reason",
+      "snippet": "老化指數高達163.12%，為高齡瀕危社區",
+      "keywords": [
+        "reason",
+        "163",
+        "12",
+        "strategic_recommendations",
+        "population",
+        "老化指數高達",
+        "老化",
+        "化指",
+        "指數",
+        "數高",
+        "高達",
+        "老化指"
+      ]
+    },
+    {
+      "id": "kb_00195",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.transportation.short_term",
+      "title": "short_term",
+      "snippet": "嚴格執法清除巷弄路霸",
+      "keywords": [
+        "short_term",
+        "strategic_recommendations",
+        "transportation",
+        "嚴格執法清除巷弄路霸",
+        "嚴格",
+        "格執",
+        "執法",
+        "法清",
+        "清除",
+        "除巷",
+        "巷弄",
+        "弄路"
+      ]
+    },
+    {
+      "id": "kb_00196",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.transportation.long_term",
+      "title": "long_term",
+      "snippet": "評估增設立體機車停車塔的可行性",
+      "keywords": [
+        "long_term",
+        "strategic_recommendations",
+        "transportation",
+        "評估增設立體機車停車塔的",
+        "評估",
+        "估增",
+        "增設",
+        "設立",
+        "立體",
+        "體機",
+        "機車",
+        "車停"
+      ]
+    },
+    {
+      "id": "kb_00197",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.transportation.note",
+      "title": "note",
+      "snippet": "在捷運完工前需採取措施",
+      "keywords": [
+        "note",
+        "strategic_recommendations",
+        "transportation",
+        "在捷運完工前需採取措施",
+        "在捷",
+        "捷運",
+        "運完",
+        "完工",
+        "工前",
+        "前需",
+        "需採",
+        "採取"
+      ]
+    },
+    {
+      "id": "kb_00198",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.economy.priority",
+      "title": "priority",
+      "snippet": "推動在地商家的數位化與社區互助經濟",
+      "keywords": [
+        "priority",
+        "strategic_recommendations",
+        "economy",
+        "推動在地商家的數位化與社",
+        "推動",
+        "動在",
+        "在地",
+        "地商",
+        "商家",
+        "家的",
+        "的數",
+        "數位"
+      ]
+    },
+    {
+      "id": "kb_00199",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.economy.goal",
+      "title": "goal",
+      "snippet": "避免舊市區商業凋零",
+      "keywords": [
+        "goal",
+        "strategic_recommendations",
+        "economy",
+        "避免舊市區商業凋零",
+        "避免",
+        "免舊",
+        "舊市",
+        "市區",
+        "區商",
+        "商業",
+        "業凋",
+        "凋零"
+      ]
+    },
+    {
+      "id": "kb_00200",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.economy.approach",
+      "title": "approach",
+      "snippet": "社區發展協會的積極介入與社會企業模式的運作",
+      "keywords": [
+        "approach",
+        "strategic_recommendations",
+        "economy",
+        "社區發展協會的積極介入與",
+        "社區",
+        "區發",
+        "發展",
+        "展協",
+        "協會",
+        "會的",
+        "的積",
+        "積極"
+      ]
+    },
+    {
+      "id": "kb_00201",
+      "section": "strategic_recommendations",
+      "path": "strategic_recommendations.vision",
+      "title": "vision",
+      "snippet": "成為新北市「新舊共融」的示範場域",
+      "keywords": [
+        "vision",
+        "strategic_recommendations",
+        "成為新北市",
+        "成為",
+        "為新",
+        "新北",
+        "北市",
+        "成為新",
+        "為新北",
+        "新北市",
+        "成為新北",
+        "為新北市"
+      ]
+    },
+    {
+      "id": "kb_00202",
+      "section": "system_integration_points",
+      "path": "system_integration_points.ui_design.elderly_friendly.target",
+      "title": "target",
+      "snippet": "19.3% 老年人口（仁忠里）",
+      "keywords": [
+        "target",
+        "19",
+        "system_integration_points",
+        "ui_design",
+        "elderly_friendly",
+        "老年人口",
+        "老年",
+        "年人",
+        "人口",
+        "老年人",
+        "年人口",
+        "仁忠里"
+      ]
+    },
+    {
+      "id": "kb_00203",
+      "section": "system_integration_points",
+      "path": "system_integration_points.ui_design.elderly_friendly.features",
+      "title": "features",
+      "snippet": "['大字體模式', '高對比度', '簡化操作流程']",
+      "keywords": [
+        "features",
+        "system_integration_points",
+        "ui_design",
+        "elderly_friendly",
+        "大字體模式",
+        "大字",
+        "字體",
+        "體模",
+        "模式",
+        "大字體",
+        "字體模",
+        "體模式"
+      ]
+    },
+    {
+      "id": "kb_00204",
+      "section": "system_integration_points",
+      "path": "system_integration_points.ui_design.dual_entry.entry_a_merchant.target",
+      "title": "target",
+      "snippet": "60% 居住在無電梯公寓的長者",
+      "keywords": [
+        "target",
+        "60",
+        "system_integration_points",
+        "ui_design",
+        "dual_entry",
+        "entry_a_merchant",
+        "居住在無電梯公寓的長者",
+        "居住",
+        "住在",
+        "在無",
+        "無電",
+        "電梯"
+      ]
+    },
+    {
+      "id": "kb_00205",
+      "section": "system_integration_points",
+      "path": "system_integration_points.ui_design.dual_entry.entry_a_merchant.features",
+      "title": "features",
+      "snippet": "['大字體模式', '外送優先顯示', '步行距離標示']",
+      "keywords": [
+        "features",
+        "system_integration_points",
+        "ui_design",
+        "dual_entry",
+        "entry_a_merchant",
+        "大字體模式",
+        "大字",
+        "字體",
+        "體模",
+        "模式",
+        "大字體",
+        "字體模"
+      ]
+    },
+    {
+      "id": "kb_00206",
+      "section": "system_integration_points",
+      "path": "system_integration_points.ui_design.dual_entry.entry_b_category.target",
+      "title": "target",
+      "snippet": "35.5% 高學歷族群 + 11.8% 青少年",
+      "keywords": [
+        "target",
+        "35",
+        "11",
+        "system_integration_points",
+        "ui_design",
+        "dual_entry",
+        "entry_b_category",
+        "高學歷族群",
+        "高學",
+        "學歷",
+        "歷族",
+        "族群"
+      ]
+    },
+    {
+      "id": "kb_00207",
+      "section": "system_integration_points",
+      "path": "system_integration_points.ui_design.dual_entry.entry_b_category.features",
+      "title": "features",
+      "snippet": "['視覺體驗', '探索樂趣', 'AI生成圖片']",
+      "keywords": [
+        "features",
+        "ai",
+        "system_integration_points",
+        "ui_design",
+        "dual_entry",
+        "entry_b_category",
+        "視覺體驗",
+        "視覺",
+        "覺體",
+        "體驗",
+        "視覺體",
+        "覺體驗"
+      ]
+    },
+    {
+      "id": "kb_00208",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.bento_kun.role",
+      "title": "role",
+      "snippet": "辦公室守護者",
+      "keywords": [
+        "role",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "bento_kun",
+        "辦公室守護者",
+        "辦公",
+        "公室",
+        "室守",
+        "守護",
+        "護者",
+        "辦公室",
+        "公室守"
+      ]
+    },
+    {
+      "id": "kb_00209",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.bento_kun.target",
+      "title": "target",
+      "snippet": "巷弄內數百家小型公司（工程、貿易、科技行）",
+      "keywords": [
+        "target",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "bento_kun",
+        "巷弄內數百家小型公司",
+        "巷弄",
+        "弄內",
+        "內數",
+        "數百",
+        "百家",
+        "家小",
+        "小型"
+      ]
+    },
+    {
+      "id": "kb_00210",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.bento_kun.feature",
+      "title": "feature",
+      "snippet": "企業訂閱制",
+      "keywords": [
+        "feature",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "bento_kun",
+        "企業訂閱制",
+        "企業",
+        "業訂",
+        "訂閱",
+        "閱制",
+        "企業訂",
+        "業訂閱",
+        "訂閱制"
+      ]
+    },
+    {
+      "id": "kb_00211",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.bento_kun.market_size",
+      "title": "market_size",
+      "snippet": "90家商業機構中的B2B客戶",
+      "keywords": [
+        "market_size",
+        "90",
+        "b2b",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "bento_kun",
+        "家商業機構中的",
+        "家商",
+        "商業",
+        "業機",
+        "機構",
+        "構中"
+      ]
+    },
+    {
+      "id": "kb_00212",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.shao_bing_tuan_zi.role",
+      "title": "role",
+      "snippet": "社區活力大使",
+      "keywords": [
+        "role",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "shao_bing_tuan_zi",
+        "社區活力大使",
+        "社區",
+        "區活",
+        "活力",
+        "力大",
+        "大使",
+        "社區活",
+        "區活力"
+      ]
+    },
+    {
+      "id": "kb_00213",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.shao_bing_tuan_zi.integration",
+      "title": "integration",
+      "snippet": "結合宮廟與社區活動",
+      "keywords": [
+        "integration",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "shao_bing_tuan_zi",
+        "結合宮廟與社區活動",
+        "結合",
+        "合宮",
+        "宮廟",
+        "廟與",
+        "與社",
+        "社區",
+        "區活"
+      ]
+    },
+    {
+      "id": "kb_00214",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.shao_bing_tuan_zi.mechanism",
+      "title": "mechanism",
+      "snippet": "發放實體或虛擬的「團子幣」",
+      "keywords": [
+        "mechanism",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "shao_bing_tuan_zi",
+        "發放實體或虛擬的",
+        "發放",
+        "放實",
+        "實體",
+        "體或",
+        "或虛",
+        "虛擬",
+        "擬的"
+      ]
+    },
+    {
+      "id": "kb_00215",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.coffee_elf.role",
+      "title": "role",
+      "snippet": "巷弄探險家",
+      "keywords": [
+        "role",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "coffee_elf",
+        "巷弄探險家",
+        "巷弄",
+        "弄探",
+        "探險",
+        "險家",
+        "巷弄探",
+        "弄探險",
+        "探險家"
+      ]
+    },
+    {
+      "id": "kb_00216",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.coffee_elf.feature",
+      "title": "feature",
+      "snippet": "打卡賺幣機制",
+      "keywords": [
+        "feature",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "coffee_elf",
+        "打卡賺幣機制",
+        "打卡",
+        "卡賺",
+        "賺幣",
+        "幣機",
+        "機制",
+        "打卡賺",
+        "卡賺幣"
+      ]
+    },
+    {
+      "id": "kb_00217",
+      "section": "system_integration_points",
+      "path": "system_integration_points.food_dollars_strategy.coffee_elf.target",
+      "title": "target",
+      "snippet": "挖掘隱藏版咖啡或茶飲店",
+      "keywords": [
+        "target",
+        "system_integration_points",
+        "food_dollars_strategy",
+        "coffee_elf",
+        "挖掘隱藏版咖啡或茶飲店",
+        "挖掘",
+        "掘隱",
+        "隱藏",
+        "藏版",
+        "版咖",
+        "咖啡",
+        "啡或"
+      ]
+    },
+    {
+      "id": "kb_00218",
+      "section": "system_integration_points",
+      "path": "system_integration_points.happiness_coin.social_welfare.target_group",
+      "title": "target_group",
+      "snippet": "19.3% 老年人口",
+      "keywords": [
+        "target_group",
+        "19",
+        "system_integration_points",
+        "happiness_coin",
+        "social_welfare",
+        "老年人口",
+        "老年",
+        "年人",
+        "人口",
+        "老年人",
+        "年人口"
+      ]
+    },
+    {
+      "id": "kb_00219",
+      "section": "system_integration_points",
+      "path": "system_integration_points.happiness_coin.social_welfare.mechanism",
+      "title": "mechanism",
+      "snippet": "純幸福幣購買（現金價0元）",
+      "keywords": [
+        "mechanism",
+        "system_integration_points",
+        "happiness_coin",
+        "social_welfare",
+        "純幸福幣購買",
+        "純幸",
+        "幸福",
+        "福幣",
+        "幣購",
+        "購買",
+        "純幸福",
+        "幸福幣"
+      ]
+    },
+    {
+      "id": "kb_00220",
+      "section": "system_integration_points",
+      "path": "system_integration_points.happiness_coin.social_welfare.benefit",
+      "title": "benefit",
+      "snippet": "創造「尊嚴救助」模式",
+      "keywords": [
+        "benefit",
+        "system_integration_points",
+        "happiness_coin",
+        "social_welfare",
+        "創造",
+        "尊嚴救助",
+        "尊嚴",
+        "嚴救",
+        "救助",
+        "尊嚴救",
+        "嚴救助",
+        "模式"
+      ]
+    },
+    {
+      "id": "kb_00221",
+      "section": "system_integration_points",
+      "path": "system_integration_points.happiness_coin.social_welfare.activities",
+      "title": "activities",
+      "snippet": "['擔任志工', '協助巡守', '參與社區活動']",
+      "keywords": [
+        "activities",
+        "system_integration_points",
+        "happiness_coin",
+        "social_welfare",
+        "擔任志工",
+        "擔任",
+        "任志",
+        "志工",
+        "擔任志",
+        "任志工",
+        "協助巡守",
+        "協助"
+      ]
+    },
+    {
+      "id": "kb_00222",
+      "section": "system_integration_points",
+      "path": "system_integration_points.happiness_coin.time_complement.idle_period",
+      "title": "idle_period",
+      "snippet": "下午2點至4點",
+      "keywords": [
+        "idle_period",
+        "system_integration_points",
+        "happiness_coin",
+        "time_complement",
+        "下午",
+        "點至"
+      ]
+    },
+    {
+      "id": "kb_00223",
+      "section": "system_integration_points",
+      "path": "system_integration_points.happiness_coin.time_complement.target",
+      "title": "target",
+      "snippet": "退休長者活動時間",
+      "keywords": [
+        "target",
+        "system_integration_points",
+        "happiness_coin",
+        "time_complement",
+        "退休長者活動時間",
+        "退休",
+        "休長",
+        "長者",
+        "者活",
+        "活動",
+        "動時",
+        "時間"
+      ]
+    },
+    {
+      "id": "kb_00224",
+      "section": "system_integration_points",
+      "path": "system_integration_points.happiness_coin.time_complement.product",
+      "title": "product",
+      "snippet": "下午茶套餐（燒餅、豆漿）",
+      "keywords": [
+        "product",
+        "system_integration_points",
+        "happiness_coin",
+        "time_complement",
+        "下午茶套餐",
+        "下午",
+        "午茶",
+        "茶套",
+        "套餐",
+        "下午茶",
+        "午茶套",
+        "茶套餐"
+      ]
+    },
+    {
+      "id": "kb_00225",
+      "section": "system_integration_points",
+      "path": "system_integration_points.logistics.curbside_pickup.reason",
+      "title": "reason",
+      "snippet": "停車困難（5,800輛機車 vs 60個公共車位）",
+      "keywords": [
+        "reason",
+        "800",
+        "vs",
+        "60",
+        "system_integration_points",
+        "logistics",
+        "curbside_pickup",
+        "停車困難",
+        "停車",
+        "車困",
+        "困難",
+        "停車困"
+      ]
+    },
+    {
+      "id": "kb_00226",
+      "section": "system_integration_points",
+      "path": "system_integration_points.logistics.curbside_pickup.feature",
+      "title": "feature",
+      "snippet": "免下車取餐，GPS觸發通知",
+      "keywords": [
+        "feature",
+        "gps",
+        "system_integration_points",
+        "logistics",
+        "curbside_pickup",
+        "免下車取餐",
+        "免下",
+        "下車",
+        "車取",
+        "取餐",
+        "免下車",
+        "下車取"
+      ]
+    },
+    {
+      "id": "kb_00227",
+      "section": "system_integration_points",
+      "path": "system_integration_points.logistics.walking_delivery.radius",
+      "title": "radius",
+      "snippet": "500",
+      "keywords": [
+        "radius",
+        "500",
+        "system_integration_points",
+        "logistics",
+        "walking_delivery"
+      ]
+    },
+    {
+      "id": "kb_00228",
+      "section": "system_integration_points",
+      "path": "system_integration_points.logistics.walking_delivery.advantage",
+      "title": "advantage",
+      "snippet": "避開交通癱瘓與停車問題",
+      "keywords": [
+        "advantage",
+        "system_integration_points",
+        "logistics",
+        "walking_delivery",
+        "避開交通癱瘓與停車問題",
+        "避開",
+        "開交",
+        "交通",
+        "通癱",
+        "癱瘓",
+        "瘓與",
+        "與停"
+      ]
+    },
+    {
+      "id": "kb_00229",
+      "section": "system_integration_points",
+      "path": "system_integration_points.logistics.walking_delivery.workers",
+      "title": "workers",
+      "snippet": "社區專勤隊（中高齡退休人士）",
+      "keywords": [
+        "workers",
+        "system_integration_points",
+        "logistics",
+        "walking_delivery",
+        "社區專勤隊",
+        "社區",
+        "區專",
+        "專勤",
+        "勤隊",
+        "社區專",
+        "區專勤",
+        "專勤隊"
+      ]
+    },
+    {
+      "id": "kb_00230",
+      "section": "key_statistics",
+      "path": "key_statistics.total_households",
+      "title": "total_households",
+      "snippet": "4891",
+      "keywords": [
+        "total_households",
+        "4891",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00231",
+      "section": "key_statistics",
+      "path": "key_statistics.total_population",
+      "title": "total_population",
+      "snippet": "12524",
+      "keywords": [
+        "total_population",
+        "12524",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00232",
+      "section": "key_statistics",
+      "path": "key_statistics.average_household_size",
+      "title": "average_household_size",
+      "snippet": "2.56",
+      "keywords": [
+        "average_household_size",
+        "56",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00233",
+      "section": "key_statistics",
+      "path": "key_statistics.elderly_percentage",
+      "title": "elderly_percentage",
+      "snippet": "15.92",
+      "keywords": [
+        "elderly_percentage",
+        "15",
+        "92",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00234",
+      "section": "key_statistics",
+      "path": "key_statistics.aging_index",
+      "title": "aging_index",
+      "snippet": "138.3",
+      "keywords": [
+        "aging_index",
+        "138",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00235",
+      "section": "key_statistics",
+      "path": "key_statistics.motorcycles_estimated",
+      "title": "motorcycles_estimated",
+      "snippet": "5800",
+      "keywords": [
+        "motorcycles_estimated",
+        "5800",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00236",
+      "section": "key_statistics",
+      "path": "key_statistics.public_motorcycle_parking",
+      "title": "public_motorcycle_parking",
+      "snippet": "60",
+      "keywords": [
+        "public_motorcycle_parking",
+        "60",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00237",
+      "section": "key_statistics",
+      "path": "key_statistics.parking_shortage_ratio",
+      "title": "parking_shortage_ratio",
+      "snippet": "96.7%缺口",
+      "keywords": [
+        "parking_shortage_ratio",
+        "96",
+        "key_statistics",
+        "缺口"
+      ]
+    },
+    {
+      "id": "kb_00238",
+      "section": "key_statistics",
+      "path": "key_statistics.total_businesses",
+      "title": "total_businesses",
+      "snippet": "90",
+      "keywords": [
+        "total_businesses",
+        "90",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00239",
+      "section": "key_statistics",
+      "path": "key_statistics.physical_stores",
+      "title": "physical_stores",
+      "snippet": "38",
+      "keywords": [
+        "physical_stores",
+        "38",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00240",
+      "section": "key_statistics",
+      "path": "key_statistics.digital_transformation_rate",
+      "title": "digital_transformation_rate",
+      "snippet": "0",
+      "keywords": [
+        "digital_transformation_rate",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00241",
+      "section": "key_statistics",
+      "path": "key_statistics.hoa_count_current",
+      "title": "hoa_count_current",
+      "snippet": "32",
+      "keywords": [
+        "hoa_count_current",
+        "32",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00242",
+      "section": "key_statistics",
+      "path": "key_statistics.hoa_count_projected",
+      "title": "hoa_count_projected",
+      "snippet": "50",
+      "keywords": [
+        "hoa_count_projected",
+        "50",
+        "key_statistics"
+      ]
+    },
+    {
+      "id": "kb_00243",
+      "section": "critical_insights",
+      "path": "critical_insights",
+      "title": "critical_insights",
+      "snippet": "['區域正處於極端的二元發展狀態：新興重劃區 vs 傳統舊市區', '仁忠里老化指數高達163.12%，為高齡瀕危社區', '機車停車供需嚴重失衡（5,800輛 vs 60個公共車位）', '商業數位化程度為零，存在巨大轉型機會', '新舊社區物業管理斷層，AI智能系統可提供解決方案', '社區專勤隊模式可同時解決人口老化、商業轉型與交通問題']",
+      "keywords": [
+        "critical_insights",
+        "vs",
+        "163",
+        "12",
+        "800",
+        "60",
+        "ai",
+        "區域正處於極端的二元發展",
+        "區域",
+        "域正",
+        "正處",
+        "處於"
+      ]
+    }
+  ],
+  "inverted_index": {
+    "knowledge_base_version": [
+      "kb_00001"
+    ],
+    "last_updated": [
+      "kb_00002"
+    ],
+    "2026": [
+      "kb_00002"
+    ],
+    "01": [
+      "kb_00002"
+    ],
+    "15": [
+      "kb_00002",
+      "kb_00052",
+      "kb_00112",
+      "kb_00233"
+    ],
+    "community_name": [
+      "kb_00003"
+    ],
+    "新北市三重區五常社區發展": [
+      "kb_00003"
+    ],
+    "新北": [
+      "kb_00003",
+      "kb_00006",
+      "kb_00162",
+      "kb_00201"
+    ],
+    "北市": [
+      "kb_00003",
+      "kb_00006",
+      "kb_00008",
+      "kb_00059",
+      "kb_00162",
+      "kb_00201"
+    ],
+    "市三": [
+      "kb_00003"
+    ],
+    "三重": [
+      "kb_00003",
+      "kb_00007",
+      "kb_00008",
+      "kb_00065"
+    ],
+    "重區": [
+      "kb_00003",
+      "kb_00007",
+      "kb_00008",
+      "kb_00065"
+    ],
+    "區五": [
+      "kb_00003"
+    ],
+    "五常": [
+      "kb_00003",
+      "kb_00004",
+      "kb_00005",
+      "kb_00051",
+      "kb_00121",
+      "kb_00184"
+    ],
+    "常社": [
+      "kb_00003",
+      "kb_00005"
+    ],
+    "社區": [
+      "kb_00003",
+      "kb_00005",
+      "kb_00025",
+      "kb_00061",
+      "kb_00067",
+      "kb_00079",
+      "kb_00108",
+      "kb_00173",
+      "kb_00185",
+      "kb_00192",
+      "kb_00200",
+      "kb_00212",
+      "kb_00213",
+      "kb_00229"
+    ],
+    "區發": [
+      "kb_00003",
+      "kb_00005",
+      "kb_00200"
+    ],
+    "villages": [
+      "kb_00004"
+    ],
+    "scope": [
+      "kb_00004",
+      "kb_00005"
+    ],
+    "五常里": [
+      "kb_00004"
+    ],
+    "常里": [
+      "kb_00004",
+      "kb_00051",
+      "kb_00121"
+    ],
+    "五順里": [
+      "kb_00004",
+      "kb_00062"
+    ],
+    "五順": [
+      "kb_00004",
+      "kb_00062"
+    ],
+    "順里": [
+      "kb_00004",
+      "kb_00062"
+    ],
+    "仁忠里": [
+      "kb_00004",
+      "kb_00202"
+    ],
+    "仁忠": [
+      "kb_00004",
+      "kb_00062",
+      "kb_00193"
+    ],
+    "忠里": [
+      "kb_00004",
+      "kb_00062",
+      "kb_00193"
+    ],
+    "description": [
+      "kb_00005",
+      "kb_00010",
+      "kb_00028",
+      "kb_00061",
+      "kb_00071",
+      "kb_00132",
+      "kb_00136",
+      "kb_00153",
+      "kb_00162",
+      "kb_00170"
+    ],
+    "五常社區發展協會服務範圍": [
+      "kb_00005"
+    ],
+    "發展": [
+      "kb_00005",
+      "kb_00200"
+    ],
+    "展協": [
+      "kb_00005",
+      "kb_00200"
+    ],
+    "協會": [
+      "kb_00005",
+      "kb_00200"
+    ],
+    "會服": [
+      "kb_00005"
+    ],
+    "服務": [
+      "kb_00005",
+      "kb_00025"
+    ],
+    "city": [
+      "kb_00006"
+    ],
+    "geographic_analysis": [
+      "kb_00006",
+      "kb_00007",
+      "kb_00008",
+      "kb_00009",
+      "kb_00010",
+      "kb_00011",
+      "kb_00012",
+      "kb_00013",
+      "kb_00014",
+      "kb_00015",
+      "kb_00016",
+      "kb_00017",
+      "kb_00018",
+      "kb_00019",
+      "kb_00020",
+      "kb_00021",
+      "kb_00022",
+      "kb_00023",
+      "kb_00024",
+      "kb_00025",
+      "kb_00026",
+      "kb_00027",
+      "kb_00028",
+      "kb_00029",
+      "kb_00030"
+    ],
+    "location": [
+      "kb_00006",
+      "kb_00007",
+      "kb_00008",
+      "kb_00009",
+      "kb_00051",
+      "kb_00062",
+      "kb_00155",
+      "kb_00178",
+      "kb_00181"
+    ],
+    "新北市": [
+      "kb_00006",
+      "kb_00201"
+    ],
+    "district": [
+      "kb_00007"
+    ],
+    "三重區": [
+      "kb_00007"
+    ],
+    "strategic_value": [
+      "kb_00008"
+    ],
+    "三重區通往台北市士林": [
+      "kb_00008"
+    ],
+    "區通": [
+      "kb_00008"
+    ],
+    "通往": [
+      "kb_00008"
+    ],
+    "往台": [
+      "kb_00008"
+    ],
+    "台北": [
+      "kb_00008",
+      "kb_00059"
+    ],
+    "市士": [
+      "kb_00008"
+    ],
+    "nearby_projects": [
+      "kb_00009"
+    ],
+    "銀新未來城": [
+      "kb_00009"
+    ],
+    "銀新": [
+      "kb_00009"
+    ],
+    "新未": [
+      "kb_00009"
+    ],
+    "未來": [
+      "kb_00009"
+    ],
+    "來城": [
+      "kb_00009"
+    ],
+    "銀新未": [
+      "kb_00009"
+    ],
+    "新未來": [
+      "kb_00009"
+    ],
+    "未來城": [
+      "kb_00009"
+    ],
+    "銀新未來": [
+      "kb_00009"
+    ],
+    "boundaries": [
+      "kb_00010",
+      "kb_00011",
+      "kb_00012",
+      "kb_00013",
+      "kb_00014",
+      "kb_00015",
+      "kb_00016",
+      "kb_00017"
+    ],
+    "renyi_redevelopment_area": [
+      "kb_00010",
+      "kb_00011",
+      "kb_00012",
+      "kb_00013",
+      "kb_00014"
+    ],
+    "仁義重劃區": [
+      "kb_00010"
+    ],
+    "仁義": [
+      "kb_00010",
+      "kb_00013",
+      "kb_00015",
+      "kb_00016",
+      "kb_00028",
+      "kb_00030",
+      "kb_00068",
+      "kb_00155",
+      "kb_00158",
+      "kb_00159",
+      "kb_00189"
+    ],
+    "義重": [
+      "kb_00010"
+    ],
+    "重劃": [
+      "kb_00010",
+      "kb_00019",
+      "kb_00026",
+      "kb_00027",
+      "kb_00051",
+      "kb_00073",
+      "kb_00170"
+    ],
+    "劃區": [
+      "kb_00010",
+      "kb_00026",
+      "kb_00027",
+      "kb_00051",
+      "kb_00073",
+      "kb_00170"
+    ],
+    "仁義重": [
+      "kb_00010"
+    ],
+    "義重劃": [
+      "kb_00010"
+    ],
+    "重劃區": [
+      "kb_00010"
+    ],
+    "east_boundary": [
+      "kb_00011"
+    ],
+    "環河北路邊界": [
+      "kb_00011"
+    ],
+    "環河": [
+      "kb_00011"
+    ],
+    "河北": [
+      "kb_00011"
+    ],
+    "北路": [
+      "kb_00011"
+    ],
+    "路邊": [
+      "kb_00011"
+    ],
+    "邊界": [
+      "kb_00011",
+      "kb_00012"
+    ],
+    "環河北": [
+      "kb_00011"
+    ],
+    "河北路": [
+      "kb_00011"
+    ],
+    "west_boundary": [
+      "kb_00012"
+    ],
+    "仁愛街邊界": [
+      "kb_00012"
+    ],
+    "仁愛": [
+      "kb_00012",
+      "kb_00028",
+      "kb_00054"
+    ],
+    "愛街": [
+      "kb_00012",
+      "kb_00028"
+    ],
+    "街邊": [
+      "kb_00012"
+    ],
+    "仁愛街": [
+      "kb_00012",
+      "kb_00028"
+    ],
+    "愛街邊": [
+      "kb_00012"
+    ],
+    "街邊界": [
+      "kb_00012"
+    ],
+    "north_boundary": [
+      "kb_00013"
+    ],
+    "143": [
+      "kb_00013",
+      "kb_00015"
+    ],
+    "仁義街": [
+      "kb_00013",
+      "kb_00028",
+      "kb_00030",
+      "kb_00068",
+      "kb_00158",
+      "kb_00159"
+    ],
+    "義街": [
+      "kb_00013",
+      "kb_00015",
+      "kb_00016",
+      "kb_00028",
+      "kb_00030",
+      "kb_00068",
+      "kb_00158",
+      "kb_00159"
+    ],
+    "五華街": [
+      "kb_00013",
+      "kb_00181"
+    ],
+    "五華": [
+      "kb_00013",
+      "kb_00016",
+      "kb_00178",
+      "kb_00181"
+    ],
+    "華街": [
+      "kb_00013",
+      "kb_00016",
+      "kb_00178",
+      "kb_00181"
+    ],
+    "巷既成道路邊界外緣": [
+      "kb_00013"
+    ],
+    "south_boundary": [
+      "kb_00014"
+    ],
+    "高速公路": [
+      "kb_00014"
+    ],
+    "高速": [
+      "kb_00014"
+    ],
+    "速公": [
+      "kb_00014"
+    ],
+    "公路": [
+      "kb_00014"
+    ],
+    "高速公": [
+      "kb_00014"
+    ],
+    "速公路": [
+      "kb_00014"
+    ],
+    "國道一號": [
+      "kb_00014"
+    ],
+    "國道": [
+      "kb_00014"
+    ],
+    "wuchang_old": [
+      "kb_00015"
+    ],
+    "traditional_community": [
+      "kb_00015",
+      "kb_00016",
+      "kb_00017"
+    ],
+    "仁義街單號側的傳統公寓群": [
+      "kb_00015"
+    ],
+    "街單": [
+      "kb_00015"
+    ],
+    "單號": [
+      "kb_00015"
+    ],
+    "號側": [
+      "kb_00015"
+    ],
+    "側的": [
+      "kb_00015"
+    ],
+    "wushun": [
+      "kb_00016",
+      "kb_00032",
+      "kb_00037",
+      "kb_00041",
+      "kb_00045",
+      "kb_00082",
+      "kb_00092",
+      "kb_00093",
+      "kb_00094",
+      "kb_00095",
+      "kb_00096",
+      "kb_00097",
+      "kb_00098",
+      "kb_00099"
+    ],
+    "57": [
+      "kb_00016"
+    ],
+    "仁義街與五華街交夾的內側": [
+      "kb_00016"
+    ],
+    "街與": [
+      "kb_00016",
+      "kb_00030",
+      "kb_00159",
+      "kb_00178"
+    ],
+    "與五": [
+      "kb_00016"
+    ],
+    "renzhong": [
+      "kb_00017",
+      "kb_00033",
+      "kb_00038",
+      "kb_00042",
+      "kb_00046",
+      "kb_00083",
+      "kb_00100",
+      "kb_00101",
+      "kb_00102",
+      "kb_00103",
+      "kb_00104",
+      "kb_00105",
+      "kb_00106",
+      "kb_00107",
+      "kb_00108",
+      "kb_00109"
+    ],
+    "區域的西側與南側邊緣": [
+      "kb_00017"
+    ],
+    "區域": [
+      "kb_00017",
+      "kb_00188",
+      "kb_00243"
+    ],
+    "域的": [
+      "kb_00017"
+    ],
+    "的西": [
+      "kb_00017"
+    ],
+    "西側": [
+      "kb_00017"
+    ],
+    "側與": [
+      "kb_00017"
+    ],
+    "與南": [
+      "kb_00017"
+    ],
+    "南側": [
+      "kb_00017"
+    ],
+    "role": [
+      "kb_00018",
+      "kb_00021",
+      "kb_00024",
+      "kb_00208",
+      "kb_00212",
+      "kb_00215"
+    ],
+    "road_system": [
+      "kb_00018",
+      "kb_00019",
+      "kb_00020",
+      "kb_00021",
+      "kb_00022",
+      "kb_00023",
+      "kb_00024",
+      "kb_00025",
+      "kb_00026",
+      "kb_00027",
+      "kb_00028",
+      "kb_00029",
+      "kb_00030"
+    ],
+    "major_arteries": [
+      "kb_00018",
+      "kb_00019",
+      "kb_00020",
+      "kb_00021",
+      "kb_00022",
+      "kb_00023",
+      "kb_00024",
+      "kb_00025"
+    ],
+    "renyi_street": [
+      "kb_00018",
+      "kb_00019",
+      "kb_00020"
+    ],
+    "貫穿全境的中軸線": [
+      "kb_00018"
+    ],
+    "貫穿": [
+      "kb_00018"
+    ],
+    "穿全": [
+      "kb_00018"
+    ],
+    "全境": [
+      "kb_00018"
+    ],
+    "境的": [
+      "kb_00018"
+    ],
+    "的中": [
+      "kb_00018"
+    ],
+    "中軸": [
+      "kb_00018"
+    ],
+    "status": [
+      "kb_00019",
+      "kb_00108",
+      "kb_00150",
+      "kb_00176"
+    ],
+    "已拓寬": [
+      "kb_00019"
+    ],
+    "已拓": [
+      "kb_00019"
+    ],
+    "拓寬": [
+      "kb_00019"
+    ],
+    "承擔重劃區主要進出車流": [
+      "kb_00019"
+    ],
+    "承擔": [
+      "kb_00019"
+    ],
+    "擔重": [
+      "kb_00019"
+    ],
+    "traffic_issue": [
+      "kb_00020"
+    ],
+    "目前有": [
+      "kb_00020"
+    ],
+    "目前": [
+      "kb_00020",
+      "kb_00158"
+    ],
+    "前有": [
+      "kb_00020",
+      "kb_00158"
+    ],
+    "個以上大型營建工地同時施": [
+      "kb_00020"
+    ],
+    "個以": [
+      "kb_00020"
+    ],
+    "以上": [
+      "kb_00020",
+      "kb_00052",
+      "kb_00164"
+    ],
+    "上大": [
+      "kb_00020"
+    ],
+    "wuhua_street": [
+      "kb_00021",
+      "kb_00022",
+      "kb_00023"
+    ],
+    "傳統商業活動最密集的街道": [
+      "kb_00021"
+    ],
+    "傳統": [
+      "kb_00021"
+    ],
+    "統商": [
+      "kb_00021"
+    ],
+    "商業": [
+      "kb_00021",
+      "kb_00154",
+      "kb_00199",
+      "kb_00211"
+    ],
+    "業活": [
+      "kb_00021",
+      "kb_00154"
+    ],
+    "活動": [
+      "kb_00021",
+      "kb_00154",
+      "kb_00223"
+    ],
+    "動最": [
+      "kb_00021"
+    ],
+    "feature": [
+      "kb_00022",
+      "kb_00210",
+      "kb_00216",
+      "kb_00226"
+    ],
+    "公車路線匯集": [
+      "kb_00022"
+    ],
+    "公車": [
+      "kb_00022",
+      "kb_00182"
+    ],
+    "車路": [
+      "kb_00022",
+      "kb_00182"
+    ],
+    "路線": [
+      "kb_00022",
+      "kb_00182"
+    ],
+    "線匯": [
+      "kb_00022"
+    ],
+    "匯集": [
+      "kb_00022"
+    ],
+    "公車路": [
+      "kb_00022"
+    ],
+    "commercial_density": [
+      "kb_00023"
+    ],
+    "huanhe_north_road": [
+      "kb_00024",
+      "kb_00025"
+    ],
+    "聯外快速道路": [
+      "kb_00024"
+    ],
+    "聯外": [
+      "kb_00024"
+    ],
+    "外快": [
+      "kb_00024"
+    ],
+    "快速": [
+      "kb_00024"
+    ],
+    "速道": [
+      "kb_00024"
+    ],
+    "道路": [
+      "kb_00024"
+    ],
+    "聯外快": [
+      "kb_00024"
+    ],
+    "note": [
+      "kb_00025",
+      "kb_00119",
+      "kb_00197"
+    ],
+    "不直接服務社區內部短程交": [
+      "kb_00025"
+    ],
+    "不直": [
+      "kb_00025"
+    ],
+    "直接": [
+      "kb_00025"
+    ],
+    "接服": [
+      "kb_00025"
+    ],
+    "務社": [
+      "kb_00025"
+    ],
+    "yuanxin_1st_street": [
+      "kb_00026"
+    ],
+    "secondary_roads": [
+      "kb_00026",
+      "kb_00027",
+      "kb_00028",
+      "kb_00029"
+    ],
+    "重劃區內新闢的標準寬度道": [
+      "kb_00026",
+      "kb_00027"
+    ],
+    "區內": [
+      "kb_00026",
+      "kb_00027"
+    ],
+    "內新": [
+      "kb_00026",
+      "kb_00027",
+      "kb_00053"
+    ],
+    "新闢": [
+      "kb_00026",
+      "kb_00027"
+    ],
+    "闢的": [
+      "kb_00026",
+      "kb_00027"
+    ],
+    "的標": [
+      "kb_00026",
+      "kb_00027"
+    ],
+    "yuanxin_2nd_street": [
+      "kb_00027"
+    ],
+    "xx": [
+      "kb_00028"
+    ],
+    "traditional_alleyways": [
+      "kb_00028",
+      "kb_00029"
+    ],
+    "characteristics": [
+      "kb_00029"
+    ],
+    "路幅通常不足": [
+      "kb_00029"
+    ],
+    "路幅": [
+      "kb_00029"
+    ],
+    "幅通": [
+      "kb_00029"
+    ],
+    "通常": [
+      "kb_00029"
+    ],
+    "常不": [
+      "kb_00029"
+    ],
+    "不足": [
+      "kb_00029"
+    ],
+    "路幅通": [
+      "kb_00029"
+    ],
+    "dangerous_intersections": [
+      "kb_00030",
+      "kb_00159"
+    ],
+    "仁義街與集賢路口": [
+      "kb_00030",
+      "kb_00159"
+    ],
+    "與集": [
+      "kb_00030",
+      "kb_00159",
+      "kb_00178"
+    ],
+    "集賢": [
+      "kb_00030",
+      "kb_00159",
+      "kb_00178"
+    ],
+    "賢路": [
+      "kb_00030",
+      "kb_00159",
+      "kb_00178"
+    ],
+    "路口": [
+      "kb_00030",
+      "kb_00159",
+      "kb_00178"
+    ],
+    "wuchang": [
+      "kb_00031",
+      "kb_00036",
+      "kb_00040",
+      "kb_00044",
+      "kb_00081",
+      "kb_00084",
+      "kb_00085",
+      "kb_00086",
+      "kb_00087",
+      "kb_00088",
+      "kb_00089",
+      "kb_00090",
+      "kb_00091"
+    ],
+    "2092": [
+      "kb_00031"
+    ],
+    "housing_analysis": [
+      "kb_00031",
+      "kb_00032",
+      "kb_00033",
+      "kb_00034",
+      "kb_00035",
+      "kb_00036",
+      "kb_00037",
+      "kb_00038",
+      "kb_00039",
+      "kb_00040",
+      "kb_00041",
+      "kb_00042",
+      "kb_00043",
+      "kb_00044",
+      "kb_00045",
+      "kb_00046",
+      "kb_00047",
+      "kb_00048",
+      "kb_00049",
+      "kb_00050",
+      "kb_00051",
+      "kb_00052",
+      "kb_00053",
+      "kb_00054",
+      "kb_00055",
+      "kb_00056",
+      "kb_00057",
+      "kb_00058",
+      "kb_00059",
+      "kb_00060",
+      "kb_00061",
+      "kb_00062",
+      "kb_00063",
+      "kb_00064",
+      "kb_00065",
+      "kb_00066",
+      "kb_00067",
+      "kb_00068",
+      "kb_00069",
+      "kb_00070",
+      "kb_00071",
+      "kb_00072",
+      "kb_00073",
+      "kb_00074",
+      "kb_00075",
+      "kb_00076",
+      "kb_00077",
+      "kb_00078",
+      "kb_00079"
+    ],
+    "total_households": [
+      "kb_00031",
+      "kb_00032",
+      "kb_00033",
+      "kb_00034",
+      "kb_00035",
+      "kb_00230"
+    ],
+    "1520": [
+      "kb_00032"
+    ],
+    "1279": [
+      "kb_00033"
+    ],
+    "total": [
+      "kb_00034",
+      "kb_00039",
+      "kb_00043",
+      "kb_00047"
+    ],
+    "4891": [
+      "kb_00034",
+      "kb_00230"
+    ],
+    "average_household_size": [
+      "kb_00035",
+      "kb_00232"
+    ],
+    "56": [
+      "kb_00035",
+      "kb_00095",
+      "kb_00232"
+    ],
+    "4360": [
+      "kb_00036"
+    ],
+    "population_trends": [
+      "kb_00036",
+      "kb_00037",
+      "kb_00038",
+      "kb_00039",
+      "kb_00040",
+      "kb_00041",
+      "kb_00042",
+      "kb_00043",
+      "kb_00044",
+      "kb_00045",
+      "kb_00046",
+      "kb_00047",
+      "kb_00048",
+      "kb_00049",
+      "kb_00050"
+    ],
+    "year_108": [
+      "kb_00036",
+      "kb_00037",
+      "kb_00038",
+      "kb_00039"
+    ],
+    "4050": [
+      "kb_00037"
+    ],
+    "3344": [
+      "kb_00038",
+      "kb_00050"
+    ],
+    "11754": [
+      "kb_00039"
+    ],
+    "5378": [
+      "kb_00040"
+    ],
+    "year_111": [
+      "kb_00040",
+      "kb_00041",
+      "kb_00042",
+      "kb_00043",
+      "kb_00116",
+      "kb_00117",
+      "kb_00118",
+      "kb_00119",
+      "kb_00120"
+    ],
+    "3970": [
+      "kb_00041"
+    ],
+    "3260": [
+      "kb_00042"
+    ],
+    "12608": [
+      "kb_00043"
+    ],
+    "5249": [
+      "kb_00044",
+      "kb_00081"
+    ],
+    "year_113": [
+      "kb_00044",
+      "kb_00045",
+      "kb_00046",
+      "kb_00047",
+      "kb_00080"
+    ],
+    "4021": [
+      "kb_00045",
+      "kb_00082"
+    ],
+    "3254": [
+      "kb_00046",
+      "kb_00050",
+      "kb_00083"
+    ],
+    "12524": [
+      "kb_00047",
+      "kb_00080",
+      "kb_00231"
+    ],
+    "wuchang_growth": [
+      "kb_00048"
+    ],
+    "108": [
+      "kb_00048",
+      "kb_00115"
+    ],
+    "111": [
+      "kb_00048",
+      "kb_00115"
+    ],
+    "23": [
+      "kb_00048"
+    ],
+    "growth_analysis": [
+      "kb_00048",
+      "kb_00049",
+      "kb_00050"
+    ],
+    "年成長": [
+      "kb_00048"
+    ],
+    "年成": [
+      "kb_00048"
+    ],
+    "成長": [
+      "kb_00048"
+    ],
+    "受益於重劃區建案": [
+      "kb_00048"
+    ],
+    "受益": [
+      "kb_00048"
+    ],
+    "wushun_stagnant": [
+      "kb_00049"
+    ],
+    "人口數幾乎水平甚至微幅下": [
+      "kb_00049"
+    ],
+    "人口": [
+      "kb_00049",
+      "kb_00050",
+      "kb_00202",
+      "kb_00218"
+    ],
+    "口數": [
+      "kb_00049"
+    ],
+    "數幾": [
+      "kb_00049"
+    ],
+    "幾乎": [
+      "kb_00049"
+    ],
+    "乎水": [
+      "kb_00049"
+    ],
+    "水平": [
+      "kb_00049"
+    ],
+    "平甚": [
+      "kb_00049"
+    ],
+    "renzhong_decline": [
+      "kb_00050"
+    ],
+    "人降至": [
+      "kb_00050"
+    ],
+    "人降": [
+      "kb_00050"
+    ],
+    "降至": [
+      "kb_00050"
+    ],
+    "人口流失持續": [
+      "kb_00050"
+    ],
+    "口流": [
+      "kb_00050"
+    ],
+    "building_types": [
+      "kb_00051",
+      "kb_00052",
+      "kb_00053",
+      "kb_00054",
+      "kb_00055",
+      "kb_00056",
+      "kb_00057",
+      "kb_00058",
+      "kb_00059",
+      "kb_00060",
+      "kb_00061",
+      "kb_00062",
+      "kb_00063",
+      "kb_00064",
+      "kb_00065",
+      "kb_00066",
+      "kb_00067",
+      "kb_00068",
+      "kb_00069",
+      "kb_00070",
+      "kb_00071",
+      "kb_00072",
+      "kb_00073"
+    ],
+    "redevelopment_area": [
+      "kb_00051",
+      "kb_00052",
+      "kb_00053",
+      "kb_00054",
+      "kb_00055",
+      "kb_00056",
+      "kb_00057",
+      "kb_00058",
+      "kb_00059",
+      "kb_00060",
+      "kb_00061"
+    ],
+    "五常里內的重劃區": [
+      "kb_00051"
+    ],
+    "里內": [
+      "kb_00051",
+      "kb_00121"
+    ],
+    "內的": [
+      "kb_00051"
+    ],
+    "的重": [
+      "kb_00051"
+    ],
+    "building_type": [
+      "kb_00052",
+      "kb_00063"
+    ],
+    "20": [
+      "kb_00052"
+    ],
+    "rc": [
+      "kb_00052",
+      "kb_00066"
+    ],
+    "層以上": [
+      "kb_00052"
+    ],
+    "層以": [
+      "kb_00052"
+    ],
+    "結構大樓": [
+      "kb_00052"
+    ],
+    "結構": [
+      "kb_00052"
+    ],
+    "age": [
+      "kb_00053",
+      "kb_00055",
+      "kb_00064",
+      "kb_00069"
+    ],
+    "年以內新成屋": [
+      "kb_00053"
+    ],
+    "年以": [
+      "kb_00053"
+    ],
+    "以內": [
+      "kb_00053"
+    ],
+    "新成": [
+      "kb_00053"
+    ],
+    "成屋": [
+      "kb_00053"
+    ],
+    "年以內": [
+      "kb_00053"
+    ],
+    "以內新": [
+      "kb_00053"
+    ],
+    "name": [
+      "kb_00054",
+      "kb_00067",
+      "kb_00167"
+    ],
+    "representative_buildings": [
+      "kb_00054",
+      "kb_00055",
+      "kb_00056",
+      "kb_00067",
+      "kb_00068",
+      "kb_00069",
+      "kb_00070",
+      "kb_00071"
+    ],
+    "仁仁愛": [
+      "kb_00054"
+    ],
+    "仁仁": [
+      "kb_00054"
+    ],
+    "households": [
+      "kb_00056",
+      "kb_00060",
+      "kb_00070"
+    ],
+    "112": [
+      "kb_00056"
+    ],
+    "per_ping": [
+      "kb_00057",
+      "kb_00072"
+    ],
+    "70": [
+      "kb_00057"
+    ],
+    "80": [
+      "kb_00057",
+      "kb_00078"
+    ],
+    "market_price": [
+      "kb_00057",
+      "kb_00058",
+      "kb_00059",
+      "kb_00072",
+      "kb_00073"
+    ],
+    "total_price_range": [
+      "kb_00058"
+    ],
+    "2000": [
+      "kb_00058"
+    ],
+    "3500": [
+      "kb_00058"
+    ],
+    "target_market": [
+      "kb_00059"
+    ],
+    "台北市外溢的高收入族群": [
+      "kb_00059"
+    ],
+    "市外": [
+      "kb_00059"
+    ],
+    "外溢": [
+      "kb_00059"
+    ],
+    "溢的": [
+      "kb_00059"
+    ],
+    "的高": [
+      "kb_00059"
+    ],
+    "1297": [
+      "kb_00060"
+    ],
+    "large_community": [
+      "kb_00060",
+      "kb_00061"
+    ],
+    "超大型社區預售案": [
+      "kb_00061"
+    ],
+    "超大": [
+      "kb_00061"
+    ],
+    "大型": [
+      "kb_00061"
+    ],
+    "型社": [
+      "kb_00061"
+    ],
+    "區預": [
+      "kb_00061"
+    ],
+    "預售": [
+      "kb_00061"
+    ],
+    "old_community": [
+      "kb_00062",
+      "kb_00063",
+      "kb_00064",
+      "kb_00065",
+      "kb_00066",
+      "kb_00067",
+      "kb_00068",
+      "kb_00069",
+      "kb_00070",
+      "kb_00071",
+      "kb_00072",
+      "kb_00073"
+    ],
+    "仁忠里及五常里舊區": [
+      "kb_00062"
+    ],
+    "里及": [
+      "kb_00062"
+    ],
+    "及五": [
+      "kb_00062"
+    ],
+    "層樓的無電梯公寓": [
+      "kb_00063"
+    ],
+    "層樓": [
+      "kb_00063"
+    ],
+    "樓的": [
+      "kb_00063"
+    ],
+    "的無": [
+      "kb_00063"
+    ],
+    "無電": [
+      "kb_00063",
+      "kb_00204"
+    ],
+    "電梯": [
+      "kb_00063",
+      "kb_00204"
+    ],
+    "梯公": [
+      "kb_00063"
+    ],
+    "公寓": [
+      "kb_00063",
+      "kb_00143"
+    ],
+    "30": [
+      "kb_00064"
+    ],
+    "40": [
+      "kb_00064"
+    ],
+    "普遍超過": [
+      "kb_00064"
+    ],
+    "普遍": [
+      "kb_00064"
+    ],
+    "遍超": [
+      "kb_00064"
+    ],
+    "超過": [
+      "kb_00064"
+    ],
+    "普遍超": [
+      "kb_00064"
+    ],
+    "遍超過": [
+      "kb_00064"
+    ],
+    "average_age": [
+      "kb_00065"
+    ],
+    "34": [
+      "kb_00065",
+      "kb_00091"
+    ],
+    "高於三重區平均": [
+      "kb_00065"
+    ],
+    "高於": [
+      "kb_00065"
+    ],
+    "於三": [
+      "kb_00065"
+    ],
+    "區平": [
+      "kb_00065"
+    ],
+    "平均": [
+      "kb_00065"
+    ],
+    "structural_issues": [
+      "kb_00066"
+    ],
+    "加強磚造或早期": [
+      "kb_00066"
+    ],
+    "加強": [
+      "kb_00066"
+    ],
+    "強磚": [
+      "kb_00066"
+    ],
+    "磚造": [
+      "kb_00066"
+    ],
+    "造或": [
+      "kb_00066"
+    ],
+    "或早": [
+      "kb_00066"
+    ],
+    "早期": [
+      "kb_00066"
+    ],
+    "常勝江山社區": [
+      "kb_00067"
+    ],
+    "常勝": [
+      "kb_00067"
+    ],
+    "勝江": [
+      "kb_00067"
+    ],
+    "江山": [
+      "kb_00067"
+    ],
+    "山社": [
+      "kb_00067"
+    ],
+    "常勝江": [
+      "kb_00067"
+    ],
+    "address": [
+      "kb_00068"
+    ],
+    "161": [
+      "kb_00068"
+    ],
+    "28": [
+      "kb_00069"
+    ],
+    "154": [
+      "kb_00070"
+    ],
+    "舊市區中少數具有規模的中": [
+      "kb_00071"
+    ],
+    "舊市": [
+      "kb_00071",
+      "kb_00199"
+    ],
+    "市區": [
+      "kb_00071",
+      "kb_00199"
+    ],
+    "區中": [
+      "kb_00071"
+    ],
+    "中少": [
+      "kb_00071"
+    ],
+    "少數": [
+      "kb_00071"
+    ],
+    "數具": [
+      "kb_00071"
+    ],
+    "50": [
+      "kb_00072",
+      "kb_00075",
+      "kb_00242"
+    ],
+    "60": [
+      "kb_00072",
+      "kb_00168",
+      "kb_00171",
+      "kb_00204",
+      "kb_00225",
+      "kb_00236",
+      "kb_00243"
+    ],
+    "price_gap": [
+      "kb_00073"
+    ],
+    "與重劃區形成顯著的價格斷": [
+      "kb_00073"
+    ],
+    "與重": [
+      "kb_00073"
+    ],
+    "區形": [
+      "kb_00073"
+    ],
+    "形成": [
+      "kb_00073"
+    ],
+    "成顯": [
+      "kb_00073"
+    ],
+    "current_hoa_count": [
+      "kb_00074"
+    ],
+    "32": [
+      "kb_00074",
+      "kb_00241"
+    ],
+    "property_management": [
+      "kb_00074",
+      "kb_00075",
+      "kb_00076",
+      "kb_00077",
+      "kb_00078",
+      "kb_00079"
+    ],
+    "projected_hoa_count": [
+      "kb_00075"
+    ],
+    "timeline": [
+      "kb_00076"
+    ],
+    "三年內": [
+      "kb_00076"
+    ],
+    "三年": [
+      "kb_00076"
+    ],
+    "年內": [
+      "kb_00076"
+    ],
+    "old_communities": [
+      "kb_00077"
+    ],
+    "challenges": [
+      "kb_00077",
+      "kb_00078",
+      "kb_00079",
+      "kb_00150",
+      "kb_00151",
+      "kb_00152",
+      "kb_00153",
+      "kb_00154",
+      "kb_00155",
+      "kb_00156",
+      "kb_00157"
+    ],
+    "設備老化": [
+      "kb_00077"
+    ],
+    "設備": [
+      "kb_00077"
+    ],
+    "備老": [
+      "kb_00077"
+    ],
+    "老化": [
+      "kb_00077",
+      "kb_00194"
+    ],
+    "設備老": [
+      "kb_00077"
+    ],
+    "備老化": [
+      "kb_00077"
+    ],
+    "人力成本上升": [
+      "kb_00077"
+    ],
+    "人力": [
+      "kb_00077"
+    ],
+    "new_communities": [
+      "kb_00078"
+    ],
+    "100": [
+      "kb_00078"
+    ],
+    "戶數少": [
+      "kb_00078"
+    ],
+    "戶數": [
+      "kb_00078"
+    ],
+    "數少": [
+      "kb_00078"
+    ],
+    "單位分攤成本極高": [
+      "kb_00078"
+    ],
+    "單位": [
+      "kb_00078"
+    ],
+    "位分": [
+      "kb_00078"
+    ],
+    "technology_gap": [
+      "kb_00079"
+    ],
+    "ai": [
+      "kb_00079",
+      "kb_00190",
+      "kb_00191",
+      "kb_00207",
+      "kb_00243"
+    ],
+    "的社區採用": [
+      "kb_00079"
+    ],
+    "的社": [
+      "kb_00079"
+    ],
+    "區採": [
+      "kb_00079"
+    ],
+    "採用": [
+      "kb_00079"
+    ],
+    "的社區": [
+      "kb_00079"
+    ],
+    "社區採": [
+      "kb_00079"
+    ],
+    "demographics": [
+      "kb_00080",
+      "kb_00081",
+      "kb_00082",
+      "kb_00083",
+      "kb_00084",
+      "kb_00085",
+      "kb_00086",
+      "kb_00087",
+      "kb_00088",
+      "kb_00089",
+      "kb_00090",
+      "kb_00091",
+      "kb_00092",
+      "kb_00093",
+      "kb_00094",
+      "kb_00095",
+      "kb_00096",
+      "kb_00097",
+      "kb_00098",
+      "kb_00099",
+      "kb_00100",
+      "kb_00101",
+      "kb_00102",
+      "kb_00103",
+      "kb_00104",
+      "kb_00105",
+      "kb_00106",
+      "kb_00107",
+      "kb_00108",
+      "kb_00109",
+      "kb_00110",
+      "kb_00111",
+      "kb_00112",
+      "kb_00113",
+      "kb_00114",
+      "kb_00115",
+      "kb_00116",
+      "kb_00117",
+      "kb_00118",
+      "kb_00119",
+      "kb_00120",
+      "kb_00121"
+    ],
+    "total_population": [
+      "kb_00080",
+      "kb_00081",
+      "kb_00082",
+      "kb_00083",
+      "kb_00231"
+    ],
+    "breakdown": [
+      "kb_00081",
+      "kb_00082",
+      "kb_00083",
+      "kb_00126",
+      "kb_00127",
+      "kb_00128",
+      "kb_00139",
+      "kb_00140",
+      "kb_00141",
+      "kb_00142"
+    ],
+    "count": [
+      "kb_00084",
+      "kb_00086",
+      "kb_00088",
+      "kb_00092",
+      "kb_00094",
+      "kb_00096",
+      "kb_00100",
+      "kb_00102",
+      "kb_00104",
+      "kb_00124",
+      "kb_00130",
+      "kb_00133",
+      "kb_00137",
+      "kb_00144",
+      "kb_00147"
+    ],
+    "627": [
+      "kb_00084"
+    ],
+    "age_structure": [
+      "kb_00084",
+      "kb_00085",
+      "kb_00086",
+      "kb_00087",
+      "kb_00088",
+      "kb_00089",
+      "kb_00090",
+      "kb_00091",
+      "kb_00092",
+      "kb_00093",
+      "kb_00094",
+      "kb_00095",
+      "kb_00096",
+      "kb_00097",
+      "kb_00098",
+      "kb_00099",
+      "kb_00100",
+      "kb_00101",
+      "kb_00102",
+      "kb_00103",
+      "kb_00104",
+      "kb_00105",
+      "kb_00106",
+      "kb_00107",
+      "kb_00108",
+      "kb_00109",
+      "kb_00110",
+      "kb_00111",
+      "kb_00112",
+      "kb_00113",
+      "kb_00114",
+      "kb_00115"
+    ],
+    "children_0_14": [
+      "kb_00084",
+      "kb_00085",
+      "kb_00092",
+      "kb_00093",
+      "kb_00100",
+      "kb_00101",
+      "kb_00110"
+    ],
+    "percentage": [
+      "kb_00085",
+      "kb_00087",
+      "kb_00089",
+      "kb_00093",
+      "kb_00095",
+      "kb_00097",
+      "kb_00101",
+      "kb_00103",
+      "kb_00105",
+      "kb_00125",
+      "kb_00131",
+      "kb_00134",
+      "kb_00138",
+      "kb_00145",
+      "kb_00148"
+    ],
+    "3962": [
+      "kb_00086"
+    ],
+    "working_age_15_64": [
+      "kb_00086",
+      "kb_00087",
+      "kb_00094",
+      "kb_00095",
+      "kb_00102",
+      "kb_00103",
+      "kb_00111"
+    ],
+    "73": [
+      "kb_00087"
+    ],
+    "720": [
+      "kb_00088"
+    ],
+    "elderly_65_plus": [
+      "kb_00088",
+      "kb_00089",
+      "kb_00096",
+      "kb_00097",
+      "kb_00104",
+      "kb_00105",
+      "kb_00112"
+    ],
+    "13": [
+      "kb_00089"
+    ],
+    "aging_index": [
+      "kb_00090",
+      "kb_00098",
+      "kb_00106",
+      "kb_00113",
+      "kb_00234"
+    ],
+    "114": [
+      "kb_00090"
+    ],
+    "83": [
+      "kb_00090"
+    ],
+    "dependency_ratio": [
+      "kb_00091",
+      "kb_00099",
+      "kb_00107",
+      "kb_00114"
+    ],
+    "445": [
+      "kb_00092"
+    ],
+    "11": [
+      "kb_00093",
+      "kb_00101",
+      "kb_00110",
+      "kb_00206"
+    ],
+    "2241": [
+      "kb_00094"
+    ],
+    "667": [
+      "kb_00096"
+    ],
+    "16": [
+      "kb_00097",
+      "kb_00138"
+    ],
+    "149": [
+      "kb_00098"
+    ],
+    "89": [
+      "kb_00098",
+      "kb_00103"
+    ],
+    "38": [
+      "kb_00099",
+      "kb_00114",
+      "kb_00115",
+      "kb_00123",
+      "kb_00239"
+    ],
+    "385": [
+      "kb_00100"
+    ],
+    "2909": [
+      "kb_00102"
+    ],
+    "628": [
+      "kb_00104"
+    ],
+    "19": [
+      "kb_00105",
+      "kb_00202",
+      "kb_00218"
+    ],
+    "163": [
+      "kb_00106",
+      "kb_00194",
+      "kb_00243"
+    ],
+    "12": [
+      "kb_00106",
+      "kb_00156",
+      "kb_00194",
+      "kb_00243"
+    ],
+    "45": [
+      "kb_00107"
+    ],
+    "高齡瀕危社區": [
+      "kb_00108"
+    ],
+    "高齡": [
+      "kb_00108",
+      "kb_00186"
+    ],
+    "齡瀕": [
+      "kb_00108"
+    ],
+    "瀕危": [
+      "kb_00108"
+    ],
+    "危社": [
+      "kb_00108"
+    ],
+    "高齡瀕": [
+      "kb_00108"
+    ],
+    "齡瀕危": [
+      "kb_00108"
+    ],
+    "needs": [
+      "kb_00109"
+    ],
+    "長照據點": [
+      "kb_00109"
+    ],
+    "長照": [
+      "kb_00109"
+    ],
+    "照據": [
+      "kb_00109"
+    ],
+    "據點": [
+      "kb_00109"
+    ],
+    "長照據": [
+      "kb_00109"
+    ],
+    "照據點": [
+      "kb_00109"
+    ],
+    "無障礙設施": [
+      "kb_00109"
+    ],
+    "無障": [
+      "kb_00109"
+    ],
+    "51": [
+      "kb_00110"
+    ],
+    "community_average": [
+      "kb_00110",
+      "kb_00111",
+      "kb_00112",
+      "kb_00113",
+      "kb_00114",
+      "kb_00115"
+    ],
+    "72": [
+      "kb_00111"
+    ],
+    "92": [
+      "kb_00112",
+      "kb_00233"
+    ],
+    "138": [
+      "kb_00113",
+      "kb_00121",
+      "kb_00234"
+    ],
+    "trend": [
+      "kb_00115"
+    ],
+    "35": [
+      "kb_00115",
+      "kb_00206"
+    ],
+    "扶養比逐年上升": [
+      "kb_00115"
+    ],
+    "扶養": [
+      "kb_00115"
+    ],
+    "養比": [
+      "kb_00115"
+    ],
+    "比逐": [
+      "kb_00115"
+    ],
+    "male": [
+      "kb_00116"
+    ],
+    "6814": [
+      "kb_00116"
+    ],
+    "gender_structure": [
+      "kb_00116",
+      "kb_00117",
+      "kb_00118",
+      "kb_00119",
+      "kb_00120"
+    ],
+    "female": [
+      "kb_00117"
+    ],
+    "7108": [
+      "kb_00117"
+    ],
+    "difference": [
+      "kb_00118"
+    ],
+    "294": [
+      "kb_00118"
+    ],
+    "女多於男": [
+      "kb_00119"
+    ],
+    "女多": [
+      "kb_00119"
+    ],
+    "多於": [
+      "kb_00119"
+    ],
+    "於男": [
+      "kb_00119"
+    ],
+    "女多於": [
+      "kb_00119"
+    ],
+    "多於男": [
+      "kb_00119"
+    ],
+    "與三重區整體趨勢一致": [
+      "kb_00119"
+    ],
+    "與三": [
+      "kb_00119"
+    ],
+    "elderly_ratio": [
+      "kb_00120"
+    ],
+    "獨居老人女性約為男性的": [
+      "kb_00120"
+    ],
+    "獨居": [
+      "kb_00120"
+    ],
+    "居老": [
+      "kb_00120"
+    ],
+    "老人": [
+      "kb_00120"
+    ],
+    "人女": [
+      "kb_00120"
+    ],
+    "女性": [
+      "kb_00120"
+    ],
+    "性約": [
+      "kb_00120"
+    ],
+    "約為": [
+      "kb_00120"
+    ],
+    "key_insights": [
+      "kb_00121"
+    ],
+    "五常里內部存在劇烈的貧富": [
+      "kb_00121"
+    ],
+    "內部": [
+      "kb_00121"
+    ],
+    "部存": [
+      "kb_00121"
+    ],
+    "存在": [
+      "kb_00121"
+    ],
+    "在劇": [
+      "kb_00121"
+    ],
+    "劇烈": [
+      "kb_00121"
+    ],
+    "total_businesses": [
+      "kb_00122",
+      "kb_00238"
+    ],
+    "90": [
+      "kb_00122",
+      "kb_00188",
+      "kb_00211",
+      "kb_00238"
+    ],
+    "commercial_ecosystem": [
+      "kb_00122",
+      "kb_00123",
+      "kb_00124",
+      "kb_00125",
+      "kb_00126",
+      "kb_00127",
+      "kb_00128",
+      "kb_00129",
+      "kb_00130",
+      "kb_00131",
+      "kb_00132",
+      "kb_00133",
+      "kb_00134",
+      "kb_00135",
+      "kb_00136",
+      "kb_00137",
+      "kb_00138",
+      "kb_00139",
+      "kb_00140",
+      "kb_00141",
+      "kb_00142",
+      "kb_00143",
+      "kb_00144",
+      "kb_00145",
+      "kb_00146",
+      "kb_00147",
+      "kb_00148",
+      "kb_00149",
+      "kb_00150",
+      "kb_00151",
+      "kb_00152",
+      "kb_00153",
+      "kb_00154",
+      "kb_00155",
+      "kb_00156",
+      "kb_00157"
+    ],
+    "physical_stores": [
+      "kb_00123",
+      "kb_00239"
+    ],
+    "18": [
+      "kb_00124"
+    ],
+    "business_distribution": [
+      "kb_00124",
+      "kb_00125",
+      "kb_00126",
+      "kb_00127",
+      "kb_00128",
+      "kb_00129",
+      "kb_00130",
+      "kb_00131",
+      "kb_00132",
+      "kb_00133",
+      "kb_00134",
+      "kb_00135",
+      "kb_00136",
+      "kb_00137",
+      "kb_00138",
+      "kb_00139",
+      "kb_00140",
+      "kb_00141",
+      "kb_00142",
+      "kb_00143",
+      "kb_00144",
+      "kb_00145",
+      "kb_00146",
+      "kb_00147",
+      "kb_00148",
+      "kb_00149"
+    ],
+    "restaurants": [
+      "kb_00124",
+      "kb_00125",
+      "kb_00126",
+      "kb_00127",
+      "kb_00128",
+      "kb_00129",
+      "kb_00156"
+    ],
+    "47": [
+      "kb_00125"
+    ],
+    "breakfast_shops": [
+      "kb_00126"
+    ],
+    "snack_shops": [
+      "kb_00127"
+    ],
+    "其餘": [
+      "kb_00127"
+    ],
+    "lunch_boxes": [
+      "kb_00128"
+    ],
+    "包含": [
+      "kb_00128"
+    ],
+    "insight": [
+      "kb_00129",
+      "kb_00143"
+    ],
+    "典型通勤住宅區": [
+      "kb_00129"
+    ],
+    "典型": [
+      "kb_00129"
+    ],
+    "型通": [
+      "kb_00129"
+    ],
+    "通勤": [
+      "kb_00129"
+    ],
+    "勤住": [
+      "kb_00129"
+    ],
+    "住宅": [
+      "kb_00129"
+    ],
+    "宅區": [
+      "kb_00129"
+    ],
+    "典型通": [
+      "kb_00129"
+    ],
+    "convenience_stores": [
+      "kb_00130",
+      "kb_00131",
+      "kb_00132"
+    ],
+    "24": [
+      "kb_00131"
+    ],
+    "超高密度的便利商店網絡": [
+      "kb_00132"
+    ],
+    "超高": [
+      "kb_00132"
+    ],
+    "高密": [
+      "kb_00132"
+    ],
+    "密度": [
+      "kb_00132"
+    ],
+    "度的": [
+      "kb_00132"
+    ],
+    "的便": [
+      "kb_00132"
+    ],
+    "便利": [
+      "kb_00132"
+    ],
+    "利商": [
+      "kb_00132"
+    ],
+    "retail": [
+      "kb_00133",
+      "kb_00134",
+      "kb_00135",
+      "kb_00136"
+    ],
+    "examples": [
+      "kb_00135"
+    ],
+    "全聯": [
+      "kb_00135"
+    ],
+    "美廉社": [
+      "kb_00135"
+    ],
+    "美廉": [
+      "kb_00135"
+    ],
+    "廉社": [
+      "kb_00135"
+    ],
+    "中小型超市": [
+      "kb_00136"
+    ],
+    "中小": [
+      "kb_00136"
+    ],
+    "小型": [
+      "kb_00136",
+      "kb_00209"
+    ],
+    "型超": [
+      "kb_00136"
+    ],
+    "超市": [
+      "kb_00136"
+    ],
+    "中小型": [
+      "kb_00136"
+    ],
+    "小型超": [
+      "kb_00136"
+    ],
+    "型超市": [
+      "kb_00136"
+    ],
+    "professional_services": [
+      "kb_00137",
+      "kb_00138",
+      "kb_00139",
+      "kb_00140",
+      "kb_00141",
+      "kb_00142",
+      "kb_00143"
+    ],
+    "self_service_laundry": [
+      "kb_00139"
+    ],
+    "traditional_laundry": [
+      "kb_00140"
+    ],
+    "computer_stores": [
+      "kb_00141"
+    ],
+    "appliance_stores": [
+      "kb_00142"
+    ],
+    "反映舊公寓缺乏曬衣空間及": [
+      "kb_00143"
+    ],
+    "反映": [
+      "kb_00143"
+    ],
+    "映舊": [
+      "kb_00143"
+    ],
+    "舊公": [
+      "kb_00143"
+    ],
+    "寓缺": [
+      "kb_00143"
+    ],
+    "缺乏": [
+      "kb_00143"
+    ],
+    "乏曬": [
+      "kb_00143"
+    ],
+    "other": [
+      "kb_00144",
+      "kb_00145",
+      "kb_00146"
+    ],
+    "types": [
+      "kb_00146",
+      "kb_00149"
+    ],
+    "彩券行": [
+      "kb_00146"
+    ],
+    "彩券": [
+      "kb_00146"
+    ],
+    "券行": [
+      "kb_00146"
+    ],
+    "institutions": [
+      "kb_00147",
+      "kb_00148",
+      "kb_00149"
+    ],
+    "金融機構": [
+      "kb_00149"
+    ],
+    "金融": [
+      "kb_00149"
+    ],
+    "融機": [
+      "kb_00149"
+    ],
+    "機構": [
+      "kb_00149",
+      "kb_00211"
+    ],
+    "金融機": [
+      "kb_00149"
+    ],
+    "融機構": [
+      "kb_00149"
+    ],
+    "診所": [
+      "kb_00149"
+    ],
+    "書局": [
+      "kb_00149"
+    ],
+    "digital_gap": [
+      "kb_00150",
+      "kb_00151",
+      "kb_00152"
+    ],
+    "家商店完成完整的數位轉型": [
+      "kb_00150"
+    ],
+    "家商": [
+      "kb_00150",
+      "kb_00211"
+    ],
+    "商店": [
+      "kb_00150"
+    ],
+    "店完": [
+      "kb_00150"
+    ],
+    "完成": [
+      "kb_00150"
+    ],
+    "成完": [
+      "kb_00150"
+    ],
+    "完整": [
+      "kb_00150"
+    ],
+    "整的": [
+      "kb_00150"
+    ],
+    "attempting": [
+      "kb_00151"
+    ],
+    "家早餐店嘗試中": [
+      "kb_00151"
+    ],
+    "家早": [
+      "kb_00151"
+    ],
+    "早餐": [
+      "kb_00151",
+      "kb_00153"
+    ],
+    "餐店": [
+      "kb_00151",
+      "kb_00153"
+    ],
+    "店嘗": [
+      "kb_00151"
+    ],
+    "嘗試": [
+      "kb_00151"
+    ],
+    "試中": [
+      "kb_00151"
+    ],
+    "家早餐": [
+      "kb_00151"
+    ],
+    "impact": [
+      "kb_00152",
+      "kb_00179"
+    ],
+    "無法對接外送平台或進行數": [
+      "kb_00152"
+    ],
+    "無法": [
+      "kb_00152"
+    ],
+    "法對": [
+      "kb_00152"
+    ],
+    "對接": [
+      "kb_00152"
+    ],
+    "接外": [
+      "kb_00152"
+    ],
+    "外送": [
+      "kb_00152"
+    ],
+    "送平": [
+      "kb_00152"
+    ],
+    "平台": [
+      "kb_00152",
+      "kb_00188"
+    ],
+    "breakfast_economy": [
+      "kb_00153",
+      "kb_00154"
+    ],
+    "高比例的早餐店反映了社區": [
+      "kb_00153"
+    ],
+    "高比": [
+      "kb_00153"
+    ],
+    "比例": [
+      "kb_00153"
+    ],
+    "例的": [
+      "kb_00153"
+    ],
+    "的早": [
+      "kb_00153"
+    ],
+    "店反": [
+      "kb_00153"
+    ],
+    "issue": [
+      "kb_00154",
+      "kb_00157",
+      "kb_00166"
+    ],
+    "日間商業活動低迷": [
+      "kb_00154"
+    ],
+    "日間": [
+      "kb_00154"
+    ],
+    "間商": [
+      "kb_00154"
+    ],
+    "動低": [
+      "kb_00154"
+    ],
+    "低迷": [
+      "kb_00154"
+    ],
+    "alleyway_economy": [
+      "kb_00155",
+      "kb_00156",
+      "kb_00157"
+    ],
+    "仁義商圈": [
+      "kb_00155"
+    ],
+    "義商": [
+      "kb_00155",
+      "kb_00189"
+    ],
+    "商圈": [
+      "kb_00155",
+      "kb_00189"
+    ],
+    "仁義商": [
+      "kb_00155"
+    ],
+    "義商圈": [
+      "kb_00155"
+    ],
+    "多位於狹小巷弄": [
+      "kb_00157"
+    ],
+    "多位": [
+      "kb_00157"
+    ],
+    "位於": [
+      "kb_00157"
+    ],
+    "於狹": [
+      "kb_00157"
+    ],
+    "狹小": [
+      "kb_00157"
+    ],
+    "小巷": [
+      "kb_00157"
+    ],
+    "巷弄": [
+      "kb_00157",
+      "kb_00174",
+      "kb_00195",
+      "kb_00209",
+      "kb_00215"
+    ],
+    "多位於": [
+      "kb_00157"
+    ],
+    "bottlenecks": [
+      "kb_00158"
+    ],
+    "transportation": [
+      "kb_00158",
+      "kb_00159",
+      "kb_00160",
+      "kb_00161",
+      "kb_00162",
+      "kb_00163",
+      "kb_00164",
+      "kb_00165",
+      "kb_00166",
+      "kb_00167",
+      "kb_00168",
+      "kb_00169",
+      "kb_00170",
+      "kb_00171",
+      "kb_00172",
+      "kb_00173",
+      "kb_00174",
+      "kb_00175",
+      "kb_00176",
+      "kb_00177",
+      "kb_00178",
+      "kb_00179",
+      "kb_00180",
+      "kb_00181",
+      "kb_00182",
+      "kb_00183",
+      "kb_00195",
+      "kb_00196",
+      "kb_00197"
+    ],
+    "road_conditions": [
+      "kb_00158",
+      "kb_00159",
+      "kb_00160"
+    ],
+    "仁義街沿線目前有": [
+      "kb_00158"
+    ],
+    "街沿": [
+      "kb_00158"
+    ],
+    "沿線": [
+      "kb_00158"
+    ],
+    "線目": [
+      "kb_00158"
+    ],
+    "risk_factors": [
+      "kb_00160"
+    ],
+    "視線死角多": [
+      "kb_00160"
+    ],
+    "視線": [
+      "kb_00160"
+    ],
+    "線死": [
+      "kb_00160"
+    ],
+    "死角": [
+      "kb_00160"
+    ],
+    "角多": [
+      "kb_00160"
+    ],
+    "視線死": [
+      "kb_00160"
+    ],
+    "線死角": [
+      "kb_00160"
+    ],
+    "死角多": [
+      "kb_00160"
+    ],
+    "視線死角": [
+      "kb_00160"
+    ],
+    "new_taipei_city": [
+      "kb_00161"
+    ],
+    "54": [
+      "kb_00161",
+      "kb_00162"
+    ],
+    "motorcycle_parking": [
+      "kb_00161",
+      "kb_00162",
+      "kb_00163",
+      "kb_00164",
+      "kb_00165",
+      "kb_00166",
+      "kb_00167",
+      "kb_00168",
+      "kb_00169",
+      "kb_00170",
+      "kb_00171",
+      "kb_00172",
+      "kb_00173",
+      "kb_00174",
+      "kb_00175"
+    ],
+    "ownership_rate": [
+      "kb_00161",
+      "kb_00162"
+    ],
+    "新北市機車持有率極高": [
+      "kb_00162"
+    ],
+    "市機": [
+      "kb_00162"
+    ],
+    "機車": [
+      "kb_00162",
+      "kb_00174",
+      "kb_00196"
+    ],
+    "車持": [
+      "kb_00162"
+    ],
+    "持有": [
+      "kb_00162"
+    ],
+    "calculation": [
+      "kb_00163"
+    ],
+    "900": [
+      "kb_00163"
+    ],
+    "estimated_total": [
+      "kb_00163",
+      "kb_00164"
+    ],
+    "result": [
+      "kb_00164",
+      "kb_00174"
+    ],
+    "800": [
+      "kb_00164",
+      "kb_00225",
+      "kb_00243"
+    ],
+    "輛以上": [
+      "kb_00164"
+    ],
+    "輛以": [
+      "kb_00164"
+    ],
+    "availability": [
+      "kb_00165"
+    ],
+    "supply_shortage": [
+      "kb_00165",
+      "kb_00166",
+      "kb_00167",
+      "kb_00168",
+      "kb_00169",
+      "kb_00170",
+      "kb_00171",
+      "kb_00172",
+      "kb_00173",
+      "kb_00174"
+    ],
+    "roadside_parking": [
+      "kb_00165",
+      "kb_00166"
+    ],
+    "極其有限": [
+      "kb_00165"
+    ],
+    "極其": [
+      "kb_00165"
+    ],
+    "其有": [
+      "kb_00165"
+    ],
+    "有限": [
+      "kb_00165"
+    ],
+    "極其有": [
+      "kb_00165"
+    ],
+    "其有限": [
+      "kb_00165"
+    ],
+    "常遭長期佔用": [
+      "kb_00166"
+    ],
+    "常遭": [
+      "kb_00166"
+    ],
+    "遭長": [
+      "kb_00166"
+    ],
+    "長期": [
+      "kb_00166"
+    ],
+    "期佔": [
+      "kb_00166"
+    ],
+    "佔用": [
+      "kb_00166"
+    ],
+    "常遭長": [
+      "kb_00166"
+    ],
+    "off_street_parking": [
+      "kb_00167",
+      "kb_00168",
+      "kb_00169",
+      "kb_00170",
+      "kb_00171"
+    ],
+    "仁信段平面停車場": [
+      "kb_00167"
+    ],
+    "仁信": [
+      "kb_00167"
+    ],
+    "信段": [
+      "kb_00167"
+    ],
+    "段平": [
+      "kb_00167"
+    ],
+    "平面": [
+      "kb_00167"
+    ],
+    "面停": [
+      "kb_00167"
+    ],
+    "停車": [
+      "kb_00167",
+      "kb_00225"
+    ],
+    "motorcycle_spaces": [
+      "kb_00168"
+    ],
+    "car_spaces": [
+      "kb_00169"
+    ],
+    "291": [
+      "kb_00169"
+    ],
+    "政府利用重劃區未開發土地": [
+      "kb_00170"
+    ],
+    "政府": [
+      "kb_00170"
+    ],
+    "府利": [
+      "kb_00170"
+    ],
+    "利用": [
+      "kb_00170"
+    ],
+    "用重": [
+      "kb_00170"
+    ],
+    "assessment": [
+      "kb_00171"
+    ],
+    "面對數千輛的潛在需求": [
+      "kb_00171"
+    ],
+    "面對": [
+      "kb_00171"
+    ],
+    "對數": [
+      "kb_00171"
+    ],
+    "數千": [
+      "kb_00171"
+    ],
+    "千輛": [
+      "kb_00171"
+    ],
+    "輛的": [
+      "kb_00171"
+    ],
+    "regulation": [
+      "kb_00172"
+    ],
+    "redevelopment_parking": [
+      "kb_00172",
+      "kb_00173",
+      "kb_00174"
+    ],
+    "新建案依規定需設置停車位": [
+      "kb_00172"
+    ],
+    "新建": [
+      "kb_00172"
+    ],
+    "建案": [
+      "kb_00172"
+    ],
+    "案依": [
+      "kb_00172"
+    ],
+    "依規": [
+      "kb_00172"
+    ],
+    "規定": [
+      "kb_00172"
+    ],
+    "定需": [
+      "kb_00172"
+    ],
+    "restriction": [
+      "kb_00173"
+    ],
+    "僅供該社區住戶使用": [
+      "kb_00173"
+    ],
+    "僅供": [
+      "kb_00173"
+    ],
+    "供該": [
+      "kb_00173"
+    ],
+    "該社": [
+      "kb_00173"
+    ],
+    "區住": [
+      "kb_00173"
+    ],
+    "住戶": [
+      "kb_00173"
+    ],
+    "機車溢出至巷弄": [
+      "kb_00174"
+    ],
+    "車溢": [
+      "kb_00174"
+    ],
+    "溢出": [
+      "kb_00174"
+    ],
+    "出至": [
+      "kb_00174"
+    ],
+    "至巷": [
+      "kb_00174"
+    ],
+    "consequences": [
+      "kb_00175"
+    ],
+    "嚴重的行人安全隱患": [
+      "kb_00175"
+    ],
+    "嚴重": [
+      "kb_00175"
+    ],
+    "重的": [
+      "kb_00175"
+    ],
+    "的行": [
+      "kb_00175"
+    ],
+    "行人": [
+      "kb_00175"
+    ],
+    "人安": [
+      "kb_00175"
+    ],
+    "安全": [
+      "kb_00175",
+      "kb_00187"
+    ],
+    "全隱": [
+      "kb_00175"
+    ],
+    "隱患": [
+      "kb_00175"
+    ],
+    "public_transportation": [
+      "kb_00176",
+      "kb_00177",
+      "kb_00178",
+      "kb_00179",
+      "kb_00180",
+      "kb_00181",
+      "kb_00182",
+      "kb_00183"
+    ],
+    "mrt_circular_line": [
+      "kb_00176",
+      "kb_00177",
+      "kb_00178",
+      "kb_00179",
+      "kb_00180"
+    ],
+    "施工中": [
+      "kb_00176"
+    ],
+    "施工": [
+      "kb_00176",
+      "kb_00179"
+    ],
+    "工中": [
+      "kb_00176"
+    ],
+    "station": [
+      "kb_00177"
+    ],
+    "y23": [
+      "kb_00177"
+    ],
+    "五華街與集賢路口附近": [
+      "kb_00178"
+    ],
+    "施工圍籬進一步壓縮了五常": [
+      "kb_00179"
+    ],
+    "工圍": [
+      "kb_00179"
+    ],
+    "圍籬": [
+      "kb_00179"
+    ],
+    "籬進": [
+      "kb_00179"
+    ],
+    "進一": [
+      "kb_00179"
+    ],
+    "一步": [
+      "kb_00179"
+    ],
+    "步壓": [
+      "kb_00179"
+    ],
+    "period": [
+      "kb_00180"
+    ],
+    "交通黑暗期": [
+      "kb_00180"
+    ],
+    "交通": [
+      "kb_00180",
+      "kb_00228"
+    ],
+    "通黑": [
+      "kb_00180"
+    ],
+    "黑暗": [
+      "kb_00180"
+    ],
+    "暗期": [
+      "kb_00180"
+    ],
+    "交通黑": [
+      "kb_00180"
+    ],
+    "通黑暗": [
+      "kb_00180"
+    ],
+    "黑暗期": [
+      "kb_00180"
+    ],
+    "bus_network": [
+      "kb_00181",
+      "kb_00182",
+      "kb_00183"
+    ],
+    "density": [
+      "kb_00182"
+    ],
+    "密集的公車路線": [
+      "kb_00182"
+    ],
+    "密集": [
+      "kb_00182"
+    ],
+    "集的": [
+      "kb_00182"
+    ],
+    "的公": [
+      "kb_00182"
+    ],
+    "密集的": [
+      "kb_00182"
+    ],
+    "challenge": [
+      "kb_00183"
+    ],
+    "first": [
+      "kb_00183"
+    ],
+    "last": [
+      "kb_00183"
+    ],
+    "mile": [
+      "kb_00183"
+    ],
+    "對於居住在仁忠里深處的老": [
+      "kb_00183"
+    ],
+    "對於": [
+      "kb_00183"
+    ],
+    "於居": [
+      "kb_00183"
+    ],
+    "居住": [
+      "kb_00183",
+      "kb_00204"
+    ],
+    "住在": [
+      "kb_00183",
+      "kb_00204"
+    ],
+    "organization": [
+      "kb_00184"
+    ],
+    "social_enterprise_solutions": [
+      "kb_00184",
+      "kb_00185",
+      "kb_00186",
+      "kb_00187",
+      "kb_00188",
+      "kb_00189",
+      "kb_00190",
+      "kb_00191",
+      "kb_00192"
+    ],
+    "community_service_team": [
+      "kb_00184",
+      "kb_00185",
+      "kb_00186",
+      "kb_00187",
+      "kb_00188",
+      "kb_00189"
+    ],
+    "五常物業規劃顧問股份有限": [
+      "kb_00184"
+    ],
+    "常物": [
+      "kb_00184"
+    ],
+    "物業": [
+      "kb_00184"
+    ],
+    "業規": [
+      "kb_00184"
+    ],
+    "規劃": [
+      "kb_00184"
+    ],
+    "劃顧": [
+      "kb_00184"
+    ],
+    "顧問": [
+      "kb_00184"
+    ],
+    "問股": [
+      "kb_00184"
+    ],
+    "concept": [
+      "kb_00185"
+    ],
+    "將社區的劣勢轉化為優勢": [
+      "kb_00185"
+    ],
+    "將社": [
+      "kb_00185"
+    ],
+    "區的": [
+      "kb_00185",
+      "kb_00192"
+    ],
+    "的劣": [
+      "kb_00185"
+    ],
+    "劣勢": [
+      "kb_00185"
+    ],
+    "勢轉": [
+      "kb_00185"
+    ],
+    "轉化": [
+      "kb_00185"
+    ],
+    "化為": [
+      "kb_00185"
+    ],
+    "target_population": [
+      "kb_00186"
+    ],
+    "55": [
+      "kb_00186"
+    ],
+    "65": [
+      "kb_00186"
+    ],
+    "中高齡退休人士": [
+      "kb_00186"
+    ],
+    "中高": [
+      "kb_00186"
+    ],
+    "齡退": [
+      "kb_00186"
+    ],
+    "退休": [
+      "kb_00186",
+      "kb_00223"
+    ],
+    "休人": [
+      "kb_00186"
+    ],
+    "人士": [
+      "kb_00186"
+    ],
+    "benefits": [
+      "kb_00187",
+      "kb_00192"
+    ],
+    "解決長者的經濟安全問題": [
+      "kb_00187"
+    ],
+    "解決": [
+      "kb_00187"
+    ],
+    "決長": [
+      "kb_00187"
+    ],
+    "長者": [
+      "kb_00187",
+      "kb_00223"
+    ],
+    "者的": [
+      "kb_00187"
+    ],
+    "的經": [
+      "kb_00187"
+    ],
+    "經濟": [
+      "kb_00187"
+    ],
+    "濟安": [
+      "kb_00187"
+    ],
+    "services": [
+      "kb_00188"
+    ],
+    "區域聯合銷售平台": [
+      "kb_00188"
+    ],
+    "域聯": [
+      "kb_00188"
+    ],
+    "聯合": [
+      "kb_00188"
+    ],
+    "合銷": [
+      "kb_00188"
+    ],
+    "銷售": [
+      "kb_00188"
+    ],
+    "售平": [
+      "kb_00188"
+    ],
+    "advantages": [
+      "kb_00189"
+    ],
+    "避開了仁義商圈的交通癱瘓": [
+      "kb_00189"
+    ],
+    "避開": [
+      "kb_00189",
+      "kb_00228"
+    ],
+    "開了": [
+      "kb_00189"
+    ],
+    "了仁": [
+      "kb_00189"
+    ],
+    "圈的": [
+      "kb_00189"
+    ],
+    "的交": [
+      "kb_00189"
+    ],
+    "model": [
+      "kb_00190"
+    ],
+    "ai_property_management": [
+      "kb_00190",
+      "kb_00191",
+      "kb_00192"
+    ],
+    "智能系統": [
+      "kb_00190"
+    ],
+    "智能": [
+      "kb_00190"
+    ],
+    "能系": [
+      "kb_00190"
+    ],
+    "系統": [
+      "kb_00190"
+    ],
+    "智能系": [
+      "kb_00190"
+    ],
+    "能系統": [
+      "kb_00190"
+    ],
+    "機動巡邏": [
+      "kb_00190"
+    ],
+    "機動": [
+      "kb_00190"
+    ],
+    "approach": [
+      "kb_00191",
+      "kb_00200"
+    ],
+    "由中央控制中心": [
+      "kb_00191"
+    ],
+    "由中": [
+      "kb_00191"
+    ],
+    "中央": [
+      "kb_00191"
+    ],
+    "央控": [
+      "kb_00191"
+    ],
+    "控制": [
+      "kb_00191"
+    ],
+    "制中": [
+      "kb_00191"
+    ],
+    "中心": [
+      "kb_00191"
+    ],
+    "由中央": [
+      "kb_00191"
+    ],
+    "大幅降低舊社區的管理費負": [
+      "kb_00192"
+    ],
+    "大幅": [
+      "kb_00192"
+    ],
+    "幅降": [
+      "kb_00192"
+    ],
+    "降低": [
+      "kb_00192"
+    ],
+    "低舊": [
+      "kb_00192"
+    ],
+    "舊社": [
+      "kb_00192"
+    ],
+    "的管": [
+      "kb_00192"
+    ],
+    "priority": [
+      "kb_00193",
+      "kb_00198"
+    ],
+    "strategic_recommendations": [
+      "kb_00193",
+      "kb_00194",
+      "kb_00195",
+      "kb_00196",
+      "kb_00197",
+      "kb_00198",
+      "kb_00199",
+      "kb_00200",
+      "kb_00201"
+    ],
+    "population": [
+      "kb_00193",
+      "kb_00194"
+    ],
+    "針對仁忠里進行重點式的長": [
+      "kb_00193"
+    ],
+    "針對": [
+      "kb_00193"
+    ],
+    "對仁": [
+      "kb_00193"
+    ],
+    "里進": [
+      "kb_00193"
+    ],
+    "進行": [
+      "kb_00193"
+    ],
+    "行重": [
+      "kb_00193"
+    ],
+    "重點": [
+      "kb_00193"
+    ],
+    "reason": [
+      "kb_00194",
+      "kb_00225"
+    ],
+    "老化指數高達": [
+      "kb_00194"
+    ],
+    "化指": [
+      "kb_00194"
+    ],
+    "指數": [
+      "kb_00194"
+    ],
+    "數高": [
+      "kb_00194"
+    ],
+    "高達": [
+      "kb_00194"
+    ],
+    "老化指": [
+      "kb_00194"
+    ],
+    "short_term": [
+      "kb_00195"
+    ],
+    "嚴格執法清除巷弄路霸": [
+      "kb_00195"
+    ],
+    "嚴格": [
+      "kb_00195"
+    ],
+    "格執": [
+      "kb_00195"
+    ],
+    "執法": [
+      "kb_00195"
+    ],
+    "法清": [
+      "kb_00195"
+    ],
+    "清除": [
+      "kb_00195"
+    ],
+    "除巷": [
+      "kb_00195"
+    ],
+    "弄路": [
+      "kb_00195"
+    ],
+    "long_term": [
+      "kb_00196"
+    ],
+    "評估增設立體機車停車塔的": [
+      "kb_00196"
+    ],
+    "評估": [
+      "kb_00196"
+    ],
+    "估增": [
+      "kb_00196"
+    ],
+    "增設": [
+      "kb_00196"
+    ],
+    "設立": [
+      "kb_00196"
+    ],
+    "立體": [
+      "kb_00196"
+    ],
+    "體機": [
+      "kb_00196"
+    ],
+    "車停": [
+      "kb_00196"
+    ],
+    "在捷運完工前需採取措施": [
+      "kb_00197"
+    ],
+    "在捷": [
+      "kb_00197"
+    ],
+    "捷運": [
+      "kb_00197"
+    ],
+    "運完": [
+      "kb_00197"
+    ],
+    "完工": [
+      "kb_00197"
+    ],
+    "工前": [
+      "kb_00197"
+    ],
+    "前需": [
+      "kb_00197"
+    ],
+    "需採": [
+      "kb_00197"
+    ],
+    "採取": [
+      "kb_00197"
+    ],
+    "economy": [
+      "kb_00198",
+      "kb_00199",
+      "kb_00200"
+    ],
+    "推動在地商家的數位化與社": [
+      "kb_00198"
+    ],
+    "推動": [
+      "kb_00198"
+    ],
+    "動在": [
+      "kb_00198"
+    ],
+    "在地": [
+      "kb_00198"
+    ],
+    "地商": [
+      "kb_00198"
+    ],
+    "商家": [
+      "kb_00198"
+    ],
+    "家的": [
+      "kb_00198"
+    ],
+    "的數": [
+      "kb_00198"
+    ],
+    "數位": [
+      "kb_00198"
+    ],
+    "goal": [
+      "kb_00199"
+    ],
+    "避免舊市區商業凋零": [
+      "kb_00199"
+    ],
+    "避免": [
+      "kb_00199"
+    ],
+    "免舊": [
+      "kb_00199"
+    ],
+    "區商": [
+      "kb_00199"
+    ],
+    "業凋": [
+      "kb_00199"
+    ],
+    "凋零": [
+      "kb_00199"
+    ],
+    "社區發展協會的積極介入與": [
+      "kb_00200"
+    ],
+    "會的": [
+      "kb_00200"
+    ],
+    "的積": [
+      "kb_00200"
+    ],
+    "積極": [
+      "kb_00200"
+    ],
+    "vision": [
+      "kb_00201"
+    ],
+    "成為新北市": [
+      "kb_00201"
+    ],
+    "成為": [
+      "kb_00201"
+    ],
+    "為新": [
+      "kb_00201"
+    ],
+    "成為新": [
+      "kb_00201"
+    ],
+    "為新北": [
+      "kb_00201"
+    ],
+    "成為新北": [
+      "kb_00201"
+    ],
+    "為新北市": [
+      "kb_00201"
+    ],
+    "target": [
+      "kb_00202",
+      "kb_00204",
+      "kb_00206",
+      "kb_00209",
+      "kb_00217",
+      "kb_00223"
+    ],
+    "system_integration_points": [
+      "kb_00202",
+      "kb_00203",
+      "kb_00204",
+      "kb_00205",
+      "kb_00206",
+      "kb_00207",
+      "kb_00208",
+      "kb_00209",
+      "kb_00210",
+      "kb_00211",
+      "kb_00212",
+      "kb_00213",
+      "kb_00214",
+      "kb_00215",
+      "kb_00216",
+      "kb_00217",
+      "kb_00218",
+      "kb_00219",
+      "kb_00220",
+      "kb_00221",
+      "kb_00222",
+      "kb_00223",
+      "kb_00224",
+      "kb_00225",
+      "kb_00226",
+      "kb_00227",
+      "kb_00228",
+      "kb_00229"
+    ],
+    "ui_design": [
+      "kb_00202",
+      "kb_00203",
+      "kb_00204",
+      "kb_00205",
+      "kb_00206",
+      "kb_00207"
+    ],
+    "elderly_friendly": [
+      "kb_00202",
+      "kb_00203"
+    ],
+    "老年人口": [
+      "kb_00202",
+      "kb_00218"
+    ],
+    "老年": [
+      "kb_00202",
+      "kb_00218"
+    ],
+    "年人": [
+      "kb_00202",
+      "kb_00218"
+    ],
+    "老年人": [
+      "kb_00202",
+      "kb_00218"
+    ],
+    "年人口": [
+      "kb_00202",
+      "kb_00218"
+    ],
+    "features": [
+      "kb_00203",
+      "kb_00205",
+      "kb_00207"
+    ],
+    "大字體模式": [
+      "kb_00203",
+      "kb_00205"
+    ],
+    "大字": [
+      "kb_00203",
+      "kb_00205"
+    ],
+    "字體": [
+      "kb_00203",
+      "kb_00205"
+    ],
+    "體模": [
+      "kb_00203",
+      "kb_00205"
+    ],
+    "模式": [
+      "kb_00203",
+      "kb_00205",
+      "kb_00220"
+    ],
+    "大字體": [
+      "kb_00203",
+      "kb_00205"
+    ],
+    "字體模": [
+      "kb_00203",
+      "kb_00205"
+    ],
+    "體模式": [
+      "kb_00203"
+    ],
+    "dual_entry": [
+      "kb_00204",
+      "kb_00205",
+      "kb_00206",
+      "kb_00207"
+    ],
+    "entry_a_merchant": [
+      "kb_00204",
+      "kb_00205"
+    ],
+    "居住在無電梯公寓的長者": [
+      "kb_00204"
+    ],
+    "在無": [
+      "kb_00204"
+    ],
+    "entry_b_category": [
+      "kb_00206",
+      "kb_00207"
+    ],
+    "高學歷族群": [
+      "kb_00206"
+    ],
+    "高學": [
+      "kb_00206"
+    ],
+    "學歷": [
+      "kb_00206"
+    ],
+    "歷族": [
+      "kb_00206"
+    ],
+    "族群": [
+      "kb_00206"
+    ],
+    "視覺體驗": [
+      "kb_00207"
+    ],
+    "視覺": [
+      "kb_00207"
+    ],
+    "覺體": [
+      "kb_00207"
+    ],
+    "體驗": [
+      "kb_00207"
+    ],
+    "視覺體": [
+      "kb_00207"
+    ],
+    "覺體驗": [
+      "kb_00207"
+    ],
+    "food_dollars_strategy": [
+      "kb_00208",
+      "kb_00209",
+      "kb_00210",
+      "kb_00211",
+      "kb_00212",
+      "kb_00213",
+      "kb_00214",
+      "kb_00215",
+      "kb_00216",
+      "kb_00217"
+    ],
+    "bento_kun": [
+      "kb_00208",
+      "kb_00209",
+      "kb_00210",
+      "kb_00211"
+    ],
+    "辦公室守護者": [
+      "kb_00208"
+    ],
+    "辦公": [
+      "kb_00208"
+    ],
+    "公室": [
+      "kb_00208"
+    ],
+    "室守": [
+      "kb_00208"
+    ],
+    "守護": [
+      "kb_00208"
+    ],
+    "護者": [
+      "kb_00208"
+    ],
+    "辦公室": [
+      "kb_00208"
+    ],
+    "公室守": [
+      "kb_00208"
+    ],
+    "巷弄內數百家小型公司": [
+      "kb_00209"
+    ],
+    "弄內": [
+      "kb_00209"
+    ],
+    "內數": [
+      "kb_00209"
+    ],
+    "數百": [
+      "kb_00209"
+    ],
+    "百家": [
+      "kb_00209"
+    ],
+    "家小": [
+      "kb_00209"
+    ],
+    "企業訂閱制": [
+      "kb_00210"
+    ],
+    "企業": [
+      "kb_00210"
+    ],
+    "業訂": [
+      "kb_00210"
+    ],
+    "訂閱": [
+      "kb_00210"
+    ],
+    "閱制": [
+      "kb_00210"
+    ],
+    "企業訂": [
+      "kb_00210"
+    ],
+    "業訂閱": [
+      "kb_00210"
+    ],
+    "訂閱制": [
+      "kb_00210"
+    ],
+    "market_size": [
+      "kb_00211"
+    ],
+    "b2b": [
+      "kb_00211"
+    ],
+    "家商業機構中的": [
+      "kb_00211"
+    ],
+    "業機": [
+      "kb_00211"
+    ],
+    "構中": [
+      "kb_00211"
+    ],
+    "shao_bing_tuan_zi": [
+      "kb_00212",
+      "kb_00213",
+      "kb_00214"
+    ],
+    "社區活力大使": [
+      "kb_00212"
+    ],
+    "區活": [
+      "kb_00212",
+      "kb_00213"
+    ],
+    "活力": [
+      "kb_00212"
+    ],
+    "力大": [
+      "kb_00212"
+    ],
+    "大使": [
+      "kb_00212"
+    ],
+    "社區活": [
+      "kb_00212"
+    ],
+    "區活力": [
+      "kb_00212"
+    ],
+    "integration": [
+      "kb_00213"
+    ],
+    "結合宮廟與社區活動": [
+      "kb_00213"
+    ],
+    "結合": [
+      "kb_00213"
+    ],
+    "合宮": [
+      "kb_00213"
+    ],
+    "宮廟": [
+      "kb_00213"
+    ],
+    "廟與": [
+      "kb_00213"
+    ],
+    "與社": [
+      "kb_00213"
+    ],
+    "mechanism": [
+      "kb_00214",
+      "kb_00219"
+    ],
+    "發放實體或虛擬的": [
+      "kb_00214"
+    ],
+    "發放": [
+      "kb_00214"
+    ],
+    "放實": [
+      "kb_00214"
+    ],
+    "實體": [
+      "kb_00214"
+    ],
+    "體或": [
+      "kb_00214"
+    ],
+    "或虛": [
+      "kb_00214"
+    ],
+    "虛擬": [
+      "kb_00214"
+    ],
+    "擬的": [
+      "kb_00214"
+    ],
+    "coffee_elf": [
+      "kb_00215",
+      "kb_00216",
+      "kb_00217"
+    ],
+    "巷弄探險家": [
+      "kb_00215"
+    ],
+    "弄探": [
+      "kb_00215"
+    ],
+    "探險": [
+      "kb_00215"
+    ],
+    "險家": [
+      "kb_00215"
+    ],
+    "巷弄探": [
+      "kb_00215"
+    ],
+    "弄探險": [
+      "kb_00215"
+    ],
+    "探險家": [
+      "kb_00215"
+    ],
+    "打卡賺幣機制": [
+      "kb_00216"
+    ],
+    "打卡": [
+      "kb_00216"
+    ],
+    "卡賺": [
+      "kb_00216"
+    ],
+    "賺幣": [
+      "kb_00216"
+    ],
+    "幣機": [
+      "kb_00216"
+    ],
+    "機制": [
+      "kb_00216"
+    ],
+    "打卡賺": [
+      "kb_00216"
+    ],
+    "卡賺幣": [
+      "kb_00216"
+    ],
+    "挖掘隱藏版咖啡或茶飲店": [
+      "kb_00217"
+    ],
+    "挖掘": [
+      "kb_00217"
+    ],
+    "掘隱": [
+      "kb_00217"
+    ],
+    "隱藏": [
+      "kb_00217"
+    ],
+    "藏版": [
+      "kb_00217"
+    ],
+    "版咖": [
+      "kb_00217"
+    ],
+    "咖啡": [
+      "kb_00217"
+    ],
+    "啡或": [
+      "kb_00217"
+    ],
+    "target_group": [
+      "kb_00218"
+    ],
+    "happiness_coin": [
+      "kb_00218",
+      "kb_00219",
+      "kb_00220",
+      "kb_00221",
+      "kb_00222",
+      "kb_00223",
+      "kb_00224"
+    ],
+    "social_welfare": [
+      "kb_00218",
+      "kb_00219",
+      "kb_00220",
+      "kb_00221"
+    ],
+    "純幸福幣購買": [
+      "kb_00219"
+    ],
+    "純幸": [
+      "kb_00219"
+    ],
+    "幸福": [
+      "kb_00219"
+    ],
+    "福幣": [
+      "kb_00219"
+    ],
+    "幣購": [
+      "kb_00219"
+    ],
+    "購買": [
+      "kb_00219"
+    ],
+    "純幸福": [
+      "kb_00219"
+    ],
+    "幸福幣": [
+      "kb_00219"
+    ],
+    "benefit": [
+      "kb_00220"
+    ],
+    "創造": [
+      "kb_00220"
+    ],
+    "尊嚴救助": [
+      "kb_00220"
+    ],
+    "尊嚴": [
+      "kb_00220"
+    ],
+    "嚴救": [
+      "kb_00220"
+    ],
+    "救助": [
+      "kb_00220"
+    ],
+    "尊嚴救": [
+      "kb_00220"
+    ],
+    "嚴救助": [
+      "kb_00220"
+    ],
+    "activities": [
+      "kb_00221"
+    ],
+    "擔任志工": [
+      "kb_00221"
+    ],
+    "擔任": [
+      "kb_00221"
+    ],
+    "任志": [
+      "kb_00221"
+    ],
+    "志工": [
+      "kb_00221"
+    ],
+    "擔任志": [
+      "kb_00221"
+    ],
+    "任志工": [
+      "kb_00221"
+    ],
+    "協助巡守": [
+      "kb_00221"
+    ],
+    "協助": [
+      "kb_00221"
+    ],
+    "idle_period": [
+      "kb_00222"
+    ],
+    "time_complement": [
+      "kb_00222",
+      "kb_00223",
+      "kb_00224"
+    ],
+    "下午": [
+      "kb_00222",
+      "kb_00224"
+    ],
+    "點至": [
+      "kb_00222"
+    ],
+    "退休長者活動時間": [
+      "kb_00223"
+    ],
+    "休長": [
+      "kb_00223"
+    ],
+    "者活": [
+      "kb_00223"
+    ],
+    "動時": [
+      "kb_00223"
+    ],
+    "時間": [
+      "kb_00223"
+    ],
+    "product": [
+      "kb_00224"
+    ],
+    "下午茶套餐": [
+      "kb_00224"
+    ],
+    "午茶": [
+      "kb_00224"
+    ],
+    "茶套": [
+      "kb_00224"
+    ],
+    "套餐": [
+      "kb_00224"
+    ],
+    "下午茶": [
+      "kb_00224"
+    ],
+    "午茶套": [
+      "kb_00224"
+    ],
+    "茶套餐": [
+      "kb_00224"
+    ],
+    "vs": [
+      "kb_00225",
+      "kb_00243"
+    ],
+    "logistics": [
+      "kb_00225",
+      "kb_00226",
+      "kb_00227",
+      "kb_00228",
+      "kb_00229"
+    ],
+    "curbside_pickup": [
+      "kb_00225",
+      "kb_00226"
+    ],
+    "停車困難": [
+      "kb_00225"
+    ],
+    "車困": [
+      "kb_00225"
+    ],
+    "困難": [
+      "kb_00225"
+    ],
+    "停車困": [
+      "kb_00225"
+    ],
+    "gps": [
+      "kb_00226"
+    ],
+    "免下車取餐": [
+      "kb_00226"
+    ],
+    "免下": [
+      "kb_00226"
+    ],
+    "下車": [
+      "kb_00226"
+    ],
+    "車取": [
+      "kb_00226"
+    ],
+    "取餐": [
+      "kb_00226"
+    ],
+    "免下車": [
+      "kb_00226"
+    ],
+    "下車取": [
+      "kb_00226"
+    ],
+    "radius": [
+      "kb_00227"
+    ],
+    "500": [
+      "kb_00227"
+    ],
+    "walking_delivery": [
+      "kb_00227",
+      "kb_00228",
+      "kb_00229"
+    ],
+    "advantage": [
+      "kb_00228"
+    ],
+    "避開交通癱瘓與停車問題": [
+      "kb_00228"
+    ],
+    "開交": [
+      "kb_00228"
+    ],
+    "通癱": [
+      "kb_00228"
+    ],
+    "癱瘓": [
+      "kb_00228"
+    ],
+    "瘓與": [
+      "kb_00228"
+    ],
+    "與停": [
+      "kb_00228"
+    ],
+    "workers": [
+      "kb_00229"
+    ],
+    "社區專勤隊": [
+      "kb_00229"
+    ],
+    "區專": [
+      "kb_00229"
+    ],
+    "專勤": [
+      "kb_00229"
+    ],
+    "勤隊": [
+      "kb_00229"
+    ],
+    "社區專": [
+      "kb_00229"
+    ],
+    "區專勤": [
+      "kb_00229"
+    ],
+    "專勤隊": [
+      "kb_00229"
+    ],
+    "key_statistics": [
+      "kb_00230",
+      "kb_00231",
+      "kb_00232",
+      "kb_00233",
+      "kb_00234",
+      "kb_00235",
+      "kb_00236",
+      "kb_00237",
+      "kb_00238",
+      "kb_00239",
+      "kb_00240",
+      "kb_00241",
+      "kb_00242"
+    ],
+    "elderly_percentage": [
+      "kb_00233"
+    ],
+    "motorcycles_estimated": [
+      "kb_00235"
+    ],
+    "5800": [
+      "kb_00235"
+    ],
+    "public_motorcycle_parking": [
+      "kb_00236"
+    ],
+    "parking_shortage_ratio": [
+      "kb_00237"
+    ],
+    "96": [
+      "kb_00237"
+    ],
+    "缺口": [
+      "kb_00237"
+    ],
+    "digital_transformation_rate": [
+      "kb_00240"
+    ],
+    "hoa_count_current": [
+      "kb_00241"
+    ],
+    "hoa_count_projected": [
+      "kb_00242"
+    ],
+    "critical_insights": [
+      "kb_00243"
+    ],
+    "區域正處於極端的二元發展": [
+      "kb_00243"
+    ],
+    "域正": [
+      "kb_00243"
+    ],
+    "正處": [
+      "kb_00243"
+    ],
+    "處於": [
+      "kb_00243"
+    ]
+  }
+}

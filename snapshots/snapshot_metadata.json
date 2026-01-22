@@ -5,6 +5,14 @@
       "timestamp": "20260119_150234",
       "created_at": "2026-01-19T15:02:34.611255",
       "purpose": "Before Google Tasks API installation"
+    },
+    {
+      "snapshot_id": "snapshot_20260122_232202",
+      "timestamp": "20260122_232202",
+      "created_at": "2026-01-22T23:22:02.501530",
+      "purpose": "雲端資料推送後回滾點",
+      "file_count": 43
     }
-  ]
+  ],
+  "last_updated": "2026-01-22T23:22:02.501538"
 }

@@ -83,6 +83,20 @@ def get_file_info(path: Path) -> Optional[Dict]:
         }
 
 
+def should_skip_file(file_path: Path) -> bool:
+    """檢查是否應該跳過此檔案"""
+    # 排除 .git、.venv、__pycache__、node_modules 等目錄
+    skip_dirs = ['.git', '.venv', '__pycache__', 'node_modules', '.idea', '.vscode']
+    for part in file_path.parts:
+        if part in skip_dirs:
+            return True
+    # 排除特定檔案類型
+    skip_extensions = ['.pyc', '.pyo', '.pyd', '.so', '.dll', '.exe']
+    if file_path.suffix.lower() in skip_extensions:
+        return True
+    return False
+
+
 def compare_files(
     local_path: Path, 
     cloud_path: Path, 
@@ -311,7 +325,12 @@ def sync_directory(
         if recursive:
             # 遞迴收集本機檔案
             for root, dirs, files in os.walk(local_dir):
+                # 排除 .git 和 .venv 目錄
+                dirs[:] = [d for d in dirs if d not in ['.git', '.venv', '__pycache__', 'node_modules']]
                 root_path = Path(root)
+                # 跳過 .git 和 .venv 目錄
+                if '.git' in root_path.parts or '.venv' in root_path.parts or '__pycache__' in root_path.parts or 'node_modules' in root_path.parts:
+                    continue
                 for file in files:
                     if pattern == "*" or file.endswith(pattern.replace("*", "")):
                         local_file = root_path / file
@@ -364,6 +383,11 @@ def sync_directory(
     
     # 同步每個檔案
     for local_file, cloud_file in files_to_sync:
+        # 跳過不需要同步的檔案
+        if should_skip_file(local_file):
+            results["skipped"].append(f"{local_file.name} (已排除)")
+            continue
+        
         comparison = compare_files(
             local_file, 
             cloud_file, 
