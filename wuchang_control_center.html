@@ -1007,6 +1007,49 @@
       </div>
     </div>
 
+    <div class="card wide" data-section="router_monitor">
+      <h2>🌐 路由器監控（系統資源）</h2>
+      <div class="muted">
+        路由器：ASUS RT-BE86U | 本地 IP: 192.168.50.84 | 外部 IP: 220.135.21.74 | DDNS: coffeeLofe.asuscomm.com
+      </div>
+      
+      <div style="margin-top: 16px;">
+        <div class="row" style="grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div style="background: #f8f9fa; border-radius: 12px; padding: 16px;">
+            <div class="muted small">連線裝置數量</div>
+            <div style="font-size: 32px; font-weight: bold; color: #667eea; margin-top: 8px;" id="routerDeviceCount">-</div>
+            <div class="muted small" style="margin-top: 4px;" id="routerDeviceDetails">載入中...</div>
+          </div>
+          <div style="background: #f8f9fa; border-radius: 12px; padding: 16px;">
+            <div class="muted small">目前網路流量</div>
+            <div style="font-size: 24px; font-weight: bold; color: #28a745; margin-top: 8px;">
+              <span id="routerUploadSpeed">-</span> ↑ / <span id="routerDownloadSpeed">-</span> ↓
+            </div>
+            <div class="muted small" style="margin-top: 4px;">Mbps</div>
+          </div>
+        </div>
+        
+        <div style="background: #fff; border: 1px solid #e9ecef; border-radius: 12px; padding: 16px; margin-top: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="margin: 0; font-size: 16px;">網路流量圖（最近 30 分鐘）</h3>
+            <button id="btnRefreshRouter" class="secondary" style="padding: 6px 12px; font-size: 12px;">刷新</button>
+          </div>
+          <canvas id="routerTrafficChart" style="max-height: 300px; width: 100%;"></canvas>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <details>
+            <summary style="cursor: pointer; color: #667eea; font-weight: 500;">連線裝置列表</summary>
+            <div id="routerDeviceList" style="margin-top: 12px; max-height: 400px; overflow-y: auto;">
+              <div class="muted">載入中...</div>
+            </div>
+          </details>
+        </div>
+        
+        <div class="muted small" id="routerStatusHint" style="margin-top: 12px;"></div>
+      </div>
+    </div>
+
     <div class="card wide" style="margin-bottom:18px;" data-section="map">
       <h2>中央區塊：大型地圖模組（環狀切換 / 樹狀導覽 / 狀態數據）</h2>
       <div class="muted">
@@ -4146,6 +4189,170 @@
 
     // 初始載入
     loadPersonalBindingStatus();
+  </script>
+
+  <script>
+    // 路由器監控功能
+    let routerTrafficChart = null;
+    let routerUpdateInterval = null;
+
+    // 載入 Chart.js（如果未載入）
+    function loadChartJS() {
+      return new Promise((resolve, reject) => {
+        if (window.Chart) {
+          resolve();
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('無法載入 Chart.js'));
+        document.head.appendChild(script);
+      });
+    }
+
+    // 更新路由器狀態
+    async function updateRouterStatus() {
+      try {
+        // 獲取連線裝置
+        const devicesRes = await fetch('/api/router/devices');
+        if (devicesRes.ok) {
+          const devicesData = await devicesRes.json();
+          if (devicesData.ok && devicesData.devices) {
+            const count = devicesData.devices.total_count || 0;
+            document.getElementById('routerDeviceCount').textContent = count;
+            document.getElementById('routerDeviceDetails').textContent = 
+              `${count} 個裝置已連線`;
+            
+            // 更新裝置列表
+            const deviceList = document.getElementById('routerDeviceList');
+            if (devicesData.devices.devices && devicesData.devices.devices.length > 0) {
+              deviceList.innerHTML = devicesData.devices.devices.map(device => `
+                <div style="padding: 8px; border-bottom: 1px solid #e9ecef; display: flex; justify-content: space-between;">
+                  <div>
+                    <strong>${device.name || device.ip || '未知裝置'}</strong><br>
+                    <span class="muted small">${device.ip || ''}</span>
+                    <span class="muted small">${device.mac || ''}</span>
+                  </div>
+                  <div class="muted small">${device.type || 'unknown'}</div>
+                </div>
+              `).join('');
+            } else {
+              deviceList.innerHTML = '<div class="muted">無連線裝置</div>';
+            }
+          }
+        }
+      } catch (e) {
+        console.error('獲取裝置列表失敗:', e);
+        document.getElementById('routerDeviceCount').textContent = '?';
+        document.getElementById('routerDeviceDetails').textContent = '載入失敗';
+      }
+
+      try {
+        // 獲取流量資訊
+        const trafficRes = await fetch('/api/router/traffic');
+        if (trafficRes.ok) {
+          const trafficData = await trafficRes.json();
+          if (trafficData.ok && trafficData.traffic) {
+            const traffic = trafficData.traffic;
+            document.getElementById('routerUploadSpeed').textContent = 
+              (traffic.upload_speed_mbps || 0).toFixed(2);
+            document.getElementById('routerDownloadSpeed').textContent = 
+              (traffic.download_speed_mbps || 0).toFixed(2);
+            
+            // 更新流量圖
+            if (traffic.history && traffic.history.upload && traffic.history.download) {
+              updateTrafficChart(traffic.history);
+            }
+          }
+        }
+      } catch (e) {
+        console.error('獲取流量資訊失敗:', e);
+        document.getElementById('routerUploadSpeed').textContent = '-';
+        document.getElementById('routerDownloadSpeed').textContent = '-';
+      }
+    }
+
+    // 更新流量圖
+    function updateTrafficChart(history) {
+      if (!routerTrafficChart) {
+        return;
+      }
+
+      const labels = history.timestamps.map((ts, i) => {
+        const date = new Date(ts);
+        return date.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+      });
+
+      routerTrafficChart.data.labels = labels;
+      routerTrafficChart.data.datasets[0].data = history.upload.map(v => (v / 1000000).toFixed(2));
+      routerTrafficChart.data.datasets[1].data = history.download.map(v => (v / 1000000).toFixed(2));
+      routerTrafficChart.update('none');
+    }
+
+    // 初始化流量圖
+    async function initTrafficChart() {
+      await loadChartJS();
+      
+      const ctx = document.getElementById('routerTrafficChart');
+      if (!ctx) return;
+
+      routerTrafficChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: '上傳 (Mbps)',
+              data: [],
+              borderColor: 'rgb(102, 126, 234)',
+              backgroundColor: 'rgba(102, 126, 234, 0.1)',
+              tension: 0.4
+            },
+            {
+              label: '下載 (Mbps)',
+              data: [],
+              borderColor: 'rgb(40, 167, 69)',
+              backgroundColor: 'rgba(40, 167, 69, 0.1)',
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Mbps'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 綁定刷新按鈕
+    document.getElementById('btnRefreshRouter')?.addEventListener('click', () => {
+      updateRouterStatus();
+    });
+
+    // 初始化
+    (async () => {
+      await initTrafficChart();
+      updateRouterStatus();
+      
+      // 每 30 秒自動更新
+      routerUpdateInterval = setInterval(updateRouterStatus, 30000);
+    })();
   </script>
 
   <div id="maintBanner" class="maint-banner hidden">（本系統未經原設計者做定期維護，可能存在風險）</div>

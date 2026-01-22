@@ -38,6 +38,14 @@ from risk_gate import check_server_health
 from dns_propagation_check import DEFAULT_RESOLVERS, load_expected_from_config, query
 from google_workspace_writer import write_workspace_artifact
 
+# 路由器整合（可選）
+try:
+    from router_integration import get_router_integration
+    ROUTER_INTEGRATION_AVAILABLE = True
+except ImportError:
+    ROUTER_INTEGRATION_AVAILABLE = False
+    get_router_integration = None
+
 # Google Tasks 整合（可選）
 try:
     from google_tasks_integration import get_google_tasks_integration
@@ -2530,6 +2538,129 @@ class Handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query)
             domain = (qs.get("domain") or ["wuchang.life"])[0].strip()
             _json(self, HTTPStatus.OK, {"ok": True, "status": _check_acme_propagation(domain)})
+            return
+
+        # 路由器整合 API
+        if parsed.path == "/api/router/status":
+            if not _require_perm(self, "read"):
+                return
+            if not ROUTER_INTEGRATION_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "router_integration_not_available"})
+                return
+            try:
+                router = get_router_integration()
+                status = router.get_router_status()
+                _json(self, HTTPStatus.OK, {"ok": True, "router": status})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/router/devices":
+            if not _require_perm(self, "read"):
+                return
+            if not ROUTER_INTEGRATION_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "router_integration_not_available"})
+                return
+            try:
+                router = get_router_integration()
+                devices = router.get_connected_devices()
+                _json(self, HTTPStatus.OK, {"ok": True, "devices": devices})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/router/traffic":
+            if not _require_perm(self, "read"):
+                return
+            if not ROUTER_INTEGRATION_AVAILABLE:
+                _json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": "router_integration_not_available"})
+                return
+            try:
+                router = get_router_integration()
+                traffic = router.get_network_traffic()
+                _json(self, HTTPStatus.OK, {"ok": True, "traffic": traffic})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        # 路由器完整控制 API（用於物業管理模組）
+        if parsed.path == "/api/router/full_control/ddns_status":
+            if not _require_perm(self, "read"):
+                return
+            try:
+                from router_full_control import get_router_full_control
+                router = get_router_full_control()
+                if not router.logged_in:
+                    router.login()
+                ddns_status = router.get_ddns_status()
+                _json(self, HTTPStatus.OK, {"ok": True, "ddns": ddns_status})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/router/full_control/port_forwarding":
+            if not _require_perm(self, "read"):
+                return
+            try:
+                from router_full_control import get_router_full_control
+                router = get_router_full_control()
+                if not router.logged_in:
+                    router.login()
+                rules = router.get_port_forwarding_rules()
+                _json(self, HTTPStatus.OK, {"ok": True, "rules": rules})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/router/full_control/add_port_forwarding":
+            if not _require_perm(self, "workspace_write"):
+                return
+            try:
+                from router_full_control import get_router_full_control
+                data = _read_json(self)
+                router = get_router_full_control()
+                if not router.logged_in:
+                    router.login()
+                
+                success = router.add_port_forwarding_rule(
+                    external_port=int(data.get("external_port", 0)),
+                    internal_ip=str(data.get("internal_ip", "")),
+                    internal_port=int(data.get("internal_port", 0)) if data.get("internal_port") else None,
+                    protocol=str(data.get("protocol", "TCP")),
+                    description=str(data.get("description", ""))
+                )
+                _json(self, HTTPStatus.OK, {"ok": success})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        # 物業管理路由器整合 API
+        if parsed.path == "/api/property/router/dashboard":
+            if not _require_perm(self, "read"):
+                return
+            try:
+                from property_management_router_integration import get_property_router_integration
+                qs = parse_qs(parsed.query)
+                property_id = (qs.get("property_id") or ["wuchang_community"])[0].strip()
+                integration = get_property_router_integration(property_id)
+                dashboard = integration.get_network_dashboard()
+                _json(self, HTTPStatus.OK, {"ok": True, "dashboard": dashboard})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/api/property/router/initialize":
+            if not _require_perm(self, "workspace_write"):
+                return
+            try:
+                from property_management_router_integration import get_property_router_integration
+                data = _read_json(self)
+                property_id = str(data.get("property_id", "wuchang_community")).strip()
+                integration = get_property_router_integration(property_id)
+                result = integration.initialize_network_infrastructure()
+                _json(self, HTTPStatus.OK, {"ok": True, "result": result})
+            except Exception as e:
+                _json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(e)})
             return
 
         if parsed.path == "/api/audit/tail":
