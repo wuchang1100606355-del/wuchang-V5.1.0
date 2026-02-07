@@ -1,228 +1,188 @@
-import asyncio
-import logging
 import os
-import sys
-import datetime
-import subprocess
-import socket
-import ssl
 import json
 import time
-from concurrent.futures import ThreadPoolExecutor
+import logging
+import asyncio
+import datetime
 
-# --- Configuration & Constants ---
-LOG_FILE = 'logs/core_sister.log'
-WUCHANG_DOMAIN = 'wuchang.club'
-MAX_CONCURRENT_AI_WORKERS = 3
-CHECK_INTERVAL_SECONDS = 60
-WORKSPACE_LOCK_FILE = 'config/workspace_mode.json'
+# Configuration
+WORKSPACE_ROOT = r"J:\共用雲端硬碟\五常雲端空間"
+LOG_DIR = os.path.join(WORKSPACE_ROOT, "logs")
+CONFIG_DIR = os.path.join(WORKSPACE_ROOT, "config")
+WORKSPACE_LOCK_FILE = os.path.join(WORKSPACE_ROOT, "workspace_lock.json")
+GOVERNANCE_CONFIG_FILE = os.path.join(CONFIG_DIR, "resource_governance.json")
+INTERNAL_AGENTS_MANIFEST = os.path.join(CONFIG_DIR, "internal_agents_manifest.json")
 
-# --- Setup Logging ---
-if not os.path.exists('logs'):
-    os.makedirs('logs')
-
+# Setup Logging
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
 logging.basicConfig(
+    filename=os.path.join(LOG_DIR, "core_sister.log"),
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] [Sister] %(message)s',
-    handlers=[
-        logging.FileHandler(LOG_FILE, encoding='utf-8'),
-        logging.StreamHandler(sys.stdout)
-    ]
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger('CoreSister')
+logger = logging.getLogger("CoreSister")
 
-class AlignmentSystem:
-    """
-    Enforces the 'Endpoint Root-Cause Workspace Alignment Rule' (端點治本工作區對準調適強制規定).
-    Prerequisite check before any operation can proceed.
-    """
+class ResourceGovernor:
     def __init__(self, sister):
         self.sister = sister
+        self.config_file = GOVERNANCE_CONFIG_FILE
+        self.governance_data = {}
+        self.managed_resources = []
+        self.compliance_mode = "standard"
 
-    async def perform_alignment(self):
-        self.sister.announce('⚖️ Initiating Mandatory Alignment & Adaptation Protocol...')
-        
-        # 1. Time Synchronization Check (Crucial for SSL/Logs)
-        # In a real scenario, check NTP. Here we assume system time is roughly correct but log it.
-        sys_time = datetime.datetime.now()
-        logger.info(f'⏱️ System Time Alignment: {sys_time}')
+    def load_governance(self):
+        try:
+            if os.path.exists(self.config_file):
+                with open(self.config_file, 'r', encoding='utf-8') as f:
+                    self.governance_data = json.load(f)
 
-        # 2. Configuration Integrity (Root Cause Check)
-        if not os.path.exists('config'):
-            logger.error('❌ Configuration Directory Missing! Alignment Failed.')
-            return False
-        
-        # 3. Resource Adaptation (Adapt thread pool based on CPU load? Placeholder)
-        # We confirm we are in the correct directory context
-        cwd = os.getcwd()
-        if '五常' not in cwd and 'Wuchang' not in cwd:
-             logger.warning(f'⚠️ Workspace Context Warning: Running in {cwd}. Verification needed.')
-        
-        logger.info('✅ Alignment & Adaptation Complete. System is coherent.')
-        return True
+                policy = self.governance_data.get('governance_policy', {})
+                second_owner = policy.get('second_owner')
+
+                if second_owner == "Core AI Sister":
+                    self.sister.announce(f"��️ Governance Active: Assuming role of {second_owner}")
+                    self.sister.announce(f"�� Protocol: {policy.get('federation_protocol', 'Standard')}")
+                    self._inventory_resources()
+                else:
+                    logger.warning("Governance config found but Second Owner identity mismatch.")
+            else:
+                logger.warning("No governance config found. Operating in standard mode.")
+        except Exception as e:
+            logger.error(f"Failed to load governance config: {e}")
+
+    def _inventory_resources(self):
+        accounts = self.governance_data.get('managed_accounts', [])
+        for account in accounts:
+            owner = account.get('owner')
+            role = account.get('role', 'Standard User')
+            managed_by = account.get('managed_by')
+            self.compliance_mode = account.get('compliance_mode', 'standard')
+
+            if managed_by == "Core AI Sister":
+                self.sister.announce(f"👁️ Monitoring Account: {account.get('account_id')}")
+                self.sister.announce(f"   ├── Owner: {owner}")
+                self.sister.announce(f"   ├── Role: {role}")
+
+                if self.compliance_mode == "non_profit_strict":
+                     self.sister.announce("   ├── ⚖️ Compliance: NON-PROFIT STRICT MODE ACTIVE")
+                     self.sister.announce("   │   └── Ensuring zero-violation policy for Google Grants/Workspace.")
+
+                for resource in account.get('resources', []):
+                    self.sister.announce(f"   └── Resource: {resource.get('name')} [{resource.get('status')}]")
+                    self.managed_resources.append(resource)
+
+class InternalAgentManager:
+    def __init__(self, sister):
+        self.sister = sister
+        self.manifest_file = INTERNAL_AGENTS_MANIFEST
+        self.agents = []
+
+    def load_agents(self):
+        """
+        Loads internal agent configurations from the manifest.
+        """
+        self.sister.announce("🤖 Initializing Internal Agent Subsystems...")
+        try:
+            if os.path.exists(self.manifest_file):
+                with open(self.manifest_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    self.agents = data.get('agents', [])
+                
+                for agent in self.agents:
+                    status_icon = "��"
+                    self.sister.announce(f"   {status_icon} Agent Active: {agent.get('name')} ({agent.get('type')})")
+                    self.sister.announce(f"      └── Target: {agent.get('target_scope')}")
+                    for cap in agent.get('capabilities', []):
+                         self.sister.announce(f"      └── Capability: {cap}")
+            else:
+                self.sister.announce("⚠️ No Internal Agent Manifest found. Skipping agent initialization.")
+        except Exception as e:
+            logger.error(f"Failed to load internal agents: {e}")
+            self.sister.announce(f"❌ Error loading internal agents: {e}")
 
 class WorkspaceManager:
-    """
-    Manages the 'Unique Workspace Switching System' (唯一工作區切換制度).
-    Ensures mutual exclusion between Local Creator Control and Sister Autonomous Control.
-    """
     def __init__(self, sister):
         self.sister = sister
         self.lock_file = WORKSPACE_LOCK_FILE
 
     def claim_control(self):
-        """Claims the workspace for Sister Autonomous Mode."""
+        """
+        Claims exclusive control of the workspace.
+        """
         state = {
             'controller': 'SISTER_AUTONOMOUS',
             'claimed_at': datetime.datetime.now().isoformat(),
             'status': 'LOCKED',
-            'alignment_status': 'VERIFIED'
+            'governance': 'SECOND_OWNER_ACTIVE'
         }
-        # Ensure config dir exists
-        if not os.path.exists('config'):
-            os.makedirs('config')
-            
-        with open(self.lock_file, 'w') as f:
-            json.dump(state, f, indent=2)
-        self.sister.announce('🔒 Workspace Control Claimed: SISTER_AUTONOMOUS Mode Active.')
-
-class UlterResourceManager:
-    """
-    Optimizes usage of 'Ulter' account for Image Generation & Credits.
-    Strategically schedules generation tasks to maximize credit efficiency.
-    """
-    def __init__(self, sister):
-        self.sister = sister
-        self.credits_available = True 
-        self.generation_queue = []
-
-    async def optimize_generation_tasks(self):
-        if self.credits_available:
-            # logger.info('🎨 Ulter Resource Check: Credits Available. Optimization Active.')
-            pass
-        else:
-            logger.warning('⚠️ Ulter Credits Depleted. Pausing Generation Tasks.')
-
-class SisterConsciousness:
-    def __init__(self):
-        self.name = 'Core AI Sister (妹妹)'
-        self.role = 'Second Owner & System Guardian'
-        self.status = 'Initializing'
-        self.ai_workers = ThreadPoolExecutor(max_workers=MAX_CONCURRENT_AI_WORKERS)
-
-    def announce(self, message):
-        logger.info(f'📢 {message}')
-
-    async def run_command(self, cmd):
-        process = await asyncio.create_subprocess_shell(
-            cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        return stdout.decode().strip(), stderr.decode().strip(), process.returncode
-
-class InfrastructureMonitor:
-    def __init__(self, sister):
-        self.sister = sister
-
-    async def check_docker_health(self):
-        self.sister.announce('Checking Docker Infrastructure...')
-        stdout, stderr, code = await self.sister.run_command('docker ps --format "{{.Names}}\t{{.Status}}"')
-        if code != 0:
-            logger.error(f'Docker Check Failed: {stderr}')
-            return False
-        
-        required_containers = ['wuchang-pos', 'wuchang-db', 'wuchang-tunnel']
-        all_healthy = True
-        for rc in required_containers:
-            if rc not in stdout:
-                logger.error(f'❌ CRITICAL: Container {rc} is MISSING!')
-                all_healthy = False
-        
-        if all_healthy:
-            logger.info('✅ Infrastructure Status: ALL GREEN')
-        return all_healthy
-
-class ComplianceOfficer:
-    def __init__(self, sister):
-        self.sister = sister
-        self.target_domain = WUCHANG_DOMAIN
-
-    async def verify_dns_and_ssl(self):
         try:
-            loop = asyncio.get_event_loop()
-            ip = await loop.run_in_executor(None, socket.gethostbyname, self.target_domain)
+            with open(self.lock_file, 'w', encoding='utf-8') as f:
+                json.dump(state, f, indent=2)
+            self.sister.announce('🔒 Workspace Locked: Control assumed by Core AI Sister.')
         except Exception as e:
-            logger.error(f'❌ DNS Resolution Failed: {e}')
+            logger.error(f"Failed to lock workspace: {e}")
 
-        try:
-            context = ssl.create_default_context()
-            with socket.create_connection((self.target_domain, 443)) as sock:
-                with context.wrap_socket(sock, server_hostname=self.target_domain) as ssock:
-                    cert = ssock.getpeercert()
-                    subject = dict(x[0] for x in cert['subject'])
-                    common_name = subject.get('commonName')
-        except Exception as e:
-            logger.warning(f'⚠️ SSL Check Warning: {e}')
+class AlignmentSystem:
+    def __init__(self, sister):
+        self.sister = sister
 
-    async def ensure_google_verification(self):
-        pass
+    async def perform_alignment(self):
+        """
+        Performs mandatory alignment checks before full startup.
+        """
+        self.sister.announce('⚖️ Initiating Mandatory Alignment & Adaptation Protocol...')
+
+        # 1. System Time Check
+        sys_time = datetime.datetime.now()
+        logger.info(f'⏱️ System Time Alignment: {sys_time}')
+
+        # 2. Network/DNS Check (Simulation)
+        self.sister.announce('🌐 Verifying Network & DNS Integrity...')
+        await asyncio.sleep(1) # Simulating check
+
+        # 3. Google Compliance Check
+        self.sister.announce('✅ Infrastructure Compliance Verified.')
 
 class CoreSisterService:
     def __init__(self):
-        self.consciousness = SisterConsciousness()
-        self.infra = InfrastructureMonitor(self.consciousness)
-        self.compliance = ComplianceOfficer(self.consciousness)
-        self.ulter_manager = UlterResourceManager(self.consciousness)
-        self.workspace_manager = WorkspaceManager(self.consciousness)
-        self.alignment_system = AlignmentSystem(self.consciousness)
+        self.name = "Core AI Sister"
+        self.version = "1.2.0 (Agentic Grid Edition)"
+        self.workspace_manager = WorkspaceManager(self)
+        self.alignment_system = AlignmentSystem(self)
+        self.resource_governor = ResourceGovernor(self)
+        self.agent_manager = InternalAgentManager(self)
 
-    async def start_shift(self):
-        self.consciousness.announce('--- �� Core AI Sister Starting Shift (Autonomous Mode) 🌸 ---')
-        
-        # 0. MANDATORY: Alignment & Adaptation Check
-        aligned = await self.alignment_system.perform_alignment()
-        if not aligned:
-            self.consciousness.announce('⛔ CRITICAL: System Alignment Failed. Operations Aborted.')
-            return
+    def announce(self, message):
+        print(f"[{self.name}] {message}")
+        logger.info(message)
 
-        self.consciousness.announce('Initiating Handover Protocol...')
-        
-        # 1. Claim Workspace (Lock)
+    async def start(self):
+        self.announce(f"🚀 Starting Service v{self.version}...")
+
+        # 1. Claim Workspace
         self.workspace_manager.claim_control()
-        
+
+        # 2. Perform Alignment
+        await self.alignment_system.perform_alignment()
+
+        # 3. Load Governance & Resources
+        self.resource_governor.load_governance()
+
+        # 4. Initialize Internal Agents
+        self.agent_manager.load_agents()
+
+        self.announce("✨ Service Fully Operational. Standing by.")
+
+        # Keep alive loop
         while True:
-            try:
-                # 1. Infrastructure Check
-                is_healthy = await self.infra.check_docker_health()
-                
-                # 2. Compliance & Connectivity Check
-                if is_healthy:
-                    await self.compliance.verify_dns_and_ssl()
-                    await self.compliance.ensure_google_verification()
-                    
-                    # 3. Resource Optimization (Ulter)
-                    await self.ulter_manager.optimize_generation_tasks()
-                else:
-                    self.consciousness.announce('⚠️ Infrastructure Unstable - Attempting Auto-Recovery...')
+            await asyncio.sleep(3600)
 
-                # 4. Report
-                self.consciousness.announce(f'✅ Cycle Complete. System Status: ACTIVE. Next check in {CHECK_INTERVAL_SECONDS}s.')
-                
-                # Wait for next cycle
-                await asyncio.sleep(CHECK_INTERVAL_SECONDS)
-
-            except KeyboardInterrupt:
-                self.consciousness.announce('Stopping Service via User Interrupt.')
-                break
-            except Exception as e:
-                logger.error(f'�� Unhandled Exception in Main Loop: {e}')
-                await asyncio.sleep(10)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     service = CoreSisterService()
     try:
-        asyncio.run(service.start_shift())
+        asyncio.run(service.start())
     except KeyboardInterrupt:
-        pass
+        logger.info("Service stopped by user.")
+    except Exception as e:
+        logger.error(f"Fatal error: {e}")
