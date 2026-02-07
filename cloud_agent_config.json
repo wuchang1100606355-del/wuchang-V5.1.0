@@ -1,0 +1,32 @@
+{
+  "cloudAgent": {
+    "name": "五常雲端代理程式",
+    "type": "GitHub Copilot",
+    "enabled": true,
+    "endpoint": "https://copilot.github.com",
+    "description": "用於自動化任務處理和代碼協助的雲端代理程式"
+  },
+  "workspace": {
+    "interactive": true,
+    "autoCommit": false,
+    "autoDelegate": false,
+    "notificationsEnabled": true
+  },
+  "approval": {
+    "requireConfirmation": true,
+    "autoApproveMinorChanges": false,
+    "approvalThreshold": "manual"
+  },
+  "delegation": {
+    "defaultAgent": "雲端代理程式",
+    "taskLogPath": "cloud_agent_tasks.json",
+    "maxConcurrentTasks": 5,
+    "taskTimeout": 3600
+  },
+  "git": {
+    "autoStage": true,
+    "autoPush": false,
+    "defaultBranch": "main",
+    "commitMessageTemplate": "[自動提交] {description}"
+  }
+}
