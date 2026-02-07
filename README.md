@@ -1,13 +1,42 @@
-# 華碩路由器 DDNS 連接工具
+# 五常雲端空間工具集 (Wuchang Cloud Workspace Tools)
 
-這個工具用於連接到華碩路由器的 DDNS 地址 `coffeeLofe.asuscomm.com` 或直接使用 IP 地址連接。
+這個工具集提供多種實用工具，包括路由器連接、虛擬磁碟管理和雲端代理程式管理。
 
-## 功能
+## 主要功能
 
+### 1. 雲端代理程式管理 (NEW!)
+- 互動工作區設定
+- 變更認可與委派
+- 雲端代理程式整合
+- 詳細使用說明請參閱 [雲端代理程式使用指南](CLOUD_AGENT_GUIDE.md)
+
+### 2. 華碩路由器 DDNS 連接
 - 測試連接到華碩路由器
 - 支持 HTTPS 連接（使用本機已安裝的證書）
 - 路由器登錄功能
 - 獲取路由器信息
+
+### 3. 虛擬磁碟管理工具 (uts/)
+- BlueStacks 移動到 J 碟
+- 虛擬磁碟清理和壓縮
+- Docker 磁碟壓縮
+- VirtualBox 完整移除
+
+## 快速開始
+
+### 雲端代理程式管理
+
+```powershell
+# 互動模式
+.\start_j_chaing.ps1
+
+# 自動認可變更並委派至雲端代理程式
+.\start_j_chaing.ps1 -AutoApprove -DelegateToCloud
+```
+
+詳細說明請參閱 [CLOUD_AGENT_GUIDE.md](CLOUD_AGENT_GUIDE.md)
+
+### 路由器連接工具
 
 ## 安裝
 

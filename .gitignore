@@ -48,3 +48,7 @@ certs/
 *.crt
 *.cert
 cert_key.tar
+
+# Test files
+test_*.ps1
+*_test.ps1
