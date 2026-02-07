@@ -125,7 +125,7 @@ function Read-LatestChanges {
 }
 
 # 函數：執行命令
-function Invoke-Command {
+function Invoke-WorkspaceCommand {
     Show-Header "執行命令或腳本"
     
     Write-Host "請輸入要執行的命令或腳本路徑：" -ForegroundColor $Colors.Prompt
@@ -136,12 +136,24 @@ function Invoke-Command {
         return
     }
     
+    # 安全性警告
+    Write-Host ""
+    Write-Host "警告: 即將執行命令" -ForegroundColor Yellow
+    Write-Host "命令: $command" -ForegroundColor Yellow
+    $confirm = Read-Host "確認執行此命令? (y/n)"
+    if ($confirm -ne 'y' -and $confirm -ne 'Y') {
+        Write-Host "已取消執行" -ForegroundColor $Colors.Warning
+        return
+    }
+    
     Write-Host ""
     Write-Host "執行中: $command" -ForegroundColor $Colors.Info
     Write-Host ""
     
     try {
         Push-Location $WorkspacePath
+        # 使用 Invoke-Expression 但已經過用戶確認
+        # 僅在用戶明確確認後執行
         Invoke-Expression $command
         Write-Host ""
         Write-Host "✓ 執行完成" -ForegroundColor $Colors.Success
@@ -351,7 +363,7 @@ function Main {
         switch ($choice) {
             "1" { Set-InteractiveWorkspace }
             "2" { Read-LatestChanges }
-            "3" { Invoke-Command }
+            "3" { Invoke-WorkspaceCommand }
             "4" { Approve-Changes }
             "5" { Delegate-ToCloudAgent }
             "6" {
