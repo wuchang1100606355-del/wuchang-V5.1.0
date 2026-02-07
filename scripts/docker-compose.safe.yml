@@ -1,0 +1,38 @@
+# Docker Compose 配置 - 使用本地儲存 + Google Drive 備份
+# ⚠️ 重要：資料庫使用本地儲存，避免版本衝突
+# Google Drive 只用於備份和只讀共享
+
+version: '3.8'
+
+services:
+  wuchang-web:
+    image: odoo:17.0
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      # 使用本地儲存（主要儲存）
+      - C:/wuchang V5.1.0/wuchang-V5.1.0/local_storage/data/odoo:/var/lib/odoo
+      - C:/wuchang V5.1.0/wuchang-V5.1.0/local_storage/uploads:/var/lib/odoo/filestore
+      - C:/wuchang V5.1.0/wuchang-V5.1.0/local_storage/logs/odoo:/var/log/odoo
+      # Google Drive 作為備份目標（只讀）
+      - J:/共用雲端硬碟/五常雲端空間/backups:/backups:ro
+      - ./wuchang_os/addons:/mnt/extra-addons
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    volumes:
+      # ⚠️ 資料庫必須使用本地儲存，不能使用 Google Drive 同步資料夾
+      - C:/wuchang V5.1.0/wuchang-V5.1.0/local_storage/database/data:/var/lib/postgresql/data
+      # 備份目錄（會定期同步到 Google Drive）
+      - C:/wuchang V5.1.0/wuchang-V5.1.0/local_storage/database/backups:/backups
+    restart: unless-stopped
+
+volumes:
+  # 不需要 named volumes，直接使用本地路徑

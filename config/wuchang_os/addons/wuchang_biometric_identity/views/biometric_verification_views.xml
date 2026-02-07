@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 生物辨識驗證記錄列表視圖 -->
+    <record id="view_biometric_verification_tree" model="ir.ui.view">
+        <field name="name">biometric.verification.tree</field>
+        <field name="model">biometric.verification</field>
+        <field name="arch" type="xml">
+            <tree string="生物辨識驗證記錄">
+                <field name="person_name"/>
+                <field name="verification_time"/>
+                <field name="verification_result"/>
+                <field name="verification_method"/>
+                <field name="permission_stage"/>
+                <field name="mac_address"/>
+                <field name="operation_type"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- 生物辨識驗證記錄表單視圖 -->
+    <record id="view_biometric_verification_form" model="ir.ui.view">
+        <field name="name">biometric.verification.form</field>
+        <field name="model">biometric.verification</field>
+        <field name="arch" type="xml">
+            <form string="生物辨識驗證記錄">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="identity_id" options="{'no_create': True}"/>
+                            <field name="person_name" readonly="1"/>
+                            <field name="verification_time"/>
+                            <field name="verification_result"/>
+                        </group>
+                        <group>
+                            <field name="verification_method"/>
+                            <field name="permission_stage"/>
+                            <field name="mac_address"/>
+                            <field name="operation_type"/>
+                        </group>
+                    </group>
+                    
+                    <group string="設備資訊">
+                        <field name="device_info" widget="text" nolabel="1" placeholder="設備資訊（JSON 格式）..."/>
+                    </group>
+                    
+                    <group string="操作詳情">
+                        <field name="operation_details" widget="text" nolabel="1" placeholder="操作詳情（JSON 格式）..."/>
+                    </group>
+                    
+                    <group string="錯誤訊息" invisible="not error_message">
+                        <field name="error_message" widget="text" nolabel="1"/>
+                    </group>
+                    
+                    <group string="備註">
+                        <field name="notes" nolabel="1" placeholder="備註資訊..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- 生物辨識驗證記錄動作 -->
+    <record id="action_biometric_verification" model="ir.actions.act_window">
+        <field name="name">生物辨識驗證記錄</field>
+        <field name="res_model">biometric.verification</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_group_by_verification_time': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                生物辨識驗證記錄
+            </p>
+            <p>
+                記錄所有生物辨識驗證的歷史，包括驗證時間、結果、權限階段等。
+            </p>
+        </field>
+    </record>
+</odoo>

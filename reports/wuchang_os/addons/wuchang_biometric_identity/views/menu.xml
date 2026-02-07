@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 生物辨識身份管理選單 -->
+    <menuitem id="menu_biometric_identity_root"
+              name="生物辨識管理"
+              sequence="100"
+              web_icon="wuchang_biometric_identity,static/description/icon.png"/>
+    
+    <menuitem id="menu_biometric_identity"
+              name="生物辨識身份"
+              parent="menu_biometric_identity_root"
+              action="action_biometric_identity"
+              sequence="10"/>
+    
+    <menuitem id="menu_biometric_verification"
+              name="驗證記錄"
+              parent="menu_biometric_identity_root"
+              action="action_biometric_verification"
+              sequence="20"/>
+</odoo>

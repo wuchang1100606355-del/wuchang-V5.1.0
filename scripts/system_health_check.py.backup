@@ -1,0 +1,334 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+系統健康檢查工具
+檢查所有服務狀態、端口、容器運行狀況
+"""
+
+import os
+import sys
+import subprocess
+import socket
+import json
+import requests
+from pathlib import Path
+from datetime import datetime
+
+PROJECT_ROOT = Path(__file__).parent.parent
+
+def print_header(title):
+    """打印標題"""
+    print("\n" + "=" * 80)
+    print(f"  {title}")
+    print("=" * 80)
+
+def check_port(host, port, timeout=2):
+    """檢查端口是否開放"""
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(timeout)
+        result = sock.connect_ex((host, port))
+        sock.close()
+        return result == 0
+    except Exception:
+        return False
+
+def check_http_service(url, timeout=5):
+    """檢查 HTTP 服務是否響應"""
+    try:
+        response = requests.get(url, timeout=timeout, verify=False, allow_redirects=True)
+        return response.status_code in [200, 301, 302, 404]
+    except Exception:
+        return False
+
+def check_docker_containers():
+    """檢查 Docker 容器狀態"""
+    print_header("Docker 容器狀態檢查")
+    
+    containers = {
+        "wuchang-web": {"port": 8069, "description": "Odoo Web 服務"},
+        "caddy": {"port": 80, "description": "Caddy 反向代理"},
+        "db": {"port": 5432, "description": "PostgreSQL 數據庫"},
+        "ollama": {"port": 11434, "description": "Ollama LLM 服務"},
+    }
+    
+    results = {}
+    
+    try:
+        # 獲取運行中的容器
+        result = subprocess.run(
+            ["docker", "ps", "--format", "{{.Names}}"],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        running_containers = set(result.stdout.strip().split('\n')) if result.stdout.strip() else set()
+        
+        # 檢查每個容器
+        for container_name, info in containers.items():
+            is_running = container_name in running_containers or any(c.startswith(container_name) for c in running_containers)
+            port_open = check_port("localhost", info["port"])
+            
+            status = "✅ 運行中" if is_running else "❌ 未運行"
+            port_status = "✅ 端口開放" if port_open else "❌ 端口關閉"
+            
+            print(f"  {container_name}:")
+            print(f"    狀態: {status}")
+            print(f"    端口 {info['port']}: {port_status}")
+            print(f"    說明: {info['description']}")
+            print()
+            
+            results[container_name] = {
+                "running": is_running,
+                "port_open": port_open,
+                "healthy": is_running and port_open
+            }
+        
+        return results
+    
+    except Exception as e:
+        print(f"  ❌ 檢查失敗: {e}")
+        return {}
+
+def check_odoo_services():
+    """檢查 Odoo 服務"""
+    print_header("Odoo 服務檢查")
+    
+    services = {
+        "http://localhost:8069": "Odoo Web 界面",
+        "http://localhost:8069/health": "Odoo 健康檢查端點",
+    }
+    
+    results = {}
+    
+    for url, description in services.items():
+        try:
+            is_accessible = check_http_service(url)
+            status = "✅ 可訪問" if is_accessible else "❌ 不可訪問"
+            print(f"  {description}: {status}")
+            print(f"    URL: {url}")
+            
+            if is_accessible:
+                try:
+                    response = requests.get(url, timeout=5, verify=False)
+                    print(f"    狀態碼: {response.status_code}")
+                except Exception as e:
+                    print(f"    錯誤: {e}")
+            
+            results[url] = {"accessible": is_accessible}
+            print()
+        except Exception as e:
+            print(f"  ❌ 檢查失敗: {e}")
+            results[url] = {"accessible": False, "error": str(e)}
+    
+    return results
+
+def check_caddy_service():
+    """檢查 Caddy 服務"""
+    print_header("Caddy 反向代理檢查")
+    
+    services = {
+        "http://localhost": "Caddy 主入口",
+        "http://localhost/health": "健康檢查",
+    }
+    
+    results = {}
+    
+    for url, description in services.items():
+        try:
+            is_accessible = check_http_service(url)
+            status = "✅ 可訪問" if is_accessible else "❌ 不可訪問"
+            print(f"  {description}: {status}")
+            print(f"    URL: {url}")
+            results[url] = {"accessible": is_accessible}
+            print()
+        except Exception as e:
+            print(f"  ❌ 檢查失敗: {e}")
+            results[url] = {"accessible": False, "error": str(e)}
+    
+    # 檢查 Caddyfile
+    caddyfile_path = PROJECT_ROOT / "wuchang_os" / "Caddyfile"
+    if caddyfile_path.exists():
+        print(f"  ✅ Caddyfile 存在: {caddyfile_path}")
+    else:
+        print(f"  ❌ Caddyfile 不存在: {caddyfile_path}")
+    
+    return results
+
+def check_ollama_service():
+    """檢查 Ollama 服務"""
+    print_header("Ollama LLM 服務檢查")
+    
+    url = "http://localhost:11434/api/tags"
+    
+    try:
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            models = data.get("models", [])
+            print(f"  ✅ Ollama 服務運行正常")
+            print(f"  可用模型: {len(models)} 個")
+            for model in models[:5]:  # 只顯示前5個
+                print(f"    - {model.get('name', 'Unknown')}")
+            if len(models) > 5:
+                print(f"    ... 還有 {len(models) - 5} 個模型")
+            return {"healthy": True, "models": len(models)}
+        else:
+            print(f"  ❌ Ollama 服務響應異常: 狀態碼 {response.status_code}")
+            return {"healthy": False}
+    except Exception as e:
+        print(f"  ❌ Ollama 服務不可訪問: {e}")
+        return {"healthy": False, "error": str(e)}
+
+def check_dns_configuration():
+    """檢查 DNS 配置"""
+    print_header("DNS 配置檢查")
+    
+    domains = [
+        "wuchang.life",
+        "www.wuchang.life",
+        "odoo.wuchang.life",
+        "status.wuchang.life",
+        "ai.wuchang.life",
+    ]
+    
+    results = {}
+    
+    import socket
+    for domain in domains:
+        try:
+            ip = socket.gethostbyname(domain)
+            print(f"  ✅ {domain}: {ip}")
+            results[domain] = {"resolved": True, "ip": ip}
+        except Exception as e:
+            print(f"  ❌ {domain}: 無法解析 ({e})")
+            results[domain] = {"resolved": False, "error": str(e)}
+    
+    return results
+
+def check_docker_compose_config():
+    """檢查 Docker Compose 配置"""
+    print_header("Docker Compose 配置檢查")
+    
+    compose_file = PROJECT_ROOT / "docker-compose.yml"
+    
+    if not compose_file.exists():
+        print(f"  ❌ docker-compose.yml 不存在")
+        return {"exists": False}
+    
+    print(f"  ✅ docker-compose.yml 存在")
+    
+    # 檢查配置是否有效
+    try:
+        result = subprocess.run(
+            ["docker-compose", "config"],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if result.returncode == 0:
+            print(f"  ✅ Docker Compose 配置有效")
+            return {"exists": True, "valid": True}
+        else:
+            print(f"  ❌ Docker Compose 配置錯誤:")
+            print(f"    {result.stderr}")
+            return {"exists": True, "valid": False, "error": result.stderr}
+    except Exception as e:
+        print(f"  ❌ 檢查失敗: {e}")
+        return {"exists": True, "valid": False, "error": str(e)}
+
+def check_certificates():
+    """檢查 SSL 證書"""
+    print_header("SSL 證書檢查")
+    
+    # Caddy 應該自動管理證書，檢查數據目錄
+    caddy_data = PROJECT_ROOT / "volumes" / "caddy-data"
+    
+    if caddy_data.exists():
+        print(f"  ✅ Caddy 數據目錄存在")
+    else:
+        print(f"  ⚠️  Caddy 數據目錄不存在（首次運行可能正常）")
+    
+    return {"caddy_data_exists": caddy_data.exists()}
+
+def generate_health_report(results):
+    """生成健康檢查報告"""
+    report_file = PROJECT_ROOT / "logs" / f"system_health_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    report_file.parent.mkdir(parents=True, exist_ok=True)
+    
+    report = {
+        "timestamp": datetime.now().isoformat(),
+        "results": results,
+        "summary": {
+            "docker_containers_healthy": all(
+                r.get("healthy", False) for r in results.get("docker", {}).values()
+            ),
+            "odoo_accessible": all(
+                r.get("accessible", False) for r in results.get("odoo", {}).values()
+            ),
+            "caddy_accessible": all(
+                r.get("accessible", False) for r in results.get("caddy", {}).values()
+            ),
+            "ollama_healthy": results.get("ollama", {}).get("healthy", False),
+        }
+    }
+    
+    with open(report_file, 'w', encoding='utf-8') as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+    
+    return report_file, report
+
+def main():
+    """主函數"""
+    print_header("系統健康檢查工具")
+    print(f"執行時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    results = {}
+    
+    # 執行各項檢查
+    results["docker"] = check_docker_containers()
+    results["odoo"] = check_odoo_services()
+    results["caddy"] = check_caddy_service()
+    results["ollama"] = check_ollama_service()
+    results["dns"] = check_dns_configuration()
+    results["docker_compose"] = check_docker_compose_config()
+    results["certificates"] = check_certificates()
+    
+    # 生成報告
+    report_file, report = generate_health_report(results)
+    
+    # 顯示摘要
+    print_header("檢查摘要")
+    
+    summary = report["summary"]
+    
+    print(f"  Docker 容器: {'✅ 正常' if summary['docker_containers_healthy'] else '❌ 異常'}")
+    print(f"  Odoo 服務: {'✅ 可訪問' if summary['odoo_accessible'] else '❌ 不可訪問'}")
+    print(f"  Caddy 服務: {'✅ 可訪問' if summary['caddy_accessible'] else '❌ 不可訪問'}")
+    print(f"  Ollama 服務: {'✅ 正常' if summary['ollama_healthy'] else '❌ 異常'}")
+    print()
+    print(f"📄 詳細報告已保存至: {report_file}")
+    print()
+    
+    # 返回狀態碼
+    all_healthy = all([
+        summary['docker_containers_healthy'],
+        summary['odoo_accessible'],
+        summary['caddy_accessible'],
+        summary['ollama_healthy']
+    ])
+    
+    if all_healthy:
+        print("✅ 系統健康檢查通過")
+        return 0
+    else:
+        print("❌ 系統健康檢查發現問題，請查看詳細報告")
+        return 1
+
+if __name__ == "__main__":
+    # 禁用 SSL 警告
+    import urllib3
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    
+    sys.exit(main())

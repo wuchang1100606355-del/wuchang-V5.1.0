@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  meimei-core:
+    image: deployment-meimei-core
+    container_name: meimei-core
+    volumes:
+      - ./tools:/app/tools
+      - ./config:/app/config
+    command: python /app/tools/store_apprentice.py
+    restart: always
+
+  wuchang-voice-commander:
+    image: voice_service-voice-commander
+    container_name: wuchang-voice-commander
+    devices:
+      - /dev/snd:/dev/snd
+    restart: always
+
+  wuchang-web-node:
+    image: python:3.11-slim
+    container_name: wuchang-web-node
+    volumes:
+      - ./tools:/app/tools
+    command: python /app/tools/web_commander.py
+    restart: always

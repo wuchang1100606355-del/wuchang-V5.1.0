@@ -1,0 +1,2 @@
+New-NetIPAddress -InterfaceAlias '乙太網路 3' -IPAddress '192.168.50.84' -PrefixLength 24 -DefaultGateway '192.168.50.1' -AddressFamily IPv4
+Set-DnsClientServerAddress -InterfaceAlias '乙太網路 3' -ServerAddresses ('192.168.50.1', '8.8.8.8')

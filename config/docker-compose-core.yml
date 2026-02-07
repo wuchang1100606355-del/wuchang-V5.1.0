@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  wuchang-db:
+    image: postgres:15
+    container_name: wuchang-db
+    volumes:
+      - wuchangv510_odoo-db-data:/var/lib/postgresql/data
+    restart: always
+
+  wuchang-pos:
+    image: odoo:17.0
+    container_name: wuchang-pos
+    depends_on:
+      - wuchang-db
+    ports:
+      - '8069:8069'
+    volumes:
+      - wuchangv510_odoo-web-data:/var/lib/odoo
+      - wuchang-odoo-config:/etc/odoo
+      - wuchang-odoo-addons:/mnt/extra-addons
+    restart: always
+
+  wuchang-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: wuchang-tunnel
+    command: tunnel --config /etc/cloudflared/config.yml run
+    volumes:
+      - wuchang-cloudflared-config:/etc/cloudflared
+    restart: always
+
+volumes:
+  wuchangv510_odoo-db-data:
+    external: true
+  wuchangv510_odoo-web-data:
+    external: true
+  wuchang-odoo-config:
+    external: true
+  wuchang-cloudflared-config:
+    external: true
+  wuchang-odoo-addons:
+    external: true

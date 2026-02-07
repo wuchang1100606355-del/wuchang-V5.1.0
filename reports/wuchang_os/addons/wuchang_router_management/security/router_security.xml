@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 路由器管理安全規則 -->
+    <record id="router_router_rule" model="ir.rule">
+        <field name="name">路由器：所有用戶</field>
+        <field name="model_id" ref="wuchang_router_management.model_router_router"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="router_device_rule" model="ir.rule">
+        <field name="name">路由器設備：所有用戶</field>
+        <field name="model_id" ref="wuchang_router_management.model_router_device"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="router_port_forwarding_rule" model="ir.rule">
+        <field name="name">端口轉發：所有用戶</field>
+        <field name="model_id" ref="wuchang_router_management.model_router_port_forwarding"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="server_identity_rule" model="ir.rule">
+        <field name="name">伺服器身份：所有用戶</field>
+        <field name="model_id" ref="wuchang_router_management.model_server_identity"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

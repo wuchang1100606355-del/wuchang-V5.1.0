@@ -1,0 +1,22 @@
+tunnel: 837487dd-1536-43ec-a1c9-ee366a0aa4b7
+credentials-file: /etc/cloudflared-custom/credentials.json
+protocol: http1.1
+
+ingress:
+  - hostname: gemini.wuchang.life
+    service: http://wuchang-open-webui:8080
+  - hostname: gemini.wuchang.org.tw
+    service: http://wuchang-open-webui:8080
+  - hostname: app.wuchang.life
+    service: http://wuchang-pos:8069
+  - hostname: ai.wuchang.life
+    service: http://wuchang-open-webui:8080
+  - hostname: wuchang.life
+    service: http://wuchang-landing:80
+  - hostname: www.wuchang.life
+    service: http://wuchang-landing:80
+  - hostname: app.wuchang.org.tw
+    service: http://wuchang-pos:8069
+  - hostname: ai.wuchang.org.tw
+    service: http://wuchang-open-webui:8080
+  - service: http_status:404

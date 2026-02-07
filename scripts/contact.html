@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="新北市三重區五常社區發展協會 - 聯絡我們">
+    <title>聯絡我們 - 五常社區發展協會</title>
+    <!-- Google Analytics 4 (GA4) - 請替換為實際的測量 ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .contact-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            color: #764ba2;
+            margin: 30px 0 15px 0;
+            font-size: 1.8rem;
+        }
+        
+        .contact-info, .contact-form {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .contact-info p {
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .contact-info a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-group {
+            margin: 20px 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button[type="submit"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+            }
+            
+            .contact-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">首頁</a>
+            <a href="/about.html">關於我們</a>
+            <a href="/mission.html">使命與活動</a>
+            <a href="/contact.html" class="active">聯絡我們</a>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="contact-section">
+            <h1>聯絡我們</h1>
+            
+            <div class="contact-info">
+                <h2>聯絡資訊</h2>
+                <p><strong>電話：</strong><a href="tel:0229866856">0229866856</a></p>
+                <p><strong>電子郵件：</strong><a href="mailto:wuchang110006355@gmail.com">wuchang110006355@gmail.com</a></p>
+                <p><strong>組織信箱：</strong><a href="mailto:admin@wuchang.life">admin@wuchang.life</a></p>
+                <p><strong>服務範圍：</strong>新北市三重區（五常里、五順里、仁忠里）</p>
+            </div>
+            
+            <div class="contact-form">
+                <h2>聯絡表單</h2>
+                <form action="/api/contact" method="POST">
+                    <div class="form-group">
+                        <label for="name">姓名：</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">電子郵件：</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">訊息：</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit">送出</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2026 新北市三重區五常社區發展協會 | Google for Nonprofits 認證組織</p>
+        <p style="margin-top: 0.5rem; opacity: 0.8;">本網站使用 HTTPS 安全連線 | 所有資料處理遵循合規與可追溯原則</p>
+    </footer>
+</body>
+</html>

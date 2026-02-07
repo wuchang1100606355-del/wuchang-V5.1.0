@@ -90,3 +90,6 @@ downloads/
 *.wma
 *.aac
 *.flac
+
+config/google_token.json
+config/google_token.json.bak

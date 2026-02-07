@@ -1,0 +1,37 @@
+# 硬編碼記錄檔案（包含敏感資訊，不得提交到版本控制系統）
+device_registry.json
+storage_change_log.jsonl
+accountable_person_authorizations.json
+encrypted_storage_config.json
+
+# Google API 憑證檔案（敏感資訊，不得提交）
+google_credentials.json
+google_token.json
+
+# 個資相關檔案
+*.encrypted
+pii_*.json
+
+# 系統日誌
+*.log
+*.jsonl
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

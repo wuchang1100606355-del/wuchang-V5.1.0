@@ -1,0 +1,114 @@
+# 網路問題修復任務
+
+## 問題描述
+
+系統目前存在網路連接問題，需要 JULES 協助解決。
+
+## 當前狀態
+
+### ✅ 已正常
+- 控制中心運行中（端口 8788）
+- VPN 連接正常（10.8.0.6 → 10.8.0.1）
+- 本地服務正常
+
+### ❌ 待解決
+- 網路共享路徑不可訪問：`\\HOME-COMMPUT\wuchang V5.1.0`
+- 伺服器端服務無回應
+- 環境變數未完整設定
+
+## 需要檢查的項目
+
+### 1. 網路共享路徑
+- [ ] 確認伺服器名稱：`HOME-COMMPUT` vs `HOME-COMPUTER`
+- [ ] 測試網路連接：`ping HOME-COMMPUT`
+- [ ] 掃描網路上的電腦：`net view`
+- [ ] 確認共享資料夾是否存在
+- [ ] 檢查共享權限設定
+
+### 2. 伺服器端服務
+- [ ] 確認伺服器端控制中心是否運行
+- [ ] 檢查實際應用伺服器 IP（可能不是 10.8.0.1）
+- [ ] 掃描 VPN 網段內的其他 IP（10.8.0.2-10.8.0.10）
+- [ ] 檢查防火牆設定
+- [ ] 測試 TCP 連接（端口 8788, 8799）
+- [ ] 測試 HTTP 健康檢查端點
+
+### 3. 環境變數設定
+- [ ] 設定 `WUCHANG_HEALTH_URL`（伺服器健康檢查 URL）
+- [ ] 設定 `WUCHANG_COPY_TO`（正確的共享路徑）
+- [ ] 設定 `WUCHANG_HUB_URL`（Little J Hub URL）
+- [ ] 設定 `WUCHANG_HUB_TOKEN`（Hub 認證 Token）
+
+## 修復步驟
+
+### 步驟 1：確認網路共享
+```powershell
+# 測試伺服器連接
+ping HOME-COMMPUT
+ping HOME-COMPUTER
+
+# 查看網路上的電腦
+net view
+
+# 嘗試訪問共享
+dir \HOME-COMMPUT\wuchang*
+dir \HOME-COMPUTER\wuchang*
+```
+
+### 步驟 2：映射網路磁碟機
+```powershell
+# 取消現有映射（如果有）
+net use Z: /delete
+
+# 使用認證資訊映射
+net use Z: \正確路徑\wuchang V5.1.0 /user:帳號 密碼 /persistent:yes
+
+# 驗證映射
+Test-Path Z:dir Z:```
+
+### 步驟 3：設定環境變數
+```powershell
+# 設定健康檢查 URL
+[System.Environment]::SetEnvironmentVariable("WUCHANG_HEALTH_URL", "https://coffeeLofe.asuscomm.com:8443/health", "User")
+
+# 設定共享路徑
+[System.Environment]::SetEnvironmentVariable("WUCHANG_COPY_TO", "Z:", "User")
+
+# 設定 Hub URL（如果需要）
+[System.Environment]::SetEnvironmentVariable("WUCHANG_HUB_URL", "http://10.8.0.1:8799", "User")
+```
+
+### 步驟 4：測試連接
+```powershell
+# 測試健康檢查
+Invoke-WebRequest -Uri $env:WUCHANG_HEALTH_URL -UseBasicParsing
+
+# 測試檔案同步
+python check_server_connection.py
+```
+
+## 預期結果
+
+- ✅ 網路共享路徑可訪問
+- ✅ 伺服器端服務可正常連接
+- ✅ 環境變數正確設定
+- ✅ 檔案同步功能正常
+
+## 相關檔案
+
+- `network_interconnection_config.json` - 網路配置
+- `check_server_connection.py` - 連接檢查工具
+- `fix_network_drive.py` - 網路磁碟機修復工具
+- `diagnose_network_share.py` - 網路共享診斷工具
+
+## 優先級
+
+**高優先級** - 影響檔案同步和系統整合
+
+## 備註
+
+請 JULES 協助：
+1. 確認正確的伺服器名稱和共享路徑
+2. 檢查伺服器端服務狀態
+3. 提供正確的連接資訊
+4. 協助完成環境變數設定

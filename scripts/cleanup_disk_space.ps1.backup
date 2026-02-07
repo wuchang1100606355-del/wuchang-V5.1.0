@@ -1,0 +1,162 @@
+# 清理系統地端檔案夾空間
+# 用途：清理不需要的快取和備份檔案
+
+param(
+    [switch]$DryRun = $false,
+    [switch]$CleanPyCache = $false,
+    [switch]$CleanNodeModules = $false,
+    [switch]$CleanMigrationPack = $false,
+    [switch]$CleanDownloads = $false
+)
+
+Write-Host "`n=== 系統地端檔案夾清理工具 ===" -ForegroundColor Cyan
+Write-Host ""
+
+if ($DryRun) {
+    Write-Host "⚠️  乾跑模式（Dry Run）- 不會實際刪除檔案" -ForegroundColor Yellow
+    Write-Host ""
+}
+
+$totalFreed = 0
+
+# 清理 Python 快取
+if ($CleanPyCache) {
+    Write-Host "=== 清理 Python 快取 ===" -ForegroundColor Yellow
+    $pycacheDirs = Get-ChildItem -Path "." -Recurse -Directory -Filter "__pycache__" -ErrorAction SilentlyContinue
+    $pycFiles = Get-ChildItem -Path "." -Recurse -File -Filter "*.pyc" -ErrorAction SilentlyContinue
+    
+    if ($pycacheDirs -or $pycFiles) {
+        $size = 0
+        foreach ($dir in $pycacheDirs) {
+            $size += (Get-ChildItem $dir.FullName -Recurse -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum
+        }
+        foreach ($file in $pycFiles) {
+            $size += $file.Length
+        }
+        
+        Write-Host "找到 $($pycacheDirs.Count) 個 __pycache__ 資料夾和 $($pycFiles.Count) 個 .pyc 檔案" -ForegroundColor White
+        Write-Host "總大小: $([math]::Round($size/1MB, 2)) MB" -ForegroundColor White
+        
+        if (-not $DryRun) {
+            foreach ($dir in $pycacheDirs) {
+                Remove-Item -Path $dir.FullName -Recurse -Force -ErrorAction SilentlyContinue
+            }
+            foreach ($file in $pycFiles) {
+                Remove-Item -Path $file.FullName -Force -ErrorAction SilentlyContinue
+            }
+            Write-Host "✅ 已清理 Python 快取" -ForegroundColor Green
+        }
+        $totalFreed += $size
+    } else {
+        Write-Host "沒有找到 Python 快取檔案" -ForegroundColor Gray
+    }
+    Write-Host ""
+}
+
+# 清理 node_modules
+if ($CleanNodeModules) {
+    Write-Host "=== 清理 node_modules ===" -ForegroundColor Yellow
+    $nodeModulesDirs = Get-ChildItem -Path "." -Recurse -Directory -Filter "node_modules" -ErrorAction SilentlyContinue
+    
+    if ($nodeModulesDirs) {
+        $size = 0
+        foreach ($dir in $nodeModulesDirs) {
+            $size += (Get-ChildItem $dir.FullName -Recurse -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum
+        }
+        
+        Write-Host "找到 $($nodeModulesDirs.Count) 個 node_modules 資料夾" -ForegroundColor White
+        Write-Host "總大小: $([math]::Round($size/1MB, 2)) MB ($([math]::Round($size/1GB, 2)) GB)" -ForegroundColor White
+        
+        $confirm = Read-Host "確認要刪除所有 node_modules？(Y/N)"
+        if ($confirm -eq "Y" -or $confirm -eq "y") {
+            if (-not $DryRun) {
+                foreach ($dir in $nodeModulesDirs) {
+                    Remove-Item -Path $dir.FullName -Recurse -Force -ErrorAction SilentlyContinue
+                }
+                Write-Host "✅ 已清理 node_modules" -ForegroundColor Green
+            }
+            $totalFreed += $size
+        } else {
+            Write-Host "已取消清理 node_modules" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "沒有找到 node_modules 資料夾" -ForegroundColor Gray
+    }
+    Write-Host ""
+}
+
+# 清理 migration_pack
+if ($CleanMigrationPack) {
+    Write-Host "=== 清理 migration_pack ===" -ForegroundColor Yellow
+    if (Test-Path "migration_pack") {
+        $size = (Get-ChildItem "migration_pack" -Recurse -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum
+        
+        Write-Host "migration_pack 大小: $([math]::Round($size/1MB, 2)) MB ($([math]::Round($size/1GB, 2)) GB)" -ForegroundColor White
+        
+        $confirm = Read-Host "確認要刪除 migration_pack？(Y/N)"
+        if ($confirm -eq "Y" -or $confirm -eq "y") {
+            if (-not $DryRun) {
+                Remove-Item -Path "migration_pack" -Recurse -Force -ErrorAction SilentlyContinue
+                Write-Host "✅ 已清理 migration_pack" -ForegroundColor Green
+            }
+            $totalFreed += $size
+        } else {
+            Write-Host "已取消清理 migration_pack" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "沒有找到 migration_pack 資料夾" -ForegroundColor Gray
+    }
+    Write-Host ""
+}
+
+# 清理 downloads 中的大檔案
+if ($CleanDownloads) {
+    Write-Host "=== 清理 downloads 資料夾 ===" -ForegroundColor Yellow
+    if (Test-Path "downloads") {
+        $largeFiles = Get-ChildItem -Path "downloads" -File -ErrorAction SilentlyContinue | 
+            Where-Object { $_.Length -gt 50MB } | 
+            Sort-Object Length -Descending
+        
+        if ($largeFiles) {
+            Write-Host "找到以下大檔案：" -ForegroundColor White
+            foreach ($file in $largeFiles) {
+                Write-Host "  $($file.Name): $([math]::Round($file.Length/1MB, 2)) MB" -ForegroundColor Gray
+            }
+            
+            $confirm = Read-Host "`n確認要刪除這些大檔案？(Y/N)"
+            if ($confirm -eq "Y" -or $confirm -eq "y") {
+                $size = 0
+                foreach ($file in $largeFiles) {
+                    $size += $file.Length
+                    if (-not $DryRun) {
+                        Remove-Item -Path $file.FullName -Force -ErrorAction SilentlyContinue
+                    }
+                }
+                Write-Host "✅ 已清理 downloads 中的大檔案" -ForegroundColor Green
+                $totalFreed += $size
+            } else {
+                Write-Host "已取消清理 downloads" -ForegroundColor Yellow
+            }
+        } else {
+            Write-Host "沒有找到大檔案" -ForegroundColor Gray
+        }
+    } else {
+        Write-Host "沒有找到 downloads 資料夾" -ForegroundColor Gray
+    }
+    Write-Host ""
+}
+
+# 總結
+Write-Host "=== 清理總結 ===" -ForegroundColor Cyan
+if ($DryRun) {
+    Write-Host "乾跑模式：預計可釋放 $([math]::Round($totalFreed/1MB, 2)) MB ($([math]::Round($totalFreed/1GB, 2)) GB)" -ForegroundColor Yellow
+} else {
+    Write-Host "已釋放空間: $([math]::Round($totalFreed/1MB, 2)) MB ($([math]::Round($totalFreed/1GB, 2)) GB)" -ForegroundColor Green
+}
+
+Write-Host "`n使用方式：" -ForegroundColor Cyan
+Write-Host "  .\scripts\cleanup_disk_space.ps1 -CleanPyCache                    # 清理 Python 快取" -ForegroundColor White
+Write-Host "  .\scripts\cleanup_disk_space.ps1 -CleanNodeModules               # 清理 node_modules" -ForegroundColor White
+Write-Host "  .\scripts\cleanup_disk_space.ps1 -CleanMigrationPack            # 清理 migration_pack" -ForegroundColor White
+Write-Host "  .\scripts\cleanup_disk_space.ps1 -CleanDownloads                # 清理 downloads 大檔案" -ForegroundColor White
+Write-Host "  .\scripts\cleanup_disk_space.ps1 -DryRun -CleanPyCache          # 乾跑模式（預覽）" -ForegroundColor White

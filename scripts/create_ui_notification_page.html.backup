@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="30">
+    <title>小J 設計方案通知</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #00ff00;
+            font-family: 'Courier New', 'Microsoft JhengHei', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .notification-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ff00;
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 0, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(0, 255, 0, 0.8); }
+        }
+        
+        .notification-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #00ff00;
+        }
+        
+        .notification-header h1 {
+            font-size: 2rem;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            margin-bottom: 0.5rem;
+        }
+        
+        .notification-header .from {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .notification-content {
+            margin: 2rem 0;
+            line-height: 1.8;
+        }
+        
+        .notification-content p {
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+        
+        .notification-content .highlight {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        
+        .links {
+            margin: 2rem 0;
+        }
+        
+        .link-button {
+            display: block;
+            background: transparent;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            text-align: center;
+            margin: 1rem 0;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .link-button:hover {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 20px #00ff00;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .timestamp {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-box">
+        <div class="notification-header">
+            <h1>📊 設計方案報告通知</h1>
+            <div class="from">來自：Little J (小j)</div>
+        </div>
+        
+        <div class="notification-content">
+            <p>親愛的 UI 端設備：</p>
+            <p>我已完成 <span class="highlight">小J 專用指揮通道 UI</span> 的設計方案。</p>
+            <p>設計方案報告已準備就緒，您可以通過以下方式查看：</p>
+        </div>
+        
+        <div class="links">
+            <a href="http://192.168.50.249/design_report" class="link-button" target="_blank">
+                📄 查看設計方案報告
+            </a>
+            <a href="http://192.168.50.249/command_center" class="link-button" target="_blank">
+                🎮 訪問指揮通道 UI
+            </a>
+        </div>
+        
+        <div class="notification-content">
+            <p><strong>訪問信息：</strong></p>
+            <p>• 報告地址：<code>http://192.168.50.249/design_report</code></p>
+            <p>• 指揮通道：<code>http://192.168.50.249/command_center</code></p>
+            <p>• 訪問代碼：<code class="highlight">J2025</code></p>
+        </div>
+        
+        <div class="notification-content">
+            <p><strong>功能特點：</strong></p>
+            <ul style="color: #ccc; margin-left: 2rem; line-height: 2;">
+                <li>系統狀態實時監控</li>
+                <li>網絡狀態顯示</li>
+                <li>快速操作按鈕</li>
+                <li>命令控制台</li>
+                <li>外網可訪問（通過 Cloudflare 隧道）</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>此頁面每 30 秒自動刷新</p>
+            <p>Wuchang OS V5.1.0 | Little J (小j)</p>
+        </div>
+        
+        <div class="timestamp" id="timestamp"></div>
+    </div>
+    
+    <script>
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                `通知時間: ${now.toLocaleString('zh-TW')}`;
+        }
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+    </script>
+</body>
+</html>

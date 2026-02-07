@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 生物辨識身份記錄規則 -->
+    <record id="biometric_identity_rule" model="ir.rule">
+        <field name="name">生物辨識身份：系統管理員可管理所有記錄</field>
+        <field name="model_id" ref="model_biometric_identity"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+    
+    <!-- 生物辨識驗證記錄規則 -->
+    <record id="biometric_verification_rule" model="ir.rule">
+        <field name="name">生物辨識驗證記錄：系統管理員可查看所有記錄</field>
+        <field name="model_id" ref="model_biometric_verification"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+</odoo>

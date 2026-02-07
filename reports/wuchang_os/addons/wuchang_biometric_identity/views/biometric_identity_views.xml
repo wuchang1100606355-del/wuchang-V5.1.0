@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 生物辨識身份列表視圖 -->
+    <record id="view_biometric_identity_tree" model="ir.ui.view">
+        <field name="name">biometric.identity.tree</field>
+        <field name="model">biometric.identity</field>
+        <field name="arch" type="xml">
+            <tree string="生物辨識身份">
+                <field name="person_name"/>
+                <field name="role"/>
+                <field name="is_founder"/>
+                <field name="accountability_priority"/>
+                <field name="biometric_type"/>
+                <field name="last_verified"/>
+                <field name="verification_count"/>
+                <field name="is_active"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- 生物辨識身份表單視圖 -->
+    <record id="view_biometric_identity_form" model="ir.ui.view">
+        <field name="name">biometric.identity.form</field>
+        <field name="model">biometric.identity</field>
+        <field name="arch" type="xml">
+            <form string="生物辨識身份">
+                <header>
+                    <button name="verify_biometric" string="驗證生物辨識" type="object" class="btn-primary"/>
+                    <field name="is_active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="person_name" required="1"/>
+                            <field name="id_number"/>
+                            <field name="role"/>
+                            <field name="organization"/>
+                        </group>
+                        <group>
+                            <field name="is_founder"/>
+                            <field name="accountability_priority"/>
+                            <field name="design_responsibility"/>
+                            <field name="usage_responsibility"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="生物辨識資料" name="biometric_data">
+                            <group>
+                                <field name="biometric_enabled"/>
+                                <field name="biometric_type"/>
+                                <field name="biometric_data" filename="biometric_data_filename" widget="binary"/>
+                                <field name="biometric_data_filename" invisible="1"/>
+                                <field name="biometric_hash"/>
+                            </group>
+                            <group string="說明">
+                                <div class="alert alert-info" role="alert">
+                                    <p><strong>生物辨識資料記錄說明：</strong></p>
+                                    <ul>
+                                        <li>用於階段三權限認證（系統創辦人）</li>
+                                        <li>生物辨識資料會加密儲存</li>
+                                        <li>支援人臉識別、指紋、虹膜、聲紋等多種類型</li>
+                                        <li>所有驗證記錄都會被完整記錄</li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+                        
+                        <page string="驗證資訊" name="verification_info">
+                            <group>
+                                <field name="mac_address"/>
+                                <field name="device_info" widget="text"/>
+                                <field name="last_verified"/>
+                                <field name="verification_count"/>
+                            </group>
+                        </page>
+                        
+                        <page string="驗證記錄" name="verification_history">
+                            <field name="verification_ids" nolabel="1">
+                                <tree>
+                                    <field name="verification_time"/>
+                                    <field name="verification_result"/>
+                                    <field name="verification_method"/>
+                                    <field name="permission_stage"/>
+                                    <field name="mac_address"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="備註" name="notes">
+                            <field name="notes" nolabel="1" placeholder="備註資訊..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- 生物辨識身份動作 -->
+    <record id="action_biometric_identity" model="ir.actions.act_window">
+        <field name="name">生物辨識身份管理</field>
+        <field name="res_model">biometric.identity</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'default_is_active': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                建立生物辨識身份記錄
+            </p>
+            <p>
+                用於階段三權限認證的生物辨識身份管理。
+            </p>
+        </field>
+    </record>
+</odoo>
