@@ -1,21 +1,51 @@
-# 華碩路由器 DDNS 連接工具
+# 五常雲端空間系統 v5.1.0
+# Wu Chang Cloud System v5.1.0
 
-這個工具用於連接到華碩路由器的 DDNS 地址 `coffeeLofe.asuscomm.com` 或直接使用 IP 地址連接。
+這個專案包含華碩路由器管理工具和互動式工作區管理系統。
 
-## 功能
+This project contains Asus router management tools and an interactive workspace management system.
 
+## 主要功能 (Main Features)
+
+### 1. 華碩路由器 DDNS 連接工具
 - 測試連接到華碩路由器
 - 支持 HTTPS 連接（使用本機已安裝的證書）
 - 路由器登錄功能
 - 獲取路由器信息
 
-## 安裝
+### 2. 互動式工作區管理 (NEW!)
+- 工作區初始化和狀態管理
+- Git 變更認可和提交
+- 雲端代理程式委派
+- 自定義命令執行
+- 詳細文檔請參閱：[START_J_CHAING_GUIDE.md](START_J_CHAING_GUIDE.md)
 
+## 安裝 (Installation)
+
+### Python 工具
 ```bash
 pip install -r requirements.txt
 ```
 
-## 使用方法
+### PowerShell 工具
+Windows 系統已內建 PowerShell，無需額外安裝。
+
+## 快速開始 (Quick Start)
+
+### 互動式工作區管理
+```powershell
+# 啟動互動式選單
+.\start_j_chaing.ps1
+
+# 或直接執行操作
+.\start_j_chaing.ps1 -Action init      # 初始化工作區
+.\start_j_chaing.ps1 -Action read      # 讀取變更
+.\start_j_chaing.ps1 -Action both      # 認可並委派到雲端
+```
+
+完整使用指南：[START_J_CHAING_GUIDE.md](START_J_CHAING_GUIDE.md)
+
+## 使用方法 (Usage)
 
 ### 1. 基本連接測試
 
