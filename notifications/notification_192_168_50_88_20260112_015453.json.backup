@@ -1,0 +1,26 @@
+{
+  "title": "小J 指揮通道設計方案報告",
+  "message": "專用指揮通道 UI 設計方案已完成，請查看報告。",
+  "timestamp": "2026-01-12T01:54:52.848232",
+  "report_url": "http://192.168.50.249/design_report",
+  "command_center_url": "http://192.168.50.249/command_center",
+  "access_code": "J2025",
+  "details": {
+    "designer": "Little J (小j)",
+    "completion_date": "2026-01-07",
+    "status": "設計完成，等待部署",
+    "features": [
+      "系統狀態監控",
+      "網絡狀態顯示",
+      "快速操作按鈕",
+      "命令控制台"
+    ]
+  },
+  "target_device": {
+    "ip": "192.168.50.88",
+    "name": "POS-PC.wuchang.life",
+    "type": "POS 系統電腦",
+    "ports": []
+  },
+  "notification_method": "file"
+}

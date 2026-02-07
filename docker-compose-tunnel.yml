@@ -1,0 +1,23 @@
+services:
+  wuchang-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: wuchang-tunnel
+    restart: always
+    command: tunnel run 837487dd-1536-43ec-a1c9-ee366a0aa4b7
+    environment:
+      - TUNNEL_TRANSPORT_PROTOCOL=http2
+    volumes:
+      - wuchang_cloudflared_config:/etc/cloudflared
+    networks:
+      - wuchangv510_default
+      - wuchangv510_wuchang-net
+
+networks:
+  wuchangv510_default:
+    external: true
+  wuchangv510_wuchang-net:
+    external: true
+
+volumes:
+  wuchang_cloudflared_config:
+    external: true

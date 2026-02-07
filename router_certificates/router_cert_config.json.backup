@@ -1,0 +1,22 @@
+{
+  "router_info": {
+    "ip": "192.168.50.1",
+    "admin_url": "http://192.168.50.1",
+    "cert_endpoint": "http://www.asusrouter.com/cert_key.tar"
+  },
+  "certificate_paths": {
+    "cert_dir": "C:\\wuchang V5.1.0\\router_certificates",
+    "suggested_cert_path": "router_certificates\\server.crt",
+    "suggested_key_path": "router_certificates\\server.key"
+  },
+  "caddy_config": {
+    "method": "auto_https",
+    "comment": "Caddy 已配置自動 HTTPS，無需手動配置路由器證書",
+    "alternative": "如果需要在 Caddy 中使用路由器證書，可以配置 tls 指令"
+  },
+  "router_config": {
+    "enable_https": true,
+    "upload_certificate": "通過管理界面上傳證書",
+    "certificate_location": "系統管理 → 系統設定 → 憑證設定"
+  }
+}

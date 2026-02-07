@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 公文範本資料 -->
+    <data noupdate="1">
+        
+        <!-- 公告範本（社區發展協會專用） -->
+        <record id="template_announcement" model="wuchang.document.template">
+            <field name="name">公告範本</field>
+            <field name="document_type">announcement</field>
+            <field name="organization_type">association</field>
+            <field name="organization">新北市三重區五常社區發展協會</field>
+            <field name="template_content" type="html">
+                <![CDATA[
+<div style="font-family: 新細明體, PMingLiU, serif; line-height: 1.8; padding: 20px;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">{organization}</h2>
+        <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">公　　　告</h3>
+        <p style="font-size: 16px; margin: 0;">公告編號：{doc_number}</p>
+        <p style="font-size: 16px; margin: 0;">中華民國 {year} 年 {month} 月 {day} 日</p>
+    </div>
+    
+    <div style="margin: 30px 0;">
+        <p style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">主旨：{subject}</p>
+        
+        <div style="margin: 20px 0; text-align: justify;">
+            <p style="margin-bottom: 15px; text-indent: 2em;">說明：</p>
+            {content}
+        </div>
+        
+        <div style="margin: 30px 0;">
+            <p style="margin-bottom: 10px;">此致</p>
+            <p style="margin-bottom: 10px;">{recipient}</p>
+        </div>
+    </div>
+    
+    <div style="text-align: right; margin-top: 50px;">
+        <p style="margin-bottom: 5px;">{organization}</p>
+        <p style="margin-bottom: 5px;">總幹事 {signer_name}</p>
+        <p>{sign_date}</p>
+    </div>
+</div>
+                ]]>
+            </field>
+        </record>
+
+        <!-- 通知範本 -->
+        <record id="template_notice" model="wuchang.document.template">
+            <field name="name">通知範本</field>
+            <field name="document_type">notice</field>
+            <field name="organization">新北市三重區五常社區發展協會</field>
+            <field name="template_content" type="html">
+                <![CDATA[
+<div style="font-family: 新細明體, PMingLiU, serif; line-height: 1.8; padding: 20px;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">{organization}</h2>
+        <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">通　　　知</h3>
+        <p style="font-size: 16px; margin: 0;">通知編號：{doc_number}</p>
+        <p style="font-size: 16px; margin: 0;">中華民國 {year} 年 {month} 月 {day} 日</p>
+    </div>
+    
+    <div style="margin: 30px 0;">
+        <p style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">主旨：{subject}</p>
+        
+        <div style="margin: 20px 0; text-align: justify;">
+            <p style="margin-bottom: 15px;">一、依據：{basis}</p>
+            <p style="margin-bottom: 15px;">二、說明：</p>
+            <div style="margin-left: 2em;">
+                {content}
+            </div>
+            <p style="margin-bottom: 15px; margin-top: 15px;">三、辦理事項：</p>
+            <div style="margin-left: 2em;">
+                {actions}
+            </div>
+        </div>
+        
+        <div style="margin: 30px 0;">
+            <p style="margin-bottom: 10px;">此致</p>
+            <p style="margin-bottom: 10px;">{recipient}</p>
+        </div>
+    </div>
+    
+    <div style="text-align: right; margin-top: 50px;">
+        <p style="margin-bottom: 5px;">{organization}</p>
+        <p style="margin-bottom: 5px;">總幹事 {signer_name}</p>
+        <p>{sign_date}</p>
+    </div>
+</div>
+                ]]>
+            </field>
+        </record>
+
+        <!-- 決議範本 -->
+        <record id="template_resolution" model="wuchang.document.template">
+            <field name="name">決議範本</field>
+            <field name="document_type">resolution</field>
+            <field name="organization">新北市三重區五常社區發展協會</field>
+            <field name="template_content" type="html">
+                <![CDATA[
+<div style="font-family: 新細明體, PMingLiU, serif; line-height: 1.8; padding: 20px;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">{organization}</h2>
+        <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">會　　議　　決　　議</h3>
+        <p style="font-size: 16px; margin: 0;">會議名稱：{meeting_name}</p>
+        <p style="font-size: 16px; margin: 0;">會議時間：中華民國 {year} 年 {month} 月 {day} 日 {time}</p>
+        <p style="font-size: 16px; margin: 0;">會議地點：{location}</p>
+        <p style="font-size: 16px; margin: 0;">決議編號：{doc_number}</p>
+    </div>
+    
+    <div style="margin: 30px 0;">
+        <p style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">案由：{subject}</p>
+        
+        <div style="margin: 20px 0; text-align: justify;">
+            <p style="margin-bottom: 15px;">說明：</p>
+            <div style="margin-left: 2em;">
+                {content}
+            </div>
+            
+            <p style="margin-bottom: 15px; margin-top: 20px;">決議：</p>
+            <div style="margin-left: 2em; font-weight: bold;">
+                {resolution}
+            </div>
+            
+            <p style="margin-bottom: 15px; margin-top: 20px;">執行事項：</p>
+            <div style="margin-left: 2em;">
+                {actions}
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 50px;">
+        <p style="margin-bottom: 15px;">出席人員：{attendees}</p>
+        <p style="margin-bottom: 15px;">主席：{chairperson}</p>
+        <p style="margin-bottom: 15px;">記錄：{recorder}</p>
+    </div>
+    
+    <div style="text-align: right; margin-top: 30px;">
+        <p style="margin-bottom: 5px;">{organization}</p>
+        <p style="margin-bottom: 5px;">總幹事 {signer_name}</p>
+        <p>{sign_date}</p>
+    </div>
+</div>
+                ]]>
+            </field>
+        </record>
+
+        <!-- 報告範本 -->
+        <record id="template_report" model="wuchang.document.template">
+            <field name="name">報告範本</field>
+            <field name="document_type">report</field>
+            <field name="organization">新北市三重區五常社區發展協會</field>
+            <field name="template_content" type="html">
+                <![CDATA[
+<div style="font-family: 新細明體, PMingLiU, serif; line-height: 1.8; padding: 20px;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">{organization}</h2>
+        <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">報　　　告</h3>
+        <p style="font-size: 16px; margin: 0;">報告編號：{doc_number}</p>
+        <p style="font-size: 16px; margin: 0;">中華民國 {year} 年 {month} 月 {day} 日</p>
+    </div>
+    
+    <div style="margin: 30px 0;">
+        <p style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">報告事項：{subject}</p>
+        
+        <div style="margin: 20px 0; text-align: justify;">
+            <p style="margin-bottom: 15px;">一、緣起：</p>
+            <div style="margin-left: 2em;">
+                {background}
+            </div>
+            
+            <p style="margin-bottom: 15px; margin-top: 15px;">二、執行內容：</p>
+            <div style="margin-left: 2em;">
+                {content}
+            </div>
+            
+            <p style="margin-bottom: 15px; margin-top: 15px;">三、執行成果：</p>
+            <div style="margin-left: 2em;">
+                {results}
+            </div>
+            
+            <p style="margin-bottom: 15px; margin-top: 15px;">四、建議事項：</p>
+            <div style="margin-left: 2em;">
+                {recommendations}
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: right; margin-top: 50px;">
+        <p style="margin-bottom: 5px;">{organization}</p>
+        <p style="margin-bottom: 5px;">總幹事 {signer_name}</p>
+        <p>{sign_date}</p>
+    </div>
+</div>
+                ]]>
+            </field>
+        </record>
+
+        <!-- 授權書範本（基於實際檔案格式） -->
+        <record id="template_authorization" model="wuchang.document.template">
+            <field name="name">授權書範本</field>
+            <field name="document_type">authorization</field>
+            <field name="organization">新北市三重區五常社區發展協會</field>
+            <field name="template_content" type="html">
+                <![CDATA[
+<div style="font-family: 新細明體, PMingLiU, serif; line-height: 1.8; padding: 20px;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">{organization}</h2>
+        <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">授權書</h3>
+        <p style="font-size: 16px; margin: 0;">文件編號：{doc_number}</p>
+        <p style="font-size: 16px; margin: 0;">生效日期：中華民國 {year} 年 {month} 月 {day} 日</p>
+    </div>
+    
+    <div style="margin: 30px 0; text-align: justify;">
+        <p style="margin-bottom: 15px; font-weight: bold;">1. 授權宗旨</p>
+        <div style="margin-left: 2em; margin-bottom: 20px;">
+            {purpose}
+        </div>
+        
+        <p style="margin-bottom: 15px; font-weight: bold;">2. 授權對象與身分綁定</p>
+        <div style="margin-left: 2em; margin-bottom: 20px;">
+            <p style="margin-bottom: 10px;">授權對象：{authorized_person}</p>
+            <p style="margin-bottom: 10px;">操作帳號：{account_email}</p>
+            <p>{identity_definition}</p>
+        </div>
+        
+        <p style="margin-bottom: 15px; font-weight: bold;">3. 權限範圍</p>
+        <div style="margin-left: 2em; margin-bottom: 20px;">
+            {scope}
+        </div>
+        
+        <p style="margin-bottom: 15px; font-weight: bold;">4. 責任與承諾</p>
+        <div style="margin-left: 2em; margin-bottom: 20px;">
+            {responsibilities}
+        </div>
+    </div>
+    
+    <div style="margin-top: 50px;">
+        <p style="margin-bottom: 10px;">授權人：{organization}</p>
+        <p style="margin-bottom: 10px;">總幹事 {authorizer_name}</p>
+        <p style="margin-bottom: 30px;">{sign_date}</p>
+        
+        <p style="margin-bottom: 10px;">被授權人：{authorized_person}</p>
+        <p>{authorized_sign_date}</p>
+    </div>
+</div>
+                ]]>
+            </field>
+        </record>
+
+    </data>
+</odoo>

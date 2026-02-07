@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五常社區 3D 空間邏輯系統</title>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.114/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.114/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        #cesiumContainer { width: 100%; height: 100vh; }
+        
+        /* UI Overlay */
+        .ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            max-width: 300px;
+        }
+        
+        h1 { margin: 0 0 10px 0; font-size: 1.5em; color: #4db8ff; }
+        p { margin: 5px 0; font-size: 0.9em; color: #ddd; }
+        
+        .stat-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+        }
+        
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.2em; font-weight: bold; color: #ff9900; }
+        .stat-label { font-size: 0.7em; color: #aaa; }
+        
+        button {
+            background: linear-gradient(45deg, #0066cc, #0099ff);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 2px 8px rgba(0,153,255,0.4); }
+
+        /* Loading Screen */
+        #loading {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            color: #4db8ff;
+            font-size: 1.5em;
+            transition: opacity 1s;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">正在載入五常 3D 空間邏輯...</div>
+    <div id="cesiumContainer"></div>
+    
+    <div class="ui-overlay">
+        <h1>五常社區空間邏輯</h1>
+        <p>Wuchang Community Spatial Logic</p>
+        <p>目前視角：<span id="location-name">全域概覽</span></p>
+        
+        <div class="stat-box">
+            <div class="stat-item">
+                <div class="stat-value">3</div>
+                <div class="stat-label">里別</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">856</div>
+                <div class="stat-label">建築</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">Live</div>
+                <div class="stat-label">狀態</div>
+            </div>
+        </div>
+        
+        <button onclick="flyToHome()">回到五常里</button>
+        <button onclick="toggleBuildings()">切換建築模型</button>
+        <button class="cesium-button" onclick="loadPropertyPoints()">顯示物業巡檢點</button>
+        <div id="info-panel" style="display:none; position:absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.8); color: white; padding: 15px; border-radius: 8px; max-width: 400px; font-family: 'Microsoft JhengHei', sans-serif;">
+            <h3 id="panel-title" style="margin-top:0; color: #4db8ff;">資訊面板</h3>
+            <div id="panel-content"></div>
+            <button id="analyze-btn" class="cesium-button" style="margin-top:10px; width:100%; display:none;" onclick="analyzeCurrentPoint()">✨ AI 影像分析</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSelectedPoint = null;
+
+        // 初始化 Cesium
+        // Note: In production, use your own Access Token from ion.cesium.com
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmZDQ1...'; // Use default or prompt user
+
+        const viewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider: Cesium.createWorldTerrain(),
+            animation: false,
+            timeline: false,
+            baseLayerPicker: false,
+            fullscreenButton: false,
+            geocoder: false,
+            homeButton: false,
+            infoBox: true,
+            sceneModePicker: false,
+            selectionIndicator: true,
+            navigationHelpButton: false
+        });
+
+        // 去除 Logo (僅供開發測試，發布需遵守授權)
+        viewer.cesiumWidget.creditContainer.style.display = "none";
+
+        // 預設飛向五常里 (中山區)
+        const wuchangLocation = {
+            lat: 25.0600,
+            lng: 121.5405,
+            height: 1500,
+            heading: 0,
+            pitch: -45
+        };
+
+        function flyToHome() {
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(
+                    wuchangLocation.lng, 
+                    wuchangLocation.lat, 
+                    wuchangLocation.height
+                ),
+                orientation: {
+                    heading: Cesium.Math.toRadians(wuchangLocation.heading),
+                    pitch: Cesium.Math.toRadians(wuchangLocation.pitch),
+                    roll: 0.0
+                },
+                duration: 2
+            });
+            document.getElementById('location-name').innerText = "五常里中心";
+        }
+
+        // 模擬載入完成
+        setTimeout(() => {
+            document.getElementById('loading').style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                flyToHome();
+            }, 1000);
+        }, 1500);
+
+        // 添加 3D 建築 (OpenStreetMap)
+        const buildingsTileset = viewer.scene.primitives.add(Cesium.createOsmBuildings());
+
+        function toggleBuildings() {
+            buildingsTileset.show = !buildingsTileset.show;
+        }
+
+        function loadPropertyPoints() {
+            // Mock data for property inspection
+            const points = [
+                { lon: 121.5405, lat: 25.0600, name: "五常公園 - 設施檢查" },
+                { lon: 121.5415, lat: 25.0610, name: "榮星花園 - 步道維護" },
+                { lon: 121.5395, lat: 25.0590, name: "巷弄巡檢 A區" }
+            ];
+            
+            points.forEach(p => {
+                const entity = viewer.entities.add({
+                    position: Cesium.Cartesian3.fromDegrees(p.lon, p.lat),
+                    point: { pixelSize: 14, color: Cesium.Color.RED, outlineColor: Cesium.Color.WHITE, outlineWidth: 2 },
+                    label: { 
+                        text: p.name, 
+                        font: '14pt monospace', 
+                        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                        outlineWidth: 2,
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                        pixelOffset: new Cesium.Cartesian2(0, -9)
+                    },
+                    properties: {
+                        description: `座標: ${p.lat}, ${p.lon}<br>狀態: 待巡檢<br>影像來源: 無人機`,
+                        raw_point: p
+                    }
+                });
+            });
+            
+            flyToHome();
+            
+            const info = document.getElementById('info-panel');
+            document.getElementById('panel-content').innerHTML = "已載入 3 個物業巡檢點，請點擊紅點查看詳情。";
+            document.getElementById('analyze-btn').style.display = 'none';
+            info.style.display = 'block';
+        }
+
+        // Handle point selection
+        const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler.setInputAction(function (movement) {
+            const pickedObject = viewer.scene.pick(movement.position);
+            if (Cesium.defined(pickedObject) && pickedObject.id && pickedObject.id.properties) {
+                const entity = pickedObject.id;
+                currentSelectedPoint = entity;
+                
+                const info = document.getElementById('info-panel');
+                const title = document.getElementById('panel-title');
+                const content = document.getElementById('panel-content');
+                const btn = document.getElementById('analyze-btn');
+                
+                title.innerText = entity.label.text.getValue();
+                content.innerHTML = entity.properties.description.getValue();
+                btn.style.display = 'block';
+                info.style.display = 'block';
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+        function analyzeCurrentPoint() {
+            if (!currentSelectedPoint) return;
+            
+            const btn = document.getElementById('analyze-btn');
+            const content = document.getElementById('panel-content');
+            
+            btn.innerText = "🔄 分析中...";
+            btn.disabled = true;
+            
+            const pointData = currentSelectedPoint.properties.raw_point.getValue();
+            
+            fetch('/api/spatial/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: `Analyze the property at ${pointData.name} (Lat: ${pointData.lat}, Lon: ${pointData.lon}). Check for maintenance needs based on typical park facility standards.`,
+                    // In real implementation, we would send image_data or image_url here
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                content.innerHTML += `<hr><strong>${data.source} 分析結果：</strong><br>${data.analysis}`;
+                btn.innerText = "✨ 再次分析";
+                btn.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                content.innerHTML += `<hr><span style="color:red">分析失敗: ${error}</span>`;
+                btn.innerText = "❌ 重試";
+                btn.disabled = false;
+            });
+        }
+
+    </script>
+</body>
+</html>

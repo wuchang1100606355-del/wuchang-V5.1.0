@@ -1,0 +1,163 @@
+version: '3.8'
+
+services:
+  # 1. 網站服務 (The Face) - 輕量級 Web Server
+  wuchang-web:
+    image: python:3.11-slim
+    container_name: wuchang-web-node
+    restart: always  # 💀 死得再慘也要爬起來 (Resurrection Protocol)
+    working_dir: /app
+    # volumes: - .:/app  (Volume mounting might fail on Windows with Chinese paths, so we use docker cp)
+    # Wait for index.html to exist
+    command: sh -c "while [ ! -f index.html ]; do echo 'Waiting for website files...'; sleep 5; done; python -m http.server 3000"
+    ports:
+      - "3000:3000"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'    # 小VM保護：限制 CPU 使用
+          memory: 256M   # 小VM保護：限制記憶體，避免 OOM 炸裂
+    networks:
+      - wuchang-net
+
+  # 2. 核心邏輯 (The Brain) - Sister AI Service
+  wuchang-brain:
+    image: python:3.11-slim
+    container_name: wuchang-brain-node
+    restart: always  # 💀 永不放棄 (Never Give Up)
+    working_dir: /app
+    volumes:
+      - .:/app  # 📂 絕對掛載：資料與硬碟同步，重啟也不會忘記
+    # Install deps and wait for code
+    command: >
+      sh -c "pip install --no-cache-dir google-api-python-client google-auth-httplib2 google-auth-oauthlib schedule watchdog requests &&
+             while [ ! -f wuchang_tools_library/core_sister_service.py ]; do echo 'Waiting for brain code...'; sleep 5; done;
+             python wuchang_tools_library/core_sister_service.py"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    environment:
+      - WUCHANG_NODE_TYPE=survival_unit  # 標記為生存單元
+      - PYTHONUTF8=1
+    networks:
+      - wuchang-net
+
+  # 3. 資料庫 (The Vault) - PostgreSQL for Odoo
+  wuchang-db:
+    image: postgres:15
+    container_name: wuchang-db
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data  # 💾 接回舊有的資料庫 Volume
+    networks:
+      - wuchang-net
+
+  # 4. 商業核心 (The Heart) - Odoo POS
+  wuchang-pos:
+    image: odoo:17.0  # 使用穩定版 Community，免費且不 expired
+    container_name: wuchang-pos
+    restart: always
+    depends_on:
+      - wuchang-db
+    ports:
+      - "8069:8069"  # POS 入口
+    volumes:
+      - ./wuchang_os/addons:/mnt/extra-addons  # 🔌 掛載現有模組，無需重裝
+      - ./config/odoo:/etc/odoo
+      - odoo-web-data:/var/lib/odoo  # 💾 接回舊有的 Filestore Volume
+    environment:
+      - HOST=wuchang-db
+      - USER=odoo
+      - PASSWORD=odoo
+    networks:
+      wuchang-net:
+      wuchangv510_default:
+        aliases:
+          - wuchang-web
+
+
+  # 5. 對外門戶 (The Gateway) - Caddy Reverse Proxy
+  wuchang-caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile.caddy
+    container_name: wuchang-gateway
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - wuchang-net
+      - wuchangv510_default
+
+  # 6. 視覺模組 (The Eye) - 3D Spatial System
+  wuchang-visual:
+    build:
+      context: .
+      dockerfile: Dockerfile.visual
+    container_name: wuchang-visual-node
+    restart: always
+    # volumes:
+    #   - .:/app  # Disable volume mount to rely on Dockerfile COPY (avoid Windows path issues)
+    # Command is now in Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - wuchang-net
+      - wuchangv510_default
+
+  # 7. AI 協作 (The Mind) - Open WebUI
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: wuchang-open-webui
+    ports:
+      - "8080:8080"
+    volumes:
+      - /opt/wuchang/openwebui:/app/backend/data
+    environment:
+      - OLLAMA_API_BASE_URL=http://ollama:11434
+    restart: unless-stopped
+    depends_on:
+      - ollama
+    networks:
+      - wuchang-net
+
+  # 8. AI 算力 (The Cortex) - Ollama
+  ollama:
+    image: ollama/ollama:latest
+    container_name: wuchang-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - /opt/wuchang/ollama:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - wuchang-net
+
+networks:
+  wuchang-net:
+    driver: bridge
+  wuchangv510_default:
+    external: true
+
+volumes:
+  odoo-db-data:
+    external: true
+    name: wuchangv510_odoo-db-data
+  odoo-web-data:
+    external: true
+    name: wuchangv510_odoo-web-data
+  caddy_data:
+  caddy_config:

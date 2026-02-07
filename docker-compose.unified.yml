@@ -1,0 +1,121 @@
+# Docker Compose 統一部署配置
+# 整合所有服務的完整配置檔案
+
+version: '3.8'
+
+services:
+  # Odoo ERP 系統
+  wuchang-web:
+    image: odoo:17.0        
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./wuchang_os/addons:/mnt/extra-addons
+      - ./downloads/jules:/mnt/jules:rw
+      - ./config:/mnt/jules-config:ro
+      - ${AI_MEMORY_PATH:-/mnt/ai-memory}/memory_store:/opt/wuchang/memory_store    
+      - ${AI_COMMON_PATH:-/mnt/ai-common}/common_store:/opt/wuchang/common_store    
+    command: odoo -d admin --db_host=db --db_user=odoo --db_password=odoo --proxy-mode --longpolling-port=8072     
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    restart: unless-stopped
+    profiles:
+      - system
+      - unified
+
+  # PostgreSQL 資料庫
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    profiles:
+      - system
+      - unified
+
+  # Caddy 反向代理
+  caddy:
+    image: caddy:2
+    depends_on:
+      - wuchang-web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./wuchang_os/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./wuchang_os/command_center:/etc/caddy/command_center:ro
+      - ./control_center.html:/etc/caddy/control_center.html:ro
+      - ./wuchang_os/command_center_design_report.html:/etc/caddy/command_center_design_report.html:ro
+      - caddy-data:/data
+    restart: unless-stopped
+    profiles:
+      - system
+      - unified
+
+  # Cloudflare Tunnel
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    depends_on:
+      - caddy
+    command: tunnel --no-autoupdate --url http://caddy:80
+    restart: unless-stopped
+    profiles:
+      - system
+      - unified
+
+  # Ollama LLM 服務
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    profiles:
+      - ai
+      - unified
+
+  # Portainer 容器管理
+  portainer:
+    image: portainer/portainer-ce:latest
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+    restart: unless-stopped
+    profiles:
+      - management
+      - unified
+
+  # Uptime Kuma 監控
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+    restart: unless-stopped
+    profiles:
+      - management
+      - unified
+
+volumes:
+  odoo-web-data:
+  odoo-db-data:
+  caddy-data:
+  ollama-data:
+  portainer-data:
+  uptime-kuma-data:
+
+# 使用方式：
+# docker-compose -f docker-compose.unified.yml --profile unified up -d

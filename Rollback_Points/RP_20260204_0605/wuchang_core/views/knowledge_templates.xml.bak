@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="kb_page" name="Wuchang Knowledge Base">
+    <t t-call="website.layout">
+      <div class="kb-root">
+        <div class="kb-plaque">
+          <div class="kb-plaque-text">五常史料馆</div>
+        </div>
+        <div class="kb-doorgate" id="kbDoor">
+          <div class="kb-door-left">
+            <div class="kb-door-ring"></div>
+          </div>
+          <div class="kb-door-right">
+            <div class="kb-door-ring"></div>
+          </div>
+          <button class="kb-enter" id="kbEnter">入馆</button>
+        </div>
+
+        <div class="kb-hall hidden" id="kbHall">
+          <div class="kb-cloud-frame"></div>
+          <div class="kb-top-filters">
+            <div class="kb-filter">
+              <label>年份</label>
+              <select id="kbYear"></select>
+            </div>
+            <div class="kb-filter">
+              <label>月份</label>
+              <select id="kbMonth"></select>
+            </div>
+            <div class="kb-filter">
+              <label>日期</label>
+              <select id="kbDay"></select>
+            </div>
+            <div class="kb-filter-info">默认展示最近三个月文件</div>
+          </div>
+
+          <div class="kb-right-panel">
+            <div class="kb-office-title">文牍处</div>
+            <div class="kb-downloads">
+              <a class="kb-download" href="#">协会表模板（DOCX）</a>
+              <a class="kb-download" href="#">协会表模板（PDF）</a>
+              <a class="kb-download" href="#">管委会议程模板</a>
+              <a class="kb-download" href="#">社区发展申请表</a>
+            </div>
+            <div class="kb-apply" id="kbApplyBtn">文书房申请入口</div>
+          </div>
+
+          <div class="kb-categories">
+            <div class="kb-category" data-key="system">
+              <div class="kb-sign redwood">系统专用柜</div>
+              <div class="kb-grid" id="kbGridSystem"></div>
+            </div>
+            <div class="kb-category" data-key="property">
+              <div class="kb-sign walnut">物业管辖柜</div>
+              <div class="kb-grid" id="kbGridProperty"></div>
+            </div>
+            <div class="kb-category" data-key="commerce">
+              <div class="kb-sign huanghuali">商业法规柜</div>
+              <div class="kb-grid" id="kbGridCommerce"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kb-reader hidden" id="kbReader">
+          <div class="kb-reader-head">
+            <div class="kb-title" id="kbDocTitle"></div>
+            <div class="kb-meta" id="kbDocMeta"></div>
+            <div class="kb-progress"><div class="kb-progress-bar" id="kbProgressBar"></div></div>
+            <div class="kb-bookmark" id="kbBookmark">书签</div>
+            <div class="kb-close" id="kbCloseReader">关闭</div>
+          </div>
+          <div class="kb-pages">
+            <div class="kb-page" id="kbPageLeft"></div>
+            <div class="kb-page" id="kbPageRight"></div>
+          </div>
+          <div class="kb-reader-controls">
+            <button class="kb-btn" id="kbPrev">上一页</button>
+            <button class="kb-btn" id="kbNext">下一页</button>
+          </div>
+        </div>
+
+        <div class="kb-permission hidden" id="kbPermission">
+          <div class="kb-permission-box">
+            <div class="kb-permission-title">权限提示</div>
+            <div class="kb-permission-body">此文档为加密文档（AES-256），需经办→主管→最高权限三级审批，并加盖电子印章后方可阅览。</div>
+            <div class="kb-permission-actions">
+              <button class="kb-btn" id="kbApply">提交申请</button>
+              <button class="kb-btn" id="kbCancel">取消</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="kb-ground"></div>
+      </div>
+
+      <style>
+        .kb-root{position:relative;min-height:100vh;background:#f5f3f0;font-family:STSong,SimSun,'Songti SC','Noto Serif SC',serif}
+        .kb-plaque{position:relative;margin:24px auto;width:1200px;height:300px;background:#8b3a3a;border:12px solid #d1b38b;border-image:linear-gradient(45deg,#d1b38b,#b9976b) 1;padding:0;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+        .kb-plaque-text{font-size:72px;letter-spacing:.2em;color:#f9f6f2;text-shadow:0 2px 0 #6b2e2e,0 8px 20px rgba(0,0,0,.3);font-family:'FZYaoti','STKaiti','KaiTi',serif}
+        .kb-doorgate{position:relative;margin:0 auto;width:1200px;height:600px;background:#7a0c0c;display:flex;overflow:hidden;border:10px solid #5d0a0a;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+        .kb-door-left,.kb-door-right{flex:1;background:linear-gradient(#7a0c0c,#5c0909);position:relative;transition:transform 1.2s cubic-bezier(.25,.8,.25,1)}
+        .kb-door-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,#c88a2b 0%,#9a6a1e 60%,#734f16 100%);box-shadow:inset 0 4px 8px rgba(255,255,255,.4),0 8px 16px rgba(0,0,0,.4)}
+        .kb-enter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 24px;background:#d1b38b;color:#3a2a1b;border:none;border-radius:6px;cursor:pointer}
+        .kb-hall{position:relative;margin:24px auto;width:1400px;min-height:900px;padding:24px;background:#f6f1e6;border:12px solid #c9b08a;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="none" stroke="#d9c5a5"/></svg>')}
+        .kb-cloud-frame{position:absolute;top:-18px;left:-18px;right:-18px;height:18px;background:repeating-linear-gradient(90deg,#d1b38b 0 40px,#f9f6f2 40px 44px)}
+        .kb-top-filters{display:flex;gap:16px;align-items:flex-end;margin-bottom:16px}
+        .kb-filter label{font-size:14px;color:#444}
+        .kb-filter select{padding:6px 10px;border:1px solid #bbb;border-radius:4px}
+        .kb-filter-info{margin-left:auto;color:#666;font-size:12px}
+        .kb-right-panel{position:absolute;top:24px;right:24px;width:260px;background:#f9f6f2;border:1px solid #d6c7b0;padding:12px}
+        .kb-office-title{font-size:18px;font-weight:700;margin-bottom:8px}
+        .kb-download{display:block;color:#1f2937;text-decoration:none;padding:6px 8px;border:1px solid #ddd;border-radius:4px;margin-bottom:6px;background:#fff}
+        .kb-apply{margin-top:10px;padding:8px;background:#8b3a3a;color:#fff;text-align:center;border-radius:4px;cursor:pointer}
+        .kb-categories{display:grid;grid-template-columns:1fr;gap:24px;margin-top:24px}
+        .kb-sign{height:60px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;letter-spacing:.2em}
+        .redwood{background:#7b3f00}
+        .walnut{background:#4a2f22}
+        .huanghuali{background:#8a4b24}
+        .kb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:18px;background:linear-gradient(#f8f5ee,#f3ede1)}
+        .kb-cabinet{position:relative;background:#b77939;border:8px solid #8b5e34;height:600px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px;background-image:linear-gradient(90deg,rgba(0,0,0,.06) 1px,transparent 1px),linear-gradient(180deg,rgba(0,0,0,.06) 1px,transparent 1px);background-size:60px 60px}
+        .kb-divider{position:absolute;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,#7a5530 0 20px,#6a4b2b 20px 40px);left:calc(33.33% - 5px)}
+        .kb-divider.r{left:auto;right:calc(33.33% - 5px)}
+        .kb-shelf{background:#d8c2a3;border:2px solid #b79d7b;display:flex;align-items:flex-end;justify-content:flex-start;padding:6px}
+        .kb-book{width:34px;height:90%;background:#7c3f2a;border:1px solid #5b2c1e;margin-right:6px;display:flex;align-items:center;justify-content:center;color:#fdf3e7;font-size:14px;writing-mode:vertical-rl;text-orientation:upright;font-family:'STKaiti','KaiTi',serif}
+        .kb-book.gold{background:#b8860b;color:#251a0c}
+        .kb-book.blue{background:#1f4a8a}
+        .kb-book.green{background:#2e7d32}
+        .kb-book.purple{background:#6b2e2e}
+        .kb-doc-card{position:absolute;bottom:8px;right:8px;font-size:10px;color:#222;background:rgba(255,255,255,.7);padding:2px 4px;border-radius:2px}
+        .kb-doc-brand{position:absolute;bottom:8px;left:8px;font-size:18px;font-family:'FZYaoti','STKaiti','KaiTi',serif;color:#222}
+        .kb-ground{position:fixed;bottom:0;left:0;right:0;height:80px;background:repeating-linear-gradient(90deg,#3a3a3a 0 20px,#2c2c2c 20px 40px)}
+        .hidden{display:none}
+        .kb-reader{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;flex-direction:column;backdrop-filter:blur(2px)}
+        .kb-reader-head{background:#fff;padding:12px;display:flex;align-items:center;gap:12px}
+        .kb-title{font-weight:700}
+        .kb-meta{font-size:12px;color:#555}
+        .kb-progress{flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden}
+        .kb-progress-bar{height:100%;width:0;background:#8b3a3a}
+        .kb-bookmark,.kb-close{cursor:pointer;padding:6px 10px;background:#eee;border-radius:4px}
+        .kb-pages{flex:1;display:flex;gap:12px;padding:12px}
+        .kb-page{flex:1;background:#faf7f2;border:1px solid #e5dccb;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+        .kb-reader-controls{background:#fff;padding:12px;display:flex;gap:12px;justify-content:center}
+        .kb-btn{padding:8px 12px;border:1px solid #bbb;background:#fff;border-radius:4px;cursor:pointer}
+        .kb-permission{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center}
+        .kb-permission-box{width:520px;background:#fff;padding:18px;border-radius:8px}
+        .kb-permission-title{font-size:18px;font-weight:700;margin-bottom:8px}
+        .kb-permission-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+      </style>
+
+      <script type="text/javascript">
+        <![CDATA[
+        (function(){
+          var enter=document.getElementById('kbEnter');
+          var door=document.getElementById('kbDoor');
+          var hall=document.getElementById('kbHall');
+          var yearSel=document.getElementById('kbYear');
+          var monthSel=document.getElementById('kbMonth');
+          var daySel=document.getElementById('kbDay');
+          var gridSystem=document.getElementById('kbGridSystem');
+          var gridProperty=document.getElementById('kbGridProperty');
+          var gridCommerce=document.getElementById('kbGridCommerce');
+          var reader=document.getElementById('kbReader');
+          var pageL=document.getElementById('kbPageLeft');
+          var pageR=document.getElementById('kbPageRight');
+          var titleEl=document.getElementById('kbDocTitle');
+          var metaEl=document.getElementById('kbDocMeta');
+          var progressBar=document.getElementById('kbProgressBar');
+          var btnPrev=document.getElementById('kbPrev');
+          var btnNext=document.getElementById('kbNext');
+          var btnClose=document.getElementById('kbCloseReader');
+          var bookmark=document.getElementById('kbBookmark');
+          var perm=document.getElementById('kbPermission');
+          var btnApply=document.getElementById('kbApply');
+          var btnCancel=document.getElementById('kbCancel');
+          var applyBtn=document.getElementById('kbApplyBtn');
+
+          var docs=[
+            {id:'SYS-001',cat:'system',name:'宪章与隐私规则',cover:'gold',level:'主法规',url:'https://example.org/constitution',date:'2025-10-12',valid:'有效',encrypted:true,index:'F-2025-001'},
+            {id:'SYS-002',cat:'system',name:'数据加密实施细则',cover:'blue',level:'实施细则',url:'https://example.org/crypto-rules',date:'2025-09-03',valid:'有效',encrypted:true,index:'F-2025-002'},
+            {id:'PROP-A001',cat:'property',name:'A-001 产权文件',cover:'gold',level:'主法规',url:'https://example.org/prop/a001',date:'2025-11-02',valid:'有效',encrypted:false,index:'F-2025-010'},
+            {id:'PROP-R101',cat:'property',name:'维修记录 R-101',cover:'green',level:'附带法规',url:'https://example.org/prop/r101',date:'2025-08-20',valid:'修订',encrypted:false,index:'F-2025-011'},
+            {id:'LAW-001',cat:'commerce',name:'商业法规总则',cover:'gold',level:'主法规',url:'https://example.org/law/001',date:'2025-07-01',valid:'有效',encrypted:false,index:'F-2025-100',org:'国家立法机关'},
+            {id:'LAW-001-IMP',cat:'commerce',name:'实施细则第壹版',cover:'blue',level:'实施细则',url:'https://example.org/law/001/imp',date:'2025-07-15',valid:'有效',encrypted:false,index:'F-2025-101',org:'国家立法机关'},
+            {id:'CASE-2025',cat:'commerce',name:'2025 判例合订本',cover:'purple',level:'法院判例',url:'https://example.org/case/2025',date:'2025-01-10',valid:'有效',encrypted:false,index:'F-2025-150',org:'最高法院'}
+          ];
+
+          function buildCabinet(grid,items){
+            grid.innerHTML='';
+            var cab=document.createElement('div');
+            cab.className='kb-cabinet';
+            var divL=document.createElement('div');divL.className='kb-divider';
+            var divR=document.createElement('div');divR.className='kb-divider r';
+            cab.appendChild(divL);cab.appendChild(divR);
+            for(var i=0;i<9;i++){
+              var shelf=document.createElement('div');shelf.className='kb-shelf';
+              var group=items.slice(i*3,(i+1)*3);
+              group.forEach(function(d){
+                var book=document.createElement('div');
+                book.className='kb-book '+(d.cover==='gold'?'gold':d.cover==='blue'?'blue':d.cover==='green'?'green':'purple');
+                book.textContent=d.name;
+                book.onclick=function(){openDoc(d)};
+                shelf.appendChild(book);
+              });
+              var card=document.createElement('div');card.className='kb-doc-card';card.textContent=(group[0]&&group[0].index)||'';
+              var brand=document.createElement('div');brand.className='kb-doc-brand';brand.textContent='五常社区发展协会';
+              shelf.appendChild(card);shelf.appendChild(brand);
+              cab.appendChild(shelf);
+            }
+            grid.appendChild(cab);
+          }
+
+          function filterByDate(){
+            var y=yearSel.value;var m=monthSel.value;var d=daySel.value;
+            function inRange(x){
+              if(!y&&!m&&!d) return true;
+              var dt=new Date(x.date);
+              if(y && dt.getFullYear()!=parseInt(y)) return false;
+              if(m && (dt.getMonth()+1)!=parseInt(m)) return false;
+              if(d && dt.getDate()!=parseInt(d)) return false;
+              return true;
+            }
+            var sys=docs.filter(function(x){return x.cat==='system'&&inRange(x)});
+            var prop=docs.filter(function(x){return x.cat==='property'&&inRange(x)});
+            var com=docs.filter(function(x){return x.cat==='commerce'&&inRange(x)});
+            buildCabinet(gridSystem,sys);
+            buildCabinet(gridProperty,prop);
+            buildCabinet(gridCommerce,com);
+          }
+
+          function initDateFilters(){
+            var now=new Date();
+            var months=[];
+            for(var i=0;i<3;i++){var t=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({y:t.getFullYear(),m:t.getMonth()+1});}
+            var years=new Set(docs.map(function(x){return new Date(x.date).getFullYear()}));
+            yearSel.innerHTML='<option value="">全部</option>';
+            years.forEach(function(y){var o=document.createElement('option');o.value=y;o.textContent=y;yearSel.appendChild(o)});
+            monthSel.innerHTML='<option value="">全部</option>';
+            months.forEach(function(mm){var o=document.createElement('option');o.value=mm.m;o.textContent=mm.m;monthSel.appendChild(o)});
+            daySel.innerHTML='<option value="">全部</option>';
+            for(var i=1;i<=31;i++){var o=document.createElement('option');o.value=i;o.textContent=i;daySel.appendChild(o)}
+            yearSel.onchange=filterByDate;monthSel.onchange=filterByDate;daySel.onchange=filterByDate;
+          }
+
+          var curDoc=null;var curPage=0;var pages=['封面','正文1','正文2','正文3','附录'];
+          function openDoc(d){
+            curDoc=d;curPage=0;
+            if(d.encrypted){perm.classList.remove('hidden');return}
+            showReader();
+          }
+          function showReader(){
+            titleEl.textContent=curDoc.name+'（'+curDoc.level+'）';
+            metaEl.textContent='来源: '+(curDoc.url||'')+' | 收录: '+curDoc.date+' | 有效性: '+curDoc.valid+(curDoc.org?(' | 机关: '+curDoc.org):'');
+            reader.classList.remove('hidden');
+            renderPages();
+            var key='kb.bookmark.'+curDoc.id;var mark=localStorage.getItem(key);if(mark){curPage=parseInt(mark)||0;renderPages();}
+          }
+          function renderPages(){
+            pageL.textContent=pages[curPage]||'';
+            pageR.textContent=pages[curPage+1]||'';
+            var prog=Math.min(100,Math.round(((curPage+1)/pages.length)*100));
+            progressBar.style.width=prog+'%';
+          }
+          btnPrev.onclick=function(){curPage=Math.max(0,curPage-1);renderPages()};
+          btnNext.onclick=function(){curPage=Math.min(pages.length-1,curPage+1);renderPages()};
+          btnClose.onclick=function(){reader.classList.add('hidden')};
+          bookmark.onclick=function(){if(!curDoc)return;localStorage.setItem('kb.bookmark.'+curDoc.id,String(curPage))};
+          btnApply.onclick=function(){perm.classList.add('hidden');showReader()};
+          btnCancel.onclick=function(){perm.classList.add('hidden')};
+          applyBtn.onclick=function(){perm.classList.remove('hidden')};
+
+          enter.onclick=function(){
+            door.querySelector('.kb-door-left').style.transform='translateX(-100%)';
+            door.querySelector('.kb-door-right').style.transform='translateX(100%)';
+            setTimeout(function(){door.classList.add('hidden');hall.classList.remove('hidden')},900);
+          };
+
+          initDateFilters();
+          filterByDate();
+        })();
+        ]]>
+      </script>
+    </t>
+  </template>
+</odoo>

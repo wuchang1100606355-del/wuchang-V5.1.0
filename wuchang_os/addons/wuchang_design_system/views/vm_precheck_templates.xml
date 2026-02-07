@@ -1,0 +1,124 @@
+<odoo>
+    <template id="vm_precheck_page" name="VM 前置檢查頁" t-name="wuchang_design_system.vm_precheck_page">
+        <link rel="stylesheet" href="/wuchang_design_system/static/src/css/variables.css"/>
+        <link rel="stylesheet" href="/wuchang_design_system/static/src/css/utilities.css"/>
+        <link rel="stylesheet" href="/wuchang_design_system/static/src/css/components.css"/>
+        <link rel="stylesheet" href="/wuchang_design_system/static/src/css/layouts.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&amp;display=swap"/>
+        <div class="container py-3 whc-container">
+            <div class="mb-3">
+                <div class="fw-bold" style="font-size:18px;">VM 作業前置檢查</div>
+                <div class="text-muted" style="font-size:12px;">輸入 GCP 專案、區域與 VM 名稱，執行登入就緒與部署診斷檢查。</div>
+            </div>
+            <div class="row g-3 whc-card whc-shadow">
+                <div class="col-md-4">
+                    <label class="form-label">Project ID</label>
+                    <input id="inp_project_id" class="form-control" t-att-value="project_id"/>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Zone</label>
+                    <input id="inp_zone" class="form-control" t-att-value="zone" placeholder="如：us-central1-a"/>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Instance Name</label>
+                    <input id="inp_name" class="form-control" t-att-value="name"/>
+                </div>
+            </div>
+            <div class="row g-3 mt-1 whc-card whc-shadow">
+                <div class="col-md-4">
+                    <label class="form-label">Region</label>
+                    <input id="inp_region" class="form-control" placeholder="如：us-central1"/>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Static IP Name</label>
+                    <input id="inp_ip_name" class="form-control" placeholder="如：ip-ui-ai-hub"/>
+                </div>
+            </div>
+            <div class="mt-3 d-flex gap-2">
+                <a id="btn_run_precheck" class="whc-btn primary" href="#">執行前置檢查</a>
+                <a id="btn_run_predeploy" class="whc-btn" href="#">檢查部署前條件</a>
+                <a href="/wuchang/status" class="whc-btn" target="_blank">服務狀態</a>
+            </div>
+            <div class="mt-3" id="result_box" style="display:none">
+                <div class="whc-card">
+                    <div id="summary_badges" class="mb-2"></div>
+                    <pre id="result_json" class="mb-0" style="white-space:pre-wrap;font-size:12px"></pre>
+                </div>
+            </div>
+            <script type="text/javascript"><![CDATA[
+                (async function(){
+                    async function jsonRpc(url, params) {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                        });
+                        const result = await response.json();
+                        if (result.error) throw result.error;
+                        return result.result;
+                    }
+                    function j(o){ try { return JSON.stringify(o||{}, null, 2); } catch(e){ return '{}'; } }
+                    function el(id){ return document.getElementById(id); }
+                    function badge(txt, ok){ var s = ok ? 'success' : 'danger'; return '<span class="badge bg-'+s+' me-1">'+txt+'</span>'; }
+                    
+                    async function run(){
+                        var pid = (el('inp_project_id').value||'').trim();
+                        var name = (el('inp_name').value||'').trim();
+                        var zone = (el('inp_zone').value||'').trim();
+                        if (!pid || !name){ window.alert('請填寫 Project ID 與 Instance Name'); return; }
+                        try {
+                            const r = await jsonRpc('/api/vm/precheck', { project_id: pid, name: name, zone: zone });
+                            var box = el('result_box');
+                            var pre = el('result_json');
+                            var sum = el('summary_badges');
+                            if (box) box.style.display = 'block';
+                            if (pre) pre.textContent = j(r);
+                            var rd = (r && r.readiness) || {};
+                            var dg = r || {};
+                            var html = '';
+                            html += badge('RUNNING', !!rd.status_ok);
+                            html += badge('IP', !!rd.has_ip);
+                            html += badge('SSH', !!rd.ssh_open);
+                            html += badge('OS Login', !!rd.os_login);
+                            html += badge('SSH Keys', !!rd.ssh_keys_present && !rd.block_project_ssh);
+                            html += badge('Google GenAI', !!dg.google_ok);
+                            html += badge('Ollama', !!dg.ollama_ok);
+                            html += badge('Open WebUI', !!dg.webui_ok);
+                            if (sum) sum.innerHTML = html;
+                        } catch(e) { console.error(e); window.alert('檢查失敗: ' + e.message); }
+                    }
+
+                    async function runPredeploy(){
+                        var pid = (el('inp_project_id').value||'').trim();
+                        var name = (el('inp_name').value||'').trim();
+                        var zone = (el('inp_zone').value||'').trim();
+                        var region = (el('inp_region').value||'').trim();
+                        var ipname = (el('inp_ip_name').value||'').trim();
+                        if (!pid || !name){ window.alert('請填寫 Project ID 與 Instance Name'); return; }
+                        try {
+                            const r = await jsonRpc('/api/gcp/predeploy_check', { project_id: pid, vm_name: name, zone: zone, region: region, ip_name: ipname });
+                            var box = el('result_box');
+                            var pre = el('result_json');
+                            var sum = el('summary_badges');
+                            if (box) box.style.display = 'block';
+                            if (pre) pre.textContent = j(r);
+                            var pd = (r && r.predeploy) || {};
+                            var html = '';
+                            html += badge('Region/Zone', !!pd.ok_zone_region);
+                            html += badge('Instance Name', !!pd.instance_name_available);
+                            html += badge('Static IP', !!pd.address_ok);
+                            html += badge('Firewall HTTP', !!pd.http_firewall_ok);
+                            html += badge('Firewall HTTPS', !!pd.https_firewall_ok);
+                            if (sum) sum.innerHTML = html;
+                        } catch(e) { console.error(e); window.alert('檢查失敗: ' + e.message); }
+                    }
+
+                    var btn = el('btn_run_precheck');
+                    if (btn) { btn.addEventListener('click', function(){ run(); }); }
+                    var btn2 = el('btn_run_predeploy');
+                    if (btn2) { btn2.addEventListener('click', function(){ runPredeploy(); }); }
+                })();
+            ]]></script>
+        </div>
+    </template>
+</odoo>

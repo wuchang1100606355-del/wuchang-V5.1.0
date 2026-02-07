@@ -1,0 +1,18 @@
+<odoo>
+  <template id="life_page" name="Wuchang Life Page">
+    <t t-call="website.layout">
+      <div class="container">
+        <section class="my-5">
+          <h1>Wuchang Life beta v1.0.0</h1>
+          <p>Welcome to Wuchang Life. This is the public landing page for the beta v1.0.0.</p>
+          <ul>
+            <li>Community-centric features</li>
+            <li>Integrated with Wuchang OS modules</li>
+            <li>Roadmap and feedback collection</li>
+          </ul>
+          <a class="btn btn-primary" href="/web">Go to Backend</a>
+        </section>
+      </div>
+    </t>
+  </template>
+</odoo>

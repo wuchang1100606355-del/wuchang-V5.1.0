@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- 1. 外送員介面 (Rider App) -->
+    <t t-name="DeliveryRiderInterface" owl="1">
+        <!-- 設備檢查與上線設定 (Equipment Check & Configuration) -->
+        <t t-if="!state.is_online">
+            <div class="equipment-check-screen h-100 d-flex flex-column p-4 bg-dark text-white">
+                <h3 class="text-center mb-4 text-primary">外送員上線檢查</h3>
+                <div class="card bg-secondary text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">必備裝備清單</h5>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="check_helmet" t-model="state.checks.helmet"/>
+                            <label class="form-check-label" for="check_helmet">符合規格之安全帽</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="check_bag" t-model="state.checks.bag"/>
+                            <label class="form-check-label" for="check_bag">保溫袋 (需清潔)</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="check_vest" t-model="state.checks.vest"/>
+                            <label class="form-check-label" for="check_vest">識別背心 / 證件</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="check_phone" t-model="state.checks.phone"/>
+                            <label class="form-check-label" for="check_phone">手機支架與電源充足</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-auto">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg" t-att-disabled="!allChecked" t-on-click="goOnline">
+                            <i class="fa fa-power-off me-2"></i> 確認裝備並上線
+                        </button>
+                        <button class="btn btn-outline-light" t-on-click="openSettings">
+                            <i class="fa fa-cog me-2"></i> 進階設定
+                        </button>
+                    </div>
+                    <small class="text-muted text-center d-block mt-3">
+                        上線即代表您同意遵守 <a href="#" class="text-info">外送員服務規範</a>
+                    </small>
+                </div>
+            </div>
+        </t>
+
+        <t t-else="">
+            <div class="delivery-rider-app h-100 d-flex flex-column bg-dark text-white">
+                <!-- 頂部狀態列 -->
+            <div class="p-3 bg-primary d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-light text-primary">任務進行中</span>
+                    <h5 class="mb-0 mt-1">訂單 #<t t-esc="order.name"/></h5>
+                </div>
+                <div class="text-end">
+                    <small>預計抵達</small>
+                    <div class="h4 mb-0">12:30</div>
+                </div>
+            </div>
+
+            <!-- 地圖區域 (Google Maps) -->
+            <div class="flex-grow-1 position-relative">
+                <div id="rider_map" class="h-100 w-100 bg-secondary" style="min-height: 300px;">
+                    <!-- Google Map will be rendered here -->
+                    <div class="d-flex align-items-center justify-content-center h-100 text-white-50">
+                        <i class="fa fa-map-marker fa-3x"></i>
+                    </div>
+                </div>
+                <!-- 導航按鈕 -->
+                <button class="btn btn-primary rounded-circle position-absolute bottom-0 end-0 m-3 p-3 shadow-lg">
+                    <i class="fa fa-location-arrow fa-2x"></i>
+                </button>
+            </div>
+
+            <!-- 底部資訊卡 -->
+            <div class="p-3 bg-dark border-top border-secondary">
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <img t-att-src="customer.avatar_url" class="rounded-circle me-2" width="40" height="40"/>
+                        <div>
+                            <div class="fw-bold"><t t-esc="customer.name"/></div>
+                            <small class="text-white-50"><t t-esc="order.address"/></small>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-light rounded-circle me-2"><i class="fa fa-phone"></i></button>
+                        <button class="btn btn-success rounded-circle" t-on-click="openChat"><i class="fa fa-comment"></i></button>
+                    </div>
+                </div>
+                <!-- 餐點已備妥按鈕 (僅商家或外送員取餐時可見，這裡假設外送員確認取餐) -->
+                <button class="btn btn-warning w-100 btn-lg fw-bold mb-2" t-on-click="confirmPickup">
+                    餐點已取 / 備妥
+                </button>
+                <button class="btn btn-success w-100 btn-lg fw-bold" t-on-click="completeDelivery">
+                    確認送達 (滑動)
+                </button>
+            </div>
+        </t>
+    </t>
+
+    <!-- 2. 商家 POS 介面 (Merchant POS Extension) -->
+    <t t-name="DeliveryMerchantInterface" owl="1">
+        <div class="delivery-merchant-panel p-3 border rounded bg-white">
+            <h5 class="border-bottom pb-2 mb-3">外送追蹤</h5>
+            <div class="list-group">
+                <t t-foreach="active_deliveries" t-as="delivery">
+                    <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-bold">#<t t-esc="delivery.order_name"/> - <t t-esc="delivery.rider_name"/></div>
+                            <small class="text-muted"><i class="fa fa-clock-o"></i> 取餐於 5 分鐘前</small>
+                        </div>
+                        <div class="text-end">
+                             <span class="badge bg-info rounded-pill mb-1">配送中</span>
+                             <!-- 商家確認餐點備妥按鈕 -->
+                             <button class="btn btn-sm btn-outline-success d-block" t-on-click="notifyReady">
+                                餐點已備妥
+                             </button>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <!-- 3. 消費者介面 (Customer View) -->
+    <t t-name="DeliveryCustomerInterface" owl="1">
+        <div class="delivery-customer-view">
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <!-- 地圖 -->
+                    <div id="customer_map" style="height: 250px;" class="bg-light"></div>
+                    
+                    <!-- 進度條 -->
+                    <div class="p-3">
+                        <h5 class="text-center mb-3">餐點配送中</h5>
+                        <div class="progress mb-2" style="height: 5px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between text-muted small">
+                            <span>已接單</span>
+                            <span>製作中</span>
+                            <span class="text-success fw-bold">配送中</span>
+                            <span>已送達</span>
+                        </div>
+                    </div>
+
+                    <!-- 外送員資訊 -->
+                    <div class="d-flex align-items-center p-3 border-top bg-light">
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">專勤隊 A 隊 - <t t-esc="rider.name"/></div>
+                            <small class="text-muted">車號: ABC-123</small>
+                        </div>
+                        <button class="btn btn-primary btn-sm rounded-pill px-3" t-on-click="openChat">
+                            <i class="fa fa-comments me-1"></i> 聯絡外送員
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <!-- 4. 系統最高權限主控台 (Supreme Command Console) -->
+    <t t-name="DeliveryCommandConsole" owl="1">
+        <div class="command-console h-100 d-flex">
+            <!-- 左側列表 -->
+            <div class="w-25 bg-dark text-white border-end border-secondary d-flex flex-column">
+                <div class="p-3 border-bottom border-secondary">
+                    <h5 class="mb-0"><i class="fa fa-globe text-primary me-2"></i>全域監控</h5>
+                    <small class="text-white-50">線上專勤隊: <t t-esc="online_riders_count"/></small>
+                </div>
+                <div class="flex-grow-1 overflow-auto">
+                    <div class="list-group list-group-flush">
+                        <t t-foreach="active_missions" t-as="mission">
+                            <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-secondary">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">#<t t-esc="mission.order_name"/></h6>
+                                    <small class="text-warning">配送中</small>
+                                </div>
+                                <p class="mb-1 small text-white-50"><t t-esc="mission.rider_name"/> -> <t t-esc="mission.customer_name"/></p>
+                                <small>距離: 1.2km</small>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側地圖 -->
+            <div class="flex-grow-1 position-relative">
+                <div id="command_map" class="h-100 w-100 bg-secondary">
+                    <!-- Global Map View -->
+                </div>
+                
+                <!-- 浮動聊天室監控 -->
+                <div class="position-absolute bottom-0 end-0 m-3 card shadow-lg" style="width: 300px; max-height: 400px;">
+                    <div class="card-header bg-dark text-white py-2 small fw-bold">
+                        <i class="fa fa-eye me-1"></i> 即時通訊監控
+                    </div>
+                    <div class="card-body p-0 overflow-auto" style="height: 200px;">
+                        <div class="p-2 small">
+                            <div class="text-muted mb-1">[#1001] 外送員: 我已經到樓下了</div>
+                            <div class="text-primary mb-1">[#1001] 消費者: 好的，我馬上下去</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

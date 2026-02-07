@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Google Drive 檔案列表視圖 -->
+    <record id="view_google_drive_file_tree" model="ir.ui.view">
+        <field name="name">wuchang.google.drive.file.tree</field>
+        <field name="model">wuchang.google.drive.file</field>
+        <field name="arch" type="xml">
+            <tree string="Google Drive 檔案">
+                <field name="name"/>
+                <field name="file_type"/>
+                <field name="sync_state" widget="badge" decoration-success="sync_state == 'synced'" decoration-warning="sync_state == 'pending'" decoration-danger="sync_state == 'error'"/>
+                <field name="file_size"/>
+                <field name="last_sync_date"/>
+                <field name="google_file_url" widget="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Google Drive 檔案表單視圖 -->
+    <record id="view_google_drive_file_form" model="ir.ui.view">
+        <field name="name">wuchang.google.drive.file.form</field>
+        <field name="model">wuchang.google.drive.file</field>
+        <field name="arch" type="xml">
+            <form string="Google Drive 檔案">
+                <header>
+                    <button name="action_sync_from_google_drive" string="同步檔案" type="object" class="btn-primary" groups="group_google_integration_user"/>
+                    <button name="action_open_google_drive" string="開啟 Google Drive" type="object" class="btn-primary" attrs="{'invisible': [('google_file_url', '=', False)]}" groups="group_google_integration_user"/>
+                    <button name="action_share_file" string="共用檔案" type="object" groups="group_google_integration_user"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="file_type"/>
+                            <field name="google_file_id" readonly="1"/>
+                            <field name="google_file_url" widget="url" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="sync_state" widget="badge"/>
+                            <field name="last_sync_date" readonly="1"/>
+                            <field name="file_size" readonly="1"/>
+                            <field name="mime_type" readonly="1"/>
+                            <field name="version" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="權限管理">
+                            <field name="shared_with" widget="many2many_tags"/>
+                            <field name="permission_level"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Google Drive 檔案搜尋視圖 -->
+    <record id="view_google_drive_file_search" model="ir.ui.view">
+        <field name="name">wuchang.google.drive.file.search</field>
+        <field name="model">wuchang.google.drive.file</field>
+        <field name="arch" type="xml">
+            <search string="搜尋 Google Drive 檔案">
+                <field name="name"/>
+                <field name="file_type"/>
+                <filter string="已同步" name="synced" domain="[('sync_state', '=', 'synced')]"/>
+                <filter string="待同步" name="pending" domain="[('sync_state', '=', 'pending')]"/>
+                <filter string="同步錯誤" name="error" domain="[('sync_state', '=', 'error')]"/>
+                <group expand="0" string="分組">
+                    <filter string="類型" name="group_type" context="{'group_by': 'file_type'}"/>
+                    <filter string="同步狀態" name="group_sync" context="{'group_by': 'sync_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Google Drive 檔案動作 -->
+    <record id="action_google_drive_file" model="ir.actions.act_window">
+        <field name="name">Google Drive 檔案</field>
+        <field name="res_model">wuchang.google.drive.file</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_google_drive_file_search"/>
+    </record>
+</odoo>

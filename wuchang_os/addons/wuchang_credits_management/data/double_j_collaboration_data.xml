@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 預設抵免額數據 -->
+    <record id="credit_free_trial" model="wuchang.gcp.credits">
+        <field name="name">免費試用抵免額</field>
+        <field name="credit_type">free_trial</field>
+        <field name="credit_id">FreeTrialUpgrade:CreditId-FreeTrial:Credit-01653B-A34601-F066BE</field>
+        <field name="amount">8334.55</field>
+        <field name="used_amount">822.45</field>
+        <field name="start_date">2025-10-28</field>
+        <field name="expiry_date">2026-01-26</field>
+        <field name="project_id">my-j-483304</field>
+        <field name="applicable_services">所有 Google Cloud 服務（除特定限制外）</field>
+        <field name="notes">⚠️ 即將在 6 天後到期，請優先使用。與 Odoo 專案整合中。</field>
+    </record>
+
+    <record id="credit_maps_platform" model="wuchang.gcp.credits">
+        <field name="name">Google Maps Platform 非營利抵免額</field>
+        <field name="credit_type">maps_platform</field>
+        <field name="credit_id">GEOH-08D48CD0-C05A-489D-BD7A-CC14A771C102</field>
+        <field name="amount">7851.00</field>
+        <field name="monthly_amount">7851.00</field>
+        <field name="is_monthly">True</field>
+        <field name="start_date">2026-01-12</field>
+        <field name="expiry_date">2027-02-01</field>
+        <field name="project_id">my-j-483304</field>
+        <field name="applicable_services">Google Maps API（所有地圖相關服務）</field>
+        <field name="notes">每月 $7,851，有效至 2027年2月1日。與 Odoo 專案整合，用於地圖服務。</field>
+    </record>
+
+    <record id="credit_nonprofit" model="wuchang.gcp.credits">
+        <field name="name">Google Cloud 非營利抵免額</field>
+        <field name="credit_type">nonprofit</field>
+        <field name="amount">350.00</field>
+        <field name="monthly_amount">350.00</field>
+        <field name="is_monthly">True</field>
+        <field name="start_date">2026-01-20</field>
+        <field name="project_id">my-j-483304</field>
+        <field name="status">pending</field>
+        <field name="applicable_services">所有 Google Cloud 服務</field>
+        <field name="notes">狀態：申請審核中，審核通過後每月可獲得 $350</field>
+    </record>
+</odoo>

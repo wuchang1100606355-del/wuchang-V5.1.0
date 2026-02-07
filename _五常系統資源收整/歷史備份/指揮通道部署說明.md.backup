@@ -1,0 +1,309 @@
+# 專用指揮通道 UI 部署說明
+
+**創建時間**: 2026-01-07  
+**系統版本**: Wuchang OS V5.1.0  
+**AI 身份**: Little J (小j)
+
+---
+
+## 📋 概述
+
+已設計並部署專用指揮通道 UI，提供外網訪問能力，用於遠程監控和管理系統。
+
+---
+
+## 🎯 功能特性
+
+### 1. 系統監控
+- ✅ Odoo 服務狀態監控
+- ✅ Ollama LLM 服務狀態
+- ✅ 資料庫連接狀態
+- ✅ Caddy 反向代理狀態
+- ✅ Cloudflare 隧道狀態
+
+### 2. 網絡監控
+- ✅ 本機 IP 地址顯示
+- ✅ 外網訪問狀態
+- ✅ 連接設備統計
+
+### 3. 快速操作
+- ✅ 刷新系統狀態
+- ✅ 網絡掃描
+- ✅ 服務重啟
+- ✅ 緊急停止
+
+### 4. 命令控制台
+- ✅ 實時命令執行
+- ✅ 日誌輸出
+- ✅ 狀態追蹤
+
+---
+
+## 🌐 訪問方式
+
+### 本地訪問
+
+```
+http://localhost/command_center
+http://localhost/command
+http://localhost/cc
+```
+
+### 外網訪問（通過 Cloudflare 隧道）
+
+```
+https://wuchang.life/command_center
+https://wuchang.life/command
+https://wuchang.life/cc
+```
+
+### 訪問代碼
+
+**默認訪問代碼**: `J2025`
+
+⚠️ **安全提醒**: 請在生產環境中修改訪問代碼！
+
+---
+
+## 📁 文件結構
+
+```
+wuchang_os/
+├── Caddyfile                    # Caddy 配置文件（已更新）
+└── command_center/
+    └── command_center.html      # 指揮通道 UI
+
+command_center.html              # 主文件（根目錄）
+```
+
+---
+
+## 🔧 配置詳情
+
+### Caddy 配置
+
+已在 `wuchang_os/Caddyfile` 中添加以下配置：
+
+```caddy
+# 專用指揮通道 UI
+@command_center path /command_center /command /cc
+handle @command_center {
+    root * /etc/caddy/command_center
+    file_server
+    try_files {path} /command_center.html
+}
+```
+
+### Docker Compose 配置
+
+已在 `docker-compose.yml` 中更新 Caddy 服務：
+
+```yaml
+caddy:
+  volumes:
+    - ./wuchang_os/Caddyfile:/etc/caddy/Caddyfile
+    - ./wuchang_os/command_center:/etc/caddy/command_center:ro  # 新增
+    - caddy-data:/data
+```
+
+---
+
+## 🚀 部署步驟
+
+### 1. 準備文件
+
+```powershell
+# 創建目錄
+New-Item -ItemType Directory -Force -Path "wuchang_os\command_center"
+
+# 複製文件
+Copy-Item "command_center.html" "wuchang_os\command_center\command_center.html"
+```
+
+### 2. 重啟 Caddy 服務
+
+```powershell
+docker-compose restart caddy
+```
+
+### 3. 驗證部署
+
+```powershell
+# 檢查本地訪問
+Invoke-WebRequest -Uri "http://localhost/command_center" -Method GET
+
+# 檢查外網訪問（如果 Cloudflare 隧道已配置）
+Invoke-WebRequest -Uri "https://wuchang.life/command_center" -Method GET
+```
+
+---
+
+## 🔒 安全配置
+
+### 1. 修改訪問代碼
+
+編輯 `command_center.html`，修改以下行：
+
+```javascript
+const ACCESS_CODE = 'J2025';  // 改為您的專用代碼
+```
+
+### 2. 添加 HTTPS 強制
+
+Caddy 已配置自動 HTTPS（通過 Cloudflare 隧道）。
+
+### 3. IP 白名單（可選）
+
+可在 Caddyfile 中添加 IP 限制：
+
+```caddy
+@command_center path /command_center /command /cc
+@allowed_ips {
+    remote_ip 192.168.0.0/16 10.0.0.0/8
+}
+handle @command_center {
+    @if not @allowed_ips {
+        respond "Access Denied" 403
+    }
+    root * /etc/caddy/command_center
+    file_server
+}
+```
+
+---
+
+## 📊 UI 功能說明
+
+### 系統狀態卡片
+
+- **Odoo 服務**: 檢查 `http://localhost:8069/web/health`
+- **Ollama LLM**: 檢查 `http://localhost:11434/api/tags`
+- **資料庫**: 間接通過 Odoo 健康檢查
+- **Caddy 代理**: 檢查 `http://localhost/health`
+
+### 網絡狀態卡片
+
+- **本機 IP**: 自動檢測或顯示已知 IP
+- **外網訪問**: 檢查 Cloudflare 隧道狀態
+- **連接設備**: 顯示網絡連接設備數量
+
+### 快速操作按鈕
+
+- **刷新狀態**: 手動觸發系統狀態檢查
+- **掃描網絡**: 掃描本地網絡設備（需後端 API）
+- **重啟服務**: 重啟 Docker 服務（需後端 API）
+- **緊急停止**: 停止所有服務（需後端 API）
+
+### 命令控制台
+
+- 實時命令輸入和執行
+- 日誌輸出顯示
+- 支持自定義命令（需後端 API）
+
+---
+
+## 🔌 後端 API 集成（待實現）
+
+當前 UI 為前端版本，以下功能需要後端 API 支持：
+
+1. **網絡掃描**: 調用 `scripts/scan_lan.py`
+2. **服務管理**: Docker Compose API
+3. **命令執行**: 安全命令執行接口
+4. **實時監控**: WebSocket 連接
+
+### 建議的 API 端點
+
+```
+POST /api/command/execute      # 執行命令
+GET  /api/status/services      # 獲取服務狀態
+POST /api/network/scan        # 掃描網絡
+POST /api/services/restart    # 重啟服務
+POST /api/services/stop        # 停止服務
+```
+
+---
+
+## 🌍 外網訪問配置
+
+### Cloudflare 隧道
+
+系統已配置 Cloudflare 隧道，確保外網訪問：
+
+1. **匿名隧道** (`cloudflared` 服務):
+   - 自動分配臨時網址
+   - 查詢: `docker logs cloudflared | grep trycloudflare.com`
+
+2. **命名隧道** (`cloudflared-named` 服務):
+   - 需要 `CLOUDFLARE_TUNNEL_TOKEN` 環境變量
+   - 固定子域名訪問
+
+### 訪問 URL
+
+- **本地**: `http://localhost/command_center`
+- **外網**: `https://wuchang.life/command_center` (通過 Cloudflare)
+- **臨時**: `https://<random>.trycloudflare.com/command_center`
+
+---
+
+## 🎨 UI 設計特點
+
+1. **終端風格**: 綠色文字、黑色背景、掃描線動畫
+2. **響應式設計**: 支持桌面和移動設備
+3. **實時更新**: 自動刷新系統狀態
+4. **安全驗證**: 訪問代碼保護
+5. **視覺反饋**: 狀態指示燈、動畫效果
+
+---
+
+## 📝 使用說明
+
+### 首次訪問
+
+1. 打開瀏覽器，訪問 `http://localhost/command_center`
+2. 輸入訪問代碼: `J2025`
+3. 點擊「驗證」按鈕
+4. 進入指揮通道界面
+
+### 日常使用
+
+1. **監控系統**: 查看系統狀態卡片，了解服務運行情況
+2. **執行操作**: 使用快速操作按鈕執行常用任務
+3. **命令控制**: 在控制台輸入命令執行自定義操作
+4. **查看日誌**: 在控制台查看實時日誌輸出
+
+---
+
+## ⚠️ 注意事項
+
+1. **訪問代碼安全**: 請修改默認訪問代碼
+2. **HTTPS 強制**: 外網訪問應使用 HTTPS
+3. **後端 API**: 部分功能需要後端 API 支持
+4. **防火牆**: 確保 Cloudflare 隧道正常運行
+5. **備份**: 定期備份配置文件
+
+---
+
+## 🔄 更新日誌
+
+### 2026-01-07
+- ✅ 創建專用指揮通道 UI
+- ✅ 配置 Caddy 路由
+- ✅ 添加外網訪問支持
+- ✅ 實現系統狀態監控
+- ✅ 添加安全驗證機制
+
+---
+
+## 📞 支持
+
+如有問題，請檢查：
+1. Caddy 服務是否運行: `docker ps | grep caddy`
+2. 文件是否正確部署: `ls wuchang_os/command_center/`
+3. Caddyfile 配置是否正確: `docker logs caddy`
+4. Cloudflare 隧道狀態: `docker logs cloudflared`
+
+---
+
+**最後更新**: 2026-01-07  
+**系統版本**: Wuchang OS V5.1.0  
+**AI 身份**: Little J (小j)

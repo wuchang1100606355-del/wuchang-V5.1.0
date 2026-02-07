@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>社區小J台語對話空白版</title>
+  <style>
+    body { font-family: 'Noto Sans TC', Arial, sans-serif; background: #f8fafc; margin: 0; }
+    .container { max-width: 420px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 2px 16px #0001; padding: 32px 24px; text-align: center; }
+    .avatar { width: 96px; height: 96px; border-radius: 50%; margin-bottom: 16px; border: 3px solid #00A8FF; }
+    h1 { color: #00A8FF; margin-bottom: 8px; }
+    .desc { color: #555; margin-bottom: 24px; }
+    .chatbox { width: 100%; min-height: 180px; border: 1px solid #eee; border-radius: 8px; padding: 12px; margin-bottom: 16px; background: #fafbfc; text-align: left; overflow-y: auto; }
+    .input-row { display: flex; gap: 8px; }
+    .input-row input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1em; }
+    .input-row button { background: #00A8FF; color: #fff; border: none; border-radius: 6px; padding: 10px 18px; font-size: 1em; cursor: pointer; }
+    .input-row button:active { background: #0077b6; }
+    .footer { color: #aaa; font-size: 0.9em; margin-top: 32px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img class="avatar" src="/static/little_j_avatar.png" alt="小J頭像">
+    <h1>社區小J台語對話空白版</h1>
+    <div class="desc">直接用台語輸入，妹妹會陪你練習、對話、測試台語AI！</div>
+    <div class="chatbox" id="chatbox"></div>
+    <div class="input-row">
+      <input id="userInput" type="text" placeholder="請用台語輸入...">
+      <button onclick="sendMsg()">送出</button>
+    </div>
+    <div class="footer">Powered by 小J | 台語AI測試空白版</div>
+  </div>
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    function sendMsg() {
+      const input = document.getElementById('userInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+      chatbox.innerHTML += `<div><b>你：</b>${msg}</div>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+      input.value = '';
+      // 空白版：妹妹暫時不自動回應，等哥哥測試或手動輸入
+    }
+    document.getElementById('userInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') sendMsg();
+    });
+  </script>
+</body>
+</html>

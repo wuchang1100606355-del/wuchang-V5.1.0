@@ -1,0 +1,37 @@
+<odoo>
+  <record id="menu_campaign" model="website.menu">
+    <field name="name">Community Campaign</field>
+    <field name="url">/campaign</field>
+    <field name="website_id" ref="website.default_website"/>
+    <field name="parent_id" ref="website.main_menu"/>
+    <field name="sequence">50</field>
+  </record>
+  <record id="campaign_wish_tree_initial" model="wuchang.community.campaign">
+    <field name="name">利公益・社區願望樹計畫</field>
+    <field name="description">這不只是一筆捐款，這是我們共同打造理想家園的起點。每一個願望，都是社區成長的養分。</field>
+    <field name="target_amount">500000</field>
+    <field name="current_amount">500000</field>
+    <field name="state">active</field>
+  </record>
+  <record id="wish_demo_1" model="wuchang.community.wish">
+    <field name="name">智慧冷鏈中繼站</field>
+    <field name="description">希望能有冷凍包裹的暫存區，不然上班都不能買生鮮！</field>
+    <field name="campaign_id" ref="campaign_wish_tree_initial"/>
+    <field name="color_theme">blue</field>
+    <field name="vote_count">42</field>
+  </record>
+  <record id="wish_demo_2" model="wuchang.community.wish">
+    <field name="name">中庭香草花園</field>
+    <field name="description">讓長輩可以種種花草，也可以讓小朋友認識植物。</field>
+    <field name="campaign_id" ref="campaign_wish_tree_initial"/>
+    <field name="color_theme">green</field>
+    <field name="vote_count">38</field>
+  </record>
+  <record id="menu_little_j_hub" model="website.menu">
+    <field name="name">Little J Hub</field>
+    <field name="url">/little-j/hub</field>
+    <field name="website_id" ref="website.default_website"/>
+    <field name="parent_id" ref="website.main_menu"/>
+    <field name="sequence">55</field>
+  </record>
+</odoo>

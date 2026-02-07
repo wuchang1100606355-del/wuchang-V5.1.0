@@ -1,0 +1,5 @@
+Date: 2025-12-26 20:26:02
+Action: Deploy Domain Strategy for loge-coffee.life
+Manager: o970106@gmail.com
+Details: Updated Caddyfile headers to reflect ownership and strategy.
+Verifier: Little J

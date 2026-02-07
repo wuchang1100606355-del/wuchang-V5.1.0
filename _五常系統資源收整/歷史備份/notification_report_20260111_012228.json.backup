@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-01-11T01:22:28.114632",
+  "message": {
+    "title": "小J 指揮通道設計方案報告",
+    "message": "專用指揮通道 UI 設計方案已完成，請查看報告。",
+    "timestamp": "2026-01-11T01:22:27.598689",
+    "report_url": "http://192.168.50.249/design_report",
+    "command_center_url": "http://192.168.50.249/command_center",
+    "access_code": "J2025",
+    "details": {
+      "designer": "Little J (小j)",
+      "completion_date": "2026-01-07",
+      "status": "設計完成，等待部署",
+      "features": [
+        "系統狀態監控",
+        "網絡狀態顯示",
+        "快速操作按鈕",
+        "命令控制台"
+      ]
+    }
+  },
+  "results": [
+    {
+      "device": {
+        "ip": "192.168.50.84",
+        "name": "LUNGsMSI.wuchang.life",
+        "type": "可能的 Odoo 實例",
+        "ports": [
+          22,
+          80,
+          443,
+          8080,
+          8069
+        ]
+      },
+      "methods": [
+        {
+          "method": "HTTP",
+          "port": 80,
+          "success": false,
+          "status_code": 404,
+          "response": "<!DOCTYPE html>\n        \n<html lang=\"en-US\" data-website-id=\"1\" data-main-object=\"ir.ui.view(240,)\">\n    <head>\n        <meta charset=\"utf-8\"/>\n        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=e"
+        },
+        {
+          "method": "Odoo",
+          "port": 8069,
+          "success": true,
+          "message": "Odoo 實例可訪問 (192.168.50.84:8069)",
+          "suggestion": "可以通過 Odoo 內部通知系統發送消息"
+        },
+        {
+          "method": "SSH",
+          "port": 22,
+          "success": false,
+          "message": "SSH 通知需要 SSH 客戶端支持",
+          "suggestion": "可以通過 SSH 連接到 192.168.50.84:22 發送通知"
+        },
+        {
+          "method": "File",
+          "file": "notifications/notification_192_168_50_84_20260111_012228.json",
+          "success": true
+        }
+      ]
+    },
+    {
+      "device": {
+        "ip": "192.168.50.88",
+        "name": "POS-PC.wuchang.life",
+        "type": "POS 系統電腦",
+        "ports": []
+      },
+      "methods": [
+        {
+          "method": "File",
+          "file": "notifications/notification_192_168_50_88_20260111_012228.json",
+          "success": true
+        }
+      ]
+    }
+  ],
+  "broadcast": {
+    "success": true,
+    "message": "已發送廣播到 192.168.50.255:9999"
+  }
+}

@@ -1,0 +1,354 @@
+# 全自動 DNS 狀態和證書檢查系統說明
+
+## 概述
+
+此系統會自動執行以下檢查，確保符合 Google 非營利組織合規要求：
+
+1. ✅ **確認首頁由 wuchang.life 可連**
+2. ✅ **Google 非營利組織合規確認 DNS 狀態**
+3. ✅ **自動完成憑證簽發**（Caddy + Let's Encrypt）
+4. ✅ **無人職守全自動執行**
+5. ✅ **授予工作內所必要之權限**
+
+**合規要求**：符合 Google 非營利組織合規要求
+
+## 功能
+
+### 1. 首頁可訪問性檢查
+
+- 檢查 `https://wuchang.life/` 是否可訪問
+- 檢查 SSL 證書是否有效
+- 檢查證書剩餘有效期
+- 自動警告即將過期的證書（30 天內）
+- **自動修復**：如果首頁不可訪問，自動重啟相關容器
+
+### 1.1. 自動問題檢測和修復（新增）
+
+系統會自動檢測以下問題並嘗試修復：
+
+- ✅ **Caddy 容器未運行**：自動啟動容器
+- ✅ **首頁不可訪問**：自動重啟 Caddy 和 wuchang-web 容器
+- ✅ **SSL 證書無效或即將過期**：自動觸發證書更新
+- ✅ **證書即將過期（7 天內）**：自動觸發證書續期
+- ⚠️ **DNS 不合規**：記錄問題，需要手動修復
+- ⚠️ **Caddy 配置文件缺失**：記錄問題，需要手動檢查
+
+### 2. Google 非營利組織合規 DNS 檢查
+
+- **A 記錄檢查**：主站和 www 子域名的 IP 地址
+- **MX 記錄檢查**：Google 郵件服務配置
+- **TXT 記錄檢查**：
+  - SPF 記錄（郵件安全）
+  - DMARC 記錄（郵件認證）
+  - DKIM 記錄（郵件簽名）
+  - ACME 挑戰記錄（Let's Encrypt 驗證）
+
+### 3. SSL 證書自動管理
+
+- 檢查 Caddy 容器狀態
+- 檢查 Let's Encrypt 證書狀態
+- 自動觸發證書續期（如果需要）
+- 檢查證書有效期和剩餘天數
+
+### 4. 自動問題檢測和修復
+
+系統會自動檢測問題並嘗試修復：
+
+- **Caddy 容器問題**：自動啟動或重啟容器
+- **首頁訪問問題**：自動重啟相關服務
+- **SSL 證書問題**：自動觸發證書更新
+- **修復驗證**：修復後自動驗證修復是否成功
+- **修復記錄**：記錄所有修復操作和結果
+
+### 5. 自動報告生成
+
+每次檢查後生成詳細的 JSON 格式報告，包含：
+- DNS 檢查結果
+- SSL 證書狀態
+- 合規性評估
+- **自動修復結果**（新增）
+- 建議和警告
+
+## 安裝與設置
+
+### 1. 安裝必要套件
+
+```bash
+pip install dnspython requests urllib3
+```
+
+或使用 requirements.txt：
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. 設置定時任務（Windows）
+
+#### 方法 A：使用快速設置腳本（推薦）
+
+以**管理員權限**打開命令提示符或 PowerShell，執行：
+
+```bash
+cd "C:\wuchang V5.1.0\scripts"
+.\快速設置全自動合規檢查.bat
+```
+
+#### 方法 B：使用 PowerShell 腳本
+
+以**管理員權限**打開 PowerShell，執行：
+
+```powershell
+cd "C:\wuchang V5.1.0\scripts"
+.\setup_auto_compliance_task.ps1
+```
+
+#### 方法 C：手動設置
+
+參考 `scripts/setup_auto_compliance_task.ps1` 中的設置步驟。
+
+### 3. 測試執行
+
+執行一次測試以確認腳本正常工作：
+
+```bash
+cd "C:\wuchang V5.1.0"
+python scripts/auto_compliance_certificate_check.py
+```
+
+## 檢查內容
+
+### DNS 檢查
+
+#### A 記錄
+
+- `wuchang.life` → `104.199.144.93`
+- `www.wuchang.life` → `104.199.144.93`
+
+#### MX 記錄
+
+- `wuchang.life` → `smtp.google.com` (優先級 1)
+
+#### TXT 記錄
+
+- **SPF 記錄**：`v=spf1 ...`（郵件發送授權）
+- **DMARC 記錄**：`v=dmarc1 ...`（郵件認證策略）
+- **DKIM 記錄**：`...`（郵件簽名）
+- **ACME 挑戰**：`_acme-challenge.wuchang.life`（Let's Encrypt 驗證）
+
+### SSL 證書檢查
+
+- 證書有效性
+- 證書過期時間
+- 剩餘有效天數
+- 自動續期狀態
+
+### Caddy 狀態檢查
+
+- Caddy 容器運行狀態
+- Caddy 配置文件存在性
+- Let's Encrypt 證書目錄
+- 自動 HTTPS 配置
+
+## 自動執行
+
+### 定時任務配置
+
+- **任務名稱**：`WuchangAutoComplianceCheck`
+- **執行頻率**：每小時執行一次
+- **權限級別**：最高權限（Highest）- 授予工作內所必要之權限
+- **首次執行**：設置後 60 分鐘
+- **持續時間**：365 天（可續期）
+
+### 執行條件
+
+- ✅ 系統啟動後自動執行
+- ✅ 僅在網絡可用時執行
+- ✅ 電池模式下也可執行
+- ✅ 自動重試（失敗時重試 3 次）
+
+## 報告格式
+
+### 報告位置
+
+`logs/compliance_cert_check_{時間戳}.json`
+
+### 報告結構
+
+```json
+{
+  "timestamp": "2026-01-11T10:00:00",
+  "domain": "wuchang.life",
+  "organization_type": "Non-profit",
+  "compliance_required": true,
+  "homepage_check": {
+    "url": "https://wuchang.life/",
+    "accessible": true,
+    "status_code": 200,
+    "ssl_valid": true,
+    "cert_expiry": "2026-04-11T00:00:00",
+    "cert_days_remaining": 90
+  },
+  "dns_compliance": {
+    "compliant": true,
+    "checks": {
+      "A_root": {...},
+      "A_www": {...},
+      "MX": {...},
+      "TXT_root": {...},
+      "TXT_acme": {...}
+    },
+    "issues": [],
+    "warnings": []
+  },
+  "caddy_certificate_status": {
+    "caddy_running": true,
+    "auto_renewal_enabled": true,
+    "certificates": [...]
+  },
+  "certificate_renewal": {
+    "success": true,
+    "method": "docker_reload"
+  },
+  "summary": {
+    "homepage_accessible": true,
+    "homepage_ssl_valid": true,
+    "dns_compliant": true,
+    "caddy_running": true,
+    "auto_renewal_enabled": true,
+    "cert_renewal_triggered": true,
+    "all_checks_passed": true
+  },
+  "compliance_status": {
+    "google_nonprofit_compliant": true,
+    "certificate_auto_renewal": true,
+    "ready_for_production": true
+  }
+}
+```
+
+## Google 非營利組織合規要求
+
+### 合規檢查項目
+
+1. **DNS 配置合規**：所有必需的 DNS 記錄正確配置
+2. **SSL 證書有效**：HTTPS 證書有效且未過期
+3. **郵件服務配置**：使用 Google 郵件服務（MX 記錄）
+4. **郵件安全**：SPF、DMARC、DKIM 記錄配置正確
+5. **自動證書管理**：證書自動續期已啟用
+
+### 合規狀態
+
+- ✅ **符合**：所有檢查通過，符合 Google 非營利組織合規要求
+- ❌ **不符合**：部分檢查未通過，需要修復
+
+## 故障排除
+
+### 問題：DNS 記錄不符合要求
+
+**解決方法**：
+
+1. 檢查 DNS 提供商設置
+2. 確認 A 記錄指向正確的 IP 地址
+3. 確認 MX 記錄指向 Google 郵件服務
+4. 添加缺失的 TXT 記錄（SPF、DMARC、DKIM）
+
+### 問題：SSL 證書無效或即將過期
+
+**解決方法**：
+
+1. 檢查 Caddy 容器是否運行
+2. 檢查 Caddy 配置文件是否正確
+3. 檢查 Let's Encrypt 證書目錄權限
+4. 手動觸發證書更新：`docker exec caddy caddy reload`
+
+### 問題：Caddy 容器未運行
+
+**解決方法**：
+
+1. 檢查 Docker 是否運行
+2. 啟動 Caddy 容器：`docker start caddy`
+3. 檢查容器日誌：`docker logs caddy`
+4. 檢查配置文件：`wuchang_os/Caddyfile`
+
+### 問題：定時任務不執行
+
+**解決方法**：
+
+1. 檢查任務是否存在：`Get-ScheduledTask -TaskName "WuchangAutoComplianceCheck"`
+2. 檢查任務狀態：`Get-ScheduledTask -TaskName "WuchangAutoComplianceCheck" | Select-Object State`
+3. 檢查 Python 路徑是否正確
+4. 檢查腳本文件是否存在
+5. 查看任務執行歷史和錯誤信息
+
+## 任務管理
+
+### 查看任務狀態
+
+```powershell
+Get-ScheduledTask -TaskName "WuchangAutoComplianceCheck"
+Get-ScheduledTask -TaskName "WuchangAutoComplianceCheck" | Get-ScheduledTaskInfo
+```
+
+### 手動觸發執行
+
+```powershell
+Start-ScheduledTask -TaskName "WuchangAutoComplianceCheck"
+```
+
+### 停止任務
+
+```powershell
+Stop-ScheduledTask -TaskName "WuchangAutoComplianceCheck"
+```
+
+### 刪除任務
+
+```powershell
+Unregister-ScheduledTask -TaskName "WuchangAutoComplianceCheck" -Confirm:$false
+```
+
+### 查看執行歷史
+
+```powershell
+Get-WinEvent -LogName Microsoft-Windows-TaskScheduler/Operational | Where-Object {$_.Message -like '*WuchangAutoComplianceCheck*'}
+```
+
+## 權限說明
+
+### 授予的權限
+
+- **執行權限**：最高權限（Highest）
+- **網絡權限**：需要網絡連接
+- **Docker 權限**：需要訪問 Docker 容器
+- **文件系統權限**：需要讀寫日誌和配置文件
+
+### 權限要求
+
+- 設置定時任務：需要管理員權限
+- 執行檢查：需要網絡訪問權限
+- Docker 操作：需要 Docker 運行權限
+- 文件操作：需要讀寫日誌目錄權限
+
+## 注意事項
+
+1. **合規要求**：所有操作必須符合 Google 非營利組織合規要求
+2. **自動執行**：系統會每小時自動執行檢查，無需人工干預
+3. **證書自動續期**：Caddy 會自動處理 Let's Encrypt 證書的申請和續期
+4. **報告保留**：檢查報告會保存在 `logs/` 目錄，建議定期清理舊報告
+5. **網絡要求**：檢查需要網絡連接，任務已設置為僅在網絡可用時執行
+
+## 合規聲明
+
+✅ **符合 Google 非營利組織合規要求**
+
+- 所有操作均以合規為最高要件
+- 僅用於非營利目的
+- 保護用戶隱私和數據安全
+- 遵守數據保護法規
+
+---
+
+**創建時間**：2026-01-11  
+**版本**：1.0.0  
+**狀態**：✅ 已就緒，等待定時任務執行

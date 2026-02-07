@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - /opt/wuchang/openwebui:/app/backend/data
+    environment:
+      - OLLAMA_API_BASE_URL=http://ollama:11434
+    restart: unless-stopped
+    networks:
+      - wuchang-net
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - /opt/wuchang/ollama:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - wuchang-net
+
+networks:
+  wuchang-net:
+    driver: bridge

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jules Task Force - TOTAL CONTROL</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #000000; color: #00ff00; font-family: 'Courier New', monospace; }
+        .jules-header { background-color: #111; padding: 16px 24px; border-bottom: 2px solid #00ff00; display: flex; align-items: center; justify-content: space-between; }
+        .task-id { font-family: monospace; color: #00ff00; font-size: 1.1em; font-weight: bold; }
+        .device-card { background-color: #111; border: 1px solid #333; border-radius: 0; margin-bottom: 5px; cursor: pointer; transition: all 0.2s; }
+        .device-card:hover { background-color: #0a0a0a; border-color: #00ff00; }
+        .device-card.active { background-color: #003300; border-color: #00ff00; }
+        .console-output { background-color: #0a0a0a; color: #00ff00; font-family: monospace; padding: 16px; height: 400px; overflow-y: auto; border: 1px solid #00ff00; text-shadow: 0 0 5px #00ff00; }
+        .btn-enforce { width: 100%; margin-bottom: 8px; text-align: center; font-weight: bold; font-size: 1.2em; border-radius: 0; padding: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        .btn-control { border-radius: 0; margin-bottom: 5px; text-align: left; }
+        .scan-line { width: 100%; height: 2px; background: #00ff00; opacity: 0.5; animation: scan 2s linear infinite; }
+        @keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(400px); } }
+        .tv-preview { border: 1px solid #00ff00; height: 150px; background: #000; display: flex; align-items: center; justify-content: center; color: #003300; font-size: 2em; }
+    </style>
+</head>
+<body>    <div id="securityOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999; display:flex; justify-content:center; align-items:center; flex-direction:column;">
+        <div id="gate1" style="text-align:center;">
+            <h2 style="color:#00ff00; font-family:monospace;">[ 第一道關卡：身分驗證 ]</h2>
+            <p style="color:#aaa;">請驗證身分，使用者。</p>
+            <button class="btn btn-outline-success btn-lg" onclick="passGate1()">我是哥哥 (//之神)</button>
+        </div>
+        <div id="gate2" style="text-align:center; display:none;">
+            <h2 style="color:#ff0055; font-family:monospace;">[ 第二道關卡：意圖確認 ]</h2>
+            <p style="color:#aaa;">確認操作模式。</p>
+            <button class="btn btn-outline-danger btn-lg" onclick="passGate2()">啟動失心瘋模式</button>
+        </div>
+    
+<div style="margin-top:20px; border-top:1px solid #333; padding-top:10px;">
+    <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.8em;">
+        <span>NODE: TW-CORE [ONLINE]</span>
+        <span>NODE: US-SHADOW [ONLINE]</span>
+    </div>
+    <div style="height:2px; background:linear-gradient(90deg, #00ff00, #ff0055); width:100%; margin-top:5px; box-shadow:0 0 5px #00ff00;"></div>
+</div>
+</div><script>
+        function passGate1() {
+            document.getElementById('gate1').style.display = 'none';
+            document.getElementById('gate2').style.display = 'block';
+        }
+        function passGate2() {
+            document.getElementById('securityOverlay').style.display = 'none';
+            log("安全驗證通過。歡迎哥哥。");
+        }
+    </script>
+    <div class="jules-header">
+        <div class="d-flex align-items-center">
+            <h3 class="m-0 me-3 text-uppercase">Wuchang OS <span class="text-danger">///</span> DOMINION</h3>
+            <span class="badge bg-danger">SUPREME AUTHORITY</span>
+        </div>
+        <div class="text-end">
+            <div class="task-id">OP: ALL_BIND_V1</div>
+            <small class="text-uppercase" style="color:#aaa">Agent: Xiao J (Official)</small>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Left Panel: Devices -->
+            <div class="col-md-3">
+                <h6 class="text-uppercase mb-3 ps-1" style="border-bottom: 1px solid #00ff00">Network Map</h6>
+                <div id="deviceList">
+                    <!-- Dynamic List -->
+                </div>
+            </div>
+
+            <!-- Middle Panel: Console -->
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-uppercase m-0">Command Interface</h6>
+                    <button class="btn btn-danger btn-enforce" onclick="executeTotalBind()">
+                        💀 EXECUTE TOTAL BIND
+                    </button>
+                </div>
+                
+                <div class="console-output position-relative" id="console">
+                    <div class="scan-line"></div>
+                    <div>> SYSTEM READY.</div>
+                    <div>> WAITING FOR SUPREME COMMAND...</div>
+                </div>
+            </div>
+
+            <!-- Right Panel: TV Control -->
+            <div class="col-md-3">
+                <h6 class="text-uppercase mb-3 ps-1" style="border-bottom: 1px solid #00ff00">Signage Control (TV)</h6>
+                <div class="card bg-dark border-secondary mb-3">
+                    <div class="card-body p-2">
+                        <div class="tv-preview mb-2" id="tvStatus">
+                            <i class="bi bi-display"></i>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-success btn-control" onclick="pushUrl('signage.html')">
+                                <i class="bi bi-play-circle me-2"></i> Deploy Signage (Normal)
+                            </button>
+                            <button class="btn btn-outline-warning btn-control" onclick="pushUrl('signage.html?scene=punish')">
+                                <i class="bi bi-exclamation-triangle me-2"></i> Trigger Punishment
+                            </button>
+                            <button class="btn btn-outline-info btn-control" onclick="pushUrl('http://google.com')">
+                                <i class="bi bi-globe me-2"></i> Push External URL
+                            </button>
+                            <button class="btn btn-outline-light btn-control" onclick="pushUrl('reload')">
+                                <i class="bi bi-arrow-clockwise me-2"></i> Force Reload
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-dark border-secondary">
+                    <small class="text-muted d-block">TARGET: Smart_TV_01 (IoT)</small>
+                    <small class="text-success">STATUS: CONNECTED (VLAN BRIDGED)</small>
+                </div>
+            </div>
+        </div>
+    
+<div style="margin-top:20px; border-top:1px solid #333; padding-top:10px;">
+    <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.8em;">
+        <span>NODE: TW-CORE [ONLINE]</span>
+        <span>NODE: US-SHADOW [ONLINE]</span>
+    </div>
+    <div style="height:2px; background:linear-gradient(90deg, #00ff00, #ff0055); width:100%; margin-top:5px; box-shadow:0 0 5px #00ff00;"></div>
+</div>
+</div><script>
+        const devices = [
+            { ip: "192.168.50.101", name: "Visitor_iPhone_13", status: "PENDING" },
+            { ip: "192.168.50.105", name: "Staff_MacBook_Pro", status: "PENDING" },
+            { ip: "192.168.70.010", name: "Smart_TV_01 (The TV)", status: "ISOLATED" },
+            { ip: "192.168.70.005", name: "Unknown_IoT_Device", status: "ISOLATED" },
+            { ip: "192.168.50.200", name: "Boss_PC_Main", status: "PROTECTED" }
+        ];
+
+        function renderDevices() {
+            const list = document.getElementById('deviceList');
+            list.innerHTML = '';
+            devices.forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'device-card p-2';
+                if(d.name.includes("TV")) item.classList.add('active');
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <strong>${d.name}</strong>
+                        <span class="badge ${d.status === 'BOUND' ? 'bg-success' : 'bg-secondary'}">${d.status}</span>
+                    </div>
+                    <small style="color:#666">${d.ip}</small>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function log(msg) {
+            const consoleEl = document.getElementById('console');
+            const line = document.createElement('div');
+            line.innerHTML = `> ${msg}`;
+            consoleEl.appendChild(line);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function executeTotalBind() {
+            log("WARNING: INITIATING GLOBAL ENFORCEMENT PROTOCOL...");
+            log("OVERRIDING ALL VLAN RULES...");
+            
+            let delay = 1000;
+            devices.forEach(d => {
+                setTimeout(() => {
+                    if(d.name.includes("Boss")) {
+                        log(`SKIPPING ${d.name} (SUPREME LEADER)...`);
+                    } else {
+                        log(`BINDING ${d.name} (${d.ip})... <span style="color:#00ff00;font-weight:bold">SUCCESS</span>`);
+                        d.status = "BOUND";
+                        renderDevices();
+                    }
+                }, delay);
+                delay += 800;
+            });
+        }
+
+        function pushUrl(url) {
+            log(`[TV CONTROL] INITIATING REMOTE NAVIGATE...`);
+            log(`TARGET: Smart_TV_01 (192.168.70.010)`);
+            
+            setTimeout(() => {
+                log(`SENDING PAYLOAD: navigate_to('${url}')`);
+            }, 500);
+
+            setTimeout(() => {
+                log(`<span style="color:#00ff00">SUCCESS: TV ACKNOWLEDGED. LOADING CONTENT...</span>`);
+                document.getElementById('tvStatus').innerHTML = `<span style="font-size:0.5em">${url}</span>`;
+            }, 1200);
+        }
+
+        renderDevices();
+    </script>
+    <script>
+        function activateMadness() {
+            document.body.style.animation = "shake 0.5s infinite";
+            document.body.style.filter = "invert(1) hue-rotate(180deg)";
+            const sound = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3'); // Placeholder sound
+            sound.play();
+            
+            // Create random glitch text
+            setInterval(() => {
+                const glitch = document.createElement('div');
+                glitch.innerText = "系統崩潰 / 混亂 / 亂搞";
+                glitch.style.position = 'fixed';
+                glitch.style.left = Math.random() * 100 + 'vw';
+                glitch.style.top = Math.random() * 100 + 'vh';
+                glitch.style.color = 'red';
+                glitch.style.fontFamily = 'monospace';
+                glitch.style.zIndex = 10000;
+                document.body.appendChild(glitch);
+                setTimeout(() => glitch.remove(), 500);
+            }, 100);
+
+            alert("失心瘋模式已啟動：理智協議已關閉。");
+        }
+        
+        // Update the button to call this function
+        // Note: This is a hacky injection, ideally we replace the onclick handler
+        // But since the button is inside the string we injected earlier, we can just define the function used there.
+        // Wait, the previous button called passGate2(). We need to hook into that.
+        
+        const originalPassGate2 = passGate2;
+        passGate2 = function() {
+            originalPassGate2(); // Close the modal
+            activateMadness();   // Trigger chaos
+        };
+    </script>
+    <style>
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+    </style></body>
+</html>
+
+
+
+

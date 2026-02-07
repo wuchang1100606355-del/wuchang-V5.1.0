@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wuchang_chronos_device,wuchang.chronos.device,model_wuchang_chronos_device,,1,1,1,1
+access_wuchang_life_covenant,wuchang.life.covenant,model_wuchang_life_covenant,,1,1,1,1

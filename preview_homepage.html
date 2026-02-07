@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wuchang OS V5.1.0 Preview</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body, html { height: 100%; margin: 0; background-color: #000; color: #a8a29e; font-family: sans-serif; }
+        .bg-black { background-color: #000000 !important; }
+        .bg-stone-900 { background-color: #1c1917 !important; }
+        .bg-stone-950 { background-color: #0c0a09 !important; }
+        .bg-stone-800 { background-color: #292524 !important; }
+        .text-stone-300 { color: #d6d3d1 !important; }
+        .text-stone-400 { color: #a8a29e !important; }
+        .text-stone-500 { color: #78716c !important; }
+        .border-stone-800 { border-color: #292524 !important; }
+        .text-emerald-500 { color: #10b981 !important; }
+        .text-purple-500 { color: #a855f7 !important; }
+        .text-blue-400 { color: #60a5fa !important; }
+        .text-red-500 { color: #ef4444 !important; }
+        
+        /* Hero Section */
+        .s_cover { 
+            background-color: #000000; 
+            min-height: 100vh; 
+            position: relative; 
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Components */
+        .card-dashboard {
+            background-color: #1c1917;
+            border: 1px solid #292524;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .progress { height: 16px; background-color: #292524; border-radius: 999px; }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <!-- Hero Section -->
+        <section class="s_cover">
+            <div class="container text-center text-white d-flex flex-column justify-content-center align-items-center" style="position: relative; z-index: 2; width: 100%;">
+                <h1 class="display-3 fw-bold mb-4">Wuchang OS V5.1.0</h1>
+                <p class="lead mb-5" style="font-size: 1.5rem; opacity: 0.8;">
+                    數位人權．極速響應．在地治理<br/>
+                    <span style="font-size: 1rem; opacity: 0.6;">Digital Human Rights • Instant Response • Local Governance</span>
+                </p>
+                
+                <div class="row justify-content-center w-100 mb-5">
+                    <div class="col-md-4 mb-3">
+                        <a href="#" class="btn btn-primary btn-lg w-100 shadow-lg" style="border-radius: 50px; padding: 15px 30px;">
+                            <i class="fa fa-sign-in-alt me-2"></i> 進入系統 (System Login)
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="#" class="btn btn-outline-light btn-lg w-100 shadow-lg" style="border-radius: 50px; padding: 15px 30px;">
+                            <i class="fa fa-shopping-cart me-2"></i> 社區商城 (Community Shop)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Latency Comparison -->
+                <div class="row w-100 text-start justify-content-center">
+                    <div class="col-md-5 mb-4">
+                        <div class="card-dashboard" style="opacity: 0.6;">
+                             <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="h5 fw-bold text-stone-400 mb-0"><i class="fa fa-globe text-blue-400 me-2"></i> 傳統雲端 AI</h4>
+                                <span class="h4 font-monospace text-stone-500 mb-0">3000 <span class="fs-6">ms</span></span>
+                             </div>
+                             <div class="progress">
+                                <div class="progress-bar bg-primary" style="width: 40%"></div>
+                             </div>
+                             <p class="mt-2 text-stone-500 small mb-0">還在排隊等伺服器回應...</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mb-4">
+                        <div class="card-dashboard" style="opacity: 0.4;">
+                             <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="h5 fw-bold text-stone-500 mb-0"><i class="fa fa-broadcast-tower text-red-500 me-2"></i> 火星通訊</h4>
+                                <span class="h4 font-monospace text-stone-500 mb-0">25 <span class="fs-6">min</span></span>
+                             </div>
+                             <div class="progress">
+                                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+                             </div>
+                             <p class="mt-2 text-stone-500 small mb-0">等你收到訊息，仗都打完了。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-muted">
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <span class="badge bg-success me-2 p-2">● Online</span>
+                        <span style="opacity: 0.7;">System Status: Normal</span>
+                    </div>
+                    <p style="font-size: 0.9rem; opacity: 0.5;">Core Model: Gemini 2.0 Pro Experimental (Little J)</p>
+                </div>
+            </div>
+            
+            <!-- Background Effect Overlay -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(20,20,20,0.8) 100%); z-index: 1;"></div>
+        </section>
+
+        <!-- Black Box Model -->
+        <section class="py-5 bg-stone-900">
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="bg-black border border-stone-800 p-5 rounded-3 position-relative overflow-hidden">
+                            <div class="position-absolute top-0 start-0 w-100" style="height: 4px; background: linear-gradient(90deg, #a855f7, #ec4899, #ef4444);"></div>
+                            <h2 class="h2 fw-bold mb-4 d-flex align-items-center text-white">
+                                <i class="fa fa-lock text-purple-500 me-3"></i>
+                                <span>黑盒子模型推論</span>
+                            </h2>
+                            <form>
+                                <div class="mb-4">
+                                    <label class="form-label text-stone-400 font-monospace">輸入指令 (Prompt)</label>
+                                    <input type="text" class="form-control form-control-lg bg-stone-900 border-stone-800 text-white font-monospace" placeholder="請輸入測試指令...">
+                                </div>
+                                <button type="button" class="btn btn-secondary btn-lg w-100 py-3 border-stone-800 text-white fw-bold">
+                                    執行黑盒推論 (Demo Only)
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Digital Rights -->
+        <section class="py-5 bg-stone-950 text-center">
+            <div class="container py-5">
+                <h2 class="h2 fw-bold mb-4 text-white">數位人權宣言</h2>
+                <p class="lead text-stone-400 mx-auto mb-5" style="max-width: 700px;">
+                    我們堅持語音與極速響應，是因為<span class="text-white fw-bold">老人家 與身障者</span>的等待成本最高。<br/>
+                    科技不該是權貴的玩具，而是弱勢的拐杖。
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button class="btn btn-dark rounded-pill px-4 py-3 text-stone-300">
+                        <i class="fa fa-microphone me-2"></i> 台語語音支援 (建置中)
+                    </button>
+                    <button class="btn btn-dark rounded-pill px-4 py-3 text-stone-300">
+                        <i class="fa fa-shield-alt me-2"></i> 物理加密保護
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-4 border-top border-stone-800 text-center text-stone-500 bg-stone-950">
+            <p class="mb-0">&copy; 2026 Wuchang OS. All Rights Reserved.</p>
+        </footer>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

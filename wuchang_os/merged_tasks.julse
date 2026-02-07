@@ -1,0 +1,24 @@
+{
+    "meta": {
+        "generated_by": "Wuchang AI Julse Processor",
+        "generated_at": "2026-01-28T07:41:21.570196",
+        "source_files_count": 0,
+        "total_tasks": 2
+    },
+    "tasks": [
+        {
+            "title": "Verify Odoo Sync",
+            "description": "Check if this task appears in Odoo",
+            "status": "todo",
+            "source_file": "Manual Entry",
+            "imported_at": "2026-01-28T07:41:21.570181"
+        },
+        {
+            "title": "Clean up J Drive",
+            "description": "Organize scattered files",
+            "status": "todo",
+            "source_file": "Manual Entry",
+            "imported_at": "2026-01-28T07:41:21.570194"
+        }
+    ]
+}

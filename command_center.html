@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小J 專用指揮通道 - Command Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #00ff00;
+            --secondary-color: #ff0055;
+            --bg-dark: #000000;
+            --bg-card: #111111;
+            --border-color: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 100%);
+            color: var(--primary-color);
+            font-family: 'Courier New', 'Microsoft JhengHei', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            animation: scan 3s linear infinite;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        
+        .header {
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid var(--primary-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--primary-color);
+            margin: 0;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .container-fluid {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .card:hover::before {
+            left: 100%;
+        }
+        
+        .card-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-body {
+            color: #cccccc;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: #888888;
+        }
+        
+        .metric-value {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .btn-command {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-command:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+        
+        .btn-command.danger {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+        
+        .btn-command.danger:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .console {
+            background: #000000;
+            border: 1px solid var(--primary-color);
+            padding: 1rem;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+        
+        .console-line {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .console-line.error {
+            color: var(--secondary-color);
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+        
+        .console-line.success {
+            color: var(--primary-color);
+        }
+        
+        .console-line.info {
+            color: #00aaff;
+        }
+        
+        .service-status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .service-status.online {
+            background: var(--primary-color);
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+        
+        .service-status.offline {
+            background: #666666;
+        }
+        
+        .service-status.warning {
+            background: #ffaa00;
+            box-shadow: 0 0 5px #ffaa00;
+        }
+        
+        .security-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .security-gate {
+            text-align: center;
+            padding: 2rem;
+            border: 2px solid var(--primary-color);
+            background: var(--bg-card);
+            max-width: 500px;
+        }
+        
+        .security-gate h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+        
+        .input-code {
+            background: #000000;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 1rem;
+            font-size: 1.5rem;
+            text-align: center;
+            letter-spacing: 0.5rem;
+            width: 100%;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scan-line"></div>
+    
+    <!-- Security Overlay -->
+    <div id="securityOverlay" class="security-overlay">
+        <div class="security-gate">
+            <h2><i class="bi bi-shield-lock"></i> 指揮通道驗證</h2>
+            <p style="color: #888; margin-bottom: 1rem;">請輸入訪問代碼</p>
+            <input type="password" id="accessCode" class="input-code" placeholder="••••••" maxlength="6" autofocus>
+            <button class="btn-command" onclick="verifyAccess()">驗證</button>
+            <p id="errorMsg" style="color: var(--secondary-color); margin-top: 1rem; display: none;">訪問代碼錯誤</p>
+        </div>
+    </div>
+    
+    <!-- Main Interface -->
+    <div id="mainInterface" style="display: none;">
+        <div class="header">
+            <h1><i class="bi bi-terminal"></i> 小J 專用指揮通道</h1>
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="connectionStatus">已連接</span>
+                <span id="currentTime"></span>
+            </div>
+        </div>
+        
+        <div class="container-fluid">
+            <!-- System Status -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="bi bi-server"></i> 系統狀態
+                    </div>
+                    <div class="card-body">
+                        <div class="metric">
+                            <span class="metric-label">Odoo 服務</span>
+                            <span class="metric-value" id="odooStatus">
+                                <span class="service-status" id="odooDot"></span>檢查中...
+                            </span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Ollama LLM</span>
+                            <span class="metric-value" id="ollamaStatus">
+                                <span class="service-status" id="ollamaDot"></span>檢查中...
+                            </span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">資料庫</span>
+                            <span class="metric-value" id="dbStatus">
+                                <span class="service-status" id="dbDot"></span>檢查中...
+                            </span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Caddy 代理</span>
+                            <span class="metric-value" id="caddyStatus">
+                                <span class="service-status" id="caddyDot"></span>檢查中...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Network Status -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="bi bi-wifi"></i> 網絡狀態
+                    </div>
+                    <div class="card-body">
+                        <div class="metric">
+                            <span class="metric-label">本機 IP</span>
+                            <span class="metric-value" id="localIP">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">外網訪問</span>
+                            <span class="metric-value" id="externalAccess">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Cloudflare 隧道</span>
+                            <span class="metric-value" id="tunnelStatus">
+                                <span class="service-status" id="tunnelDot"></span>檢查中...
+                            </span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">連接設備</span>
+                            <span class="metric-value" id="connectedDevices">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="bi bi-lightning"></i> 快速操作
+                    </div>
+                    <div class="card-body">
+                        <button class="btn-command" onclick="refreshStatus()">
+                            <i class="bi bi-arrow-clockwise"></i> 刷新狀態
+                        </button>
+                        <button class="btn-command" onclick="scanNetwork()">
+                            <i class="bi bi-search"></i> 掃描網絡
+                        </button>
+                        <button class="btn-command" onclick="restartServices()">
+                            <i class="bi bi-arrow-repeat"></i> 重啟服務
+                        </button>
+                        <button class="btn-command danger" onclick="emergencyStop()">
+                            <i class="bi bi-exclamation-triangle"></i> 緊急停止
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Command Console -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="bi bi-terminal"></i> 命令控制台
+                </div>
+                <div class="card-body">
+                    <div id="console" class="console"></div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <input type="text" id="commandInput" class="form-control" 
+                               style="background: #000; border: 1px solid var(--primary-color); color: var(--primary-color);" 
+                               placeholder="輸入命令..." onkeypress="handleCommandKey(event)">
+                        <button class="btn-command" onclick="executeCommand()" style="width: auto;">
+                            <i class="bi bi-send"></i> 執行
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Access Code (should be changed in production)
+        const ACCESS_CODE = 'J2025';
+        
+        // Initialize
+        let statusCheckInterval;
+        
+        function verifyAccess() {
+            const code = document.getElementById('accessCode').value.toUpperCase();
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (code === ACCESS_CODE) {
+                document.getElementById('securityOverlay').style.display = 'none';
+                document.getElementById('mainInterface').style.display = 'block';
+                log('訪問驗證成功。歡迎使用指揮通道。', 'success');
+                initializeSystem();
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('accessCode').value = '';
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 2000);
+            }
+        }
+        
+        document.getElementById('accessCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyAccess();
+            }
+        });
+        
+        function initializeSystem() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            checkAllStatus();
+            statusCheckInterval = setInterval(checkAllStatus, 30000); // Check every 30 seconds
+        }
+        
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleString('zh-TW');
+        }
+        
+        function log(message, type = 'info') {
+            const console = document.getElementById('console');
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            const timestamp = new Date().toLocaleTimeString('zh-TW');
+            line.textContent = `[${timestamp}] ${message}`;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+        
+        async function checkAllStatus() {
+            log('檢查系統狀態...', 'info');
+            
+            // Check Odoo
+            checkService('odoo', 'http://localhost:8069/web/health');
+            
+            // Check Ollama
+            checkService('ollama', 'http://localhost:11434/api/tags');
+            
+            // Check Database (indirect via Odoo)
+            checkService('db', 'http://localhost:8069/web/health');
+            
+            // Check Caddy
+            checkService('caddy', 'http://localhost/health');
+            
+            // Check Cloudflare Tunnel
+            checkTunnelStatus();
+            
+            // Get local IP
+            getLocalIP();
+        }
+        
+        async function checkService(serviceName, url) {
+            try {
+                const response = await fetch(url, { 
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                const statusDot = document.getElementById(`${serviceName}Dot`);
+                const statusText = document.getElementById(`${serviceName}Status`);
+                
+                if (response.ok) {
+                    statusDot.className = 'service-status online';
+                    statusText.innerHTML = `<span class="service-status online"></span>運行中`;
+                    log(`${serviceName} 服務正常`, 'success');
+                } else {
+                    statusDot.className = 'service-status warning';
+                    statusText.innerHTML = `<span class="service-status warning"></span>異常`;
+                    log(`${serviceName} 服務響應異常: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                const statusDot = document.getElementById(`${serviceName}Dot`);
+                const statusText = document.getElementById(`${serviceName}Status`);
+                statusDot.className = 'service-status offline';
+                statusText.innerHTML = `<span class="service-status offline"></span>離線`;
+                log(`${serviceName} 服務無法連接`, 'error');
+            }
+        }
+        
+        async function checkTunnelStatus() {
+            // Check if Cloudflare tunnel is active
+            try {
+                const response = await fetch('/health', { 
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                const tunnelDot = document.getElementById('tunnelDot');
+                const tunnelStatus = document.getElementById('tunnelStatus');
+                
+                if (response.ok) {
+                    tunnelDot.className = 'service-status online';
+                    tunnelStatus.innerHTML = `<span class="service-status online"></span>已連接`;
+                    document.getElementById('externalAccess').textContent = '可用';
+                } else {
+                    tunnelDot.className = 'service-status warning';
+                    tunnelStatus.innerHTML = `<span class="service-status warning"></span>不穩定`;
+                    document.getElementById('externalAccess').textContent = '檢查中';
+                }
+            } catch (error) {
+                const tunnelDot = document.getElementById('tunnelDot');
+                const tunnelStatus = document.getElementById('tunnelStatus');
+                tunnelDot.className = 'service-status offline';
+                tunnelStatus.innerHTML = `<span class="service-status offline"></span>未連接`;
+                document.getElementById('externalAccess').textContent = '不可用';
+            }
+        }
+        
+        async function getLocalIP() {
+            try {
+                // Try to get IP from network API or use known IP
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                document.getElementById('localIP').textContent = data.ip || '192.168.50.249';
+            } catch (error) {
+                document.getElementById('localIP').textContent = '192.168.50.249';
+            }
+        }
+        
+        function refreshStatus() {
+            log('手動刷新系統狀態...', 'info');
+            checkAllStatus();
+        }
+        
+        function scanNetwork() {
+            log('開始掃描網絡設備...', 'info');
+            // This would call a backend API to scan network
+            log('網絡掃描功能需要後端 API 支持', 'info');
+        }
+        
+        function restartServices() {
+            if (confirm('確定要重啟所有服務嗎？')) {
+                log('重啟服務功能需要後端 API 支持', 'info');
+                // This would call a backend API to restart services
+            }
+        }
+        
+        function emergencyStop() {
+            if (confirm('⚠️ 緊急停止所有服務？此操作不可逆！')) {
+                log('緊急停止功能需要後端 API 支持', 'error');
+                // This would call a backend API to stop services
+            }
+        }
+        
+        function executeCommand() {
+            const input = document.getElementById('commandInput');
+            const command = input.value.trim();
+            
+            if (command) {
+                log(`執行命令: ${command}`, 'info');
+                // This would send command to backend API
+                log('命令執行功能需要後端 API 支持', 'info');
+                input.value = '';
+            }
+        }
+        
+        function handleCommandKey(event) {
+            if (event.key === 'Enter') {
+                executeCommand();
+            }
+        }
+    </script>
+</body>
+</html>

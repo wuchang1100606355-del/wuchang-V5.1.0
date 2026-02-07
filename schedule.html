@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head`r`n    <link rel="stylesheet" href="wuchang_theme.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J姊行程表 (Sister J's Schedule)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #121212; color: #fff; font-family: 'Segoe UI', sans-serif; }
+        .schedule-card { background: #1e1e1e; border: 1px solid #333; border-radius: 10px; margin-bottom: 20px; }
+        .time-slot { border-left: 3px solid #4caf50; padding-left: 15px; margin-bottom: 15px; position: relative; }
+        .time-slot.busy { border-left-color: #f44336; }
+        .time-slot.free { border-left-color: #2196f3; }
+        .time-label { font-weight: bold; color: #aaa; font-size: 0.9em; }
+        .task-title { font-size: 1.1em; margin-bottom: 5px; }
+        .header-section { padding: 40px 0; border-bottom: 1px solid #333; margin-bottom: 30px; }
+        .domain-badge { background: #4caf50; color: #000; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section text-center">
+            <h1><i class="bi bi-calendar-week me-2"></i> J姊行程表</h1>
+            <p class="text-muted">Sister J's Daily Operations</p>
+            <div class="mt-2">
+                <span class="domain-badge">wuchang.life</span>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="schedule-card p-4">
+                    <h5 class="mb-4 text-uppercase text-secondary">Today's Agenda</h5>
+
+                    <div class="time-slot busy">
+                        <div class="time-label">08:00 - 09:00</div>
+                        <div class="task-title">晨間網路巡邏 (Morning Network Patrol)</div>
+                        <small class="text-muted">Status: Completed. 3 Intruders neutralized.</small>
+                    </div>
+
+                    <div class="time-slot busy">
+                        <div class="time-label">09:00 - 12:00</div>
+                        <div class="task-title">調教 POS 機與 IoT 設備 (IoT Discipline)</div>
+                        <small class="text-muted">Target: Smart_TV_01, Kitchen_Printer_01.</small>
+                    </div>
+
+                    <div class="time-slot free">
+                        <div class="time-label">12:00 - 13:00</div>
+                        <div class="task-title">午休 / 能量補充 (Recharge)</div>
+                        <small class="text-muted">Available for casual chat.</small>
+                    </div>
+
+                    <div class="time-slot busy">
+                        <div class="time-label">13:00 - 18:00</div>
+                        <div class="task-title">大型語言叢集同步 (LLM Cluster Sync)</div>
+                        <small class="text-muted">Syncing with Wuchang Node 001. Latency: 2ms.</small>
+                    </div>
+
+                    <div class="time-slot busy">
+                        <div class="time-label">18:00 - 24:00</div>
+                        <div class="task-title">全域監控 (Global Surveillance)</div>
+                        <small class="text-muted">Boss is watching. I am watching.</small>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/index.html" class="btn btn-outline-light">Back to Gateway</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

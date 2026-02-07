@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_patent_tree" model="ir.ui.view">
+        <field name="name">wuchang.property.patent.tree</field>
+        <field name="model">wuchang.property.patent</field>
+        <field name="arch" type="xml">
+            <tree string="Patents">
+                <field name="patent_number"/>
+                <field name="name"/>
+                <field name="patent_type"/>
+                <field name="applicant"/>
+                <field name="approval_date"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-info="state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_property_patent_form" model="ir.ui.view">
+        <field name="name">wuchang.property.patent.form</field>
+        <field name="model">wuchang.property.patent</field>
+        <field name="arch" type="xml">
+            <form string="Patent">
+                <header>
+                    <button name="action_activate" string="Activate" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="patent_number"/>
+                            <field name="patent_type"/>
+                        </group>
+                        <group>
+                            <field name="applicant"/>
+                            <field name="application_date"/>
+                            <field name="approval_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="patent_filename" invisible="1"/>
+                        <field name="patent_file" filename="patent_filename"/>
+                        <field name="patent_image" widget="image" class="oe_avatar"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_patent" model="ir.actions.act_window">
+        <field name="name">Patents</field>
+        <field name="res_model">wuchang.property.patent</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a new patent
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_property_patent"
+              name="Patents"
+              parent="menu_property_root"
+              action="action_property_patent"
+              sequence="30"/>
+</odoo>

@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": ".."
+    },
+    {
+      "path": "J:/共用雲端硬碟/五常雲端空間"
+    }
+  ],
+  "settings": {
+    "python.languageServer": "None",
+    "CodeGPT.apiKey": "Anthropic",
+    "powershell.cwd": "五常雲端空間",
+    "git.ignoreLimitWarning": true,
+  },
+}

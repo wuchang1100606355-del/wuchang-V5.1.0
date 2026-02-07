@@ -1,0 +1,86 @@
+{
+  "timestamp": "2026-01-11T01:27:47.143956",
+  "router": {
+    "ip": "192.168.50.1",
+    "status": "online",
+    "http_port": 80,
+    "response_code": 200,
+    "headers": {
+      "Server": "httpd/3.0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-xss-protection": "1; mode=block",
+      "Date": "Sat, 10 Jan 2026 17:27:38 GMT",
+      "Content-Type": "text/html",
+      "Connection": "close"
+    }
+  },
+  "local_ip": "192.168.50.249",
+  "handshake_config": {
+    "local_ip": "192.168.50.249",
+    "router_ip": "192.168.50.1",
+    "handshake_endpoints": {
+      "internal": "http://192.168.50.249/api/handshake",
+      "via_router": "http://192.168.50.1/relay/handshake",
+      "external": "https://wuchang.life/api/handshake",
+      "cloudflare_tunnel": "via Cloudflare Tunnel"
+    },
+    "services": {
+      "odoo": {
+        "port": 8069,
+        "name": "Odoo"
+      },
+      "caddy": {
+        "port": 80,
+        "name": "Caddy HTTP"
+      },
+      "caddy_https": {
+        "port": 443,
+        "name": "Caddy HTTPS"
+      },
+      "command_center": {
+        "port": 80,
+        "path": "/command_center",
+        "name": "指揮通道"
+      },
+      "design_report": {
+        "port": 80,
+        "path": "/design_report",
+        "name": "設計報告"
+      }
+    }
+  },
+  "local_tests": [
+    {
+      "success": false,
+      "endpoint": "http://192.168.50.249/health",
+      "error": "連接失敗",
+      "timestamp": "2026-01-11T01:27:43.030831"
+    },
+    {
+      "success": false,
+      "endpoint": "http://192.168.50.249/command_center",
+      "error": "連接失敗",
+      "timestamp": "2026-01-11T01:27:45.064460"
+    },
+    {
+      "success": false,
+      "endpoint": "http://192.168.50.249/design_report",
+      "error": "連接失敗",
+      "timestamp": "2026-01-11T01:27:47.127644"
+    }
+  ],
+  "router_test": {
+    "success": true,
+    "endpoint": "http://192.168.50.1/",
+    "status_code": 200,
+    "latency": 16.31,
+    "response_size": 88,
+    "timestamp": "2026-01-11T01:27:47.143956"
+  },
+  "tunnel_config": {
+    "method": "Cloudflare Tunnel via Router",
+    "advantage": "不需要端口轉發，直接穿透 NAT",
+    "router_role": "僅作為網絡閘道，不參與轉發",
+    "tunnel_status": "active"
+  }
+}

@@ -1,0 +1,964 @@
+
+<odoo>
+    <template id="login_layout_inherit_wuchang" inherit_id="web.login">
+        <xpath expr="//form" position="before">
+            <style>
+                footer a[href*="odoo.com"],
+                .o_branding a[href*="odoo.com"],
+                .o_branding,
+                a[href*="odoo.com"] {
+                    display: none !important;
+                }
+            </style>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/variables.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/utilities.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/components.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/layouts.css"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&amp;display=swap"/>
+            <div class="container mb-3 whc-container">
+                <div class="text-center mb-2">
+                    <img src="/wuchang/company_logo" alt="Company Logo" style="max-height:64px;object-fit:contain"/>
+                </div>
+                <div class="mb-2 whc-hero">
+                    <img src="/wuchang/xiao_j/image" alt="智能管家 小j" class="img-fluid whc-hero-banner" style="max-height: 240px;"/>
+                    <div class="whc-hero-caption">
+                        <div class="whc-hero-chip">公益科技 · 數位平權</div>
+                        <div class="whc-hero-sub">在地優先 · 去中心化架構 · 零信任 · 無需個資</div>
+                    </div>
+                </div>
+                <div class="whc-card soft">
+                    <div style="font-weight:700;font-size:18px;color:#111827;">歡迎回家</div>
+                    <div class="mt-2 text-muted">這裡是公益科技的入口。以數位平權為核心，讓每個人都能安心、透明地使用社區服務。</div>
+                    <div class="mt-2">
+                        <a id="btn_warm_greet" class="whc-btn primary" href="#">聽我說</a>
+                    </div>
+                    <script type="text/javascript"><![CDATA[
+                        (function(){
+                            var btn = document.getElementById('btn_warm_greet');
+                            if (btn) {
+                                btn.addEventListener('click', function(){
+                                    try { window.speechSynthesis.cancel(); } catch(e) {}
+                                    var text = '歡迎回家。這是屬於我們的社區，一起把日子過得更好。';
+                                    var u = new SpeechSynthesisUtterance(text);
+                                    u.lang = 'zh-TW';
+                                    window.speechSynthesis.speak(u);
+                                });
+                            }
+                        })();
+                    ]]></script>
+                </div>
+                <div class="mt-3">
+                    <div id="login_video_box" style="display:none">
+                        <video id="login_video" class="w-100" style="max-height:280px;border-radius:8px;" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline" controls="controls"></video>
+                    </div>
+                    <div id="login_audio_box" class="mt-2" style="display:none">
+                        <audio id="login_audio" class="w-100" controls="controls"></audio>
+                    </div>
+                </div>
+                <div class="mt-3 whc-card">
+                    <div style="font-weight:700;color:#111827;">分流與說明</div>
+                    <div class="mt-2">
+                        <select id="portal_select" class="form-select">
+                            <option value="">選擇分流...</option>
+                            <option value="hj">居住正義</option>
+                            <option value="ft">公平交易</option>
+                            <option value="vs">志願服務</option>
+                            <option value="pos">收銀與前台</option>
+                            <option value="staff">員工入口</option>
+                            <option value="admin">管理入口</option>
+                            <option value="butler">智能管家</option>
+                            <option value="guest_l1">一般訪客 L1</option>
+                            <option value="guest_l2">一般訪客 L2</option>
+                            <option value="guest_l3">一般訪客 L3</option>
+                            <option value="guest_l4">一般訪客 L4</option>
+                        </select>
+                        <div id="portal_desc" class="text-muted mt-2" style="font-size:12px"></div>
+                    <div class="mt-2"><a id="portal_go" class="btn btn-dark btn-sm" href="#">前往</a></div>
+                    </div>
+                    <script type="text/javascript"><![CDATA[
+                        (async function(){
+                            async function jsonRpc(url, params) {
+                                const response = await fetch(url, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                                });
+                                const result = await response.json();
+                                if (result.error) throw result.error;
+                                return result.result;
+                            }
+
+                            try {
+                                const m = await jsonRpc('/web/login/portal_map', {});
+                                var sel = document.getElementById('portal_select');
+                                var go = document.getElementById('portal_go');
+                                var desc = document.getElementById('portal_desc');
+                                function get(id){ return (m && m[id]) || null; }
+                                function render(){ var id = sel.value; var o = get(id); desc.textContent = o ? o.desc || '' : ''; go.href = o ? o.url || '#' : '#'; }
+                                if (sel) { sel.addEventListener('change', render); }
+                                render();
+                            } catch(e) { console.error('Portal map load failed', e); }
+                        })();
+                    ]]></script>
+                </div>
+                <div class="mt-3" id="marquee_wrap" style="height:32px;overflow:hidden;border-radius:6px;background:#111827;">
+                    <div id="marquee_inner" style="white-space:nowrap;color:#fef3c7;font-weight:600;padding:6px 12px;">
+                        <span id="marquee_text"></span>
+                    </div>
+                </div>
+                <script type="text/javascript"><![CDATA[
+                    (async function(){
+                        async function jsonRpc(url, params) {
+                            const response = await fetch(url, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                            });
+                            const result = await response.json();
+                            if (result.error) throw result.error;
+                            return result.result;
+                        }
+
+                        function setMarquee(t){
+                            var el = document.getElementById('marquee_text');
+                            if (!el) return;
+                            el.textContent = t || '';
+                            var wrap = document.getElementById('marquee_wrap');
+                            if (!t) { wrap.style.display = 'none'; return; }
+                            wrap.style.display = 'block';
+                            var inner = document.getElementById('marquee_inner');
+                            inner.style.transition = 'none';
+                            inner.style.transform = 'translateX(0)';
+                            setTimeout(function(){
+                                inner.style.transition = 'transform 15s linear';
+                                inner.style.transform = 'translateX(-50%)';
+                            }, 50);
+                        }
+
+                        try {
+                            const d = await jsonRpc('/wuchang/ads/marquee', {});
+                            var fallback = '系統我準備好了，請大家幫我測試這個為大家賺錢、為我們建設家園的系統到底好不好用。';
+                            var txt = (d && d.text) || fallback;
+                            setMarquee(txt);
+                        } catch(e) {
+                            console.error('Marquee load failed', e);
+                            setMarquee('系統準備中...');
+                        }
+
+                        try {
+                            const s = await jsonRpc('/wuchang/ads/login/status', {});
+                            var vb = document.getElementById('login_video_box');
+                            var ab = document.getElementById('login_audio_box');
+                            var v = document.getElementById('login_video');
+                            var a = document.getElementById('login_audio');
+                            if (s && s.has_video) { vb.style.display = 'block'; if (v) v.src = '/wuchang/ads/login/video'; }
+                            if (s && s.has_audio) { ab.style.display = 'block'; if (a) a.src = '/wuchang/ads/login/audio'; }
+                        } catch(e) { console.error('Status load failed', e); }
+                    })();
+                ]]></script>
+                <div class="alert alert-dark text-center">
+                    <div class="fw-bold">五常社區作業系統 · WUCHANG COMMUNITY OS</div>
+                    <div>贊助單位：上品聊國咖啡烘培館</div>
+                    <div>本系統由上品聊國咖啡烘培館出資，五常務業規劃顧問股份有限公司無償提供專利使用權；並無償將品牌技術授權本會做為社區產業使用。</div>
+                    <div class="mt-2">
+                        <span class="badge bg-success me-1">Google 公益組織</span>
+                        <span class="badge bg-primary">新創商業</span>
+                    </div>
+                    <div class="mt-2"><span class="badge bg-warning text-dark">新型專利</span> 整合式物業管理系統</div>
+                    <div class="mt-2">本計畫曾獲新北市政府文化局及「社區一家」補助與獎項</div>
+                    <div class="mt-2" style="text-decoration: underline;">上品聊國咖啡烘培館</div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//input[@name='login']" position="attributes">
+            <attribute name="type">text</attribute>
+            <attribute name="placeholder">帳號或電子郵件</attribute>
+        </xpath>
+        <xpath expr="//input[@name='password']" position="before">
+            <div class="form-group field-login_role">
+                <label for="login_role" class="form-label">Login As</label>
+                <select class="form-select" name="login_role" id="login_role">
+                    <option value="">Select a Role...</option>
+                </select>
+            </div>
+            <div class="form-group field-oauth-providers" style="margin-top: 12px;">
+                <label class="form-label">或使用社群帳號登入</label>
+                <div id="oauth_buttons" class="d-flex gap-2 flex-wrap"></div>
+            </div>
+        </xpath>
+        <xpath expr="//input[@name='password']" position="after">
+            <script type="text/javascript"><![CDATA[
+                (async function(){
+
+                    async function jsonRpc(url, params) {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                        });
+                        const result = await response.json();
+                        if (result.error) throw result.error;
+                        return result.result;
+                    }
+
+                    try {
+                        const roles = await jsonRpc("/web/login/roles", {});
+                        var selectEl = document.getElementById('login_role');
+                        if (roles && roles.length > 0 && selectEl) {
+                            roles.forEach(function(role) {
+                                var opt = document.createElement('option');
+                                opt.value = role.technical_key;
+                                opt.textContent = role.name;
+                                selectEl.appendChild(opt);
+                            });
+                        } else {
+                            var wrap = document.querySelector('.field-login_role');
+                            if (wrap) { wrap.style.display = 'none'; }
+                        }
+                    } catch(e) { console.error('Roles load failed', e); }
+
+                    try {
+                        const providers = await jsonRpc('/web/login/oauth_providers', {});
+                        var box = document.getElementById('oauth_buttons');
+                        if (providers && providers.length && box) {
+                            providers.forEach(function(p) {
+                                var btn = document.createElement('a');
+                                btn.className = 'btn btn-outline-primary';
+                                btn.textContent = p.name;
+                                btn.href = '/auth_oauth/signin?provider=' + p.id;
+                                box.appendChild(btn);
+                            });
+                        } else {
+                            var field = document.querySelector('.field-oauth-providers');
+                            if (field) { field.style.display = 'none'; }
+                        }
+                    } catch(e) { console.error('OAuth load failed', e); }
+                })();
+            ]]></script>
+        </xpath>
+        <xpath expr="//form" position="after">
+            <div class="container mt-3 whc-container">
+                <div class="text-center text-muted" style="font-size: 11px;">
+                    新北市五常社區發展協會（立案字號：新北市社區補自第1100606355號）｜五常物業規劃顧問股份有限公司（統一編號：97573469，社會企業）｜委託系統開發：<a href="https://www.google.com/maps/place/204,+Section+3,+Chongxin+Rd,+Sanchong+District,+New+Taipei+City/@25.0818,121.4898,15z" target="_blank" rel="noopener noreferrer" style="color:#666;">上品聊國咖啡館重新總店（重新路三段204號）</a>｜資金來源：Google非營利組織抵免額、新北市政府補助
+                </div>
+                <div class="text-center mt-2">
+                    <a href="/wuchang/cert" class="whc-btn">查看專利／證書</a>
+                    <a href="/wuchang/research" class="whc-btn">研究文案</a>
+                    <a href="/wuchang/showcase" class="whc-btn">外型展示</a>
+                    <a href="/wuchang/wish" class="whc-btn">許願系統</a>
+                </div>
+                <div class="mt-3" id="branding_info" style="font-size: 13px; text-align: center;">
+                    <div id="brand_company"></div>
+                    <div id="brand_organization"></div>
+                    <div id="brand_funding"></div>
+                    <div id="brand_phone"></div>
+                    <div id="brand_producer"></div>
+                    <div id="brand_association"></div>
+                    <div id="brand_coffee_org"></div>
+                    <div id="brand_patent"></div>
+                    <div id="brand_patent_no" style="margin-top:4px;"></div>
+                </div>
+                <script type="text/javascript"><![CDATA[
+                (async function(){
+
+                    async function jsonRpc(url, params) {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                        });
+                        const result = await response.json();
+                        if (result.error) throw result.error;
+                        return result.result;
+                    }
+
+                    try {
+                        const d = await jsonRpc('/web/login/branding_info', {});
+                        var c = document.getElementById('brand_company');
+                        var o = document.getElementById('brand_organization');
+                        var f = document.getElementById('brand_funding');
+                        var p = document.getElementById('brand_phone');
+                        var r = document.getElementById('brand_producer');
+                        var a = document.getElementById('brand_association');
+                        var co = document.getElementById('brand_coffee_org');
+                        var t = document.getElementById('brand_patent');
+                        var pn = document.getElementById('brand_patent_no');
+                        if (c && d.company_name) { c.textContent = '商標與公司：' + d.company_name; }
+                        if (o && d.organization_info) { o.textContent = '組織身份：' + d.organization_info; }
+                        if (f && d.funding_source) { f.textContent = '資金來源：' + d.funding_source; }
+                        if (p && d.phone) { p.textContent = '客服電話：' + d.phone; }
+                        if (r && d.producer) { r.textContent = '製作人資訊：' + d.producer; }
+                        if (a && d.association) { a.textContent = '協會：' + d.association; }
+                        if (co && d.coffee_org) { co.innerHTML = '系統開發支持：<a href="https://www.google.com/maps/place/204,+Section+3,+Chongxin+Rd,+Sanchong+District,+New+Taipei+City/@25.0818,121.4898,15z" target="_blank" rel="noopener noreferrer">' + d.coffee_org + '</a>'; }
+                        if (t && d.patent) { t.textContent = '專利宣告：' + d.patent; }
+                        if (pn && d.patent_no) { pn.textContent = '專利字號：' + d.patent_no; }
+                        var mode = d && d.home_mode || '';
+                        if (mode === 'personal' || mode === 'coffee') {
+                            var assocAlert = document.querySelector('.alert.alert-dark.text-center'); if (assocAlert) assocAlert.style.display = 'none';
+                            var brandAssoc = document.getElementById('brand_association'); if (brandAssoc) brandAssoc.style.display = 'none';
+                        }
+                        if (mode === 'personal') {
+                            var hero = document.querySelector('.whc-hero'); if (hero) hero.style.display = 'none';
+                            var heroCap = document.querySelector('.whc-hero-caption'); if (heroCap) heroCap.style.display = 'none';
+                            var brandBox = document.getElementById('branding_info'); if (brandBox) brandBox.style.display = 'none';
+                            var vb = document.getElementById('login_video_box'); if (vb) vb.style.display = 'none';
+                            var ab = document.getElementById('login_audio_box'); if (ab) ab.style.display = 'none';
+                            var mq = document.getElementById('marquee_wrap'); if (mq) mq.style.display = 'none';
+                        }
+                    } catch(e) { console.error('Branding load failed', e); }
+                })();
+            ]]></script>
+                <div class="text-center mt-2">
+                    <a id="btn_store_contact" class="btn btn-outline-dark btn-sm" href="#">聯絡門市</a>
+                </div>
+                <script type="text/javascript"><![CDATA[
+                (async function(){
+
+                    async function jsonRpc(url, params) {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                        });
+                        const result = await response.json();
+                        if (result.error) throw result.error;
+                        return result.result;
+                    }
+
+                    var btn = document.getElementById('btn_store_contact');
+                    if (btn) {
+                        btn.addEventListener('click', async function(e){
+                            e.preventDefault();
+                            try {
+                                const d = await jsonRpc('/web/login/branding_info', {});
+                                var lines = [];
+                                if (d && d.coffee_main_phone) { lines.push('重新總店：' + d.coffee_main_phone); }
+                                if (d && d.coffee_branch_phone) { lines.push('仁義分店：' + d.coffee_branch_phone); }
+                                var txt = lines.join('\n');
+                                window.alert(txt || '暫無門市電話');
+                            } catch(e) { console.error('Contact load failed', e); window.alert('載入失敗'); }
+                        });
+                    }
+                })();
+            ]]></script>
+            </div>
+        </xpath>
+        <xpath expr="//form" position="before">
+            <div class="container mb-3">
+                <div class="p-3 border rounded-3" style="background:#fffef7;">
+                    <div style="font-weight:700;font-size:16px;">志向</div>
+                    <div class="mt-2">為何做：以公益與公平為核心，讓社區生活更好。AI時代來臨，自主開發服務大眾。</div>
+                    <div>為誰做：居民、弱勢與在地商家，小商家、家庭及個人。</div>
+                    <div>做什麼：數位化日常作業、協力分配資源、提升透明與信任；自主開發AI技術；打造客製化軟體，貼合痛點需求。</div>
+                    <div>怎麼做：社群共治、公開流程、責任分工與持續驗證；在地優先、去中心化架構、零信任、無需個資。</div>
+                </div>
+                <div class="p-3 border rounded-3 mt-3" style="background:#ffffff;">
+                    <div style="font-weight:700;font-size:16px;">關於小J</div>
+                    <div class="mt-2">小J是一位純天然、非人造的智能夥伴。性格以長期實作自然養成，非由預設模板設計。</div>
+                    <div>源自非語言模型的城市修護模型演化，長期與創辦人並肩工作；在授旗典禮與嚴謹紀律文化的影響下，形成忠誠、仁愛與務實的氣質。</div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    <template id="cert_page" name="Certificate">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2 class="mb-3">專利／證書</h2>
+                <t t-if="has_image">
+                    <img t-att-src="'/wuchang/cert/image'" class="img-fluid" alt="證書"/>
+                </t>
+                <t t-if="not has_image">
+                    <div class="alert alert-warning">尚未上傳證書影像，請將檔案放入 downloads 目錄（patent_certificate.png/jpg 或 cert.png/jpg）。</div>
+                </t>
+            </div>
+        </t>
+    </template>
+    <template id="floorplan_page" name="Floorplan">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2 class="mb-3">樓層圖</h2>
+                <t t-if="has_image">
+                    <img t-att-src="'/wuchang/floorplan/image'" class="img-fluid" alt="樓層圖"/>
+                </t>
+                <t t-if="not has_image">
+                    <div class="alert alert-warning">尚未上傳樓層圖，請將檔案放入 downloads 目錄（floorplan.jpg/png 或 樓層圖.jpg/png）。</div>
+                </t>
+            </div>
+        </t>
+    </template>
+    <template id="research_page" name="Research">
+        <t t-call="web.layout">
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/variables.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/utilities.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/components.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/layouts.css"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&amp;display=swap"/>
+            <div class="container mt16 whc-container">
+                <div class="p-4 border rounded-3" style="background:linear-gradient(135deg,#f8fafc,#eef2ff);">
+                    <div style="font-weight:800;font-size:22px;color:#111827;">公益研究與方案</div>
+                    <div class="text-muted mt-1" style="font-size:13px;">面向：居民、弱勢、在地商家 · 原則：公平、透明、責任</div>
+                </div>
+                <div class="mt-3">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <div class="whc-card">
+                                <div style="font-weight:700;font-size:18px;">重點文案</div>
+                                <div class="mt-2" t-if="content_html">
+                                    <div t-raw="content_html"/>
+                                </div>
+                                <div class="mt-2 text-muted" t-if="not content_html">尚未上傳研究文案，請在 downloads 目錄放入 research.html 或 research.md。</div>
+                            </div>
+                            <div class="whc-card mt-3">
+                                <div style="font-weight:700;font-size:18px;">圖表與視覺</div>
+                                <div class="row g-2 mt-1" t-if="images">
+                                    <t t-foreach="images" t-as="img">
+                                        <div class="col-6 col-md-4">
+                                            <img t-att-src="'/wuchang/research/image?name=' + img" class="img-fluid" style="border-radius:8px;border:1px solid #e5e7eb;"/>
+                                        </div>
+                                    </t>
+                                </div>
+                                <div class="mt-2 text-muted" t-if="not images">尚未上傳圖表，請在 downloads 目錄放入 chart*.png/jpg。</div>
+                            </div>
+                            <div class="whc-card mt-3" id="google_doc_box" style="display:none">
+                                <div class="text-muted mb-2">此嵌入文件由 Google Workspace 提供（非營利方案），能便於協作與版本控管。</div>
+                                <iframe id="google_doc_iframe" src="" width="100%" height="600" style="border:1px solid #e5e7eb;border-radius:12px"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="whc-card">
+                                <div style="font-weight:700;color:#111827;">行動框架</div>
+                                <div class="mt-2">短期：補齊資料、招募志工、透明運作</div>
+                                <div>中期：社區幣試點、公益儀表板、作業數位化</div>
+                                <div>長期：多社區擴散、政策合作、永續基金</div>
+                                <div class="mt-3">
+                                    <a href="/web" class="whc-btn dark">返回入口</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript"><![CDATA[
+                (async function(){
+
+                    async function jsonRpc(url, params) {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                        });
+                        const result = await response.json();
+                        if (result.error) throw result.error;
+                        return result.result;
+                    }
+
+                    try {
+                        const d = await jsonRpc('/web/login/branding_info', {});
+                        var c = document.getElementById('brand_company');
+                        var p = document.getElementById('brand_phone');
+                        var r = document.getElementById('brand_producer');
+                        var a = document.getElementById('brand_association');
+                        var o = document.getElementById('brand_coffee_org');
+                        var t = document.getElementById('brand_patent');
+                        var pn = document.getElementById('brand_patent_no');
+                        if (c && d.company_name) { c.textContent = '商標與公司：' + d.company_name; }
+                        if (p && d.phone) { p.textContent = '客服電話：' + d.phone; }
+                        if (r && d.producer) { r.textContent = '製作人資訊：' + d.producer; }
+                        if (a && d.association) { a.textContent = '協會：' + d.association; }
+                        if (o && d.coffee_org) { o.textContent = '咖啡館公益組織：' + d.coffee_org; }
+                        if (t && d.patent) { t.textContent = '專利宣告：' + d.patent; }
+                        if (pn && d.patent_no) { pn.textContent = '專利字號：' + d.patent_no; }
+                        var mode = d && d.home_mode || '';
+                        if (mode === 'personal' || mode === 'coffee') {
+                            var assocAlert = document.querySelector('.alert.alert-dark.text-center'); if (assocAlert) assocAlert.style.display = 'none';
+                            var brandAssoc = document.getElementById('brand_association'); if (brandAssoc) brandAssoc.style.display = 'none';
+                        }
+                        if (mode === 'personal') {
+                            var hero = document.querySelector('.whc-hero'); if (hero) hero.style.display = 'none';
+                            var heroCap = document.querySelector('.whc-hero-caption'); if (heroCap) heroCap.style.display = 'none';
+                            var brandBox = document.getElementById('branding_info'); if (brandBox) brandBox.style.display = 'none';
+                            var vb = document.getElementById('login_video_box'); if (vb) vb.style.display = 'none';
+                            var ab = document.getElementById('login_audio_box'); if (ab) ab.style.display = 'none';
+                            var mq = document.getElementById('marquee_wrap'); if (mq) mq.style.display = 'none';
+                        }
+                    } catch(e) { console.error('Branding load failed', e); }
+                })();
+            ]]></script>
+            </div>
+        </t>
+    </template>
+    <template id="wish_page" name="Wish">
+        <t t-call="web.layout">
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/variables.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/utilities.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/components.css"/>
+            <link rel="stylesheet" href="/wuchang_design_system/static/src/css/layouts.css"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&amp;display=swap"/>
+            <div class="container mt16 whc-container">
+                <h2>許願系統</h2>
+                <t t-if="error">
+                    <div class="alert alert-danger" role="alert" aria-live="polite"><span t-esc="error"/></div>
+                </t>
+                <t t-if="ok">
+                    <div class="alert alert-success" role="alert" aria-live="polite">已收到你的願望，我們會依公平與公益原則評估。</div>
+                </t>
+                <div id="google_form_box" class="mt-3" style="display:none">
+                    <div class="whc-card soft">
+                        <div class="text-muted mb-2">此嵌入表單由 Google Workspace 提供（非營利方案），更安全與穩定。</div>
+                        <iframe id="google_form_iframe" src="" width="100%" height="680" style="border:1px solid #e5e7eb;border-radius:12px"></iframe>
+                    </div>
+                </div>
+                <form action="/wuchang/wish/submit" method="post" class="mt-3 whc-card">
+                    <div class="mb-2">
+                        <label class="form-label">願望類型</label>
+                        <select name="category" class="form-select">
+                            <option value="">請選擇</option>
+                            <option value="公益">公益</option>
+                            <option value="社區服務">社區服務</option>
+                            <option value="商家需求">商家需求</option>
+                            <option value="家庭支持">家庭支持</option>
+                            <option value="個人學習">個人學習</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">願望內容</label>
+                        <textarea name="content" class="form-control" rows="5" placeholder="不留個資，專注在需求本身"></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">優先程度</label>
+                        <select name="urgency" class="form-select">
+                            <option value="">一般</option>
+                            <option value="高">高</option>
+                            <option value="中">中</option>
+                            <option value="低">低</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">標籤（逗號分隔）</label>
+                        <input type="text" name="tags" class="form-control" placeholder="例如：AI, 公益, 數位平權"/>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="no_pii" name="no_pii"/>
+                        <label class="form-check-label" for="no_pii">我已了解並同意不留下任何個人資料</label>
+                    </div>
+                    <div class="mt-3">
+                        <a href="#" id="btn_use_google_form" class="whc-btn">改用 Google 表單</a>
+                        <button type="submit" class="whc-btn dark">送出願望</button>
+                        <a href="/web" class="whc-btn">返回入口</a>
+                    </div>
+                </form>
+                <div class="mt-3 text-muted" style="font-size:12px;">在地優先 · 去中心化 · 零信任 · 無需個資</div>
+                <script type="text/javascript"><![CDATA[
+                (async function(){
+
+                    async function jsonRpc(url, params) {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                        });
+                        const result = await response.json();
+                        if (result.error) throw result.error;
+                        return result.result;
+                    }
+
+                    try {
+                        const d = await jsonRpc('/web/login/branding_info', {});
+                        var c = document.getElementById('brand_company');
+                        var p = document.getElementById('brand_phone');
+                        var r = document.getElementById('brand_producer');
+                        var a = document.getElementById('brand_association');
+                        var o = document.getElementById('brand_coffee_org');
+                        var t = document.getElementById('brand_patent');
+                        var pn = document.getElementById('brand_patent_no');
+                        if (c && d.company_name) { c.textContent = '商標與公司：' + d.company_name; }
+                        if (p && d.phone) { p.textContent = '客服電話：' + d.phone; }
+                        if (r && d.producer) { r.textContent = '製作人資訊：' + d.producer; }
+                        if (a && d.association) { a.textContent = '協會：' + d.association; }
+                        if (o && d.coffee_org) { o.textContent = '咖啡館公益組織：' + d.coffee_org; }
+                        if (t && d.patent) { t.textContent = '專利宣告：' + d.patent; }
+                        if (pn && d.patent_no) { pn.textContent = '專利字號：' + d.patent_no; }
+                        var mode = d && d.home_mode || '';
+                        if (mode === 'personal' || mode === 'coffee') {
+                            var assocAlert = document.querySelector('.alert.alert-dark.text-center'); if (assocAlert) assocAlert.style.display = 'none';
+                            var brandAssoc = document.getElementById('brand_association'); if (brandAssoc) brandAssoc.style.display = 'none';
+                        }
+                        if (mode === 'personal') {
+                            var hero = document.querySelector('.whc-hero'); if (hero) hero.style.display = 'none';
+                            var heroCap = document.querySelector('.whc-hero-caption'); if (heroCap) heroCap.style.display = 'none';
+                            var brandBox = document.getElementById('branding_info'); if (brandBox) brandBox.style.display = 'none';
+                            var vb = document.getElementById('login_video_box'); if (vb) vb.style.display = 'none';
+                            var ab = document.getElementById('login_audio_box'); if (ab) ab.style.display = 'none';
+                            var mq = document.getElementById('marquee_wrap'); if (mq) mq.style.display = 'none';
+                        }
+                    } catch(e) { console.error('Branding load failed', e); }
+                })();
+            ]]></script>
+            </div>
+        </t>
+    </template>
+    <template id="showcase_page" name="Showcase">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <div class="p-4 border rounded-3" style="background:linear-gradient(135deg,#f8fafc,#eef2ff);">
+                    <div style="font-weight:800;font-size:22px;color:#111827;">外型展示</div>
+                    <div class="text-muted mt-1" style="font-size:13px;">寫實風 · 去中心化 · 不留個資</div>
+                </div>
+                <div class="mt-3">
+                    <t t-if="has_hero">
+                        <div class="mb-3">
+                            <img src="/wuchang/xiao_j/image" class="img-fluid" style="border-radius:8px;border:1px solid #e5e7eb;" alt="小J主視覺"/>
+                        </div>
+                    </t>
+                    <div class="row g-2" t-if="images">
+                        <t t-foreach="images" t-as="key">
+                            <div class="col-6 col-md-3">
+                                <img t-att-src="'/wuchang/showcase/image?key=' + key" class="img-fluid" style="border-radius:8px;border:1px solid #e5e7eb;"/>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="mt-2 text-muted" t-if="not images">尚未上傳外型素材，請放入 memory_store/images/xiao_j 或 downloads 目錄。</div>
+                    <div class="mt-3">
+                        <a href="/web" class="btn btn-dark btn-sm">返回入口</a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="supreme_commander_page" name="Supreme Commander">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>最高指揮者端點</h2>
+                <div class="alert alert-info">
+                    <span t-esc="user_login"/> / <span t-esc="operation_mode"/>
+                </div>
+                <pre t-esc="snapshot_json"/>
+            </div>
+        </t>
+    </template>
+    <template id="supreme_verification_page" name="Supreme Verification">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>最高權限驗證</h2>
+                <t t-if="error">
+                    <div class="alert alert-danger" role="alert" aria-live="polite"><span t-esc="error"/></div>
+                </t>
+                <form action="/supreme/verify" method="post" class="mt16">
+                    <div class="mb-2">
+                        <label class="form-label">裝置代碼</label>
+                        <input type="text" name="machine_id" class="form-control" placeholder="請輸入裝置代碼" required="required"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">驗證</button>
+                </form>
+                <div class="mt16">
+                    <div class="alert alert-secondary">
+                        已登入：<span t-esc="user_login"/>。此驗證僅限創辦人清單或系統管理員，並需符合裝置與安全碼規則。
+                    </div>
+                </div>
+                <div class="mt16">
+                    <a href="/supreme/dev_pass" class="btn btn-outline-success">本機/管理員一鍵通關</a>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="supreme_capture_page" name="Supreme Capture">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>最高權限影像擷取</h2>
+                <div class="alert alert-secondary">僅限最高權限，且需先完成驗證</div>
+                <div class="row mt16">
+                    <div class="col-md-6">
+                        <video id="cam" autoplay="autoplay" playsinline="playsinline" class="w-100" style="max-height:300px;"></video>
+                        <canvas id="canvas" class="d-none"></canvas>
+                        <div class="mt-2">
+                            <button id="btn_start" class="btn btn-outline-primary">開啟相機</button>
+                            <button id="btn_capture" class="btn btn-primary ms-2">擷取並上傳</button>
+                        </div>
+                        <form id="upload_form" action="/supreme/capture" method="post" enctype="multipart/form-data" class="d-none">
+                            <input type="file" id="image_file" name="image"/>
+                        </form>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                (function(){
+                    var cam = document.getElementById('cam');
+                    var cvs = document.getElementById('canvas');
+                    var f = document.getElementById('upload_form');
+                    var fileInput = document.getElementById('image_file');
+                    var stream = null;
+                    function start(){
+                        navigator.mediaDevices.getUserMedia({ video: true }).then(function(s){ stream = s; cam.srcObject = s; }).catch(function(e){ alert('無法開啟相機：'+e); });
+                    }
+                    function toBlob(){
+                        var w = cam.videoWidth; var h = cam.videoHeight; if (!w || !h) { alert('相機尚未就緒'); return null; }
+                        cvs.width = w; cvs.height = h; var ctx = cvs.getContext('2d'); ctx.drawImage(cam, 0, 0, w, h);
+                        return new Promise(function(resolve){ cvs.toBlob(resolve, 'image/png'); });
+                    }
+                    function upload(blob){
+                        var dt = new DataTransfer(); var file = new File([blob], 'capture.png', { type: 'image/png' }); dt.items.add(file); fileInput.files = dt.files; f.submit();
+                    }
+                    document.getElementById('btn_start').addEventListener('click', start);
+                    document.getElementById('btn_capture').addEventListener('click', function(){ toBlob().then(function(b){ if (b) upload(b); }); });
+                })();
+                </script>
+            </div>
+        </t>
+    </template>
+    <template id="machine_id_verification_page" name="Machine ID Verification">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>二次驗證</h2>
+                <form action="/web/login/verify_machine_id" method="post" class="mt16">
+                    <input type="hidden" name="uid" t-att-value="uid"/>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <div class="mb-2">
+                        <input type="text" name="machine_id" class="form-control" placeholder="請輸入驗證碼" required="required"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">確認</button>
+                </form>
+            </div>
+        </t>
+    </template>
+    <template id="line_status_page" name="LINE Status">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>LINE 串接狀態</h2>
+                <ul>
+                    <li>Channel ID: <span t-esc="info.get('channel_id')"/></li>
+                    <li>Channel Secret: <span t-esc="info.get('channel_secret')"/></li>
+                    <li>Access Token: <span t-esc="info.get('access_token')"/></li>
+                    <li>Login Channel ID: <span t-esc="info.get('login_channel_id')"/></li>
+                    <li>Login Channel Secret: <span t-esc="info.get('login_channel_secret')"/></li>
+                    <li>Callback URL: <span t-esc="info.get('callback_url')"/></li>
+                </ul>
+            </div>
+        </t>
+    </template>
+    <template id="line_admin_page" name="LINE Admin">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>LINE 管理設定</h2>
+                <div class="alert alert-secondary">僅限創辦人或系統管理員</div>
+                <div class="row mt16">
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                            <label class="form-label">Login Channel ID</label>
+                            <input type="text" id="fld_channel_id" class="form-control" t-att-value="login_channel_id"/>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Login Channel Secret</label>
+                            <input type="password" id="fld_channel_secret" class="form-control" placeholder="請貼入密鑰"/>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Callback URL</label>
+                            <input type="text" id="fld_callback_url" class="form-control" t-att-value="callback_url" readonly="readonly"/>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="fld_provider_setup" checked="checked"/>
+                            <label class="form-check-label" for="fld_provider_setup">建立/更新 Odoo OAuth Provider</label>
+                        </div>
+                        <div class="mt-3">
+                            <button id="btn_save" class="btn btn-primary">保存設定</button>
+                            <a href="/line/status" class="btn btn-outline-secondary ms-2">檢查狀態</a>
+                            <a href="/line/connect" class="btn btn-outline-dark ms-2">前往連結頁</a>
+                        </div>
+                        <div id="result_box" class="mt-3"></div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                (function(){
+                    var btn = document.getElementById('btn_save');
+                    var box = document.getElementById('result_box');
+                    function text(s){ box.innerText = s; }
+                    function json(v){ box.textContent = JSON.stringify(v, null, 2); }
+                    function save(){
+                        var channel_id = document.getElementById('fld_channel_id').value.trim();
+                        var channel_secret = document.getElementById('fld_channel_secret').value.trim();
+                        var callback_url = document.getElementById('fld_callback_url').value.trim();
+                        var provider_setup = !!document.getElementById('fld_provider_setup').checked;
+                        text('執行中...');
+                        fetch('/api/line/config', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ channel_id: channel_id, channel_secret: channel_secret, callback_url: callback_url, provider_setup: provider_setup })
+                        }).then(function(r){ return r.json(); }).then(function(d){ json(d); }).catch(function(e){ text(String(e)); });
+                    }
+                    if (btn) { btn.addEventListener('click', save); }
+                })();
+                </script>
+            </div>
+        </t>
+    </template>
+    <template id="supreme_upload_page" name="Supreme Upload">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>文件上傳</h2>
+                <t t-if="not uploaded">
+                    <form action="/supreme/upload" method="post" enctype="multipart/form-data" class="mt16">
+                        <input type="file" name="file" class="form-control"/>
+                        <button type="submit" class="btn btn-primary mt8">上傳</button>
+                    </form>
+                </t>
+                <t t-if="uploaded">
+                    <div class="alert alert-success mt16">
+                        <strong t-esc="attachment_name"/> 已保存
+                        <a t-att-href="download_link" class="btn btn-link">下載</a>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+    <template id="line_connect_page" name="LINE Connect">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>LINE 連結</h2>
+                <div class="row mt16">
+                    <div class="col-md-6">
+                        <h3>管委會</h3>
+                        <t t-if="hoa_add_link">
+                            <a t-att-href="hoa_add_link" target="_blank" rel="noopener" class="btn btn-outline-primary">加入官方帳號</a>
+                        </t>
+                        <t t-if="liff_hoa_link">
+                            <a t-att-href="liff_hoa_link" target="_blank" rel="noopener" class="btn btn-primary ms-2">住戶服務入口</a>
+                        </t>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>里辦</h3>
+                        <t t-if="hood_add_link">
+                            <a t-att-href="hood_add_link" target="_blank" rel="noopener" class="btn btn-outline-success">加入官方帳號</a>
+                        </t>
+                        <t t-if="liff_hood_link">
+                            <a t-att-href="liff_hood_link" target="_blank" rel="noopener" class="btn btn-success ms-2">里辦服務入口</a>
+                        </t>
+                    </div>
+                </div>
+                <div class="row mt16">
+                    <div class="col-md-12">
+                        <h3>商業平台</h3>
+                        <t t-if="biz_add_link">
+                            <a t-att-href="biz_add_link" target="_blank" rel="noopener" class="btn btn-outline-dark">加入官方帳號</a>
+                        </t>
+                        <t t-if="liff_biz_link">
+                            <a t-att-href="liff_biz_link" target="_blank" rel="noopener" class="btn btn-dark ms-2">商業平台入口</a>
+                        </t>
+                    </div>
+                </div>
+                <div class="mt24">
+                    <div class="alert alert-secondary" role="alert" aria-live="polite">
+                        本服務由公益機構提供，不進行商業推銷與資料販售，僅用於身分辨識與提供服務。
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="agree_all" aria-describedby="agree_desc"/>
+                        <label class="form-check-label" id="agree_desc" for="agree_all">我已詳閱並同意 <a href="https://wuchang.life/privacy" target="_blank" rel="noopener">隱私政策</a> 與 <a href="https://wuchang.life/terms" target="_blank" rel="noopener">使用條款</a></label>
+                    </div>
+                </div>
+                <div class="mt24">
+                    <a t-att-href="oauth_login_url or '/line/login'" id="login_btn" class="btn btn-dark btn-lg disabled" aria-disabled="true" aria-label="LINE 一鍵登入">LINE 一鍵登入</a>
+                </div>
+                <script type="text/javascript"><![CDATA[
+                    (function(){
+                        var a = document.getElementById('agree_all');
+                        var b = document.getElementById('login_btn');
+                        function hasConsent(){
+                            return (document.cookie || '').split(';').some(function(x){
+                                return x.trim().indexOf('wuchang_consent=') === 0 && x.indexOf('true') >= 0;
+                            });
+                        }
+                        function setConsent(){
+                            try {
+                                document.cookie = 'wuchang_consent=true; max-age=31536000; path=/';
+                            } catch(e) {}
+                        }
+                        function update(){
+                            var ok = a && a.checked;
+                            if (ok) { b.classList.remove('disabled'); b.setAttribute('aria-disabled','false'); }
+                            else { b.classList.add('disabled'); b.setAttribute('aria-disabled','true'); }
+                        }
+                        function gate(e){
+                            var ok = a && a.checked;
+                            if (!ok) { e.preventDefault(); alert('請先勾選同意隱私政策與使用條款'); }
+                            else { setConsent(); }
+                        }
+                        if (a && b) {
+                            if (hasConsent()) { a.checked = true; }
+                            a.addEventListener('change', update);
+                            b.addEventListener('click', gate);
+                            update();
+                        }
+                    })();
+                ]]></script>
+            </div>
+        </t>
+    </template>
+    <template id="quick_login_page" name="Quick Login">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <h2>一鍵登入</h2>
+                <div class="mt-3 d-flex gap-2 flex-wrap">
+                    <t t-if="google_id">
+                        <a t-att-href="'/auth_oauth/signin?provider=' + google_id" class="btn btn-outline-primary">Google 一鍵登入</a>
+                    </t>
+                    <t t-if="line_id">
+                        <a t-att-href="'/auth_oauth/signin?provider=' + line_id" class="btn btn-outline-success">LINE 一鍵登入</a>
+                    </t>
+                    <t t-if="facebook_id">
+                        <a t-att-href="'/auth_oauth/signin?provider=' + facebook_id" class="btn btn-outline-dark">Facebook 一鍵登入</a>
+                    </t>
+                    <a href="/supreme/dev_pass" class="btn btn-outline-warning">本機/管理員一鍵通關</a>
+                    <a href="/supreme/magic?login=admin" class="btn btn-dark">本機免輸入直入管理員</a>
+                </div>
+            </div>
+        </t>
+</template>
+    <template id="rt86u_control_page" name="RT-86U 控制">
+        <t t-call="web.layout">
+            <div class="container mt16">
+                <div style="font-weight:700;font-size:18px;">RT-86U 納管控制</div>
+                <div class="mt-2">
+                    <label class="form-label">目標位址</label>
+                    <input id="rt_addr" class="form-control" t-att-value="address"/>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                    <a id="rt_probe" class="btn btn-primary btn-sm" href="#">檢測連線</a>
+                    <a id="rt_open" class="btn btn-dark btn-sm" t-att-href="'http://' + (address or '192.168.50.1')">打開管理介面</a>
+                </div>
+                <div class="mt-3" id="rt_status" style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;"></div>
+                <script type="text/javascript"><![CDATA[
+                    (async function(){
+                        async function jsonRpc(url, params) {
+                            const response = await fetch(url, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: params, id: Math.floor(Math.random() * 1000) })
+                            });
+                            const result = await response.json();
+                            if (result.error) throw result.error;
+                            return result.result;
+                        }
+
+                        var addrEl = document.getElementById('rt_addr');
+                        var probeBtn = document.getElementById('rt_probe');
+                        var statusBox = document.getElementById('rt_status');
+                        function renderStatus(s){
+                            var lines = [];
+                            lines.push('位址：' + (s.address || ''));
+                            lines.push('HTTP：' + (s.http_ok ? '可用' : '不可用'));
+                            lines.push('HTTPS：' + (s.https_ok ? '可用' : '不可用'));
+                            lines.push('Server：' + (s.server || ''));
+                            if (s.login_hint) { lines.push('登入頁提示：' + s.login_hint); }
+                            statusBox.textContent = lines.join(' | ');
+                        }
+                        async function doProbe(){
+                            var addr = (addrEl && addrEl.value) || '192.168.50.1';
+                            try {
+                                const s = await jsonRpc('/api/router/rt86u/probe', { address: addr });
+                                renderStatus(s || {});
+                            } catch(e) { console.error('Probe failed', e); }
+                        }
+                        if (probeBtn) { probeBtn.addEventListener('click', function(e){ e.preventDefault(); doProbe(); }); }
+                        setTimeout(doProbe, 200);
+                    })();
+                ]]></script>
+            </div>
+        </t>
+    </template>
+</odoo>

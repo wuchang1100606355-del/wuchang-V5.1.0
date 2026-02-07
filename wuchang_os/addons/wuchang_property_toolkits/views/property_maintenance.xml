@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_property_maintenance_tree" model="ir.ui.view">
+        <field name="name">wuchang.property.maintenance.tree</field>
+        <field name="model">wuchang.property.maintenance</field>
+        <field name="arch" type="xml">
+            <tree string="Maintenance Requests" decoration-info="state=='submitted'" decoration-muted="state=='done'">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="location"/>
+                <field name="priority" widget="priority"/>
+                <field name="reporter_id"/>
+                <field name="assigned_to"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-warning="state == 'in_progress'" decoration-info="state == 'submitted'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_property_maintenance_form" model="ir.ui.view">
+        <field name="name">wuchang.property.maintenance.form</field>
+        <field name="model">wuchang.property.maintenance</field>
+        <field name="arch" type="xml">
+            <form string="Maintenance Request">
+                <header>
+                    <button name="action_submit" string="Submit" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_assign" string="Start Progress" type="object" class="oe_highlight" invisible="state != 'submitted'"/>
+                    <button name="action_done" string="Mark as Done" type="object" class="oe_highlight" invisible="state != 'in_progress'"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state in ('done', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Request Subject"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="reporter_id"/>
+                            <field name="assigned_to"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_property_maintenance_search" model="ir.ui.view">
+        <field name="name">wuchang.property.maintenance.search</field>
+        <field name="model">wuchang.property.maintenance</field>
+        <field name="arch" type="xml">
+            <search string="Maintenance Requests">
+                <field name="name"/>
+                <field name="location"/>
+                <field name="reporter_id"/>
+                <filter string="My Requests" name="my_requests" domain="[('reporter_id.user_ids', 'in', [uid])]"/>
+                <filter string="Open Requests" name="open_requests" domain="[('state', 'in', ['submitted', 'in_progress'])]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_property_maintenance" model="ir.actions.act_window">
+        <field name="name">Maintenance Requests</field>
+        <field name="res_model">wuchang.property.maintenance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new maintenance request
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_property_root" name="Property Mgmt" web_icon="wuchang_property_toolkits,static/description/icon.png" sequence="10"/>
+    <menuitem id="menu_property_maintenance" name="Maintenance" parent="menu_property_root" sequence="10"/>
+    <menuitem id="menu_property_maintenance_request" name="Requests" parent="menu_property_maintenance" action="action_property_maintenance" sequence="1"/>
+</odoo>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五常雲端空間 - 控制中心</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 2.5em; }
+        .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .service-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .service-card:hover { transform: translateY(-5px); }
+        .service-card a { color: white; text-decoration: none; display: block; }
+        h3 { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 五常雲端空間</h1>
+        <div class="services">
+            <div class="service-card">
+                <a href="http://localhost:8069">
+                    <h3>📊 Odoo ERP</h3>
+                    <p>企業資源規劃系統</p>
+                </a>
+            </div>
+            <div class="service-card">
+                <a href="http://localhost:9000">
+                    <h3>🐳 Portainer</h3>
+                    <p>容器管理平台</p>
+                </a>
+            </div>
+            <div class="service-card">
+                <a href="http://localhost:3001">
+                    <h3>📈 Uptime Kuma</h3>
+                    <p>系統監控</p>
+                </a>
+            </div>
+            <div class="service-card">
+                <a href="http://localhost:11434">
+                    <h3>🤖 Ollama</h3>
+                    <p>本地 LLM 服務</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

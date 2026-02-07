@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_phantom_ice_brew" model="product.template">
+            <field name="name">Phantom Ice Brew (隱冰醇萃)</field>
+            <field name="list_price">150.0</field>
+            <field name="type">consu</field>
+            <field name="default_code">PIB001</field>
+        </record>
+    </data>
+</odoo>

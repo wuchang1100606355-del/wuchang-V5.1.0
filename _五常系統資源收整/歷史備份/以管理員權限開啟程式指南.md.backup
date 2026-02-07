@@ -1,0 +1,224 @@
+# 以系統管理員權限開啟程式指南
+
+## 📋 需要以管理員權限開啟的程式
+
+1. **Cursor / VS Code**（當前程式）
+2. **Docker Desktop**
+
+---
+
+## ✅ 步驟 1：以管理員權限開啟 Cursor / VS Code
+
+### 方法 A：從開始菜單（推薦）
+
+1. 關閉當前 Cursor / VS Code 視窗
+2. 點擊 **開始按鈕**（Windows 鍵）
+3. 搜尋 **"Cursor"** 或 **"Visual Studio Code"**
+4. **右鍵點擊**程式圖標
+5. 選擇 **"以系統管理員身分執行"**（Run as administrator）
+6. 確認 UAC 提示（點擊「是」）
+
+### 方法 B：從桌面快捷方式
+
+1. 關閉當前 Cursor / VS Code 視窗
+2. 在桌面找到 Cursor / VS Code 快捷方式
+3. **右鍵點擊**快捷方式
+4. 選擇 **"以系統管理員身分執行"**
+5. 確認 UAC 提示（點擊「是」）
+
+### 方法 C：從檔案總管
+
+1. 關閉當前 Cursor / VS Code 視窗
+2. 開啟檔案總管
+3. 導航到 Cursor / VS Code 安裝目錄（通常是）：
+   - Cursor: `C:\Users\你的用戶名\AppData\Local\Programs\cursor\`
+   - VS Code: `C:\Program Files\Microsoft VS Code\`
+4. 找到 `Cursor.exe` 或 `Code.exe`
+5. **右鍵點擊**執行檔
+6. 選擇 **"以系統管理員身分執行"**
+7. 確認 UAC 提示（點擊「是」）
+
+### 驗證管理員權限
+
+在 PowerShell 終端中執行：
+```powershell
+([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+```
+
+如果返回 `True`，表示已以管理員權限執行。
+
+---
+
+## ✅ 步驟 2：以管理員權限開啟 Docker Desktop
+
+### 方法 A：從開始菜單（推薦）
+
+1. 如果 Docker Desktop 正在運行，先關閉它
+2. 點擊 **開始按鈕**（Windows 鍵）
+3. 搜尋 **"Docker Desktop"**
+4. **右鍵點擊** Docker Desktop 圖標
+5. 選擇 **"以系統管理員身分執行"**
+6. 確認 UAC 提示（點擊「是」）
+
+### 方法 B：從系統匣（System Tray）
+
+1. 如果 Docker Desktop 正在運行：
+   - 右鍵點擊系統匣中的 Docker 圖標
+   - 選擇 **"Quit Docker Desktop"** 或 **"退出"**
+2. 等待 Docker Desktop 完全關閉
+3. 使用上述方法 A 重新以管理員權限開啟
+
+### 方法 C：從安裝目錄
+
+1. 關閉 Docker Desktop
+2. 開啟檔案總管
+3. 導航到 Docker Desktop 安裝目錄（通常是）：
+   - `C:\Program Files\Docker\Docker\`
+4. 找到 `Docker Desktop.exe`
+5. **右鍵點擊**執行檔
+6. 選擇 **"以系統管理員身分執行"**
+7. 確認 UAC 提示（點擊「是」）
+
+### 驗證 Docker Desktop 狀態
+
+在 PowerShell 終端中執行：
+```powershell
+docker ps
+```
+
+如果沒有錯誤，表示 Docker 已正常運行。
+
+---
+
+## ✅ 步驟 3：驗證環境準備
+
+### 檢查當前目錄
+
+在 PowerShell 終端中執行：
+```powershell
+pwd
+# 應該顯示: C:\wuchang V5.1.0
+```
+
+如果不是，請切換到正確目錄：
+```powershell
+cd "C:\wuchang V5.1.0"
+```
+
+### 檢查 Python 環境
+
+```powershell
+python --version
+# 或
+python3 --version
+```
+
+### 檢查 Docker 狀態
+
+```powershell
+docker --version
+docker ps
+```
+
+### 檢查必要套件
+
+```powershell
+python -c "import dns.resolver, requests, urllib3; print('✓ 所有套件已安裝')"
+```
+
+如果出現錯誤，需要安裝套件：
+```powershell
+pip install dnspython requests urllib3
+```
+
+---
+
+## 📝 設定永久以管理員權限執行（可選）
+
+### 設定 Cursor / VS Code 永久以管理員執行
+
+1. 找到 Cursor / VS Code 快捷方式
+2. **右鍵點擊** → **"內容"**（Properties）
+3. 切換到 **"相容性"**（Compatibility）標籤
+4. 勾選 **"以系統管理員身分執行此程式"**（Run this program as an administrator）
+5. 點擊 **"確定"**（OK）
+
+### 設定 Docker Desktop 永久以管理員執行
+
+1. 找到 Docker Desktop 快捷方式
+2. **右鍵點擊** → **"內容"**（Properties）
+3. 切換到 **"相容性"**（Compatibility）標籤
+4. 勾選 **"以系統管理員身分執行此程式"**
+5. 點擊 **"確定"**（OK）
+
+**注意**：設定後，每次開啟程式都會要求管理員權限。
+
+---
+
+## 🔍 故障排除
+
+### 問題：無法以管理員權限執行
+
+**可能原因**：
+- 當前用戶不是管理員
+- UAC 被禁用
+- 程式被防毒軟體阻擋
+
+**解決方法**：
+1. 確認當前用戶是管理員
+2. 檢查 UAC 設定（控制台 → 使用者帳戶 → 變更使用者帳戶控制設定）
+3. 暫時停用防毒軟體或將程式加入白名單
+
+### 問題：Docker Desktop 無法啟動
+
+**可能原因**：
+- Docker 服務未運行
+- 權限不足
+- 端口被占用
+
+**解決方法**：
+1. 以管理員權限執行 Docker Desktop
+2. 檢查 Windows 服務中的 Docker 服務是否運行
+3. 重啟 Docker Desktop
+4. 檢查端口占用情況
+
+### 問題：Python 命令找不到
+
+**解決方法**：
+1. 確認 Python 已安裝
+2. 檢查 PATH 環境變數
+3. 使用完整路徑執行 Python
+
+---
+
+## ✅ 完成檢查清單
+
+完成後，請確認：
+
+- [ ] Cursor / VS Code 已以管理員權限開啟
+- [ ] Docker Desktop 已以管理員權限開啟
+- [ ] 當前目錄正確：`C:\wuchang V5.1.0`
+- [ ] Python 環境正常
+- [ ] Docker 運行正常
+- [ ] 必要套件已安裝
+
+---
+
+## 🚀 下一步
+
+完成以上步驟後，可以繼續執行：
+
+1. **測試合規檢查腳本**：
+   ```powershell
+   python scripts\auto_compliance_certificate_check.py
+   ```
+
+2. **設置定時任務**：
+   ```powershell
+   cd scripts
+   .\快速設置全自動合規檢查.bat
+   ```
+
+---
+
+**合規聲明**：符合 Google 非營利組織合規要求

@@ -1,0 +1,30 @@
+:root {
+  --whc-font: 'Noto Sans TC', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  --whc-primary: #f97316;
+  --whc-secondary: #57534e;
+  --whc-bg: #fafaf9;
+  --whc-surface: #ffffff;
+  --whc-border: #e7e5e4;
+  --whc-text: #292524;
+  --whc-muted: #78716c;
+  --whc-success: #16a34a;
+  --whc-warning: #f59e0b;
+  --whc-danger: #dc2626;
+  --whc-radius-sm: 8px;
+  --whc-radius: 16px;
+  --whc-shadow-1: 0 2px 4px rgba(67, 20, 7, 0.06);
+  --whc-shadow-2: 0 8px 16px rgba(67, 20, 7, 0.08);
+  --whc-space-1: 4px;
+  --whc-space-2: 8px;
+  --whc-space-3: 12px;
+  --whc-space-4: 16px;
+  --whc-space-5: 24px;
+  --whc-space-6: 32px;
+}
+body {
+  color: var(--whc-text);
+  background: var(--whc-bg);
+  font-family: var(--whc-font);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&display=swap');

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>五常雲端相簿</title>
+    <style>
+        body { background: #121212; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+        .logo { font-size: 1.5em; font-weight: bold; color: #00aaff; }
+        .status { color: #0f0; font-size: 0.9em; }
+        
+        .upload-area { border: 2px dashed #444; padding: 40px; text-align: center; border-radius: 10px; cursor: pointer; transition: all 0.3s; }
+        .upload-area:hover { border-color: #00aaff; background: rgba(0, 170, 255, 0.1); }
+        .upload-btn { background: #0078d7; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; }
+        
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; }
+        .photo-card { background: #1e1e1e; border-radius: 8px; overflow: hidden; height: 150px; position: relative; }
+        .photo-placeholder { width: 100%; height: 100%; background: linear-gradient(45deg, #222, #333); display: flex; align-items: center; justify-content: center; color: #555; font-size: 2em; }
+        .photo-info { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.7); font-size: 0.8em; padding: 5px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">☁️ 五常雲端相簿 (五常雲端)</div>
+        <div class="status">● 已連線至雲端硬碟 (J:\我的雲端硬碟\網站照)</div>
+    </div>
+
+    <div class="upload-area" onclick="uploadSim()">
+        <h3>點擊或拖曳照片至此上傳</h3>
+        <p>將您的珍貴回憶備份至雲端核心</p>
+        <button class="upload-btn">選擇檔案</button>
+    </div>
+
+    <div class="gallery" id="galleryGrid">
+        <!-- Photos will appear here -->
+        <div class="photo-card"><div class="photo-placeholder">照片_001</div><div class="photo-info">2026-01-01</div></div>
+        <div class="photo-card"><div class="photo-placeholder">照片_002</div><div class="photo-info">2026-01-01</div></div>
+        <div class="photo-card"><div class="photo-placeholder">照片_003</div><div class="photo-info">2026-01-01</div></div>
+    </div>
+
+    <script>
+        function uploadSim() { window.open("http://localhost:8888/%E7%B6%B2%E7%AB%99%E7%85%A7/", "_blank"); return;
+            const gallery = document.getElementById('galleryGrid');
+            const newCard = document.createElement('div');
+            newCard.className = 'photo-card';
+            newCard.innerHTML = '<div class="photo-placeholder" style="background:#004400; color:#0f0;">上傳中...</div>';
+            gallery.prepend(newCard);
+            
+            setTimeout(() => {
+                newCard.innerHTML = '<div class="photo-placeholder">新照片</div><div class="photo-info">剛剛</div>';
+                alert("照片已安全上傳至五常雲端！");
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
+
+
+

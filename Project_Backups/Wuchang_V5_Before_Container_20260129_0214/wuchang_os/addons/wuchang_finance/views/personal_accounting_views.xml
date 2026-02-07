@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_personal_invoice_tree" model="ir.ui.view">
+        <field name="name">wuchang.personal.invoice.tree</field>
+        <field name="model">wuchang.personal.invoice</field>
+        <field name="arch" type="xml">
+            <tree string="個人發票">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="seller_name"/>
+                <field name="category"/>
+                <field name="amount" sum="Total"/>
+                <field name="lottery_result" widget="badge" decoration-success="lottery_result == 'won'" decoration-warning="lottery_result == 'pending'"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_personal_invoice_form" model="ir.ui.view">
+        <field name="name">wuchang.personal.invoice.form</field>
+        <field name="model">wuchang.personal.invoice</field>
+        <field name="arch" type="xml">
+            <form string="發票明細">
+                <header>
+                    <field name="lottery_result" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="seller_name"/>
+                            <field name="category"/>
+                            <field name="carrier_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="消費明細">
+                            <field name="details"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_personal_invoice" model="ir.actions.act_window">
+        <field name="name">發票存摺</field>
+        <field name="res_model">wuchang.personal.invoice</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                開始記錄您的第一張發票
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_personal_finance" name="個人財務" parent="wuchang_finance.menu_wuchang_finance_root" sequence="20"/>
+    <menuitem id="menu_personal_invoice" name="發票存摺" parent="menu_personal_finance" action="action_personal_invoice" sequence="10"/>
+</odoo>

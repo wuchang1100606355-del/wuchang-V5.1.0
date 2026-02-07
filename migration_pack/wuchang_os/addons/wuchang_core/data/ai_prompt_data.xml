@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fortune Telling -->
+        <record id="prompt_fortune_telling" model="wuchang.ai.prompt">
+            <field name="name">fortune_telling</field>
+            <field name="description">Fortune telling based on order details</field>
+            <field name="template">Write a short, whimsical fortune for a customer who ordered: {order_details}. Keep it lighthearted.</field>
+        </record>
+
+        <!-- Haggling Simulation -->
+        <record id="prompt_haggling_simulation" model="wuchang.ai.prompt">
+            <field name="name">haggling_simulation</field>
+            <field name="description">Simulate a shopkeeper haggling with a customer</field>
+            <field name="template">A customer offers {customer_offer} for an item priced at {original_price}. Act as a friendly but firm shopkeeper. Accept, reject, or counter-offer. Keep it short.</field>
+        </record>
+
+        <!-- Recipe Generation -->
+        <record id="prompt_recipe_generation" model="wuchang.ai.prompt">
+            <field name="name">recipe_generation</field>
+            <field name="description">Generate a recipe from ingredients</field>
+            <field name="template">Create a unique dish recipe using these ingredients: {ingredients}. Provide a name and brief instructions.</field>
+        </record>
+
+        <!-- Operation Analysis -->
+        <record id="prompt_operation_analysis" model="wuchang.ai.prompt">
+            <field name="name">operation_analysis</field>
+            <field name="description">Analyze operational data</field>
+            <field name="template">Analyze the following operational data and provide 3 key insights: {operation_data}</field>
+        </record>
+
+        <!-- Translation -->
+        <record id="prompt_translation" model="wuchang.ai.prompt">
+            <field name="name">translation</field>
+            <field name="description">Translate menu text</field>
+            <field name="template">Translate the following menu item or description to {target_language}: {menu_text}</field>
+        </record>
+
+        <!-- Vibe Check -->
+        <record id="prompt_vibe_check" model="wuchang.ai.prompt">
+            <field name="name">vibe_check</field>
+            <field name="description">Suggest music and announcement based on context</field>
+            <field name="template">Given the current context: '{current_context}', suggest a song genre and a public announcement to set the mood.</field>
+        </record>
+
+        <!-- Leftover Special -->
+        <record id="prompt_leftover_special" model="wuchang.ai.prompt">
+            <field name="name">leftover_special</field>
+            <field name="description">Create a special menu from leftovers</field>
+            <field name="template">We have these leftovers: {leftovers}. Invent a 'Special of the Day' name and description to sell them.</field>
+        </record>
+    </data>
+</odoo>

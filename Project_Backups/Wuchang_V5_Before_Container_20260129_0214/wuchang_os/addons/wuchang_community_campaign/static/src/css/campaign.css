@@ -1,0 +1,200 @@
+.wish-tree {
+  min-height: 300px;
+  border: 2px dashed #8bc34a;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+#vote-panel {
+  min-height: 200px;
+  border: 2px dashed #03a9f4;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+#transparency-dashboard {
+  min-height: 200px;
+  border: 2px dashed #9c27b0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Wuchang Community Campaign Styles 
+     Theme: Ethereal, Modern, Eco-Tech 
+ */ 
+ 
+ :root { 
+     --primary-gradient: linear-gradient(135deg, #00b09b 0%, #96c93d 100%); 
+     --glass-bg: rgba(255, 255, 255, 0.1); 
+     --glass-border: rgba(255, 255, 255, 0.2); 
+     --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); 
+ } 
+ 
+ .wish-tree-wrapper { 
+     background: #1a1a2e; 
+     min-height: 100vh; 
+     font-family: 'Noto Sans TC', sans-serif; 
+     color: #fff; 
+     padding-bottom: 5rem; 
+ } 
+ 
+ .hero-section { 
+     position: relative; 
+     padding: 6rem 0 4rem; 
+     background: radial-gradient(circle at 50% 10%, #2a2a4e 0%, #1a1a2e 100%); 
+     overflow: hidden; 
+ } 
+ 
+ .glowing-orb { 
+     width: 200px; 
+     height: 200px; 
+     background: var(--primary-gradient); 
+     border-radius: 50%; 
+     filter: blur(80px); 
+     opacity: 0.6; 
+     position: absolute; 
+     top: 50%; 
+     left: 50%; 
+     transform: translate(-50%, -50%); 
+     z-index: 0; 
+     animation: pulse 4s infinite ease-in-out; 
+ } 
+ 
+ @keyframes pulse { 
+     0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; } 
+     50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; } 
+     100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; } 
+ } 
+ 
+ .text-gradient { 
+     background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%); 
+     -webkit-background-clip: text; 
+     -webkit-text-fill-color: transparent; 
+     font-weight: 700; 
+     position: relative; 
+     z-index: 1; 
+ } 
+ 
+ .glass-card { 
+     background: var(--glass-bg); 
+     backdrop-filter: blur(10px); 
+     -webkit-backdrop-filter: blur(10px); 
+     border-radius: 20px; 
+     border: 1px solid var(--glass-border); 
+     box-shadow: var(--card-shadow); 
+     color: white; 
+ } 
+ 
+ .funding-card { 
+     background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%); 
+ } 
+ 
+ .gradient-bar { 
+     background: var(--primary-gradient); 
+     border-radius: 10px; 
+     box-shadow: 0 0 10px rgba(150, 201, 61, 0.5); 
+ } 
+ 
+ .wish-card { 
+     background: rgba(255, 255, 255, 0.05); 
+     backdrop-filter: blur(5px); 
+     border: 1px solid rgba(255, 255, 255, 0.1); 
+     border-radius: 15px; 
+     color: white; 
+     transition: all 0.3s ease; 
+     overflow: hidden; 
+ } 
+ 
+ .wish-card:hover { 
+     transform: translateY(-5px); 
+     box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+     border-color: rgba(255, 255, 255, 0.3); 
+ } 
+ 
+ .wish-icon { 
+     font-size: 1.5rem; 
+     opacity: 0.8; 
+ } 
+ 
+ .theme-green { border-top: 4px solid #96c93d; } 
+ .theme-green .wish-icon { color: #96c93d; } 
+ 
+ .theme-blue { border-top: 4px solid #4facfe; } 
+ .theme-blue .wish-icon { color: #4facfe; } 
+ 
+ .theme-gold { border-top: 4px solid #ffd700; } 
+ .theme-gold .wish-icon { color: #ffd700; } 
+ 
+ .theme-pink { border-top: 4px solid #ff758c; } 
+ .theme-pink .wish-icon { color: #ff758c; } 
+ 
+ .btn-pill { 
+     border-radius: 50px; 
+     padding: 0.5rem 1.5rem; 
+     font-weight: 600; 
+ } 
+ 
+ .btn-glow { 
+     background: var(--primary-gradient); 
+     border: none; 
+     box-shadow: 0 4px 15px rgba(0, 176, 155, 0.4); 
+ } 
+ 
+ .glass-modal .modal-content { 
+     background: #2a2a4e; 
+     color: white; 
+     border: 1px solid rgba(255,255,255,0.1); 
+ } 
+ 
+ .glass-input { 
+     background: rgba(255, 255, 255, 0.1); 
+     border: 1px solid rgba(255, 255, 255, 0.1); 
+     color: white; 
+ } 
+ 
+ .glass-input:focus { 
+     background: rgba(255, 255, 255, 0.15); 
+     color: white; 
+     border-color: rgba(255, 255, 255, 0.3); 
+     box-shadow: none; 
+ } 
+ 
+ .vote-btn { 
+     border-radius: 20px; 
+     transition: all 0.2s; 
+ } 
+ 
+ .vote-btn:active { 
+     transform: scale(0.95); 
+ } 
+ 
+.vote-btn.voted {
+  background-color: white;
+  color: #1a1a2e;
+}
+
+.little-j-hub-wrapper { min-height: 100vh; background: #0d0f14; position: relative; }
+.digital-grid-bg { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); pointer-events: none; }
+.glass-panel { background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); }
+.pulse-badge { animation: pulseBadge 2s infinite; }
+@keyframes pulseBadge { 0%,100%{opacity:.7} 50%{opacity:1} }
+.hologram-ring { position: absolute; border: 2px solid rgba(0, 242, 254, .2); border-radius: 50%; animation: spin 10s linear infinite; }
+.hologram-ring.ring-1 { width: 220px; height: 220px; left: 50%; top: 40%; transform: translate(-50%,-50%); }
+.hologram-ring.ring-2 { width: 280px; height: 280px; left: 50%; top: 40%; transform: translate(-50%,-50%); animation-duration: 16s; }
+.hologram-ring.ring-3 { width: 340px; height: 340px; left: 50%; top: 40%; transform: translate(-50%,-50%); animation-duration: 22s; }
+@keyframes spin { from{transform: translate(-50%,-50%) rotate(0)} to{transform: translate(-50%,-50%) rotate(360deg)} }
+.avatar-wrapper { position: relative; }
+.floating { animation: floating 4s ease-in-out infinite; }
+@keyframes floating { 0%,100%{transform: translateY(0)} 50%{transform: translateY(-6px)} }
+.voice-wave { display: inline-flex; gap: 4px; }
+.voice-wave .bar { width: 4px; height: 18px; background: #00f2fe; animation: wave 1s infinite ease-in-out; }
+.voice-wave .bar:nth-child(2){animation-delay:.1s}
+.voice-wave .bar:nth-child(3){animation-delay:.2s}
+.voice-wave .bar:nth-child(4){animation-delay:.3s}
+.voice-wave .bar:nth-child(5){animation-delay:.4s}
+@keyframes wave { 0%,100%{transform: scaleY(0.6)} 50%{transform: scaleY(1.2)} }
+.service-card { padding: 16px; border-radius: 16px; }
+.hover-glow { transition: box-shadow .2s, transform .2s; }
+.hover-glow:hover { box-shadow: 0 10px 30px rgba(0, 176, 155, .3); transform: translateY(-2px); }
+.status-indicator { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; font-size: .9rem; color: #9ad2ff; }
+.status-indicator.online i { color: #30d158; }

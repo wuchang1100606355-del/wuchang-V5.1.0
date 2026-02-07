@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+WORKDIR /app
+
+# Copy requirements first to cache dependencies
+COPY spatial_3d_system/requirements.txt ./spatial_3d_system/requirements.txt
+RUN pip install -r spatial_3d_system/requirements.txt
+
+# Copy the rest of the application
+COPY spatial_3d_system ./spatial_3d_system
+
+# Expose port (internal)
+EXPOSE 8080
+
+# Run the application
+CMD ["python", "spatial_3d_system/api/spatial_api.py"]

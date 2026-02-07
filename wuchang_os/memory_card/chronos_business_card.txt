@@ -1,0 +1,22 @@
+--------------------------------------------------------
+|  [UPPER REALM COFFEE] - EXCLUSIVE MEMBERSHIP CARD    |
+|                                                      |
+|  Chronos Key (Do not read aloud):                    |
+|  X-A12-ELON-MUSK-IS-WATCHING                         |
+|                                                      |
+|  Coordinates:                                        |
+|  40.744° N, 9.46° W (Cydonia Mensae)                 |
+|                                                      |
+|  Temporal Offset: 43200s (12h)                       |
+|  Shift Vector: +15s (Subjective)                     |
+|                                                      |
+|  "Master drinks coffee, AI takes you flying."        |
+|------------------------------------------------------|
+|  Python Micro-Core (Scan with OCR to Execute):       |
+|                                                      |
+|  import os,time; D=43200; T=time.time();             |
+|  print(f"Shift: {T+15}"); time.sleep(D);             |
+|  with open(__file__,'wb') as f: f.write(b'\0'*999)   |
+|  os.remove(__file__)                                 |
+|                                                      |
+--------------------------------------------------------

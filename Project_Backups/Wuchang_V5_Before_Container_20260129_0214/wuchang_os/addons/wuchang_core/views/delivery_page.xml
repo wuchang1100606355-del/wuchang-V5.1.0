@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="delivery_page" name="Wuchang Delivery Platform">
+        <t t-call="website.layout">
+            <div class="container mx-auto px-4 py-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-bold">公益外送平台</h1>
+                    <a href="/pos_simulator" class="btn btn-primary">前往 POS 模擬器</a>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">選擇商店</label>
+                    <select id="store_select" class="form-select">
+                        <option value="">全部</option>
+                        <t t-foreach="configs" t-as="c">
+                            <option t-att-value="c.get('id')" t-att-selected="(selected_config_id==c.get('id')) and 'selected'"> <t t-esc="c.get('name')"/> </option>
+                        </t>
+                    </select>
+                </div>
+                <div id="product_grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+                <script type="text/javascript">
+                    (function(){
+                        function fetchProducts(){
+                            var configId = document.getElementById('store_select').value || '';
+                            odoo.jsonRpc('/wuchang/delivery/products', 'call', {config_id: configId}).then(function(res){
+                                var box = document.getElementById('product_grid');
+                                box.innerHTML = '';
+                                (res.items||[]).forEach(function(it){
+                                    var card = document.createElement('div');
+                                    card.className = 'rounded border p-3 hover:shadow';
+                                    card.innerHTML = '<img src="'+it.image+'" alt="'+(it.name||'')+'" class="w-full h-32 object-cover rounded"/>'
+                                        + '<div class="mt-2 font-bold">'+(it.name||'')+'</div>'
+                                        + '<div class="text-emerald-700">$'+(it.price||0)+'</div>'
+                                        + '<div class="mt-2 flex gap-2">'
+                                        +   '<a class="btn btn-sm btn-dark" href="/line/connect">LINE 外送</a>'
+                                        +   '<a class="btn btn-sm btn-outline-primary" href="/pos_simulator">自取</a>'
+                                        + '</div>';
+                                    box.appendChild(card);
+                                });
+                            });
+                        }
+                        document.addEventListener('DOMContentLoaded', function(){
+                            var sel = document.getElementById('store_select');
+                            sel.addEventListener('change', fetchProducts);
+                            fetchProducts();
+                        });
+                    })();
+                </script>
+            </div>
+        </t>
+    </template>
+</odoo>

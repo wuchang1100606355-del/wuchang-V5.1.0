@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Wuchang Rescue Boot</title>
+    <style>body{background:#000;color:#0f0;font-family:monospace;padding:50px;}.log{margin-bottom:5px;}</style>
+</head>
+<body>
+    <div id="boot-sequence">
+        <div class="log">BIOS CHECK... OK</div>
+        <div class="log">BOOT MODE: USB-HDD / USB-KEY (DETECTED)</div>
+        <div class="log">XHCI HAND-OFF... <span style="color:#0f0">ENABLED</span></div>
+        <div class="log">LOADING KERNEL FROM NEW USB...</div>
+        <div class="log">MOUNTING FILESYSTEM... OK</div>
+        <div class="log">BOOTING WUCHANG LIVE ENVIRONMENT...</div>
+    </div>
+    <iframe id="desktop-frame" src="desktop.html" style="position:fixed;top:0;left:0;width:100%;height:100%;border:none;display:none;"></iframe>
+    <script>
+        setTimeout(() => {
+            document.getElementById('boot-sequence').style.display = 'none';
+            document.getElementById('desktop-frame').style.display = 'block';
+            document.body.style.padding = '0';
+        }, 3000);
+    </script>
+</body>
+</html>

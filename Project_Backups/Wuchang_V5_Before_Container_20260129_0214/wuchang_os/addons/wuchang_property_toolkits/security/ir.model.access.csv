@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wuchang_property_maintenance,wuchang.property.maintenance,model_wuchang_property_maintenance,base.group_user,1,1,1,1
+access_wuchang_property_maintenance_manager,wuchang.property.maintenance manager,model_wuchang_property_maintenance,base.group_system,1,1,1,1
+access_wuchang_property_patent,wuchang.property.patent,model_wuchang_property_patent,base.group_user,1,1,1,1
+access_wuchang_property_patent_manager,wuchang.property.patent manager,model_wuchang_property_patent,base.group_system,1,1,1,1

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gcp_credits_user,wuchang.gcp.credits.user,model_wuchang_gcp_credits,base.group_user,1,1,1,1
+access_credits_usage_log_user,wuchang.credits.usage.log.user,model_wuchang_credits_usage_log,base.group_user,1,1,1,1
+access_double_j_task_user,wuchang.double.j.task.user,model_wuchang_double_j_task,base.group_user,1,1,1,1

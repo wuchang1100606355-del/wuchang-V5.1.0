@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>雙J協作終端 (Mobile)</title>
+    <style>
+        :root {
+            --primary-color: #00ff88;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-color: #00d4ff;
+            --danger-color: #ff4444;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        header {
+            background-color: var(--card-bg);
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        #main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .status-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #555;
+            margin-right: 8px;
+        }
+        .status-active { background-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-color); }
+        .status-processing { background-color: var(--accent-color); animation: pulse 1s infinite; }
+        .status-error { background-color: var(--danger-color); }
+
+        #response-box {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 100px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            border-left: 4px solid var(--accent-color);
+        }
+        #controls {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-bottom: 20px;
+        }
+        .mic-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(0,255,136,0.2);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .mic-btn:active, .mic-btn.active {
+            transform: scale(0.95);
+            background: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border-radius: 25px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: #fff;
+            font-size: 1rem;
+        }
+        button.send-btn {
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            padding: 0 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        /* Diagnostic Panel (Collapsible) */
+        .diagnostic-panel {
+            font-size: 0.8rem;
+            color: #888;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        .diag-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .diag-label { color: #aaa; }
+        .diag-val { color: var(--accent-color); }
+            #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .login-box {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--primary-color);
+            max-width: 80%;
+        }
+        .login-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #222;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        .login-btn {
+            background: var(--primary-color);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="color: var(--primary-color);">🔒 Family Access</h2>
+            <p>Please enter the Family Code to access Meimei.</p>
+            <input type="password" id="access-code" class="login-input" placeholder="Enter Code">
+            <button class="login-btn" onclick="performLogin()">Unlock</button>
+            <p id="login-msg" style="color: var(--danger-color); margin-top: 10px;"></p>
+        </div>
+    </div>
+
+<header>
+    <h1>Juers & Sister</h1>
+    <div class="subtitle">Dual-J Collaboration Terminal</div>
+</header>
+
+<div id="main-container">
+    <div class="status-card" id="status-card">
+        <span class="status-indicator" id="status-dot"></span>
+        <span id="status-text">Ready</span>
+    </div>
+
+    <div id="response-box">
+        等待指令... (Awaiting Command)
+    </div>
+
+    <div class="diagnostic-panel">
+        <div class="diag-row"><span class="diag-label">Intent:</span> <span class="diag-val" id="diag-intent">-</span></div>
+        <div class="diag-row"><span class="diag-label">Policy:</span> <span class="diag-val" id="diag-policy">-</span></div>
+        <div class="diag-row"><span class="diag-label">Latency:</span> <span class="diag-val" id="diag-latency">-</span></div>
+    </div>
+
+    <div id="controls">
+        <div class="mic-btn" id="mic-btn">
+            🎤
+        </div>
+        <div class="input-group">
+            <input type="text" id="cmd-input" placeholder="輸入指令或詢問...">
+            <button class="send-btn" id="send-btn">➤</button>
+        </div>
+    </div>
+</div>
+
+    <script>
+        // Check Auth on Load
+        window.addEventListener('load', () => {
+            fetch('/check_auth')
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('login-overlay').style.display = 'none';
+                    }
+                });
+        });
+
+        function performLogin() {
+            const code = document.getElementById('access-code').value;
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('login-overlay').style.display = 'none';
+                } else {
+                    document.getElementById('login-msg').innerText = 'Incorrect Code';
+                }
+            })
+            .catch(err => document.getElementById('login-msg').innerText = 'Error connecting');
+        }
+    const micBtn = document.getElementById('mic-btn');
+    const sendBtn = document.getElementById('send-btn');
+    const cmdInput = document.getElementById('cmd-input');
+    const responseBox = document.getElementById('response-box');
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    
+    // Web Speech API
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+    let isRecording = false;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'zh-TW';
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+            isRecording = true;
+            updateStatus('recording');
+        };
+
+        recognition.onend = () => {
+            isRecording = false;
+            updateStatus('ready');
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            cmdInput.value = transcript;
+            sendCommand(transcript);
+        };
+    } else {
+        micBtn.style.display = 'none'; // Hide if not supported
+        responseBox.innerText = "Browser does not support Web Speech API.";
+    }
+
+    function updateStatus(state) {
+        micBtn.classList.remove('active');
+        statusDot.className = 'status-indicator'; // reset
+        
+        if (state === 'recording') {
+            micBtn.classList.add('active');
+            statusDot.classList.add('status-processing');
+            statusText.innerText = "Listening...";
+        } else if (state === 'processing') {
+            statusDot.classList.add('status-processing');
+            statusText.innerText = "Thinking...";
+        } else {
+            statusDot.classList.add('status-active');
+            statusText.innerText = "Ready";
+        }
+    }
+
+    async function sendCommand(text) {
+        if (!text.trim()) return;
+        
+        updateStatus('processing');
+        const startTime = Date.now();
+        
+        try {
+            const res = await fetch('/command', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ command: text })
+            });
+            
+            const data = await res.json();
+            const latency = Date.now() - startTime;
+            
+            responseBox.innerText = data.message;
+            document.getElementById('diag-intent').innerText = "COMMAND"; // Simplified for now
+            document.getElementById('diag-policy').innerText = data.policy || "N/A";
+            document.getElementById('diag-latency').innerText = `${latency}ms`;
+            
+            if (data.status === 'success') {
+                speak(data.message);
+            } else {
+                speak("系統拒絕執行");
+            }
+
+        } catch (e) {
+            responseBox.innerText = "Error: " + e;
+        } finally {
+            updateStatus('ready');
+            cmdInput.value = '';
+        }
+    }
+
+    function speak(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-TW';
+        speechSynthesis.speak(utterance);
+    }
+
+    // Event Listeners
+    micBtn.addEventListener('click', () => {
+        if (isRecording) recognition.stop();
+        else recognition.start();
+    });
+
+    sendBtn.addEventListener('click', () => sendCommand(cmdInput.value));
+    
+    cmdInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendCommand(cmdInput.value);
+    });
+
+</script>
+</body>
+</html>
+

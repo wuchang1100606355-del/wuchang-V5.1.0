@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Google 表單列表視圖 -->
+    <record id="view_google_form_tree" model="ir.ui.view">
+        <field name="name">wuchang.google.form.tree</field>
+        <field name="model">wuchang.google.form</field>
+        <field name="arch" type="xml">
+            <tree string="Google 表單">
+                <field name="name"/>
+                <field name="form_type"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-muted="state == 'closed'"/>
+                <field name="response_count"/>
+                <field name="google_form_url" widget="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Google 表單表單視圖 -->
+    <record id="view_google_form_form" model="ir.ui.view">
+        <field name="name">wuchang.google.form.form</field>
+        <field name="model">wuchang.google.form</field>
+        <field name="arch" type="xml">
+            <form string="Google 表單">
+                <header>
+                    <button name="action_create_google_form" string="建立 Google 表單" type="object" class="btn-primary" states="draft" groups="group_google_integration_user"/>
+                    <button name="action_open_google_form" string="開啟 Google 表單" type="object" class="btn-primary" attrs="{'invisible': [('google_form_url', '=', False)]}" groups="group_google_integration_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,closed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="form_type"/>
+                            <field name="google_form_url" widget="url" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="response_count"/>
+                            <field name="create_uid" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="描述">
+                            <field name="description" placeholder="輸入表單描述..."/>
+                        </page>
+                        <page string="填寫說明">
+                            <field name="instructions" placeholder="輸入填寫說明..."/>
+                        </page>
+                        <page string="回應">
+                            <field name="response_ids" nolabel="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="responder_id"/>
+                                    <field name="response_date"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Google 表單搜尋視圖 -->
+    <record id="view_google_form_search" model="ir.ui.view">
+        <field name="name">wuchang.google.form.search</field>
+        <field name="model">wuchang.google.form</field>
+        <field name="arch" type="xml">
+            <search string="搜尋 Google 表單">
+                <field name="name"/>
+                <field name="form_type"/>
+                <filter string="啟用" name="active" domain="[('state', '=', 'active')]"/>
+                <filter string="已關閉" name="closed" domain="[('state', '=', 'closed')]"/>
+                <group expand="0" string="分組">
+                    <filter string="類型" name="group_type" context="{'group_by': 'form_type'}"/>
+                    <filter string="狀態" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Google 表單動作 -->
+    <record id="action_google_form" model="ir.actions.act_window">
+        <field name="name">Google 表單</field>
+        <field name="res_model">wuchang.google.form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_google_form_search"/>
+    </record>
+
+    <!-- AI 公文生成列表視圖 -->
+    <record id="view_google_document_ai_tree" model="ir.ui.view">
+        <field name="name">wuchang.google.document.ai.tree</field>
+        <field name="model">wuchang.google.document.ai</field>
+        <field name="arch" type="xml">
+            <tree string="AI 公文生成">
+                <field name="name"/>
+                <field name="document_type"/>
+                <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-info="state == 'review'"/>
+                <field name="google_drive_url" widget="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- AI 公文生成表單視圖 -->
+    <record id="view_google_document_ai_form" model="ir.ui.view">
+        <field name="name">wuchang.google.document.ai.form</field>
+        <field name="model">wuchang.google.document.ai</field>
+        <field name="arch" type="xml">
+            <form string="AI 公文生成">
+                <header>
+                    <button name="action_generate_document" string="AI 生成公文" type="object" class="btn-primary" states="draft" groups="group_google_integration_user"/>
+                    <button name="action_save_to_google_drive" string="儲存到 Google Drive" type="object" states="approved" groups="group_google_integration_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,approved,published"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="document_type"/>
+                            <field name="form_id"/>
+                            <field name="response_id"/>
+                        </group>
+                        <group>
+                            <field name="google_drive_url" widget="url" readonly="1"/>
+                            <field name="create_uid" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="公文內容">
+                            <field name="content" widget="html"/>
+                        </page>
+                        <page string="AI 設定">
+                            <field name="ai_prompt"/>
+                            <field name="ai_model"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI 公文生成動作 -->
+    <record id="action_google_document_ai" model="ir.actions.act_window">
+        <field name="name">AI 公文生成</field>
+        <field name="res_model">wuchang.google.document.ai</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 抵免額管理視圖 -->
+    <record id="view_gcp_credits_tree" model="ir.ui.view">
+        <field name="name">wuchang.gcp.credits.tree</field>
+        <field name="model">wuchang.gcp.credits</field>
+        <field name="arch" type="xml">
+            <tree string="抵免額列表" decoration-danger="status=='expired'" decoration-warning="status=='exhausted'">
+                <field name="name"/>
+                <field name="credit_type"/>
+                <field name="amount"/>
+                <field name="remaining_amount"/>
+                <field name="status"/>
+                <field name="days_remaining"/>
+                <field name="collaboration_status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_gcp_credits_form" model="ir.ui.view">
+        <field name="name">wuchang.gcp.credits.form</field>
+        <field name="model">wuchang.gcp.credits</field>
+        <field name="arch" type="xml">
+            <form string="抵免額管理">
+                <header>
+                    <button name="action_configure_with_double_j" type="object" 
+                            string="使用雙J協作配置" class="oe_highlight"
+                            icon="fa-users"/>
+                    <field name="status" widget="statusbar" statusbar_visible="active,expired,exhausted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_configure_with_double_j" type="object" 
+                                class="oe_stat_button" icon="fa-users">
+                            <field name="collaboration_status" widget="statinfo" string="協作狀態"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="credit_type"/>
+                            <field name="credit_id"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="used_amount"/>
+                            <field name="remaining_amount"/>
+                            <field name="monthly_amount" attrs="{'invisible': [('is_monthly', '=', False)]}"/>
+                            <field name="is_monthly"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="expiry_date"/>
+                            <field name="days_remaining"/>
+                        </group>
+                        <group>
+                            <field name="applicable_services" placeholder="例如：所有 Google Cloud 服務"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="雙J協作任務" name="collaboration_tasks">
+                            <group>
+                                <field name="little_j_task_id" domain="[('agent', '=', 'little_j')]"/>
+                                <field name="jules_task_id" domain="[('agent', '=', 'jules')]"/>
+                            </group>
+                        </page>
+                        <page string="使用記錄" name="usage_logs">
+                            <field name="usage_log_ids">
+                                <tree>
+                                    <field name="service_name"/>
+                                    <field name="amount"/>
+                                    <field name="usage_date"/>
+                                    <field name="agent"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="備註" name="notes">
+                            <field name="notes" placeholder="記錄相關備註資訊..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gcp_credits_search" model="ir.ui.view">
+        <field name="name">wuchang.gcp.credits.search</field>
+        <field name="model">wuchang.gcp.credits</field>
+        <field name="arch" type="xml">
+            <search string="搜尋抵免額">
+                <field name="name"/>
+                <field name="credit_type"/>
+                <field name="project_id"/>
+                <filter string="使用中" name="active" domain="[('status', '=', 'active')]"/>
+                <filter string="已到期" name="expired" domain="[('status', '=', 'expired')]"/>
+                <filter string="待審核" name="pending" domain="[('status', '=', 'pending')]"/>
+                <separator/>
+                <filter string="緊急（6天內到期）" name="urgent" domain="[('days_remaining', '&lt;=', 6)]"/>
+                <group expand="0" string="分組">
+                    <filter string="抵免額類型" name="group_credit_type" context="{'group_by': 'credit_type'}"/>
+                    <filter string="狀態" name="group_status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 雙J協作任務視圖 -->
+    <record id="view_double_j_task_tree" model="ir.ui.view">
+        <field name="name">wuchang.double.j.task.tree</field>
+        <field name="model">wuchang.double.j.task</field>
+        <field name="arch" type="xml">
+            <tree string="雙J協作任務" decoration-muted="status=='completed'" decoration-danger="status=='failed'">
+                <field name="name"/>
+                <field name="agent"/>
+                <field name="task_type"/>
+                <field name="priority"/>
+                <field name="status"/>
+                <field name="deadline"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_double_j_task_form" model="ir.ui.view">
+        <field name="name">wuchang.double.j.task.form</field>
+        <field name="model">wuchang.double.j.task</field>
+        <field name="arch" type="xml">
+            <form string="雙J協作任務">
+                <header>
+                    <button name="action_start" type="object" string="開始執行" 
+                            states="assigned" class="oe_highlight"/>
+                    <button name="action_complete" type="object" string="完成" 
+                            states="in_progress" class="oe_highlight"/>
+                    <field name="status" widget="statusbar" 
+                           statusbar_visible="pending,assigned,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="agent"/>
+                            <field name="task_type"/>
+                            <field name="priority"/>
+                        </group>
+                        <group>
+                            <field name="assigned_date" readonly="1"/>
+                            <field name="start_date" readonly="1"/>
+                            <field name="completed_date" readonly="1"/>
+                            <field name="deadline"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="任務詳細描述..."/>
+                    </group>
+                    <notebook>
+                        <page string="協作資訊" name="collaboration">
+                            <field name="collaborator_task_id"/>
+                            <field name="related_credit_id"/>
+                        </page>
+                        <page string="執行結果" name="result">
+                            <field name="result" placeholder="記錄執行結果..."/>
+                            <field name="error_message" attrs="{'invisible': [('status', '!=', 'failed')]}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gcp_credits" model="ir.actions.act_window">
+        <field name="name">抵免額管理</field>
+        <field name="res_model">wuchang.gcp.credits</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                建立新的抵免額記錄
+            </p>
+            <p>
+                管理 Google Cloud Platform 的抵免額，並使用雙J協作機制進行配置。
+            </p>
+        </field>
+    </record>
+
+    <record id="action_double_j_task" model="ir.actions.act_window">
+        <field name="name">雙J協作任務</field>
+        <field name="res_model">wuchang.double.j.task</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

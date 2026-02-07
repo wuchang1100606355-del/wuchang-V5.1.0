@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 住戶入口首頁 -->
+    <template id="portal_my_home" name="My Home">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12 text-center mb-4">
+                        <h2>五常智慧社區</h2>
+                        <p class="text-muted">歡迎回來，<t t-esc="request.env.user.name"/></p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- 包裹卡片 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body text-center">
+                                <i class="fa fa-cube fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title">我的包裹</h5>
+                                <h3 class="display-4 text-danger" t-if="parcel_count > 0">
+                                    <t t-esc="parcel_count"/>
+                                </h3>
+                                <p class="card-text text-muted" t-else="">目前沒有待領包裹</p>
+                                <a href="/my/parcels" class="btn btn-outline-primary mt-2">查看詳情</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 公設預約卡片 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body text-center">
+                                <i class="fa fa-calendar-check-o fa-3x text-success mb-3"></i>
+                                <h5 class="card-title">公設預約</h5>
+                                <p class="card-text">KTV、健身房、會議室</p>
+                                <a href="/my/facilities" class="btn btn-outline-success mt-2">立即預約</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 報修卡片 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body text-center">
+                                <i class="fa fa-wrench fa-3x text-warning mb-3"></i>
+                                <h5 class="card-title">線上報修</h5>
+                                <p class="card-text" t-if="workorder_count > 0">
+                                    <span class="badge badge-warning"><t t-esc="workorder_count"/> 件處理中</span>
+                                </p>
+                                <a href="/my/workorders" class="btn btn-outline-warning mt-2">申請報修</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- 包裹列表頁 -->
+    <template id="portal_my_parcels" name="My Parcels">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <h3>我的包裹</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>到貨時間</th>
+                                <th>物流商</th>
+                                <th>單號</th>
+                                <th>狀態</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="parcels" t-as="parcel">
+                                <tr>
+                                    <td><span t-field="parcel.arrival_time"/></td>
+                                    <td><span t-field="parcel.carrier"/></td>
+                                    <td><span t-field="parcel.tracking_number"/></td>
+                                    <td>
+                                        <span t-if="parcel.state == 'arrived'" class="badge badge-danger">已到貨</span>
+                                        <span t-if="parcel.state == 'picked'" class="badge badge-success">已領取</span>
+                                    </td>
+                                    <td>
+                                        <button t-if="parcel.state == 'arrived'" class="btn btn-sm btn-primary" data-toggle="modal" t-att-data-target="'#qrModal-' + str(parcel.id)">
+                                            領取憑證
+                                        </button>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,69 @@
+{
+  "title": "系統部署狀態檢查報告",
+  "timestamp": "2026-01-12T03:30:21.379094",
+  "domain": "wuchang.life",
+  "check_results": {
+    "dns": {
+      "domain": "wuchang.life",
+      "resolved": false,
+      "ip": null,
+      "error": "DNS 解析失敗: [Errno 11001] getaddrinfo failed"
+    },
+    "urls": {
+      "首頁": {
+        "url": "https://wuchang.life/",
+        "accessible": false,
+        "status_code": null,
+        "error": "連接錯誤: HTTPSConnectionPool(host='wuchang.life', port=443): Max retries exceeded with url: / (Caused by Name",
+        "response_time": null,
+        "content_length": null,
+        "final_url": null
+      },
+      "登入頁": {
+        "url": "https://wuchang.life/web/login",
+        "accessible": false,
+        "status_code": null,
+        "error": "連接錯誤: HTTPSConnectionPool(host='wuchang.life', port=443): Max retries exceeded with url: /web/login (Cause",
+        "response_time": null,
+        "content_length": null,
+        "final_url": null
+      },
+      "HTTP 首頁": {
+        "url": "http://wuchang.life/",
+        "accessible": false,
+        "status_code": null,
+        "error": "連接錯誤: HTTPConnectionPool(host='wuchang.life', port=80): Max retries exceeded with url: / (Caused by NameRe",
+        "response_time": null,
+        "content_length": null,
+        "final_url": null
+      },
+      "HTTP 登入頁": {
+        "url": "http://wuchang.life/web/login",
+        "accessible": false,
+        "status_code": null,
+        "error": "連接錯誤: HTTPConnectionPool(host='wuchang.life', port=80): Max retries exceeded with url: /web/login (Caused ",
+        "response_time": null,
+        "content_length": null,
+        "final_url": null
+      }
+    },
+    "summary": {
+      "homepage_accessible": false,
+      "login_accessible": false,
+      "all_ok": false
+    }
+  },
+  "target_device": {
+    "ip": "192.168.50.84",
+    "name": "LUNGsMSI.wuchang.life",
+    "type": "Odoo 實例",
+    "ports": [
+      22,
+      80,
+      443,
+      8080,
+      8069
+    ]
+  },
+  "notification_method": "file"
+}

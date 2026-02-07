@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- 覆寫首頁 -->
+        <template id="wuchang_homepage" name="Wuchang Homepage" inherit_id="website.homepage" active="True">
+            <!-- 替換 Logo (如果有需要) -->
+            <!-- <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
+                <a href="/" class="navbar-brand logo">
+                    <img src="/wuchang_web_portal/static/src/img/logo.png" class="img-fluid" alt="Wuchang Logo"/>
+                </a>
+            </xpath> -->
+
+            <xpath expr="//div[@id='wrap']" position="replace">
+                <div id="wrap" class="oe_structure oe_empty">
+                    
+                    <!-- 啟動倒數計時器 (Launch Countdown) -->
+                    <div class="alert alert-danger text-center mb-0 fw-bold" role="alert">
+                        <i class="fa fa-clock-o me-2"></i> 
+                        五常社區 重・總店 (Chongxin Head Store) 啟動倒數：
+                        <span id="launch_countdown" class="badge bg-white text-danger fs-5">02:00:00</span>
+                        <script>
+                            // 簡單的倒數計時邏輯 (2小時)
+                            (function(){
+                                var duration = 7200; // 2 hours in seconds
+                                var display = document.querySelector('#launch_countdown');
+                                var timer = duration, hours, minutes, seconds;
+                                setInterval(function () {
+                                    hours = parseInt(timer / 3600, 10);
+                                    minutes = parseInt((timer % 3600) / 60, 10);
+                                    seconds = parseInt(timer % 60, 10);
+
+                                    hours = hours < 10 ? "0" + hours : hours;
+                                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                                    display.textContent = hours + ":" + minutes + ":" + seconds;
+
+                                    if (--timer < 0) {
+                                        timer = 0;
+                                        display.textContent = "SYSTEM ONLINE";
+                                        display.classList.remove('text-danger');
+                                        display.classList.add('text-success');
+                                    }
+                                }, 1000);
+                            })();
+                        </script>
+                    </div>
+
+                    <!-- Hero Section: 戰情室風格 -->
+                    <section class="s_cover parallax bg-black-50 pt96 pb96" data-scroll-background-ratio="0.5">
+                        <div class="container text-center text-white">
+                            <h1 class="display-3 fw-bold">五常社區 重・總店</h1>
+                            <p class="lead mb-5">Wuchang Community Re-Start HQ</p>
+                            <p class="mb-5 text-warning fw-bold">系統核心 (Core) | 商業引擎 (Business) | 實體地面站 (Ground Station) | 全線備戰</p>
+                            
+                            <!-- 一鍵註冊按鈕 (One-Click Join) -->
+                            <div class="mb-5">
+                                <a href="/web/signup" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg pulse-animation">
+                                    <i class="fa fa-user-plus me-2"></i> 加入五常社區 (一鍵註冊)
+                                </a>
+                                <p class="small mt-2 text-white-50">支援 Google / Line 快速登入</p>
+                            </div>
+
+                            <!-- 戰情數據 (Live Data Placeholders) -->
+                            <div class="row mt-5">
+                                <div class="col-md-3">
+                                    <div class="card bg-transparent border-white text-white">
+                                        <div class="card-body">
+                                            <h3><span class="odoo_count_up" data-from="0" data-to="158000">158,000</span></h3>
+                                            <small>公益基金水位 (TWD)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-transparent border-white text-white">
+                                        <div class="card-body">
+                                            <h3><span class="odoo_count_up" data-from="0" data-to="420">420</span></h3>
+                                            <small>今日愛心訂單</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-transparent border-white text-white">
+                                        <div class="card-body">
+                                            <h3><span class="odoo_count_up" data-from="0" data-to="15">15</span></h3>
+                                            <small>線上專勤隊員</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-transparent border-white text-white">
+                                        <div class="card-body">
+                                            <h3><span class="odoo_count_up" data-from="0" data-to="1250">1,250</span></h3>
+                                            <small>受助長輩人次</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 榮耀牆 (Hall of Fame) -->
+                    <section class="py-5 bg-light border-bottom">
+                        <div class="container">
+                            <div class="text-center mb-4">
+                                <h5 class="text-muted text-uppercase tracking-wider">榮耀與認證 TRUSTED BY</h5>
+                            </div>
+                            <div class="row justify-content-center align-items-center grayscale-hover">
+                                <!-- Google -->
+                                <div class="col-6 col-md-2 text-center mb-4">
+                                    <img src="/wuchang_web_portal/static/src/img/google_nonprofit.png" alt="Google 非營利認證" class="img-fluid" style="max-height: 60px;" title="Google for Nonprofits 認證夥伴"/>
+                                    <p class="small text-muted mt-2">Google 非營利認證</p>
+                                </div>
+                                <div class="col-6 col-md-2 text-center mb-4">
+                                    <img src="/wuchang_web_portal/static/src/img/google_startup.png" alt="Google 新創認證" class="img-fluid" style="max-height: 60px;" title="Google for Startups 受獎團隊"/>
+                                    <p class="small text-muted mt-2">Google 新創認證</p>
+                                </div>
+                                <!-- Sinyi -->
+                                <div class="col-6 col-md-2 text-center mb-4">
+                                    <img src="/wuchang_web_portal/static/src/img/sinyi_award.png" alt="信義房屋社造獎" class="img-fluid" style="max-height: 60px;" title="信義房屋社區一家 社造計畫得主"/>
+                                    <p class="small text-muted mt-2">信義房屋社造獎</p>
+                                </div>
+                                <!-- Gov -->
+                                <div class="col-6 col-md-2 text-center mb-4">
+                                    <img src="/wuchang_web_portal/static/src/img/culture_logo.png" alt="文化局補助" class="img-fluid" style="max-height: 60px;" title="文化局社造補助計畫"/>
+                                    <p class="small text-muted mt-2">文化局社造補助</p>
+                                </div>
+                                <div class="col-6 col-md-2 text-center mb-4">
+                                    <img src="/wuchang_web_portal/static/src/img/social_logo.png" alt="社會局補助" class="img-fluid" style="max-height: 60px;" title="社會局創新服務補助"/>
+                                    <p class="small text-muted mt-2">社會局創新補助</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 系統介紹 (System Introduction) -->
+                    <section class="pt64 pb64 bg-white">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <h2 class="display-5 fw-bold mb-4">什麼是五常 AI 生態系？</h2>
+                                    <p class="lead text-muted">這是一艘科技諾亞方舟，為了守護社區的韌性而生。</p>
+                                    <p>我們運用 <strong>AI 人工智慧</strong> 與 <strong>共享經濟</strong> 模式，打破傳統商業的剝削。在這裡，消費就是做公益，居住就是享福利，互助就是賺財富。</p>
+                                    <div class="row mt-4">
+                                        <div class="col-6 mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa fa-check-circle text-success me-2"></i>
+                                                <span>0% 外送抽成</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa fa-check-circle text-success me-2"></i>
+                                                <span>5% 管理費回饋</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa fa-check-circle text-success me-2"></i>
+                                                <span>獨居長者 AI 守護</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa fa-check-circle text-success me-2"></i>
+                                                <span>幸福幣 1:1 抵用</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 text-center">
+                                    <!-- 這裡未來放介紹影片或圖片 -->
+                                    <div class="rounded-3 bg-light p-5 shadow-sm">
+                                        <i class="fa fa-users fa-5x text-secondary mb-3"></i>
+                                        <h4>社區共好・無限循環</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 專利與公益聲明 (Legal & Patent) -->
+                    <section class="py-4 bg-dark text-white-50">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h5 class="text-white"><i class="fa fa-shield me-2"></i> 專利權與公益免責聲明</h5>
+                                    <p class="small mb-0">
+                                        本系統核心技術已取得 <strong>新型專利 (Patent Pending)</strong> 保護。
+                                        我們採行「條件式公益授權」：僅授權予非營利組織 (NPO) 及社區發展協會免費使用。
+                                        任何未經授權之商業改作、銷售或營利行為，將自動觸發專利侵權法律追溯。
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <span class="badge bg-warning text-dark p-2">Strictly Non-Profit Use Only</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 四大平台入口 (Grid Navigation) -->
+                    <section class="pt64 pb64 bg-100">
+                        <div class="container">
+                            <div class="text-center mb-5">
+                                <h2>四大核心服務平台</h2>
+                                <p class="text-muted">滿足您生活中的所有需求</p>
+                            </div>
+                            <div class="row g-4">
+                                <!-- 公平交易 -->
+                                <div class="col-md-6 col-lg-3">
+                                    <a href="https://trade.wuchang.community" class="text-decoration-none">
+                                        <div class="card h-100 shadow-sm hover-shadow transition-all border-0">
+                                            <div class="card-body text-center p-5">
+                                                <i class="fa fa-shopping-basket fa-4x text-primary mb-4"></i>
+                                                <h4 class="card-title text-dark">公平交易平台</h4>
+                                                <p class="card-text text-muted">公益外送、在地良品、幸福幣折抵</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!-- 居住正義 -->
+                                <div class="col-md-6 col-lg-3">
+                                    <a href="https://housing.wuchang.community" class="text-decoration-none">
+                                        <div class="card h-100 shadow-sm hover-shadow transition-all border-0">
+                                            <div class="card-body text-center p-5">
+                                                <i class="fa fa-building fa-4x text-success mb-4"></i>
+                                                <h4 class="card-title text-dark">居住正義平台</h4>
+                                                <p class="card-text text-muted">AI 總幹事、包裹管理、5% 回饋金</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!-- 志願服務 -->
+                                <div class="col-md-6 col-lg-3">
+                                    <a href="https://care.wuchang.community" class="text-decoration-none">
+                                        <div class="card h-100 shadow-sm hover-shadow transition-all border-0">
+                                            <div class="card-body text-center p-5">
+                                                <i class="fa fa-heart fa-4x text-danger mb-4"></i>
+                                                <h4 class="card-title text-dark">志願服務平台</h4>
+                                                <p class="card-text text-muted">任務接單、電話問安、時間銀行</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!-- 個人管家 -->
+                                <div class="col-md-6 col-lg-3">
+                                    <a href="https://my.wuchang.community" class="text-decoration-none">
+                                        <div class="card h-100 shadow-sm hover-shadow transition-all border-0">
+                                            <div class="card-body text-center p-5">
+                                                <i class="fa fa-user-circle fa-4x text-info mb-4"></i>
+                                                <h4 class="card-title text-dark">個人服務中樞</h4>
+                                                <p class="card-text text-muted">發票對獎、智慧家庭、一鍵求救</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Jules AI Chat Widget (Floating) -->
+                    <div id="jules-chat-widget" class="position-fixed bottom-0 end-0 m-4" style="z-index: 9999;">
+                        <button class="btn btn-primary rounded-circle p-3 shadow-lg" style="width: 60px; height: 60px;">
+                            <i class="fa fa-comments fa-2x"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

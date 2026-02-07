@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Google Meet 列表視圖 -->
+    <record id="view_google_meet_tree" model="ir.ui.view">
+        <field name="name">wuchang.google.meet.tree</field>
+        <field name="model">wuchang.google.meet</field>
+        <field name="arch" type="xml">
+            <tree string="Google Meet 會議">
+                <field name="name"/>
+                <field name="organizer_id"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="state" widget="badge" decoration-success="state == 'scheduled'" decoration-info="state == 'in_progress'" decoration-muted="state == 'completed'"/>
+                <field name="google_meet_link" widget="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Google Meet 表單視圖 -->
+    <record id="view_google_meet_form" model="ir.ui.view">
+        <field name="name">wuchang.google.meet.form</field>
+        <field name="model">wuchang.google.meet</field>
+        <field name="arch" type="xml">
+            <form string="Google Meet 會議">
+                <header>
+                    <button name="action_create_google_meet" string="建立 Google Meet" type="object" class="btn-primary" groups="group_google_integration_user"/>
+                    <button name="action_start_meeting" string="開始會議" type="object" states="scheduled" groups="group_google_integration_user"/>
+                    <button name="action_complete_meeting" string="完成會議" type="object" states="in_progress" groups="group_google_integration_user"/>
+                    <button name="action_cancel_meeting" string="取消會議" type="object" states="draft,scheduled" groups="group_google_integration_admin"/>
+                    <button name="action_open_google_meet" string="開啟 Google Meet" type="object" class="btn-primary" attrs="{'invisible': [('google_meet_link', '=', False)]}" groups="group_google_integration_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,scheduled,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="organizer_id"/>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                        </group>
+                        <group>
+                            <field name="google_meet_link" widget="url" attrs="{'readonly': [('state', 'in', ['completed', 'cancelled'])]}"/>
+                            <field name="google_calendar_id" readonly="1"/>
+                            <field name="auto_join_enabled"/>
+                            <field name="recording_enabled"/>
+                            <field name="recording_url" widget="url" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="參與者">
+                            <field name="partner_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="描述">
+                            <field name="description" placeholder="輸入會議描述..."/>
+                        </page>
+                        <page string="記錄">
+                            <field name="notes" placeholder="輸入會議記錄..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Google Meet 搜尋視圖 -->
+    <record id="view_google_meet_search" model="ir.ui.view">
+        <field name="name">wuchang.google.meet.search</field>
+        <field name="model">wuchang.google.meet</field>
+        <field name="arch" type="xml">
+            <search string="搜尋 Google Meet 會議">
+                <field name="name"/>
+                <field name="organizer_id"/>
+                <field name="partner_ids"/>
+                <filter string="已排程" name="scheduled" domain="[('state', '=', 'scheduled')]"/>
+                <filter string="進行中" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="已完成" name="completed" domain="[('state', '=', 'completed')]"/>
+                <group expand="0" string="分組">
+                    <filter string="狀態" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="主持人" name="group_organizer" context="{'group_by': 'organizer_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Google Meet 動作 -->
+    <record id="action_google_meet" model="ir.actions.act_window">
+        <field name="name">Google Meet 會議</field>
+        <field name="res_model">wuchang.google.meet</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_google_meet_search"/>
+        <field name="context">{'default_organizer_id': uid}</field>
+    </record>
+</odoo>

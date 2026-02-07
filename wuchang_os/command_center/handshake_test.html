@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外網握手測試</title>
+    <style>
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 2rem;
+        }
+        .test-box {
+            border: 1px solid #00ff00;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #111;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff0055; }
+        button {
+            background: transparent;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+        button:hover { background: #00ff00; color: #000; }
+        #result { margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>外網握手測試</h1>
+    <div class="test-box">
+        <button onclick="testHandshake()">測試握手</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        async function testHandshake() {
+            const result = document.getElementById('result');
+            result.innerHTML = '測試中...';
+            
+            const endpoints = [
+                '/api/handshake',
+                '/api/relay/handshake',
+                '/router/relay/status'
+            ];
+            
+            let output = '';
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint);
+                    const data = await response.json();
+                    output += `<div class="success">✓ ${endpoint}: 成功</div>`;
+                    output += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (e) {
+                    output += `<div class="error">✗ ${endpoint}: ${e.message}</div>`;
+                }
+            }
+            result.innerHTML = output;
+        }
+    </script>
+</body>
+</html>

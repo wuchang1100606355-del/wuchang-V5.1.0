@@ -1,0 +1,15 @@
+services:
+  wuchang-landing:
+    image: nginx:alpine
+    container_name: wuchang-landing
+    restart: always
+    ports:
+      - '8888:80'
+    volumes:
+      - J:/共用雲端硬碟/五常雲端空間/landing_page:/usr/share/nginx/html
+    networks:
+      - wuchangv510_default
+
+networks:
+  wuchangv510_default:
+    external: true

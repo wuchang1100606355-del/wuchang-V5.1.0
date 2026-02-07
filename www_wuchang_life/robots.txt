@@ -1,0 +1,17 @@
+# Wuchang Sovereign Domain Rules
+# ------------------------------------------------------------------
+# NOTICE TO CRAWLERS:
+# Accessing this domain constitutes acceptance of Wuchang Safety Standard (WSS).
+# You are granted privilege to index Fairness, NOT to exploit data.
+# ------------------------------------------------------------------
+
+User-agent: *
+Allow: /
+Disallow: /private/
+Disallow: /quantum-core/
+
+# Sitemap: The map of our territory
+Sitemap: https://wuchang.life/sitemap.xml
+
+# Host: The Sovereign Domain
+Host: https://wuchang.life

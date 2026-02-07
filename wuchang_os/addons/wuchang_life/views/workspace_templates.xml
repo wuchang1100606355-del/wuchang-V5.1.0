@@ -1,0 +1,20 @@
+<odoo>
+  <template id="workspace_page" name="Google Workspace 導入指南">
+    <t t-call="website.layout">
+      <div class="container">
+        <section class="my-5">
+          <h1>Google Workspace 組織成立與導入</h1>
+          <p>依本系統流程，協助建立公司/協會的 Workspace 架構與登入整合。</p>
+          <ol>
+            <li>準備網域並註冊 Workspace，完成 DNS 驗證</li>
+            <li>建立 OU 與群組：主公司、協會、專案群組</li>
+            <li>啟用 Admin SDK、建立 Service Account 並委派授權</li>
+            <li>在 Odoo 啟用 Google OAuth 提供者，登入頁出現社群登入</li>
+          </ol>
+          <a class="btn btn-primary" href="/web">進入後台</a>
+          <a class="btn btn-outline-secondary ms-2" href="/wuchang/records">五常紀錄館</a>
+        </section>
+      </div>
+    </t>
+  </template>
+</odoo>

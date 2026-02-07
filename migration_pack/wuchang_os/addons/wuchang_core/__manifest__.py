@@ -1,0 +1,51 @@
+{
+    'name': 'Wuchang Core',
+    'version': '5.0',
+    'description': '''
+    五常社區 OS 核心 (含社工咖啡師模型)
+    
+    最高原則：本系統定位 Odoo 社群為骨幹，開發 Google 非營利組織應用。
+    ''',
+    'author': 'WUCHANG.AI',
+    'license': 'LGPL-3',
+    'depends': ['base', 'contacts', 'auth_signup', 'mail', 'website', 'point_of_sale', 'account'],
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'views/task_views.xml',
+        'views/pos_expense_views.xml',
+        'views/pos_config_views.xml',
+        'views/finance_views.xml',
+        'data/pos_expense_sequence.xml',
+        'data/pos_setup.xml',
+        'data/menu_setup.xml',
+        'data/signup_setup.xml',
+        'data/lang_setup.xml',
+        'data/user_setup.xml',
+        'data/cron.xml',
+        'data/meeting_setup.xml',
+        'data/ai_prompt_data.xml',
+        'views/ai_agent_views.xml',
+        'views/ai_prompt_views.xml',
+        'views/report_views.xml',
+        'views/webauthn_login.xml',
+        'views/knowledge_templates.xml',
+        'views/needs_templates.xml',
+        'views/guardian_avatar.xml',
+        'views/homepage_template.xml',
+        'views/pos_simulator.xml',
+        'views/delivery_page.xml',
+        'views/order_website.xml',
+        'views/voice_chat.xml',
+        'views/voice_reference.xml',
+        'views/mobile_voice_app.xml',
+        'views/ambassador.xml',
+    ],
+    'assets': {
+        'point_of_sale.assets': [
+            'wuchang_core/static/src/js/pos_extension.js',
+        ],
+    },
+    'installable': True,
+    'application': True,
+}

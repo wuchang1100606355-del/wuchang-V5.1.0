@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-01-11T01:36:35.788315",
+  "device_type": "CHROME_OS",
+  "port": 3477,
+  "enrollment_config": {
+    "endpoint": "/api/device/enroll/chrome_os",
+    "port": 3477,
+    "protocol": "HTTP/HTTPS",
+    "method": "POST",
+    "required_fields": [
+      "device_id",
+      "device_name",
+      "ip_address",
+      "port"
+    ]
+  },
+  "devices": [
+    {
+      "device_id": "CHROME_OS_0_0_0_0",
+      "device_type": "CHROME_OS",
+      "device_name": "Chrome OS Device (0.0.0.0)",
+      "ip_address": "0.0.0.0",
+      "port": 3477,
+      "enrollment_time": "2026-01-11T01:36:35.787330",
+      "status": "enrolled",
+      "managed_by": "Little J (小j)",
+      "network": {
+        "local_network": "192.168.50.0/24",
+        "router_ip": "192.168.50.1",
+        "connection_method": "relay"
+      },
+      "capabilities": {
+        "web_access": true,
+        "api_access": true,
+        "remote_control": false,
+        "file_sharing": false
+      },
+      "access_urls": {
+        "command_center": "http://192.168.50.249/command_center",
+        "design_report": "http://192.168.50.249/design_report",
+        "handshake": "http://192.168.50.249/api/handshake"
+      }
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+# Ignore system files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Ignore build outputs
+dist/
+build/
+*.log
+
+# Ignore dependencies
+node_modules/
+__pycache__/
+*.pyc
+
+# Ignore environment variables and secrets
+.env
+.env.local
+*.key
+*.pem
+secrets/
+config/odoo.conf
+
+# Ignore Docker volumes and data
+backups/
+downloads/
+logs/
+memory_store/voice_samples/
+memory_store/conversations/
+pgdata/
+ollama-data/
+openwebui-data/
+
+# Ignore IDE settings
+.vscode/
+.idea/
+*.swp
+
+# Ignore OS specific
+.trae/
+.tmp.driveupload/
+.tmp.drivedownload/
+
+# Ignore temporary and log files
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!tailwind.config.js
+!postcss.config.js
+!vite.config.ts
+!.vscode/extensions.json
+# Private Configuration
+config/*.json
+config/google_*.json
+*.secret
+
+
+# Large Files & Binaries
+*.exe
+*.zip
+*.7z
+*.rar
+build/
+dist/
+downloads/
+*.pdf
+*.jpg
+*.png
+*.doc
+*.docx
+*.tar.gz
+*.mov
+*.mp4
+*.zip
+*.rar
+*.7z
+*.wav
+*.mp3
+*.m4a
+*.tar.gz
+*.mov
+*.mp4
+*.zip
+*.rar
+*.7z
+*.wav
+*.mp3
+*.m4a
+*.wma
+*.aac
+*.flac

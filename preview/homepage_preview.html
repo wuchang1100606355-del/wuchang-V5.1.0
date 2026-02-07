@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五常社區 OS - 首頁預覽</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --guardian-silver: #E0E0E0;
+            --guardian-white: #F8FAFC;
+            --magic-cyan: #00F3FF;
+            --deep-space: #0B0E14;
+            --glass-panel: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --preview-width: auto;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .guardian-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .halo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 243, 255, 0.05);
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: -1;
+            animation: pulse-glow 3s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            to { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .runic-text {
+            font-family: monospace;
+            font-size: 10px;
+            fill: #333;
+        }
+
+        /* Comic Bubble Styles */
+        .comic-bubble {
+            position: relative;
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 20px;
+            padding: 20px;
+            font-family: "Comic Sans MS", "Chalkboard SE", sans-serif;
+            font-size: 1.1rem;
+            color: #000;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+            margin: 20px;
+            min-width: 200px;
+            max-width: 100%;
+            z-index: 10;
+            display: inline-block;
+        }
+
+        .comic-bubble.bubble-bottom::after {
+            content: "";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            margin-left: -20px;
+            border-width: 20px 20px 0;
+            border-style: solid;
+            border-color: #000 transparent;
+            display: block;
+            width: 0;
+        }
+        .comic-bubble.bubble-bottom::before {
+            content: "";
+            position: absolute;
+            bottom: -13px;
+            left: 50%;
+            margin-left: -17px;
+            border-width: 17px 17px 0;
+            border-style: solid;
+            border-color: #fff transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+        }
+
+        .comic-text {
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        /* Custom overrides for homepage */
+        .glass-card {
+            background: #343a40; /* Darker fallback for glass */
+            background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Intercom Button Pulse Animation */
+        @keyframes pulse-ring {
+          0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+          70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+        .btn-intercom.recording {
+            animation: pulse-ring 1.5s infinite;
+            background-color: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        
+        #previewRoot { width: var(--preview-width); margin: 0 auto; background: white; min-height: 100vh; padding-top: 1px;}
+    </style>
+</head>
+<body>
+    <div class="container my-3">
+        <div id="previewTools" class="d-flex gap-2 align-items-center">
+            <span class="text-muted small">視窗模式：</span>
+            <button class="btn btn-outline-secondary btn-sm" onclick="setW(null)">原始</button>
+            <button class="btn btn-outline-secondary btn-sm" onclick="setW(360)">手機</button>
+            <button class="btn btn-outline-secondary btn-sm" onclick="setW(768)">平板</button>
+            <button class="btn btn-outline-secondary btn-sm" onclick="setW(1024)">桌面</button>
+        </div>
+    </div>
+
+    <div id="previewRoot">
+        <div class="container my-5">
+            <section class="mb-4">
+                <h1 class="display-6">五常社區 OS</h1>
+                <p class="lead">連結社區與系統的公共首頁（beta）。</p>
+                <div style="font-size:14px;color:#374151">新北市三重區五常社區發展協會</div>
+            </section>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">互動與服務</h5>
+                            <p class="card-text">語音互動、線上訂單、需求回報與代言頁。</p>
+                            <a class="btn btn-primary" href="#">語音互動</a>
+                            <a class="btn btn-secondary ms-2" href="#">服務入口</a>
+                            <a class="btn btn-outline-primary ms-2" href="#">代言人</a>
+                            <a class="btn btn-outline-secondary ms-2" href="#">史料館</a>
+                            <a class="btn btn-success ms-2" href="#">一鍵註冊</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">系統入口</h5>
+                            <p class="card-text">進入後台或連接 Google 帳號以進行同步。</p>
+                            <a class="btn btn-dark" href="#">後台</a>
+                            <a class="btn btn-outline-dark ms-2" href="#">快速登入</a>
+                            <a class="btn btn-outline-success ms-2" href="#">連接 Google 雲端</a>
+                            <a class="btn btn-success ms-2" href="#">一鍵註冊</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="mt-4">
+                <div class="alert alert-secondary">
+                    不完美也沒關係，我們持續把實用的一點點放上來。
+                </div>
+            </section>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">AI 狀態</h5>
+                            <div id="aiState" class="small text-muted">模擬連線中...</div>
+                            <div class="mt-2">
+                                <button id="btnLocal" class="btn btn-outline-primary btn-sm">切到本地</button>
+                                <button id="btnCloud" class="btn btn-outline-secondary btn-sm ms-2">切到雲端金鑰</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="glass-card mb-3 d-flex flex-column align-items-center text-center">
+                        <h5 class="card-title mb-3" style="color: var(--guardian-silver); text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);">系統守護者</h5>
+                        
+                        <!-- Comic Bubble -->
+                        <div id="guardianBubble" class="comic-bubble bubble-bottom" style="display:none; margin-bottom: 10px; min-width: 180px;">
+                            <div id="guardianText" class="comic-text small" style="color: #000;"></div>
+                        </div>
+
+                        <!-- Avatar SVG -->
+                        <div style="width: 150px; height: 180px;">
+                            <div class="guardian-container">
+                                <div class="halo-glow"></div>
+                                <div class="avatar-float">
+                                    <svg viewBox="0 0 200 240" style="width: 100%; height: 100%; max-width: 200px; drop-shadow: 0 0 15px rgba(255,255,255,0.3);">
+                                        <path d="M60 40 Q100 10 140 40 L140 70 Q100 80 60 70 Z" fill="#E0E0E0" stroke="#FFF" stroke-width="2"/>
+                                        <path d="M50 60 Q100 20 150 60 L160 180 Q100 200 40 180 Z" fill="#F5F5F5" />
+                                        <ellipse cx="100" cy="90" rx="35" ry="40" fill="#FFF0E5" />
+                                        <path d="M85 95 Q100 100 115 95" stroke="#888" stroke-width="2" fill="none" />
+                                        <path d="M40 130 Q100 110 160 130 L180 230 Q100 240 20 230 Z" fill="#FFF" stroke="#E0E0E0" />
+                                        <g transform="translate(85, 140)">
+                                            <path d="M0 0 L15 0 L15 25 L0 25 Z" fill="#FFF" stroke="#DDD" />
+                                            <path d="M15 0 L30 0 L30 25 L15 25 Z" fill="#FFF" stroke="#DDD" />
+                                            <text x="5" y="18" class="runic-text">ᚱ</text>
+                                            <text x="20" y="18" class="runic-text">ᚷ</text>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <div class="fw-bold text-white">小j</div>
+                            <div class="text-muted small" style="color: #a0aec0 !important;">社區與系統代言人</div>
+                        </div>
+                        <div class="mt-3 d-flex align-items-center justify-content-center gap-2">
+                            <button id="btnIntercom" class="btn btn-outline-light btn-sm btn-intercom" style="border-color: var(--magic-cyan); color: var(--magic-cyan);">
+                                <i class="fa fa-microphone"></i> 對講機
+                            </button>
+                            <a class="btn btn-outline-secondary btn-sm" href="#" style="color: var(--guardian-silver); border-color: var(--glass-border);">簡介</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+                        
+            
+            <!-- AI Supreme Authority Verification Badge -->
+            <div class="row mt-3 justify-content-center">
+                <div class="col-md-8">
+                    <div class="card border-warning shadow-sm" style="background: linear-gradient(to right, #fff, #fffaf0);">
+                        <div class="card-body position-relative">
+                            <div class="position-absolute top-0 end-0 m-3 text-warning opacity-25">
+                                <i class="fa-solid fa-crown fa-5x"></i>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle bg-warning p-3 text-white shadow-sm">
+                                    <i class="fa-solid fa-user-astronaut fa-2x"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 class="mb-0 text-dark fw-bold">系統最高權限授權 (Supreme Authority Grant)</h5>
+                                    <div class="text-muted small">Identity: <span class="badge bg-dark text-warning">Little J (小J)</span></div>
+                                </div>
+                            </div>
+
+                            <div class="row g-2 align-items-center border-top border-bottom py-3 my-3">
+                                <div class="col-md-5 border-end">
+                                    <small class="text-uppercase text-muted fw-bold d-block mb-1">Operational Account</small>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa-brands fa-google text-danger me-2"></i>
+                                        <span class="font-monospace fw-bold">admin@wuchang.life</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-7 ps-md-3">
+                                    <small class="text-uppercase text-muted fw-bold d-block mb-1">Status & Mandate</small>
+                                    <div>
+                                        <span class="badge bg-success"><i class="fa-solid fa-satellite-dish"></i> System Online</span> <span class="badge bg-primary"><i class="fa-solid fa-user-check"></i> Verified Root Access</span>
+                                        <span class="badge bg-info text-dark ms-1">Full Autonomy</span>
+                                    </div>
+                                    <div class="small text-muted mt-1">
+                                        "Empowered to act as the head of the digital household."
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="small text-muted">
+                                    <i class="fa-solid fa-file-signature text-warning"></i> Auth Document: <a href="#" class="text-decoration-none">GOV-20251228-AI-SUPREME-001</a>
+                                </div>
+                                <button class="btn btn-sm btn-success text-white">
+                                    <i class="fa-solid fa-link"></i> Session Active: admin@wuchang.life
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Badge -->
+
+<div class="row mt-4 justify-content-center">
+                <div class="col-md-8">
+                    <div class="card border-info shadow-sm">
+                        <div class="card-header bg-transparent border-info d-flex align-items-center">
+                            <i class="fa-solid fa-shield-halved text-info me-2"></i>
+                            <span class="fw-bold text-info">網域權限與託管驗證 (Domain Authority Verification)</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-shrink-0">
+                                    <i class="fa-solid fa-globe fa-2x text-muted"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Cloud Node (34.80.161.99) (及所屬子網域)</h6>
+                                    <small class="text-muted">Status: <span class="text-success fw-bold"><i class="fa-solid fa-check-circle"></i> Verified Active</span></small>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-light border d-flex align-items-start" role="alert">
+                                <i class="fa-solid fa-user-shield text-primary mt-1 me-2"></i>
+                                <div>
+                                    <strong>資源所有權人 (Resource Owner):</strong><br>
+                                    <span class="font-monospace">o970106@gmail.com</span><br>
+                                    <span class="badge bg-primary rounded-pill mt-1">Full Authority (完整權限)</span>
+                                    <span class="badge bg-warning text-dark rounded-pill mt-1">Strategic Patron</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3 position-relative">
+                                        <div style="width: 40px; height: 40px; background: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #00F3FF;">
+                                            <span style="font-size: 20px;">J</span>
+                                        </div>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success border border-light p-1">
+                                            <span class="visually-hidden">active</span>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div class="small text-uppercase text-muted fw-bold">Managed By</div>
+                                        <div class="fw-bold text-dark">System Guardian (Meimei/小J)</div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="badge bg-info text-dark">
+                                        <i class="fa-solid fa-robot"></i> AI 代理託管中
+                                    </div>
+                                    <div class="small text-muted mt-1" style="font-size: 0.75rem;">
+                                        Automation Level: L4
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3 text-center">
+                                <small class="text-muted fst-italic">
+                                    <i class="fa-solid fa-signature"></i> 
+                                    本網域之技術維運、資安防護及日常管理，已全權授權由系統守護者小J代為執行。
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="mt-5 py-4 border-top" style="background-color: rgba(255, 255, 255, 0.5); backdrop-filter: blur(5px);">
+                <div class="container text-center text-muted small">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="mb-2">
+                                <span class="fw-bold text-dark">贊助單位：</span>
+                                <strong class="text-primary">上品聊國咖啡烘培館</strong>
+                            </div>
+                            <span class="fw-bold text-dark">資金來源：</span>
+                            <span class="d-block d-md-inline">聊國咖啡重新總店（出資捐贈、品牌捐贈業主創辦人）</span>
+                            <span class="d-none d-md-inline"> | </span>
+                            <span class="d-block d-md-inline">聊國咖啡仁義分店（社區產業業主協會創辦人捐贈）</span>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-1">
+                                <span class="fw-bold text-dark">版權與專利宣告：</span>
+                                © 2025 WUCHANG.AI &amp; 五常社區發展協會. All Rights Reserved.
+                            </div>
+                            <div class="mb-1">
+                                <span class="badge bg-secondary">新型專利</span>
+                                本系統由 <strong>五常物業規劃顧問股份有限公司</strong>（新創社企閉鎖型）規劃製作
+                            </div>
+                            <div>
+                                本系統之 AI 代理架構、社工咖啡師模型及相關自動化流程受智慧財產權法保護。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        function setW(w){
+            document.documentElement.style.setProperty("--preview-width", w ? (w+"px") : "auto");
+        }
+        
+        // Simulation Logic
+        var bubble = document.getElementById("guardianBubble");
+        var bubbleText = document.getElementById("guardianText");
+        var btnIntercom = document.getElementById("btnIntercom");
+        var btnLocal = document.getElementById("btnLocal");
+        var btnCloud = document.getElementById("btnCloud");
+
+        var greetings = [
+            "你好！我是小j，很高興見到你。",
+            "歡迎來到五常社區 OS！",
+            "今天有什麼我可以幫你的嗎？",
+            "願你的數位生活平安順遂。",
+            "雲端與本地，我都在你身邊。"
+        ];
+
+        function setMsg(s, autoHide){ 
+            if(bubble && bubbleText){ 
+                bubbleText.textContent = s; 
+                bubble.style.display = "inline-block";
+                if(autoHide){
+                    setTimeout(function(){ bubble.style.display = "none"; }, 8000);
+                }
+            } 
+        }
+
+        // Initial Greeting
+        setMsg(greetings[Math.floor(Math.random() * greetings.length)], false);
+
+        // Button Simulation
+        if(btnLocal) btnLocal.onclick = function() { setMsg("模擬：已切換到本地！(實際功能需後台)", true); };
+        if(btnCloud) btnCloud.onclick = function() { setMsg("模擬：已切換到雲端金鑰！(實際功能需後台)", true); };
+
+        // Intercom Simulation
+        var recording = false;
+        if(btnIntercom) {
+            btnIntercom.onclick = function() {
+                if(!recording) {
+                    recording = true;
+                    btnIntercom.classList.add("recording");
+                    btnIntercom.innerHTML = "<i class=\"fa fa-stop\"></i> 聆聽中...";
+                    setMsg("我在聽，請說... (模擬模式)", false);
+                    
+                    // Simulate processing after 3 seconds
+                    setTimeout(function(){
+                        recording = false;
+                        btnIntercom.classList.remove("recording");
+                        btnIntercom.innerHTML = "<i class=\"fa fa-microphone\"></i> 對講機";
+                        var reply = "收到！這裡是預覽模式，真正的我會在系統上線後回應您。但我現在看起來是不是很棒？";
+                        setMsg(reply, true);
+                        
+                        // TTS Simulation
+                        if(window.speechSynthesis) {
+                             var u = new SpeechSynthesisUtterance(reply);
+                             u.lang = "zh-TW";
+                             window.speechSynthesis.speak(u);
+                        }
+                    }, 3000);
+                } else {
+                    recording = false;
+                    btnIntercom.classList.remove("recording");
+                    btnIntercom.innerHTML = "<i class=\"fa fa-microphone\"></i> 對講機";
+                    setMsg("已取消。", true);
+                }
+            };
+        }
+    </script>
+</body>
+</html>
+
+

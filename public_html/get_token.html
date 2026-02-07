@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時空黑科技 - 每日啟動序號</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 0px 15px rgba(0, 210, 255, 0.5);
+        }
+        h2 {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #a0a0a0;
+            font-weight: 300;
+        }
+        .token-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .token-box::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        #tokenDisplay {
+            font-family: "Consolas", monospace;
+            font-size: 3em;
+            letter-spacing: 5px;
+            color: #00d2ff;
+            text-shadow: 0 0 10px #00d2ff;
+            position: relative;
+            z-index: 1;
+        }
+        .info {
+            font-size: 0.9em;
+            color: #ccc;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        .btn {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .compliance-note {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            text-align: left;
+            font-size: 0.85em;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+        .compliance-note strong {
+            color: #ffc107;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌌 時空黑科技</h1>
+        <h2>解鎖電腦封印效能 | Spacetime Expansion</h2>
+        
+        <div class="token-box">
+            <div id="tokenDisplay">LOADING...</div>
+        </div>
+
+        <div class="info">
+            此序號僅限今日有效<br>
+            <span id="dateDisplay"></span>
+        </div>
+
+        <!-- 
+        ⚠️ 超頻風險提示 (Overclocking Disclaimer) ⚠️
+        本系統透過優化記憶體與 CPU 排程來提升效能，雖然不直接調整電壓，
+        但高負載運作仍可能導致硬體溫度上升。請確保散熱良好。
+        -->
+
+        <button class="btn" onclick="copyToken()">📋 複製啟動序號 (COPY)</button>
+
+        <div class="compliance-note">
+            <strong>⚖️ 社會企業責任聲明 (Social Enterprise Notice)</strong><br>
+            本軟體服務採用「社會企業」模式運作。您所支付的授權費用或支持，將視為購買本公司技術服務之營收。鑒於五常社區發展協會尚未法人化，我們承諾將此營收的特定比例提撥由江政隆 (Juers) 管理的「五常社區發展基金池」，用於推動社區公益發展，直至協會完成法人登記。
+            <br><br>
+            <em>*此為商業服務對價，非公益勸募捐款。</em>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 Spacetime Systems. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        // SHA-256 implementation
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+            return hashHex;
+        }
+
+        async function generateDailyToken() {
+            const secretKey = "WUCHANG_SPACETIME_SECRET_KEY_2026"; 
+            const now = new Date();
+            const dateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
+            
+            document.getElementById("dateDisplay").innerText = dateStr;
+
+            const rawString = `${secretKey}-${dateStr}`;
+            const hash = await sha256(rawString);
+            
+            // Take first 8 chars and uppercase
+            const token = hash.substring(0, 8).toUpperCase();
+            document.getElementById("tokenDisplay").innerText = token;
+        }
+
+        function copyToken() {
+            const token = document.getElementById("tokenDisplay").innerText;
+            navigator.clipboard.writeText(token).then(() => {
+                const btn = document.querySelector(".btn");
+                const originalText = btn.innerText;
+                btn.innerText = "✅ 序號已複製";
+                btn.style.background = "linear-gradient(90deg, #11998e, #38ef7d)";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = "linear-gradient(90deg, #00d2ff, #3a7bd5)";
+                }, 2000);
+            });
+        }
+
+        generateDailyToken();
+    </script>
+</body>
+</html>

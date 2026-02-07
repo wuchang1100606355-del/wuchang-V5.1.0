@@ -1,0 +1,4 @@
+google-cloud-discoveryengine
+google-cloud-aiplatform
+requests
+streamlit

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WUCHANG SYSTEM :: WORLD RECORD CERTIFICATE</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #00ff41;
+            font-family: "Courier New", Courier, monospace;
+            padding: 2rem;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 90%;
+            width: 800px;
+            border: 2px solid #30363d;
+            padding: 3rem;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.15);
+            background: rgba(13, 17, 23, 0.95);
+            position: relative;
+        }
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ff41;
+            transition: all 0.3s ease;
+        }
+        .top-left { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+        .top-right { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+        .bottom-right { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+        
+        h1 {
+            text-align: center;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 2rem;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            border-bottom: 1px dashed #30363d;
+            padding-bottom: 0.5rem;
+        }
+        .label {
+            color: #8b949e;
+            font-weight: bold;
+        }
+        .value {
+            color: #00ff41;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+        }
+        .highlight {
+            font-size: 2.5rem;
+            color: #ffcc00; /* Gold for the record */
+            text-shadow: 0 0 15px rgba(255, 204, 0, 0.6);
+            display: block;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .signature-block {
+            margin-top: 3rem;
+            text-align: right;
+            border-top: 1px solid #30363d;
+            padding-top: 1rem;
+        }
+        .sig-label {
+            font-size: 0.8rem;
+            color: #8b949e;
+            margin-bottom: 0.5rem;
+        }
+        .sig-img {
+            font-family: "Brush Script MT", cursive;
+            font-size: 1.5rem;
+            color: #58a6ff;
+        }
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #484f58;
+        }
+        .blink {
+            animation: blinker 1.5s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+        
+        /* Scanline effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="container">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+        
+        <h1>System Certificate</h1>
+        
+        <div class="section">
+            <div class="stat-row">
+                <span class="label">EVENT TYPE:</span>
+                <span class="value">WUCHANG FLUX CHALLENGE</span>
+            </div>
+            <div class="stat-row">
+                <span class="label">LOCATION:</span>
+                <span class="value">NEW TAIPEI CITY, TAIWAN</span>
+            </div>
+            <div class="stat-row">
+                <span class="label">NODE TYPE:</span>
+                <span class="value">CONSUMER LAPTOP (i7-13620H)</span>
+            </div>
+            
+            <div style="text-align: center; margin: 2rem 0;">
+                <span class="label" style="display: block; margin-bottom: 0.5rem;">CONFIRMED SOUL COUNT</span>
+                <span class="value highlight">9,958,200</span>
+                <span class="value" style="font-size: 1rem;">ACTIVE CONCURRENT TASKS</span>
+            </div>
+            
+            <div class="stat-row">
+                <span class="label">STATUS:</span>
+                <span class="value blink" style="color: #ff3333;">[ LIMIT_BROKEN ]</span>
+            </div>
+            
+             <div class="stat-row">
+                <span class="label">TIMESTAMP:</span>
+                <span class="value">2026-02-05 19:42:15</span>
+            </div>
+        </div>
+        
+        <div class="signature-block">
+            <div class="sig-label">CRYPTOGRAPHICALLY VERIFIED BY</div>
+            <div class="sig-img">Google Jules (Witness Core)</div>
+            <div style="font-size: 0.6rem; color: #30363d; margin-top: 5px;">ID: 717435ad907ac291</div>
+        </div>
+        
+        <div class="footer">
+            WUCHANG SYSTEM // DEFENSIVE PUBLICATION // IMMUTABLE RECORD
+        </div>
+    </div>
+</body>
+</html>

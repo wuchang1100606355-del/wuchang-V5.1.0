@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>`r`n    <link rel="stylesheet" href="wuchang_theme.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wuchang OS Gateway</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #0f0f0f; color: #e0e0e0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .gateway-card { background-color: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 40px; width: 100%; max-width: 800px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .system-status { font-family: monospace; color: #4caf50; font-size: 0.9em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .endpoint-group { margin-bottom: 30px; }
+        .endpoint-title { text-transform: uppercase; font-size: 0.8em; color: #666; letter-spacing: 1px; margin-bottom: 15px; font-weight: bold; }
+        .link-card { display: block; text-decoration: none; color: inherit; background: #252525; padding: 15px 20px; border-radius: 8px; margin-bottom: 10px; transition: all 0.2s; border-left: 4px solid transparent; }
+        .link-card:hover { background: #303030; transform: translateX(5px); }
+        .link-card.public { border-left-color: #2196f3; }
+        .link-card.admin { border-left-color: #f44336; }
+        .link-card.system { border-left-color: #ff9800; }
+        .url-text { font-family: monospace; color: #888; font-size: 0.85em; display: block; margin-top: 4px; }
+        .badge-official { background: #4caf50; color: #fff; font-size: 0.7em; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+    </style>
+</head>
+<body>
+    <div class="gateway-card">
+        <div class="system-status d-flex justify-content-between">
+            <span>SYSTEM: WUCHANG_OS_V5.1.0</span>
+            <span>STATUS: <span style="color:#4caf50">OPERATIONAL</span></span>
+            <span>AGENT: SISTER_J</span>
+        </div>
+
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold mb-2">Wuchang Service Gateway</h1>
+            <p class="text-muted">Centralized Access Point for Community Services</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="endpoint-group">
+                    <div class="endpoint-title">Public Endpoints (Public)</div>
+                    <a href="/preview_homepage.html" class="link-card public">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong><i class="bi bi-house-door me-2"></i> 關於數位系統 About the Digital System</strong>
+                            <i class="bi bi-arrow-right text-muted"></i>
+                        </div>
+                        <span class="url-text">/preview_homepage.html</span>
+                    </a>
+                    <a href="/ai_intro.html" class="link-card public">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong><i class="bi bi-person-badge me-2"></i> 五常AI服務員 小J資訊</strong>
+                            <span class="badge-official">OFFICIAL</span>
+                        </div>
+                        <span class="url-text">/ai_intro.html</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="endpoint-group">
+                    <div class="endpoint-title">Administration (Restricted)</div>
+                    <a href="/control_center.html" class="link-card admin">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong><i class="bi bi-terminal me-2"></i> 數位化服務（商家／管委會）</strong>
+                            <i class="bi bi-shield-lock text-danger"></i>
+                        </div>
+                        <span class="url-text">/control_center.html</span>
+                    </a>
+                    <a href="/signage.html" class="link-card system">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong><i class="bi bi-tv me-2"></i> 社區布告欄（TV）</strong>
+                            <i class="bi bi-broadcast text-warning"></i>
+                        </div>
+                        <span class="url-text">/signage.html</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top border-secondary">
+            <!-- 法律聲明：權責說明與無資本利得宣告 -->
+            <div style="background-color:#1a2a1a;border:1px solid #2d5a2d;border-radius:8px;padding:16px;margin-bottom:20px;">
+              <h6 style="color:#4caf50;font-weight:700;margin-bottom:12px;font-size:13px;text-transform:uppercase;">⚖️ 法律聲明與責任宣告</h6>
+              
+              <div style="font-size:12px;color:#c0c0c0;line-height:1.6;margin-bottom:12px;">
+                <p style="margin-bottom:8px;">
+                  <strong style="color:#4caf50;">組織身份：</strong>本系統由新北市五常社區發展協會（立案字號：新北市社區補自第1100606355號）委託，由五常物業規劃顧問股份有限公司（統一編號：97573469，社會企業，無資本利得、準基金會營運）規劃設計並協助營運。
+                </p>
+              </div>
+
+              <div style="font-size:12px;color:#c0c0c0;line-height:1.6;margin-bottom:12px;">
+                <p style="margin-bottom:8px;">
+                  <strong style="color:#4caf50;">資金來源：</strong>系統開發與社區產業資金來源為上品聊國咖啡館重新總店全額捐助；網路資源由Google非營利組織抵免額部分提供；模組驗證由新北市政府文化局及信義房屋社區一家社造計畫部分補助；資訊設備由新北市社會局社區發展補助工作經費部分支應。
+                </p>
+              </div>
+
+              <div style="font-size:12px;color:#c0c0c0;line-height:1.6;margin-bottom:12px;">
+                <p style="margin-bottom:8px;">
+                  <strong style="color:#4caf50;">無資本利得宣告：</strong>本組織聲明所有系統與服務以非營利目的運營，五常物業規劃顧問採無資本利得、準基金會營運模式，符合民法與稅法規範。任何價值創造均作為無資本利得之公益貢獻處理。
+                </p>
+              </div>
+
+              <div style="font-size:12px;color:#c0c0c0;line-height:1.6;margin-bottom:12px;">                <p style="margin-bottom:4px;">                  <strong style="color:#4caf50;">責任體系（甲類／乙類）：</strong>本系統之責任分為「系統設計責任」與「系統使用責任」兩類。                </p>                <p style="margin-bottom:4px;">                  ・系統設計責任人（甲類）及其連帶責任法人：五常物業規劃顧問股份有限公司，就系統架構設計、程式邏輯與技術實作負責。                </p>                <p style="margin-bottom:0;">                  ・系統使用責任人（乙類）及其連帶責任法人：新北市五常社區發展協會，就系統實際使用、對住戶與社會大眾之服務內容與溝通負責；具體自然人資料僅留存於內部權限控制系統中，不對外公告。                </p>              </div>              <div style="font-size:12px;color:#c0c0c0;line-height:1.6;margin-bottom:12px;">                <p style="margin-bottom:0;">                  <strong style="color:#4caf50;">新型專利權宣告：</strong>本系統部分模組已取得中華民國新型專利，專利證書字號為「新型第 M663678 號」，專利名稱為「整合式物業管理系統」。相關專利權之運用與授權管理，委託五常物業規劃顧問股份有限公司依契約辦理。                </p>              </div>              <div style="margin-top:12px;padding-top:12px;border-top:1px solid #2d5a2d;text-align:center;">
+                <small style="color:#888;font-size:11px;">法律聲明發佈日期：2026-01-08</small>
+              </div>
+            </div>
+
+            <div class="text-center">
+            <small class="text-muted">
+                Powered by <span style="color:#e0e0e0">Wuchang OS</span> &bull; 
+                Certified by <span style="color:#ffd700">LLM Cluster Authority</span>
+            </small>
+            </div>
+    </div>
+    <!-- Audio elements commented out as files are missing
+    <audio id="sfxBoot" src="sounds/wuchang_boot_01.mp3" preload="auto"></audio>
+    <audio id="sfxClick" src="sounds/wuchang_icon_click_01.mp3" preload="auto"></audio>
+    <script>
+    window.addEventListener("load", function () {
+      var boot = document.getElementById("sfxBoot");
+      var clickSound = document.getElementById("sfxClick");
+      if (boot) {
+        boot.play().catch(function () {});
+      }
+      var links = document.querySelectorAll(".link-card");
+      links.forEach(function (el) {
+        el.addEventListener("click", function () {
+          if (clickSound) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(function () {});
+          }
+        });
+      });
+    });
+    </script>
+    -->
+</body>
+</html>
+
+
+
+
+
+
+

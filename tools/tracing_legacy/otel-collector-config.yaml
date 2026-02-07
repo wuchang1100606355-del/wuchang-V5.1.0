@@ -1,0 +1,37 @@
+receivers:
+    otlp:
+        protocols:
+            grpc:
+                endpoint: 0.0.0.0:4317
+            http:
+                endpoint: 0.0.0.0:4318
+    zipkin:
+        endpoint: "0.0.0.0:9411"
+
+processors:
+    batch:
+        timeout: 10s
+        send_batch_size: 1024
+    memory_limiter:
+        check_interval: 1s
+        limit_mib: 512
+        spike_limit_mib: 128
+
+exporters:
+    jaeger:
+        endpoint: "http://jaeger:14268/api/traces"
+    logging:
+        loglevel: debug
+    prometheus:
+        endpoint: "0.0.0.0:8888"
+
+service:
+    pipelines:
+        traces:
+            receivers: [otlp, zipkin]
+            processors: [memory_limiter, batch]
+            exporters: [jaeger, logging]
+        metrics:
+            receivers: [otlp]
+            processors: [batch]
+            exporters: [prometheus, logging]

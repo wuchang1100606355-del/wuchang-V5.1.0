@@ -1,0 +1,39 @@
+# Caddy 反向代理配置檔案
+# 用於提供首頁和路由服務
+
+# 首頁 - www.wuchang.life
+www.wuchang.life {
+    root * /etc/caddy/control_center.html
+    file_server
+}
+
+# Odoo ERP 系統 - app.wuchang.org.tw
+app.wuchang.org.tw {
+    reverse_proxy wuchang-web:8069
+}
+
+# AI 介面 - ai.wuchang.org.tw
+ai.wuchang.org.tw {
+    reverse_proxy open-webui:8080
+}
+
+# 容器管理 - admin.wuchang.org.tw
+admin.wuchang.org.tw {
+    reverse_proxy portainer:9000
+}
+
+# 系統監控 - monitor.wuchang.org.tw
+monitor.wuchang.org.tw {
+    reverse_proxy uptime-kuma:3001
+}
+
+# 預設本地服務
+localhost {
+    reverse_proxy wuchang-web:8069
+}
+
+# 預設路由
+:80 {
+    root * /etc/caddy/control_center.html
+    file_server
+}

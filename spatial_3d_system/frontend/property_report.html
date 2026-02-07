@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五常物業管理報告預覽 - Core AI Sister</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #0f172a; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .stat-card { transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-blue-400">五常物業管理報告 <span class="text-sm font-normal text-slate-400">v1.0 Preview</span></h1>
+                <p class="text-slate-400">即時監測系統由妹妹 (Core AI Sister) 提供支援</p>
+            </div>
+            <div class="text-right">
+                <div id="current-time" class="text-xl font-mono">2026-02-03 15:30:00</div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <span class="w-2 h-2 mr-1 bg-green-500 rounded-full animate-pulse"></span> 系統連線中
+                </span>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass p-6 rounded-2xl stat-card">
+                <p class="text-slate-400 text-sm">物業巡檢點</p>
+                <p class="text-3xl font-bold mt-2">128 <span class="text-xs text-blue-400">處</span></p>
+            </div>
+            <div class="glass p-6 rounded-2xl stat-card border-l-4 border-red-500">
+                <p class="text-slate-400 text-sm">待處理異常</p>
+                <p class="text-3xl font-bold mt-2 text-red-400">3 <span class="text-xs">件</span></p>
+            </div>
+            <div class="glass p-6 rounded-2xl stat-card">
+                <p class="text-slate-400 text-sm">今日完成度</p>
+                <p class="text-3xl font-bold mt-2">92 <span class="text-xs">%</span></p>
+            </div>
+            <div class="glass p-6 rounded-2xl stat-card">
+                <p class="text-slate-400 text-sm">志工在崗</p>
+                <p class="text-3xl font-bold mt-2">12 <span class="text-xs text-blue-400">人</span></p>
+            </div>
+        </div>
+
+        <!-- Charts & Lists -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left: Chart -->
+            <div class="lg:col-span-2 glass p-6 rounded-2xl">
+                <h3 class="text-lg font-semibold mb-4 text-blue-300">巡檢效率趨勢 (近 7 日)</h3>
+                <canvas id="efficiencyChart" height="200"></canvas>
+            </div>
+
+            <!-- Right: Recent Events -->
+            <div class="glass p-6 rounded-2xl">
+                <h3 class="text-lg font-semibold mb-4 text-blue-300">最近動態</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-3 text-sm">
+                        <div class="w-2 h-2 mt-1.5 bg-blue-500 rounded-full"></div>
+                        <div>
+                            <p class="font-medium">五常公園設施檢查完成</p>
+                            <p class="text-slate-500 text-xs">10 分鐘前 · 志工：陳小明</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 text-sm">
+                        <div class="w-2 h-2 mt-1.5 bg-red-500 rounded-full"></div>
+                        <div>
+                            <p class="font-medium text-red-300">榮星花園發現步道破損</p>
+                            <p class="text-slate-500 text-xs">25 分鐘前 · 已自動通報</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 text-sm">
+                        <div class="w-2 h-2 mt-1.5 bg-blue-500 rounded-full"></div>
+                        <div>
+                            <p class="font-medium">巷弄巡檢 A 區開始</p>
+                            <p class="text-slate-500 text-xs">40 分鐘前 · 志工：張大華</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-full mt-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition" onclick="location.href='/earth-3d-viewer'">
+                    返回 3D 地圖視圖
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update Time
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.toLocaleString();
+        }, 1000);
+
+        // Chart.js Implementation
+        const ctx = document.getElementById('efficiencyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1/28', '1/29', '1/30', '1/31', '2/1', '2/2', '今日'],
+                datasets: [{
+                    label: '完成巡檢數',
+                    data: [45, 52, 48, 60, 55, 63, 72],
+                    borderColor: '#60a5fa',
+                    backgroundColor: 'rgba(96, 165, 250, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

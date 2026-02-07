@@ -1,0 +1,7 @@
+Date: 2025-12-26 20:30:21
+Action: System Logic Defect Fixes
+Manager: Little J
+Details:
+1. Fixed Money Vanishing Bug in pos_config_ext.py: Added fund balance update and transparency logging.
+2. Fixed Hardcoded AI Model Name in ai_logic.py: Replaced hardcoded model strings with dynamic configuration lookup.
+Verifier: Little J

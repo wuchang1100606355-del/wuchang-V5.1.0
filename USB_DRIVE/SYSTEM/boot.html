@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Wuchang Rescue Boot</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: 'Consolas', monospace; padding: 50px; }
+        .log { margin-bottom: 5px; }
+        .blink { animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+        #desktop-frame { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; display: none; }
+    </style>
+</head>
+<body>
+    <div id="boot-sequence">
+        <div class="log">BIOS CHECK... OK</div>
+        <div class="log">BOOT MODE: USB-HDD / USB-KEY (DETECTED)</div><div class="log">DETECTING USB DEVICE... FOUND [WUCHANG RESCUE DRIVE]</div>
+        <div class="log">LOADING KERNEL...</div>
+        <div class="log">MOUNTING FILESYSTEM... READ-ONLY MODE</div>
+        <div class="log">VERIFYING INTEGRITY... <span style="color:yellow">WARNING: HOST SYSTEM UNSTABLE</span></div>
+        <div class="log">BYPASSING HOST OS...</div>
+        <div class="log">BOOTING WUCHANG LIVE ENVIRONMENT... <span class="blink">_</span></div>
+    </div>
+    <iframe id="desktop-frame" src="desktop.html"></iframe>
+
+    <script>
+        setTimeout(() => {
+            document.body.innerHTML += '<div class="log" style="color:#fff">>> SYSTEM READY. LAUNCHING DESKTOP...</div>';
+        }, 2000);
+        setTimeout(() => {
+            document.getElementById('boot-sequence').style.display = 'none';
+            document.getElementById('desktop-frame').style.display = 'block';
+            document.body.style.padding = '0';
+        }, 4000);
+    </script>
+</body>
+</html>
+
+

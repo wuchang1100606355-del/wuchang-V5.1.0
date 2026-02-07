@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五常 AI 量子傀儡術控制台</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #000000; color: #00ff00; margin: 0; padding: 20px; text-shadow: 0 0 5px #00ff00; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #004400; padding-bottom: 20px; }
+        .header h1 { color: #00ff00; margin: 0; letter-spacing: 2px; text-transform: uppercase; }
+        .header p { color: #008800; font-size: 0.9em; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .agent-card { background-color: #050505; border: 1px solid #003300; border-radius: 4px; padding: 15px; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 0 5px #002200; }
+        .agent-card.active { border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.4); }
+        .agent-card.offline { border-color: #ff0000; color: #ff0000; text-shadow: 0 0 5px #ff0000; opacity: 0.7; }
+        .agent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px dashed #003300; padding-bottom: 5px; }
+        .agent-name { font-weight: bold; font-size: 1.2em; }
+        .agent-role { font-size: 0.8em; background-color: #002200; color: #00ff00; padding: 2px 8px; border: 1px solid #00ff00; }
+        .agent-status { font-size: 0.9em; margin-bottom: 5px; display: flex; align-items: center; }
+        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+        .status-dot.online { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; }
+        .status-dot.working { background-color: #ffff00; box-shadow: 0 0 10px #ffff00; animation: pulse 0.5s infinite alternate; }
+        .status-dot.offline { background-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
+        .agent-log { font-family: 'Consolas', monospace; font-size: 0.75em; color: #00cc00; background: #001100; padding: 5px; border: 1px solid #003300; height: 80px; overflow-y: hidden; margin-top: 10px; white-space: pre-wrap; }
+        @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+        .stats-panel { display: flex; justify-content: space-around; background: #050505; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #004400; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 2em; font-weight: bold; color: #00ff00; }
+        .stat-label { font-size: 0.8em; color: #008800; text-transform: uppercase; }
+        .quantum-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.03), rgba(0, 255, 0, 0.03) 1px, transparent 1px, transparent 2px); z-index: 1000; }
+    </style>
+</head>
+<body>
+    <div class="quantum-overlay"></div>
+    <div class="header">
+        <h1>五常 AI 量子傀儡術控制台</h1>
+        <p>WUCHANG QUANTUM PUPPETRY CONSOLE | 雲端指揮中心</p>
+    </div>
+
+    <div class="stats-panel">
+        <div class="stat-item">
+            <div class="stat-value" id="total-agents">0</div>
+            <div class="stat-label">量子傀儡 (Puppets)</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="total-tasks">0</div>
+            <div class="stat-label">量子運算週期</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="system-load">0%</div>
+            <div class="stat-label">糾纏同步率</div>
+        </div>
+    </div>
+
+    <div class="grid-container" id="agent-grid">
+        <!-- Agents will be populated here -->
+    </div>
+
+    <script>
+        function updateDashboard() {
+            fetch('/api/grid_status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total-agents').textContent = data.active_agents;
+                    document.getElementById('total-tasks').textContent = data.total_tasks;
+                    document.getElementById('system-load').textContent = data.system_load + '%';
+                    
+                    const grid = document.getElementById('agent-grid');
+                    grid.innerHTML = ''; // Clear current
+                    
+                    data.agents.forEach(agent => {
+                        const card = document.createElement('div');
+                        card.className = gent-card ;
+                        
+                        let statusClass = 'online';
+                        if (agent.status === 'working') statusClass = 'working';
+                        if (agent.status === 'offline') statusClass = 'offline';
+
+                        card.innerHTML = 
+                            <div class="agent-header">
+                                <span class="agent-name">\</span>
+                                <span class="agent-role">\</span>
+                            </div>
+                            <div class="agent-status">
+                                <span class="status-dot \"></span>
+                                \
+                            </div>
+                            <div class="agent-log">\</div>
+                        ;
+                        grid.appendChild(card);
+                    });
+                })
+                .catch(err => console.error('Error fetching status:', err));
+        }
+
+        // Initial load and periodic update
+        updateDashboard();
+        setInterval(updateDashboard, 1000); // Faster update for "Quantum" feel
+    </script>
+</body>
+</html>

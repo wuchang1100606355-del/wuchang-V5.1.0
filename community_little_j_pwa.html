@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>社區小J雲端入口</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00A8FF">
+  <style>
+    body { font-family: 'Noto Sans TC', Arial, sans-serif; background: #f8fafc; margin: 0; }
+    .container { max-width: 400px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 2px 16px #0001; padding: 32px 24px; text-align: center; }
+    .avatar { width: 96px; height: 96px; border-radius: 50%; margin-bottom: 16px; border: 3px solid #00A8FF; }
+    h1 { color: #00A8FF; margin-bottom: 8px; }
+    .desc { color: #555; margin-bottom: 24px; }
+    .qr { margin: 24px 0; }
+    .btn { background: #00A8FF; color: #fff; border: none; border-radius: 8px; padding: 12px 24px; font-size: 1.1em; cursor: pointer; margin-top: 12px; }
+    .btn:active { background: #0077b6; }
+    .footer { color: #aaa; font-size: 0.9em; margin-top: 32px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <img class="avatar" src="/static/little_j_avatar.png" alt="小J頭像">
+    <h1>社區小J雲端入口</h1>
+    <div class="desc">一鍵進入社區AI服務，支援Google Tasks、Jules協作、公告、註冊與資源管控</div>
+    <div class="qr" id="qr"></div>
+    <button class="btn" onclick="refreshQR()">產生動態QR登入/資源管控</button>
+    <div class="footer">Powered by 小J &amp; Jules | 五常雲端空間</div>
+  </div>
+  <script>
+    function getDynamicQRUrl() {
+      // 動態產生帶有資源管控參數的URL
+      const ts = Date.now();
+      const token = btoa('wjqr-' + ts + '-' + Math.random().toString(36).slice(2,10));
+      // 可根據實際需求串接API產生專屬資源管控連結
+      return `https://wuchang.life/qr-login?token=${token}`;
+    }
+    function renderQR() {
+      const url = getDynamicQRUrl();
+      QRCode.toCanvas(document.getElementById('qr'), url, { width: 220 });
+    }
+    function refreshQR() {
+      renderQR();
+    }
+    // 頁面載入時自動產生一次
+    renderQR();
+  </script>
+</body>
+</html>

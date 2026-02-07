@@ -1,0 +1,20 @@
+[tool.pyright]
+include = ["wuchang_os", "scripts"]
+exclude = ["**/__pycache__", "**/node_modules", "**/.git", "**/Lib"]
+reportMissingImports = true
+reportMissingModuleSource = false
+reportMissingTypeStubs = false
+typeCheckingMode = "basic"
+pythonVersion = "3.10"
+pythonPlatform = "Linux"
+
+[tool.pylint.messages_control]
+disable = [
+    "import-error",
+    "no-name-in-module",
+    "missing-module-docstring",
+    "missing-class-docstring"
+]
+
+[tool.pylint."TYPECHECK"]
+generated-members = ["odoo.*"]

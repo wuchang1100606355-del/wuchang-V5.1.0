@@ -1,0 +1,451 @@
+# 手動設定工作項目清單
+
+**更新時間**：2026-01-11  
+**狀態**：待執行
+
+---
+
+## 📋 總覽
+
+本清單包含所有需要手動執行的設定步驟，以啟用全自動 DNS 狀態和證書檢查系統。
+
+---
+
+## ✅ 第一階段：環境準備
+
+### 1. 安裝必要 Python 套件
+
+**執行位置**：專案根目錄
+
+**Windows (PowerShell)**：
+```powershell
+cd "C:\wuchang V5.1.0"
+pip install dnspython requests urllib3
+```
+
+**macOS/Linux**：
+```bash
+cd "路徑/到/wuchang V5.1.0"
+pip3 install dnspython requests urllib3
+```
+
+**或使用 requirements.txt**：
+```bash
+pip install -r requirements.txt
+```
+
+**驗證**：
+```bash
+python -c "import dns.resolver, requests, urllib3; print('套件已安裝')"
+```
+
+**狀態**：☐ 未完成
+
+---
+
+### 2. 確認 Docker 環境（可選，用於自動修復功能）
+
+**檢查 Docker 是否運行**：
+
+**Windows**：
+```powershell
+docker ps
+```
+
+**macOS/Linux**：
+```bash
+docker ps
+```
+
+**如果未安裝 Docker**：
+- Windows: 安裝 Docker Desktop for Windows
+- macOS: 安裝 Docker Desktop for Mac
+- Linux: 安裝 Docker Engine
+
+**狀態**：☐ 未完成
+
+---
+
+## ✅ 第二階段：測試執行
+
+### 3. 測試合規檢查腳本
+
+**執行位置**：專案根目錄
+
+**Windows**：
+```powershell
+cd "C:\wuchang V5.1.0"
+python scripts\auto_compliance_certificate_check.py
+```
+
+**macOS/Linux**：
+```bash
+cd "路徑/到/wuchang V5.1.0"
+python3 scripts/auto_compliance_certificate_check.py
+```
+
+**預期結果**：
+- ✅ 檢查首頁可訪問性
+- ✅ 檢查 DNS 合規狀態
+- ✅ 檢查 Caddy 證書狀態
+- ✅ 自動問題檢測和修復（如果有問題）
+- ✅ 生成檢查報告
+
+**檢查報告位置**：`logs/compliance_cert_check_{時間戳}.json`
+
+**狀態**：☐ 未完成
+
+---
+
+### 4. 測試每小時部署檢查腳本（可選）
+
+**執行位置**：專案根目錄
+
+**Windows**：
+```powershell
+cd "C:\wuchang V5.1.0"
+python scripts\hourly_deployment_check.py
+```
+
+**macOS/Linux**：
+```bash
+cd "路徑/到/wuchang V5.1.0"
+python3 scripts/hourly_deployment_check.py
+```
+
+**預期結果**：
+- ✅ 檢查 DNS 解析
+- ✅ 檢查首頁和登入頁可訪問性
+- ✅ 聯繫 UI 設備進行回報
+- ✅ 生成檢查報告
+
+**狀態**：☐ 未完成
+
+---
+
+## ✅ 第三階段：設置定時任務
+
+### 5. 設置全自動合規檢查定時任務
+
+#### Windows 系統
+
+**方法 A：使用快速設置腳本（推薦）**
+
+1. 以**管理員權限**打開 PowerShell 或命令提示符
+2. 執行：
+   ```powershell
+   cd "C:\wuchang V5.1.0\scripts"
+   .\快速設置全自動合規檢查.bat
+   ```
+3. 按照提示完成設置
+4. 選擇是否立即測試執行
+
+**方法 B：使用 PowerShell 腳本**
+
+1. 以**管理員權限**打開 PowerShell
+2. 執行：
+   ```powershell
+   cd "C:\wuchang V5.1.0\scripts"
+   .\setup_auto_compliance_task.ps1
+   ```
+3. 按照提示完成設置
+
+**驗證任務已創建**：
+```powershell
+Get-ScheduledTask -TaskName "WuchangAutoComplianceCheck"
+```
+
+**狀態**：☐ 未完成
+
+#### macOS 系統
+
+1. 打開終端（Terminal）
+2. 執行：
+   ```bash
+   cd "路徑/到/wuchang V5.1.0/scripts"
+   chmod +x setup_auto_compliance_task_macos.sh
+   ./setup_auto_compliance_task_macos.sh
+   ```
+3. 按照提示完成設置
+4. 選擇是否立即測試執行
+
+**驗證任務已創建**：
+```bash
+launchctl list | grep wuchang
+```
+
+**狀態**：☐ 未完成
+
+#### Linux 系統
+
+1. 打開終端
+2. 執行（需要 sudo 權限）：
+   ```bash
+   cd "路徑/到/wuchang V5.1.0/scripts"
+   chmod +x setup_auto_compliance_task_macos.sh
+   sudo ./setup_auto_compliance_task_macos.sh
+   ```
+3. 按照提示完成設置
+
+**驗證任務已創建**：
+```bash
+sudo systemctl status wuchang-autocompliancecheck.timer
+```
+
+**狀態**：☐ 未完成
+
+---
+
+### 6. 設置每小時部署檢查定時任務（可選）
+
+#### Windows 系統
+
+**方法 A：使用快速設置腳本**
+
+1. 以**管理員權限**打開 PowerShell 或命令提示符
+2. 執行：
+   ```powershell
+   cd "C:\wuchang V5.1.0\scripts"
+   .\快速設置每小時檢查.bat
+   ```
+
+**方法 B：使用 PowerShell 腳本**
+
+1. 以**管理員權限**打開 PowerShell
+2. 執行：
+   ```powershell
+   cd "C:\wuchang V5.1.0\scripts"
+   .\setup_hourly_check_task.ps1
+   ```
+
+**驗證任務已創建**：
+```powershell
+Get-ScheduledTask -TaskName "WuchangHourlyDeploymentCheck"
+```
+
+**狀態**：☐ 未完成
+
+---
+
+## ✅ 第四階段：驗證和監控
+
+### 7. 驗證定時任務狀態
+
+#### Windows
+
+```powershell
+# 查看任務狀態
+Get-ScheduledTask -TaskName "WuchangAutoComplianceCheck"
+
+# 查看任務執行信息
+Get-ScheduledTask -TaskName "WuchangAutoComplianceCheck" | Get-ScheduledTaskInfo
+
+# 查看執行歷史
+Get-WinEvent -LogName Microsoft-Windows-TaskScheduler/Operational | Where-Object {$_.Message -like '*WuchangAutoComplianceCheck*'}
+```
+
+#### macOS
+
+```bash
+# 查看任務狀態
+launchctl list | grep wuchang
+
+# 查看任務詳情
+launchctl list com.wuchang.autocompliancecheck
+
+# 查看日誌
+tail -f logs/compliance_check_stdout.log
+tail -f logs/compliance_check_stderr.log
+```
+
+#### Linux
+
+```bash
+# 查看定時器狀態
+sudo systemctl status wuchang-autocompliancecheck.timer
+
+# 查看服務狀態
+sudo systemctl status wuchang-autocompliancecheck.service
+
+# 查看日誌
+sudo journalctl -u wuchang-autocompliancecheck.service -f
+```
+
+**狀態**：☐ 未完成
+
+---
+
+### 8. 檢查生成的報告
+
+**報告位置**：
+- 合規檢查報告：`logs/compliance_cert_check_{時間戳}.json`
+- 部署檢查報告：`logs/deployment_check_{時間戳}.json`
+
+**檢查方式**：
+1. 等待定時任務首次執行（設置後 60 分鐘）
+2. 或手動觸發執行一次
+3. 查看 `logs/` 目錄中的最新報告
+
+**狀態**：☐ 未完成
+
+---
+
+## ✅ 第五階段：手動處理項目（如需要）
+
+### 9. DNS 記錄配置（如檢測到問題）
+
+如果檢查報告顯示 DNS 不合規，需要手動配置：
+
+**需要檢查的 DNS 記錄**：
+- A 記錄：`wuchang.life` → `104.199.144.93`
+- A 記錄：`www.wuchang.life` → `104.199.144.93`
+- MX 記錄：`wuchang.life` → `smtp.google.com` (優先級 1)
+- TXT 記錄：SPF、DMARC、DKIM（如需要）
+
+**操作方式**：
+1. 登入 DNS 管理後台
+2. 根據檢查報告中的問題進行修復
+3. 等待 DNS 傳播（通常 5-30 分鐘）
+4. 重新執行檢查驗證
+
+**狀態**：☐ 未完成（僅在檢測到問題時需要）
+
+---
+
+### 10. Caddy 配置文件檢查（如檢測到問題）
+
+如果檢查報告顯示 Caddy 配置文件缺失：
+
+**檢查位置**：`wuchang_os/Caddyfile`
+
+**操作方式**：
+1. 確認文件是否存在
+2. 確認文件內容包含 `wuchang.life` 網域配置
+3. 如缺失，參考現有配置創建或修復
+
+**狀態**：☐ 未完成（僅在檢測到問題時需要）
+
+---
+
+## 📊 設定進度檢查表
+
+### 必須完成的項目
+
+- [ ] **1. 安裝必要 Python 套件**
+- [ ] **2. 測試合規檢查腳本**
+- [ ] **3. 設置全自動合規檢查定時任務**
+- [ ] **4. 驗證定時任務狀態**
+- [ ] **5. 檢查生成的報告**
+
+### 可選完成的項目
+
+- [ ] **6. 確認 Docker 環境**（用於自動修復功能）
+- [ ] **7. 測試每小時部署檢查腳本**
+- [ ] **8. 設置每小時部署檢查定時任務**
+
+### 條件性項目（僅在檢測到問題時需要）
+
+- [ ] **9. DNS 記錄配置**（如檢查報告顯示問題）
+- [ ] **10. Caddy 配置文件檢查**（如檢查報告顯示問題）
+
+---
+
+## 🚀 快速開始指南
+
+### 最簡化設置（僅核心功能）
+
+1. **安裝套件**：
+   ```bash
+   pip install dnspython requests urllib3
+   ```
+
+2. **測試執行**：
+   ```bash
+   python scripts/auto_compliance_certificate_check.py
+   ```
+
+3. **設置定時任務**：
+   - Windows: `.\快速設置全自動合規檢查.bat`（管理員權限）
+   - macOS: `./setup_auto_compliance_task_macos.sh`
+   - Linux: `sudo ./setup_auto_compliance_task_macos.sh`
+
+4. **驗證**：等待 1 小時後檢查報告，或手動觸發執行
+
+---
+
+## 📝 重要提醒
+
+### 權限要求
+
+- **Windows**：設置定時任務需要**管理員權限**
+- **Linux**：設置 systemd 服務需要 **sudo 權限**
+- **macOS**：設置 launchd 任務需要**用戶權限**（通常已具備）
+
+### 執行時間
+
+- **首次執行延遲**：定時任務設置後會延遲 60 分鐘首次執行
+- **執行頻率**：之後每小時執行一次
+- **手動觸發**：可以隨時手動執行腳本進行檢查
+
+### 報告位置
+
+所有檢查報告保存在：`logs/` 目錄
+
+建議定期清理舊報告以節省空間。
+
+---
+
+## 🔧 故障排除
+
+### 如果設置失敗
+
+1. **檢查 Python 環境**：
+   ```bash
+   python --version
+   python -c "import sys; print(sys.executable)"
+   ```
+
+2. **檢查腳本路徑**：
+   - 確認在正確的目錄執行
+   - 確認腳本文件存在
+
+3. **檢查權限**：
+   - Windows: 確認以管理員權限運行
+   - Linux: 確認有 sudo 權限
+   - macOS: 確認有文件讀寫權限
+
+4. **查看錯誤信息**：
+   - 仔細閱讀錯誤訊息
+   - 查看日誌文件
+
+---
+
+## 📚 相關文檔
+
+- **完整說明**：`docs/全自動合規證書檢查說明.md`
+- **自動修復說明**：`docs/自動問題修復功能說明.md`
+- **macOS/Linux 說明**：`docs/macOS_Linux設置說明.md`
+- **每小時檢查說明**：`docs/每小時部署檢查說明.md`
+
+---
+
+## ✅ 合規聲明
+
+**符合 Google 非營利組織合規要求**
+
+所有設定步驟均以合規為最高要件，確保：
+- 僅用於非營利目的
+- 保護系統穩定性和安全性
+- 記錄所有操作以備審計
+
+---
+
+**完成設定後，系統將自動：**
+- ✅ 每小時檢查系統部署狀態
+- ✅ 確認首頁由 wuchang.life 可連
+- ✅ Google 非營利組織合規確認 DNS 狀態
+- ✅ 自動完成憑證簽發
+- ✅ 自動檢測和修復問題
+- ✅ 生成詳細檢查報告
+
+**無需人工干預，全自動執行！**

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Google Workspace 整合管理員群組 -->
+    <record id="group_google_integration_admin" model="res.groups">
+        <field name="name">Google Workspace 整合管理員</field>
+        <field name="category_id" ref="base.module_category_productivity"/>
+        <field name="comment">擁有 Google Workspace 整合功能的完整管理權限，包括 Google Meet、Google 表單、Google Drive 等所有功能的設定和管理。</field>
+        <field name="users" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <!-- Google Workspace 整合使用者群組 -->
+    <record id="group_google_integration_user" model="res.groups">
+        <field name="name">Google Workspace 整合使用者</field>
+        <field name="category_id" ref="base.module_category_productivity"/>
+        <field name="comment">可以使用 Google Workspace 整合功能，包括建立 Google Meet 會議、使用 Google 表單等。</field>
+    </record>
+
+    <!-- 伺服器管理員群組（繼承系統管理員權限） -->
+    <record id="group_server_admin" model="res.groups">
+        <field name="name">伺服器管理員</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="comment">擁有伺服器配置和管理的完整權限，包括系統設定、API 配置、服務管理等。</field>
+        <field name="users" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <!-- 超級管理員群組（繼承所有管理員權限） -->
+    <record id="group_super_admin" model="res.groups">
+        <field name="name">超級管理員</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="comment">擁有系統的最高權限，包括所有功能的完整存取權限。</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_system')), (4, ref('group_google_integration_admin')), (4, ref('group_server_admin'))]"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

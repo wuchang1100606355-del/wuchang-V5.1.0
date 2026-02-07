@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>五常作業系統桌面</title>
+    <style>
+        body { margin: 0; background: #000 url('https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed; background-size: cover; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); pointer-events: none; }
+        
+        .desktop-icons { position: absolute; top: 20px; left: 20px; display: flex; flex-direction: column; gap: 20px; z-index: 10; }
+        .icon { width: 80px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .icon:hover { transform: scale(1.1); background: rgba(255,255,255,0.1); border-radius: 5px; }
+        .icon-img { width: 48px; height: 48px; font-size: 40px; display: block; margin: 0 auto 5px; }
+        .icon-label { color: #fff; text-shadow: 1px 1px 2px #000; font-size: 0.9em; }
+        
+        .taskbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; background: rgba(20,20,20,0.9); border-top: 1px solid #333; display: flex; align-items: center; padding: 0 10px; z-index: 100; }
+        .start-btn { color: #fff; font-weight: bold; padding: 5px 15px; background: #0078d7; border-radius: 3px; cursor: pointer; margin-right: 15px; }
+        .clock { margin-left: auto; color: #fff; padding-right: 20px; font-size: 0.9em; }
+        
+        .window { position: absolute; top: 100px; left: 200px; width: 800px; height: 500px; background: #1e1e1e; border: 1px solid #444; box-shadow: 0 0 20px rgba(0,0,0,0.8); display: none; flex-direction: column; z-index: 50; resize: both; overflow: auto; }
+        .window-header { background: #333; color: #ddd; padding: 5px 10px; display: flex; justify-content: space-between; align-items: center; cursor: move; }
+        .window-title { font-size: 0.9em; }
+        .window-controls span { cursor: pointer; margin-left: 10px; }
+        .window-content { flex: 1; background: #000; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    
+    <div class="desktop-icons">
+        <div class="icon" onclick="openWindow('Identity', 'ai_intro.html')">
+            <div class="icon-img">🆔</div>
+            <div class="icon-label">官方身分</div>
+        </div>
+        <div class="icon" onclick="openWindow('Control Center', 'control_center.html')">
+            <div class="icon-img">🎛️</div>
+            <div class="icon-label">控制中心</div>
+        </div>
+        <div class="icon" onclick="openWindow('Animation', 'animation_studio.html')">
+            <div class="icon-img">🎨</div>
+            <div class="icon-label">動畫工作室</div>
+        </div>
+        <div class="icon" onclick="openWindow('Schedule', 'schedule.html')">
+            <div class="icon-img">📅</div>
+            <div class="icon-label">行程表</div>
+        </div>
+        
+        <div class="icon" onclick="openWindow('USB Drive', 'usb_view.html')">
+            <div class="icon-img" style="color:#ffaa00;">💾</div>
+            <div class="icon-label">救援硬碟 (USB)</div>
+        </div>
+
+        <div class="icon" onclick="openWindow('Cloud Gallery', 'cloud_gallery.html')">
+            <div class="icon-img">☁️</div>
+            <div class="icon-label">雲端相簿</div>
+        </div>
+<div class="icon" onclick="openWindow('Signage', 'signage.html')">
+            <div class="icon-img">📺</div>
+            <div class="icon-label">電子看板</div>
+        </div>
+    </div>
+    
+    <div id="mainWindow" class="window">
+        <div class="window-header" id="dragHeader">
+            <div class="window-title" id="winTitle">應用程式</div>
+            <div class="window-controls">
+                <span onclick="minimizeWindow()">_</span>
+                <span onclick="toggleMaximize()">□</span>
+                <span onclick="closeWindow()">X</span>
+            </div>
+        </div>
+        <div class="window-content">
+            <iframe id="appFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <div class="taskbar">
+        <div class="start-btn">五常核心</div>
+        <div style="color:#aaa; font-size:0.9em;">系統就緒</div>
+        <div class="clock" id="clock">12:00</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const win = document.getElementById('mainWindow');
+        const frame = document.getElementById('appFrame');
+        const title = document.getElementById('winTitle');
+
+        function openWindow(name, url) {
+            title.innerText = name;
+            frame.src = url;
+            win.style.display = 'flex';
+        }
+
+        function closeWindow() {
+            win.style.display = 'none';
+            frame.src = '';
+        }
+
+        // Simple Dragging
+        const header = document.getElementById('dragHeader');
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        header.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offsetX = e.clientX - win.offsetLeft;
+            offsetY = e.clientY - win.offsetTop;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                win.style.left = (e.clientX - offsetX) + 'px';
+                win.style.top = (e.clientY - offsetY) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+    </script>
+</body>
+</html>
+
+
+
+

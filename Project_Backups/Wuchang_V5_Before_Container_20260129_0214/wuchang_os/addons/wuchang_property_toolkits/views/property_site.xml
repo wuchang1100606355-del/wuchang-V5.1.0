@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="property_site" name="Property Site">
+    <t t-call="website.layout">
+      <style>
+        .hero{position:relative;border-radius:12px;overflow:hidden}
+        .hero img{width:100%;height:280px;object-fit:cover;display:block}
+        .hero .title{position:absolute;left:16px;bottom:16px;background:rgba(0,0,0,.45);color:#fff;padding:10px 14px;border-radius:10px;font-weight:700}
+        .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:18px}
+        @media(min-width:768px){.grid{grid-template-columns:1fr 1fr}}
+        @media(min-width:1024px){.grid{grid-template-columns:1fr 1fr 1fr}}
+        .card{border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+        .card .hd{padding:12px 14px;font-weight:600}
+        .card .bd{padding:0 14px 14px 14px;color:#374151}
+        .cta{display:flex;gap:8px;margin-top:12px}
+      </style>
+      <div class="container my-4">
+        <div class="hero">
+          <img t-att-src="hero_url" alt="Hero"/>
+          <div class="title">智昇華物業 · 住戶服務入口</div>
+        </div>
+        <div class="grid">
+          <div class="card"><div class="hd">報修服務</div><div class="bd">線上回報設備與公共區域問題<div class="cta"><a href="/needs" class="btn btn-primary btn-sm">立即報修</a></div></div></div>
+          <div class="card"><div class="hd">公告資訊</div><div class="bd">社區重要公告與活動<div class="cta"><a href="/archives" class="btn btn-outline-primary btn-sm">查看公告</a></div></div></div>
+          <div class="card"><div class="hd">費用查詢</div><div class="bd">查詢管理費與繳費資訊<div class="cta"><a href="#" class="btn btn-secondary btn-sm">前往查詢</a></div></div></div>
+          <div class="card"><div class="hd">訪客登記</div><div class="bd">預約訪客車輛與通行<div class="cta"><a href="#" class="btn btn-outline-secondary btn-sm">快速登記</a></div></div></div>
+          <div class="card"><div class="hd">裝修申請</div><div class="bd">提交裝修計畫與時程<div class="cta"><a href="#" class="btn btn-dark btn-sm">填寫申請</a></div></div></div>
+          <div class="card"><div class="hd">客服聯絡</div><div class="bd">線上客服與 LINE 聯繫<div class="cta"><a href="/line/connect?role=hoa" class="btn btn-success btn-sm">加入 LINE</a></div></div></div>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>

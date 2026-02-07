@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mobile_voice_app" name="Mobile Voice App" page="True">
+      <t t-call="website.layout">
+        <t t-set="title">小j 語音</t>
+        <div id="wrap" class="oe_structure container mx-auto px-4 py-8">
+          <section class="mb-6">
+            <h1 class="text-2xl font-bold">語音通話</h1>
+            <p class="text-gray-600">iPhone 專用頁，錄音→轉字→回覆→朗讀</p>
+          </section>
+          <section class="space-y-3">
+            <div>
+              <button id="btnRec" class="px-4 py-2 rounded bg-emerald-600 text-white">開始錄音</button>
+              <button id="btnStop" class="ml-2 px-4 py-2 rounded bg-gray-700 text-white">停止錄音</button>
+              <button id="btnSend" class="ml-2 px-4 py-2 rounded bg-gray-800 text-white">上傳轉字</button>
+            </div>
+            <div>
+              <div class="font-semibold mb-1">辨識文字</div>
+              <textarea id="recognized" class="border p-2 w-full" rows="4" placeholder="待轉寫..."></textarea>
+            </div>
+            <div>
+              <button id="btnLLM" class="px-4 py-2 rounded bg-indigo-600 text-white">送出生成</button>
+              <button id="btnSpeak" class="ml-2 px-4 py-2 rounded bg-amber-600 text-white">朗讀回覆</button>
+            </div>
+            <div class="mt-3">
+              <div class="font-semibold mb-1">回覆</div>
+              <div id="reply" class="border p-2 min-h-24"></div>
+            </div>
+          </section>
+          <script type="text/javascript">
+            <![CDATA[
+            (function(){
+              var AC = window.AudioContext || window.webkitAudioContext;
+              var ctx = null, mediaStream = null, recorderNode = null, recording = false, buffers = [], sampleRate = 16000;
+              function startRec(){
+                if (!AC) { alert('此瀏覽器不支援錄音'); return; }
+                if (recording) { return; }
+                navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream){
+                  ctx = new AC();
+                  sampleRate = Math.min(ctx.sampleRate || 44100, 48000);
+                  mediaStream = stream;
+                  var source = ctx.createMediaStreamSource(stream);
+                  var processor = ctx.createScriptProcessor(4096, 1, 1);
+                  processor.onaudioprocess = function(e){
+                    var ch = e.inputBuffer.getChannelData(0);
+                    buffers.push(new Float32Array(ch));
+                  };
+                  source.connect(processor);
+                  processor.connect(ctx.destination);
+                  recorderNode = processor;
+                  recording = true;
+                }).catch(function(){ alert('麥克風權限被拒'); });
+              }
+              function stopRec(){
+                if (!recording) { return; }
+                try { recorderNode && recorderNode.disconnect(); } catch(_){}
+                try { mediaStream && mediaStream.getTracks().forEach(function(t){ try{ t.stop(); }catch(_){} }); } catch(_){}
+                recording = false;
+              }
+              function mergeBuffers(bufs){
+                var length = 0; for (var i=0;i<bufs.length;i++){ length += bufs[i].length; }
+                var out = new Float32Array(length); var offset = 0;
+                for (var i=0;i<bufs.length;i++){ out.set(bufs[i], offset); offset += bufs[i].length; }
+                return out;
+              }
+              function floatTo16BitPCM(input){
+                var buffer = new ArrayBuffer(input.length * 2);
+                var view = new DataView(buffer);
+                var offset = 0;
+                for (var i=0;i<input.length;i++, offset+=2){
+                  var s = Math.max(-1, Math.min(1, input[i]));
+                  view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+                }
+                return view;
+              }
+              function encodeWAV(samples, sampleRate){
+                var buffer = new ArrayBuffer(44 + samples.length * 2);
+                var view = new DataView(buffer);
+                function writeString(offset, s){ for (var i=0;i<s.length;i++){ view.setUint8(offset+i, s.charCodeAt(i)); } }
+                var offset = 0;
+                writeString(0, 'RIFF'); view.setUint32(4, 36 + samples.length * 2, true); writeString(8, 'WAVE');
+                writeString(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+                view.setUint32(24, sampleRate, true); view.setUint32(28, sampleRate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+                writeString(36, 'data'); view.setUint32(40, samples.length * 2, true);
+                var pcm = floatTo16BitPCM(samples);
+                var out = new Uint8Array(buffer);
+                var pcmView = new Uint8Array(pcm.buffer);
+                out.set(pcmView, 44);
+                return new Blob([out], { type: 'audio/wav' });
+              }
+              var lastBlob = null;
+              document.getElementById('btnRec').onclick = function(){ buffers=[]; startRec(); };
+              document.getElementById('btnStop').onclick = function(){ stopRec(); var merged = mergeBuffers(buffers); lastBlob = encodeWAV(merged, sampleRate); };
+              document.getElementById('btnSend').onclick = function(){
+                if (!lastBlob){ alert('尚未錄音'); return; }
+                var fd = new FormData(); fd.append('audio', lastBlob, 'voice.wav');
+                fetch('/wuchang/voice/transcribe', { method: 'POST', body: fd }).then(function(r){ return r.json(); }).then(function(j){
+                  if ((j||{}).ok){ (document.getElementById('recognized')||{}).value = (j.text||''); } else { alert('轉寫失敗：'+((j||{}).error||'未知')); }
+                }).catch(function(){ alert('連線錯誤'); });
+              };
+              document.getElementById('btnLLM').onclick = function(){
+                var text = (document.getElementById('recognized')||{}).value || '';
+                if (!text){ return; }
+                fetch('/wuchang/llm/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ prompt: text }) })
+                .then(function(r){ return r.json(); }).then(function(j){
+                  var p = ((((j||{}).candidates||[{}])[0]||{}).content||{}).parts||[];
+                  var t = (p[0]||{}).text || '';
+                  (document.getElementById('reply')||{}).textContent = t || '';
+                }).catch(function(){ (document.getElementById('reply')||{}).textContent='連線錯誤'; });
+              };
+              document.getElementById('btnSpeak').onclick = function(){
+                var text = (document.getElementById('reply')||{}).textContent || '';
+                if (!text || !window.speechSynthesis){ return; }
+                var u = new SpeechSynthesisUtterance(text); u.lang='zh-TW'; window.speechSynthesis.speak(u);
+              };
+            })();
+            ]]>
+          </script>
+        </div>
+      </t>
+    </template>
+</odoo>

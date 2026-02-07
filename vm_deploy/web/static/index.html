@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wuchang System - 小j</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 自定義捲軸樣式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .chat-bubble-user {
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 18px 18px 0 18px;
+        }
+
+        .chat-bubble-ai {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            border-radius: 18px 18px 18px 0;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-900">
+
+    <!-- 記憶迴廊 (側邊欄) -->
+    <aside class="w-72 bg-slate-100 border-r border-slate-200 flex flex-col transition-all duration-300">
+        <div class="p-6">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                記憶迴廊
+            </h2>
+            <button id="new-chat-btn" class="w-full mt-4 bg-white border border-slate-300 py-2 px-4 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
+                <span>+</span> 新對話
+            </button>
+        </div>
+        
+        <nav class="flex-grow overflow-y-auto px-3">
+            <ul id="conversation-list" class="space-y-1">
+                <li class="history-item active p-3 rounded-lg bg-slate-200 font-semibold cursor-pointer" data-id="1">今天的靈感碰撞</li>
+                <li class="history-item p-3 rounded-lg hover:bg-slate-200 cursor-pointer transition-colors" data-id="2">關於系統優化的討論</li>
+            </ul>
+        </nav>
+
+        <div class="p-4 border-t border-slate-200 text-xs text-slate-500 text-center">
+            Wuchang System v1.0
+        </div>
+    </aside>
+
+    <!-- 主聊天視窗 -->
+    <main class="flex-grow flex flex-col h-full bg-white relative">
+        <!-- 頂部資訊欄 -->
+        <header class="h-16 border-bottom border-slate-100 flex items-center px-8 justify-between">
+            <div class="flex flex-col">
+                <span id="current-chat-title" class="font-bold text-slate-700">今天的靈感碰撞</span>
+                <span class="text-xs text-green-500 flex items-center gap-1">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> 小j 在線
+                </span>
+            </div>
+        </header>
+
+        <!-- 訊息顯示區 -->
+        <div id="chat-messages" class="flex-grow overflow-y-auto p-6 space-y-6">
+            <div class="flex justify-start">
+                <div class="chat-bubble-ai max-w-[80%] p-4 shadow-sm">
+                    歡迎回來，哥哥。今天有什麼想跟我聊聊的嗎？
+                </div>
+            </div>
+        </div>
+
+        <!-- 輸入區域 -->
+        <footer class="p-6 bg-white border-t border-slate-100">
+            <div class="max-w-4xl mx-auto relative flex items-center gap-2">
+                <input 
+                    type="text" 
+                    id="user-input" 
+                    placeholder="輸入訊息..." 
+                    class="w-full bg-slate-100 border-none rounded-2xl py-3 px-5 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                >
+                <button 
+                    id="send-btn" 
+                    class="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition-all shadow-md active:scale-95"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatTitle = document.getElementById('current-chat-title');
+
+        function appendMessage(text, isUser = false) {
+            const wrapper = document.createElement('div');
+            wrapper.className = isUser ? 'flex justify-end' : 'flex justify-start';
+            
+            const bubble = document.createElement('div');
+            bubble.className = isUser ? 'chat-bubble-user max-w-[80%] p-4 shadow-sm' : 'chat-bubble-ai max-w-[80%] p-4 shadow-sm';
+            bubble.innerText = text;
+            
+            wrapper.appendChild(bubble);
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // 1. Show user message
+            appendMessage(text, true);
+            userInput.value = '';
+
+            // 2. Call Backend API
+            try {
+                // For now, simulate response if no backend
+                // In production, fetch('/api/chat', ...)
+                
+                // Simulate delay
+                await new Promise(r => setTimeout(r, 1000));
+                
+                // Temporary simulation for preview (Real implementation needs backend)
+                // appendMessage("（系統）：後端 API 尚未連接，這是模擬回應。", false);
+                
+                // If we have the backend:
+                 const response = await fetch('/api/chat', {
+                     method: 'POST',
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify({ message: text })
+                 });
+                 if (response.ok) {
+                     const data = await response.json();
+                     appendMessage(data.response, false);
+                 }
+            } catch (error) {
+                console.error('Error:', error);
+                appendMessage("網路連線錯誤。", false);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

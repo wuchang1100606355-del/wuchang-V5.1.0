@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  voice-commander:
+    build: .
+    container_name: wuchang-voice-commander
+    restart: always
+    network_mode: "host"
+    environment:
+      - WUCHANG_NETWORK=internal
+      - COLLABORATION_MODE=active
+    volumes:
+      - ./logs:/app/logs
+      - ./:/app  # Mount current directory to allow live code updates
+    command: python voice_commander.py
+

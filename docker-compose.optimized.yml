@@ -1,0 +1,218 @@
+# Docker Compose 優化配置
+# 利用 Windows 10 專業版功能優化
+# 添加資源限制、健康檢查、依賴管理
+# 合規要求：符合 Google 非營利組織合規要求
+
+version: '3.8'
+
+services:
+  wuchang-web:
+    image: odoo:17.0        
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./wuchang_os/addons:/mnt/extra-addons
+      - ./downloads/jules:/mnt/jules:rw
+      - ./config:/mnt/jules-config:ro
+      - ${AI_MEMORY_PATH:-/mnt/ai-memory}/memory_store:/opt/wuchang/memory_store    
+      - ${AI_COMMON_PATH:-/mnt/ai-common}/common_store:/opt/wuchang/common_store    
+    command: odoo -d admin --db_host=db --db_user=odoo --db_password=odoo --proxy-mode --longpolling-port=8072     
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    restart: unless-stopped
+    profiles:
+      - system
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 2G
+        reservations:
+          cpus: '2'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8069/web/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    profiles:
+      - system
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  caddy:
+    image: caddy:2
+    depends_on:
+      wuchang-web:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./wuchang_os/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./wuchang_os/command_center:/etc/caddy/command_center:ro
+      - ./wuchang_os/command_center_design_report.html:/etc/caddy/command_center_design_report.html:ro
+      - caddy-data:/data
+    restart: unless-stopped
+    profiles:
+      - system
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  caddy-ui:
+    image: caddy:2
+    ports:
+      - "8081:80"
+      - "8444:443"
+    volumes:
+      - ./wuchang_os/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    restart: unless-stopped
+    profiles:
+      - ui
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    depends_on:
+      - caddy
+    command: tunnel --no-autoupdate --url http://caddy:80
+    restart: unless-stopped
+    profiles:
+      - system
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  cloudflared-named:
+    image: cloudflare/cloudflared:latest
+    depends_on:
+      - caddy
+    command: tunnel run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    restart: unless-stopped
+    profiles:
+      - named
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+    restart: unless-stopped
+    profiles:
+      - ui
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+    restart: unless-stopped
+    profiles:
+      - ui
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    profiles:
+      - ui
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  odoo-web-data:
+  odoo-db-data:
+  caddy-data:
+  uptime-kuma-data:
+  portainer-data:
+  ollama-data:

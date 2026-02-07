@@ -1,0 +1,34 @@
+<odoo>
+  <data noupdate="1">
+    <!-- Platform (Branch Company) -->
+    <record id="company_sanchong_branch" model="res.company">
+      <field name="name">新北市三重區物業管理分處</field>
+      <field name="currency_id" ref="base.TWD"/>
+      <field name="street">重新路</field>
+      <field name="city">新北市</field>
+      <field name="street2">三重區</field>
+      <field name="zip">241</field>
+    </record>
+
+    <!-- Wuchang Community Development Association (The Only Active Group Client) -->
+    <!-- Jurisdiction: Wushun, Wuchang, Renzhong Villages -->
+    <record id="partner_wuchang_association" model="res.partner">
+      <field name="name">五常社區發展協會</field>
+      <field name="is_company">True</field>
+      <field name="company_id" ref="company_sanchong_branch"/>
+      <field name="street">五常街</field>
+      <field name="city">新北市</field>
+      <field name="street2">三重區</field>
+      <field name="zip">241</field>
+      <field name="comment">轄區：新北市三重區五順里、五常里、仁忠里</field>
+      <field name="property_payment_term_id" ref="account.account_payment_term_immediate"/>`n      <field name="property_management_role">association</field>`n      <!-- Spatiotemporal Anchor: Wuchang Street Center -->`n      <field name="spatial_idx_lat">25.0700000</field>`n      <field name="spatial_idx_lng">121.5000000</field>`n      <field name="spatial_idx_alt">10.5</field>`n      <field name="spatial_ref_uuid">WUCHANG-HQ-ANCHOR-001</field>
+    </record>
+
+    <!-- Equipment Category -->
+    <record id="equipment_category_property" model="maintenance.equipment.category">
+        <field name="name">物業設施</field>
+        <field name="technician_user_id" ref="base.user_admin"/>
+    </record>
+  </data>
+</odoo>
+

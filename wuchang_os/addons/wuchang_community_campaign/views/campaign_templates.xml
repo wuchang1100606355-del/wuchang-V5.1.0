@@ -1,0 +1,171 @@
+<odoo>
+  <template id="campaign_home" name="Community Campaign Home">
+    <t t-call="website.layout">
+      <div class="container">
+        <section class="my-5">
+          <h1>Wuchang Community Campaign</h1>
+          <p>Interactive Wish Tree &amp; Community Voting System</p>
+        </section>
+        <section id="wish-tree" class="my-4">
+          <h2>Wish Tree</h2>
+          <div class="wish-tree" data-source="/campaign/data/wishes"></div>
+        </section>
+        <section id="voting" class="my-4">
+          <h2>Project Voting</h2>
+          <div id="vote-panel"></div>
+        </section>
+        <section id="transparency" class="my-4">
+          <h2>Transparency Dashboard</h2>
+          <div id="transparency-dashboard"></div>
+        </section>
+        <section class="my-4">
+          <h2>System Concepts</h2>
+          <ul>
+            <li>Trust: Non-Profit Integrity</li>
+            <li>Confidence: Defeating Corporate Monopolies</li>
+            <li>Belief: Better Life For All</li>
+          </ul>
+        </section>
+      </div>
+    </t>
+  </template>
+  <template id="wish_tree_page" name="Community Wish Tree">
+    <t t-call="website.layout">
+      <div class="container main-content">
+        <div class="row justify-content-center mb-4">
+          <div class="col-md-10">
+            <h1 class="text-gradient">社區願望樹</h1>
+            <p>每一個願望，都是社區成長的養分</p>
+          </div>
+        </div>
+        <t t-foreach="campaigns" t-as="campaign">
+          <div class="row justify-content-center mb-4">
+            <div class="col-md-10">
+              <div class="card glass-card p-4">
+                <div class="row align-items-center">
+                  <div class="col-md-8">
+                    <h2 t-field="campaign.name"/>
+                    <p t-field="campaign.description"/>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <div class="funding-status">
+                      <span class="d-block">目前資金</span>
+                      <span class="h2" t-esc="campaign.current_amount"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="progress mt-3" style="height: 10px;">
+                  <div class="progress-bar gradient-bar" t-att-style="'width: %s%%' % campaign.progress"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row wish-grid">
+            <t t-foreach="campaign.wish_ids" t-as="wish">
+              <div class="col-md-4 col-sm-6 mb-4">
+                <div t-attf-class="card wish-card h-100 theme-#{wish.color_theme}">
+                  <div class="card-body d-flex flex-column">
+                    <h5 t-field="wish.name"/>
+                    <p class="flex-grow-1" t-field="wish.description"/>
+                    <div class="mt-3 d-flex justify-content-between align-items-center">
+                      <small t-field="wish.user_id.name"/>
+                      <button class="btn btn-sm btn-outline-light vote-btn" t-att-data-wish-id="wish.id">
+                        <i class="fa fa-thumbs-up"></i> <span class="vote-count" t-esc="wish.vote_count"/>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </t>
+          </div>
+        </t>
+        <section class="my-5">
+          <h3>System Concepts</h3>
+          <ul>
+            <li>信任：不獲利，才能建立真正的信任</li>
+            <li>信心：敢於與資本巨獸對抗</li>
+            <li>信念：讓大家過得更好</li>
+          </ul>
+        </section>
+      </div>
+    </t>
+  </template>
+  <template id="little_j_service_hub" name="Little J AI Hub">
+    <t t-call="website.layout">
+      <div id="wrap" class="little-j-hub-wrapper">
+        <div class="digital-grid-bg"></div>
+        <div class="container h-100 d-flex flex-column justify-content-center py-5 position-relative z-10">
+          <div class="row mb-5">
+            <div class="col-12 d-flex justify-content-between align-items-center glass-panel p-3 rounded-pill">
+              <div class="d-flex align-items-center">
+                <span class="badge bg-primary rounded-pill me-2 pulse-badge">AI CORE ACTIVE</span>
+                <span class="text-white-50 font-monospace small">SYS_VER: 4.0 | UPTIME: 99.9%</span>
+              </div>
+              <div class="text-end">
+                <span class="text-gradient fw-bold">WUCHANG OS</span>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center h-100">
+            <div class="col-lg-4 text-center mb-5 mb-lg-0">
+              <div class="little-j-container">
+                <div class="hologram-ring ring-1"></div>
+                <div class="hologram-ring ring-2"></div>
+                <div class="hologram-ring ring-3"></div>
+                <div class="avatar-wrapper floating">
+                  <img src="/wuchang_core/static/src/img/little_j_fullbody.png"
+                       class="img-fluid little-j-main"
+                       alt="Little J AI"
+                       onerror="this.src='https://cdn-icons-png.flaticon.com/512/4712/4712109.png'"/>
+                </div>
+                <div class="voice-wave mt-4">
+                  <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                </div>
+                <h3 class="mt-3 text-white fw-light">您好，我是 <span class="fw-bold text-primary">小J</span></h3>
+                <p class="text-white-50 small">您的全能數位管家</p>
+              </div>
+            </div>
+            <div class="col-lg-8 ps-lg-5">
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <a href="/award/coach" class="text-decoration-none">
+                    <div class="service-card glass-card hover-glow">
+                      <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box bg-primary-soft text-primary rounded-circle p-3 me-3">
+                          <i class="fa fa-magic fa-2x"></i>
+                        </div>
+                        <div>
+                          <h5 class="text-white mb-0">願望教練</h5>
+                          <small class="text-primary">Award Coach</small>
+                        </div>
+                      </div>
+                      <p class="text-white-50 small">「我有個點子...」讓我幫您把模糊的想法，轉化為完美的社區提案。</p>
+                      <div class="status-indicator online"><i class="fa fa-circle me-1"></i> 準備就緒</div>
+                    </div>
+                  </a>
+                </div>
+                <div class="col-md-6">
+                  <a href="/business/war-room" class="text-decoration-none">
+                    <div class="service-card glass-card hover-glow">
+                      <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box bg-info-soft text-info rounded-circle p-3 me-3">
+                          <i class="fa fa-line-chart fa-2x"></i>
+                        </div>
+                        <div>
+                          <h5 class="text-white mb-0">商業戰情室</h5>
+                          <small class="text-info">Business Logic</small>
+                        </div>
+                      </div>
+                      <p class="text-white-50 small">分析社區消費數據、團購趨勢。我是您經營生意的最強數據分析師。</p>
+                      <div class="status-indicator online"><i class="fa fa-circle me-1"></i> 準備就緒</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>

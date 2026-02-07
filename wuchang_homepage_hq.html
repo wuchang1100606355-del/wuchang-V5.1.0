@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head`r`n    <link rel="stylesheet" href="wuchang_theme.css" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="五常社區 OS - 連結社區與系統的智慧之旅"
+        />
+        <meta name="theme-color" content="#1B5E5D" />
+        <title>五常社區 OS | Wuchang Community OS</title>
+
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Roboto+Mono:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Font Awesome for Icons -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+
+        <style>
+            /* ==================== CSS 變數 ==================== */
+            :root {
+                /* 色彩系統 */
+                --color-primary-dark: #0f4c3a;
+                --color-primary: #1b5e5d;
+                --color-primary-light: #2a7a77;
+                --color-primary-lighter: #4aaea8;
+                --color-accent-dark: #2e7d54;
+                --color-accent: #4caf50;
+                --color-accent-light: #81c784;
+                --color-highlight: #ffb700;
+                --color-neutral-900: #1a1a1a;
+                --color-neutral-800: #2e2e2e;
+                --color-neutral-700: #424242;
+                --color-neutral-600: #616161;
+                --color-neutral-500: #757575;
+                --color-neutral-400: #bdbdbd;
+                --color-neutral-300: #e0e0e0;
+                --color-neutral-200: #f5f5f5;
+                --color-neutral-100: #fafafa;
+                --color-white: #ffffff;
+                --color-error: #f44336;
+                --color-warning: #ff9800;
+                --color-success: #4caf50;
+                --color-info: #2196f3;
+
+                /* 字體 */
+                --font-sans: "Noto Sans TC", "Microsoft JhengHei", "Segoe UI",
+                    system-ui, sans-serif;
+                --font-serif: "Noto Serif TC", "Georgia", serif;
+                --font-mono: "Roboto Mono", monospace;
+
+                /* 間距 */
+                --space-xs: 4px;
+                --space-sm: 8px;
+                --space-md: 16px;
+                --space-lg: 24px;
+                --space-xl: 32px;
+                --space-xxl: 48px;
+                --space-xxxl: 64px;
+                --space-huge: 96px;
+
+                /* 圓角 */
+                --radius-sm: 4px;
+                --radius-md: 8px;
+                --radius-lg: 12px;
+                --radius-xl: 16px;
+                --radius-full: 9999px;
+
+                /* 陰影 */
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+                /* 過渡 */
+                --transition-fast: 150ms ease-in-out;
+                --transition-normal: 250ms ease-in-out;
+                --transition-slow: 350ms ease-in-out;
+            }
+
+            /* ==================== 基礎樣式 ==================== */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: var(--font-sans);
+                font-size: 16px;
+                line-height: 1.6;
+                color: var(--color-neutral-900);
+                background-color: var(--color-white);
+                overflow-x: hidden;
+            }
+
+            /* ==================== 導覽列 ==================== */
+            header {
+                background-color: var(--color-white);
+                border-bottom: 1px solid var(--color-neutral-300);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .navbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: var(--space-md) var(--space-lg);
+            }
+
+            .logo {
+                font-size: 24px;
+                font-weight: 700;
+                color: var(--color-primary);
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: var(--space-sm);
+            }
+
+            .logo i {
+                font-size: 32px;
+            }
+
+            .nav-links {
+                display: flex;
+                gap: var(--space-lg);
+                list-style: none;
+            }
+
+            .nav-links a {
+                text-decoration: none;
+                color: var(--color-neutral-700);
+                font-weight: 500;
+                transition: color var(--transition-normal);
+                padding-bottom: 4px;
+                border-bottom: 2px solid transparent;
+            }
+
+            .nav-links a:hover {
+                color: var(--color-primary);
+                border-bottom-color: var(--color-primary);
+            }
+
+            .nav-cta {
+                display: flex;
+                gap: var(--space-md);
+                align-items: center;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                border: none;
+                border-radius: var(--radius-sm);
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all var(--transition-normal);
+                text-decoration: none;
+                display: inline-block;
+                text-align: center;
+                font-family: var(--font-sans);
+            }
+
+            .btn-primary {
+                background-color: var(--color-primary);
+                color: white;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .btn-primary:hover {
+                background-color: var(--color-primary-dark);
+                box-shadow: var(--shadow-lg);
+                transform: translateY(-2px);
+            }
+
+            .btn-secondary {
+                background-color: transparent;
+                color: var(--color-primary);
+                border: 2px solid var(--color-primary);
+            }
+
+            .btn-secondary:hover {
+                background-color: var(--color-primary);
+                color: white;
+            }
+
+            /* ==================== 英雄區 ==================== */
+            .hero {
+                background: linear-gradient(
+                    135deg,
+                    var(--color-primary) 0%,
+                    var(--color-primary-light) 100%
+                );
+                color: white;
+                padding: var(--space-huge) var(--space-lg);
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                min-height: 600px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .hero::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: linear-gradient(
+                        45deg,
+                        rgba(255, 255, 255, 0.05) 25%,
+                        transparent 25%
+                    ),
+                    linear-gradient(
+                        -45deg,
+                        rgba(255, 255, 255, 0.05) 25%,
+                        transparent 25%
+                    ),
+                    linear-gradient(
+                        45deg,
+                        transparent 75%,
+                        rgba(255, 255, 255, 0.05) 75%
+                    ),
+                    linear-gradient(
+                        -45deg,
+                        transparent 75%,
+                        rgba(255, 255, 255, 0.05) 75%
+                    );
+                background-size: 40px 40px;
+                background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+                opacity: 0.1;
+                z-index: 0;
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 1;
+                max-width: 800px;
+                animation: fadeInUp 0.8s ease-out;
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .hero h1 {
+                font-size: 56px;
+                font-weight: 900;
+                margin-bottom: var(--space-md);
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            .hero .subtitle {
+                font-size: 20px;
+                font-weight: 300;
+                margin-bottom: var(--space-lg);
+                opacity: 0.95;
+            }
+
+            .hero .tagline {
+                font-size: 14px;
+                opacity: 0.8;
+                margin-bottom: var(--space-xxl);
+                font-style: italic;
+            }
+
+            .countdown {
+                background-color: rgba(255, 255, 255, 0.15);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: var(--radius-lg);
+                padding: var(--space-lg) var(--space-xl);
+                margin-bottom: var(--space-xxl);
+                backdrop-filter: blur(10px);
+            }
+
+            .countdown-label {
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: var(--space-sm);
+                opacity: 0.8;
+            }
+
+            .countdown-time {
+                font-size: 48px;
+                font-weight: 700;
+                font-family: var(--font-mono);
+                letter-spacing: 2px;
+            }
+
+            .hero-cta {
+                display: flex;
+                gap: var(--space-md);
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .btn-light {
+                background-color: white;
+                color: var(--color-primary);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .btn-light:hover {
+                background-color: var(--color-neutral-100);
+                box-shadow: var(--shadow-xl);
+            }
+
+            /* ==================== 主容器 ==================== */
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 var(--space-lg);
+            }
+
+            /* ==================== 區塊 ==================== */
+            section {
+                padding: var(--space-huge) var(--space-lg);
+            }
+
+            section.alt {
+                background-color: var(--color-neutral-100);
+            }
+
+            section h2 {
+                font-size: 40px;
+                font-weight: 700;
+                color: var(--color-primary);
+                margin-bottom: var(--space-lg);
+                text-align: center;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                color: var(--color-neutral-700);
+                font-size: 18px;
+                margin-bottom: var(--space-xxxl);
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* ==================== 卡片網格 ==================== */
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: var(--space-lg);
+                margin-top: var(--space-xxxl);
+            }
+
+            .card {
+                background-color: white;
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--color-neutral-300);
+                overflow: hidden;
+                transition: all var(--transition-normal);
+                box-shadow: var(--shadow-sm);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .card:hover {
+                box-shadow: var(--shadow-xl);
+                transform: translateY(-8px);
+                border-color: var(--color-primary);
+            }
+
+            .card-icon {
+                width: 100%;
+                height: 120px;
+                background: linear-gradient(
+                    135deg,
+                    var(--color-primary-lighter),
+                    var(--color-primary)
+                );
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 48px;
+            }
+
+            .card-body {
+                padding: var(--space-lg);
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .card-title {
+                font-size: 20px;
+                font-weight: 600;
+                color: var(--color-primary);
+                margin-bottom: var(--space-md);
+            }
+
+            .card-text {
+                font-size: 14px;
+                color: var(--color-neutral-700);
+                line-height: 1.7;
+                margin-bottom: var(--space-lg);
+                flex: 1;
+            }
+
+            .card-cta {
+                display: flex;
+                gap: var(--space-sm);
+                flex-wrap: wrap;
+            }
+
+            .btn-sm {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            /* ==================== 認證區 ==================== */
+            .certifications {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: var(--space-lg);
+                align-items: center;
+                justify-items: center;
+                margin-top: var(--space-xxxl);
+            }
+
+            .cert-item {
+                text-align: center;
+                transition: all var(--transition-normal);
+                cursor: pointer;
+            }
+
+            .cert-badge {
+                width: 100px;
+                height: 100px;
+                border-radius: var(--radius-lg);
+                background: linear-gradient(
+                    135deg,
+                    var(--color-primary-lighter),
+                    var(--color-primary)
+                );
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: var(--space-md);
+                font-size: 36px;
+                box-shadow: var(--shadow-md);
+                transition: all var(--transition-normal);
+            }
+
+            .cert-item:hover .cert-badge {
+                transform: scale(1.1) rotate(3deg);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .cert-name {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--color-primary);
+                line-height: 1.4;
+            }
+
+            /* ==================== 資金來源區 ==================== */
+            .funding-card {
+                background: linear-gradient(
+                    135deg,
+                    var(--color-primary),
+                    var(--color-primary-light)
+                );
+                color: white;
+                border-radius: var(--radius-lg);
+                padding: var(--space-xxl);
+                margin-top: var(--space-xxxl);
+            }
+
+            .funding-card h3 {
+                font-size: 24px;
+                margin-bottom: var(--space-lg);
+                display: flex;
+                align-items: center;
+                gap: var(--space-md);
+            }
+
+            .funding-list {
+                list-style: none;
+            }
+
+            .funding-list li {
+                padding: var(--space-md) 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .funding-list li:last-child {
+                border-bottom: none;
+            }
+
+            .funding-list strong {
+                font-weight: 600;
+            }
+
+            .funding-link {
+                color: var(--color-highlight);
+                text-decoration: none;
+                border-bottom: 1px solid var(--color-highlight);
+                transition: opacity var(--transition-normal);
+            }
+
+            .funding-link:hover {
+                opacity: 0.8;
+            }
+
+            /* ==================== 法律聲明區 ==================== */
+            .legal {
+                background-color: var(--color-neutral-100);
+                border-left: 4px solid var(--color-primary);
+                padding: var(--space-lg);
+                border-radius: var(--radius-md);
+                margin-top: var(--space-xxxl);
+            }
+
+            .legal h3 {
+                font-size: 18px;
+                font-weight: 700;
+                color: var(--color-primary);
+                margin-bottom: var(--space-md);
+                display: flex;
+                align-items: center;
+                gap: var(--space-sm);
+            }
+
+            .legal-section {
+                margin-bottom: var(--space-lg);
+            }
+
+            .legal-section h4 {
+                font-size: 14px;
+                font-weight: 700;
+                color: var(--color-neutral-900);
+                margin-bottom: var(--space-sm);
+            }
+
+            .legal-section p {
+                font-size: 13px;
+                line-height: 1.8;
+                color: var(--color-neutral-700);
+            }
+
+            /* ==================== 頁腳 ==================== */
+            footer {
+                background-color: var(--color-primary);
+                color: white;
+                padding: var(--space-xxl) var(--space-lg);
+                margin-top: var(--space-huge);
+            }
+
+            .footer-content {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: var(--space-xxxl);
+            }
+
+            .footer-section h4 {
+                font-size: 16px;
+                font-weight: 700;
+                margin-bottom: var(--space-lg);
+            }
+
+            .footer-section a {
+                display: block;
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                margin-bottom: var(--space-md);
+                font-size: 14px;
+                transition: color var(--transition-normal);
+            }
+
+            .footer-section a:hover {
+                color: var(--color-highlight);
+            }
+
+            .footer-bottom {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                padding-top: var(--space-lg);
+                margin-top: var(--space-xxl);
+                text-align: center;
+                font-size: 13px;
+                opacity: 0.8;
+            }
+
+            /* ==================== 響應式設計 ==================== */
+            @media (max-width: 768px) {
+                .nav-links {
+                    display: none;
+                }
+
+                .hero h1 {
+                    font-size: 40px;
+                }
+
+                .hero .subtitle {
+                    font-size: 18px;
+                }
+
+                .countdown-time {
+                    font-size: 36px;
+                }
+
+                section h2 {
+                    font-size: 28px;
+                }
+
+                .grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .hero {
+                    min-height: 400px;
+                }
+            }
+
+            /* ==================== 無動畫首選項 ==================== */
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                    scroll-behavior: auto !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 導覽列 -->
+        <header>
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-community"></i>
+                    <span>五常 OS</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#services">服務</a></li>
+                    <li><a href="#certifications">認證</a></li>
+                    <li><a href="#funding">資金</a></li>
+                    <li><a href="#contact">聯絡</a></li>
+                </ul>
+                <div class="nav-cta">
+                    <a href="/web/login" class="btn btn-secondary">登入</a>
+                    <a href="/web/register" class="btn btn-primary">註冊</a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- 英雄區 -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>五常社區 OS</h1>
+                <p class="subtitle">連結社區與系統的智慧之旅</p>
+                <p class="tagline">
+                    Wuchang Community Operating System - Connecting Community
+                    and Digital Intelligence
+                </p>
+
+                <div class="countdown">
+                    <div class="countdown-label">系統啟動倒數</div>
+                    <div class="countdown-time" id="countdown">02:00:00</div>
+                </div>
+
+                <div class="hero-cta">
+                    <a href="#services" class="btn btn-light">探索服務</a>
+                    <a
+                        href="/web/login"
+                        class="btn btn-light"
+                        style="
+                            background-color: transparent;
+                            border: 2px solid white;
+                            color: white;
+                        "
+                        >立即登入</a
+                    >
+                </div>
+            </div>
+        </section>
+
+        <!-- 服務區 -->
+        <section id="services" class="container">
+            <h2>我們的服務</h2>
+            <p class="section-subtitle">為社區提供全方位的數位解決方案</p>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">🎤</div>
+                    <div class="card-body">
+                        <h3 class="card-title">語音互動</h3>
+                        <p class="card-text">
+                            與「五常AI服務員 小J資訊」進行自然語言互動，獲得即時協助與建議。
+                        </p>
+                        <div class="card-cta">
+                            <a href="/ai_intro.html" class="btn btn-primary btn-sm">開始對話</a
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📋</div>
+                    <div class="card-body">
+                        <h3 class="card-title">線上服務</h3>
+                        <p class="card-text">
+                            物業報修、繳費管理、意見反饋，一站式解決社區需求。
+                        </p>
+                        <div class="card-cta">
+                            <a href="/web" class="btn btn-primary btn-sm">進入服務</a
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📚</div>
+                    <div class="card-body">
+                        <h3 class="card-title">社區資訊</h3>
+                        <p class="card-text">
+                            瀏覽社區史料、最新公告、活動日程與重要資訊。
+                        </p>
+                        <div class="card-cta">
+                            <a href="/preview_homepage.html" class="btn btn-primary btn-sm">瀏覽資訊</a
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <div class="card-body">
+                        <h3 class="card-title">系統管理</h3>
+                        <p class="card-text">
+                            進入管理後台，管理社區資源、使用者與數據分析。
+                        </p>
+                        <div class="card-cta">
+                            <a href="/web" class="btn btn-primary btn-sm"
+                                >進入後台</a
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🤝</div>
+                    <div class="card-body">
+                        <h3 class="card-title">合作夥伴</h3>
+                        <p class="card-text">
+                            與政府機構、非營利組織與科技企業深度合作。
+                        </p>
+                        <div class="card-cta">
+                            <a
+                                href="#certifications"
+                                class="btn btn-primary btn-sm"
+                                >了解更多</a
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💡</div>
+                    <div class="card-body">
+                        <h3 class="card-title">創新方案</h3>
+                        <p class="card-text">
+                            獲得台灣新型專利認證，領先的社區智慧化解決方案。
+                        </p>
+                        <div class="card-cta">
+                            <a href="#certifications" class="btn btn-primary btn-sm">詳細資訊</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 認證區 -->
+        <section id="certifications" class="alt">
+            <div class="container">
+                <h2>榮耀與認證</h2>
+                <p class="section-subtitle">受信任的合作夥伴與認證機構</p>
+
+                <div class="certifications">
+                    <div class="cert-item">
+                        <a
+                            href="https://www.google.com/nonprofits/"
+                            target="_blank"
+                            style="text-decoration: none"
+                        >
+                            <div class="cert-badge">🔵</div>
+                            <p class="cert-name">Google<br />Nonprofits</p>
+                        </a>
+                    </div>
+
+                    <div class="cert-item">
+                        <a
+                            href="https://startup.google.com/"
+                            target="_blank"
+                            style="text-decoration: none"
+                        >
+                            <div class="cert-badge">🚀</div>
+                            <p class="cert-name">Google<br />Startups</p>
+                        </a>
+                    </div>
+
+                    <div class="cert-item">
+                        <a
+                            href="https://www.sinyi.com.tw/charity/community/"
+                            target="_blank"
+                            style="text-decoration: none"
+                        >
+                            <div class="cert-badge">🏘️</div>
+                            <p class="cert-name">社區一家<br />工作小組</p>
+                        </a>
+                    </div>
+
+                    <div class="cert-item">
+                        <a
+                            href="https://www.culture.ntpc.gov.tw/"
+                            target="_blank"
+                            style="text-decoration: none"
+                        >
+                            <div class="cert-badge">🎭</div>
+                            <p class="cert-name">新北市<br />文化局</p>
+                        </a>
+                    </div>
+
+                    <div class="cert-item">
+                        <a
+                            href="https://www.social.ntpc.gov.tw/"
+                            target="_blank"
+                            style="text-decoration: none"
+                        >
+                            <div class="cert-badge">🤲</div>
+                            <p class="cert-name">新北市<br />社會局</p>
+                        </a>
+                    </div>
+
+                    <div class="cert-item">
+                        <a
+                            href="https://www.tipo.gov.tw/"
+                            target="_blank"
+                            style="text-decoration: none"
+                        >
+                            <div class="cert-badge">⭐</div>
+                            <p class="cert-name">新型專利<br />M663678</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 資金來源區 -->
+        <section id="funding" class="container">
+            <div class="funding-card">
+                <h3>
+                    <i class="fas fa-heart"></i>
+                    資金來源與合作
+                </h3>
+                <ul class="funding-list">
+                    <li>
+                        <strong>系統開發：</strong>
+                        <a
+                            href="https://www.google.com/maps/place/204,+Section+3,+Chongxin+Rd,+Sanchong+District,+New+Taipei+City/@25.0818,121.4898,15z"
+                            target="_blank"
+                            class="funding-link"
+                            >上品聊國咖啡館重新總店</a
+                        >全額捐助
+                    </li>
+                    <li>
+                        <strong>網路資源：</strong>
+                        <a
+                            href="https://www.google.com/nonprofits/"
+                            target="_blank"
+                            class="funding-link"
+                            >Google Nonprofits</a
+                        >非營利組織抵免額
+                    </li>
+                    <li>
+                        <strong>模組驗證：</strong>
+                        <a
+                            href="https://www.culture.ntpc.gov.tw/"
+                            target="_blank"
+                            class="funding-link"
+                            >新北市文化局</a
+                        >、<a
+                            href="https://www.sinyi.com.tw/charity/community/"
+                            target="_blank"
+                            class="funding-link"
+                            >社區一家工作小組</a
+                        >認可支持
+                    </li>
+                    <li>
+                        <strong>設備補助：</strong>
+                        <a
+                            href="https://www.social.ntpc.gov.tw/"
+                            target="_blank"
+                            class="funding-link"
+                            >新北市社會局</a
+                        >社區發展補助
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 法律聲明 -->
+        <section class="container">
+            <div class="legal">
+                <h3><i class="fas fa-gavel"></i> 法律聲明與責任宣告</h3>
+
+                <div class="legal-section">
+                    <h4>組織身份與權責</h4>
+                    <p>
+                        本系統由<strong>新北市五常社區發展協會</strong>（立案字號：新北市社區補自第1100606355號）委託，由<strong>五常物業規劃顧問股份有限公司</strong>（統一編號：97573469，社會企業，無資本利得、準基金會營運模式）規劃設計並協助營運。
+                    </p>
+                </div>
+
+                <div class="legal-section">
+                    <h4>責任歸屬</h4>
+                    <p>
+                        五常社區核心決策人為<strong>江政隆</strong>（詳細個人資料僅留存於內部系統）。江政隆對本系統之所有決策、政策與行為負承諾之責任。
+                    </p>
+                </div>
+
+                <div class="legal-section">
+                    <h4>無資本利得宣告</h4>
+                    <p>
+                        本組織聲明：五常社區及其轄下所有系統、服務與產品均以<strong>非營利目的</strong>運營。本組織自該系統與服務獲得之任何價值，均作為<strong>無資本利得之公益貢獻</strong>處理，不作為任何形式之營利或資本利得。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 頁腳 -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>關於我們</h4>
+                    <a href="#">組織簡介</a>
+                    <a href="#">願景與使命</a>
+                    <a href="#">團隊成員</a>
+                    <a href="#">新聞中心</a>
+                </div>
+
+                <div class="footer-section">
+                    <h4>服務</h4>
+                    <a href="#">語音互動</a>
+                    <a href="#">線上服務</a>
+                    <a href="#">社區資訊</a>
+                    <a href="#">系統管理</a>
+                </div>
+
+                <div class="footer-section">
+                    <h4>支持</h4>
+                    <a href="#">常見問題</a>
+                    <a href="#">技術支援</a>
+                    <a href="#">意見反饋</a>
+                    <a href="#">聯絡我們</a>
+                </div>
+
+                <div class="footer-section">
+                    <h4>法律</h4>
+                    <a href="#">隱私政策</a>
+                    <a href="#">使用條款</a>
+                    <a href="#">免責聲明</a>
+                    <a href="#">無障礙聲明</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>
+                    © 2026 新北市五常社區發展協會 ×
+                    五常物業規劃顧問股份有限公司<br />
+                    All rights reserved. 設計與開發由 Claude Haiku 4.5 AI
+                    自動化完成<br />
+                    <a href="#" style="color: inherit">隱私</a> •
+                    <a href="#" style="color: inherit">條款</a> •
+                    <a href="#" style="color: inherit">設定</a>
+                </p>
+            </div>
+        </footer>
+
+        <script>
+            // 倒數計時器
+            function startCountdown() {
+                const countdownElement = document.getElementById("countdown")
+                let timeLeft = 7200 // 2 hours in seconds
+
+                function updateCountdown() {
+                    const hours = Math.floor(timeLeft / 3600)
+                    const minutes = Math.floor((timeLeft % 3600) / 60)
+                    const seconds = timeLeft % 60
+
+                    countdownElement.textContent =
+                        String(hours).padStart(2, "0") +
+                        ":" +
+                        String(minutes).padStart(2, "0") +
+                        ":" +
+                        String(seconds).padStart(2, "0")
+
+                    if (timeLeft > 0) {
+                        timeLeft--
+                        setTimeout(updateCountdown, 1000)
+                    } else {
+                        countdownElement.textContent = "SYSTEM ONLINE"
+                        countdownElement.style.color = "#4CAF50"
+                    }
+                }
+
+                updateCountdown()
+            }
+
+            // 平滑滾動
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener("click", function (e) {
+                    e.preventDefault()
+                    const target = document.querySelector(
+                        this.getAttribute("href")
+                    )
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        })
+                    }
+                })
+            })
+
+            // 頁面載入時啟動倒數計時
+            window.addEventListener("load", startCountdown)
+        </script>
+    </body>
+</html>
+
+
+
+

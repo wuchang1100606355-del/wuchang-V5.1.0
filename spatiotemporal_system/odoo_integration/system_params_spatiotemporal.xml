@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- 時空系統啟用設定 -->
+        <record id="spatiotemporal_system_enabled" model="ir.config_parameter">
+            <field name="key">spatiotemporal.system.enabled</field>
+            <field name="value">True</field>
+        </record>
+        
+        <!-- AI 小 J 時空能力授權 -->
+        <record id="ai_j_spatiotemporal_authorization" model="ir.config_parameter">
+            <field name="key">ai.j.spatiotemporal.authorization</field>
+            <field name="value">full</field>
+        </record>
+        
+        <!-- OpenAI API Key (AI 小 J 專用) -->
+        <record id="ai_j_openai_api_key" model="ir.config_parameter">
+            <field name="key">ai.j.openai.api.key</field>
+            <field name="value"></field>
+        </record>
+        
+        <!-- Anthropic API Key (AI 小 J 專用) -->
+        <record id="ai_j_anthropic_api_key" model="ir.config_parameter">
+            <field name="key">ai.j.anthropic.api.key</field>
+            <field name="value"></field>
+        </record>
+        
+        <!-- Google API Key (AI 小 J 專用) -->
+        <record id="ai_j_google_api_key" model="ir.config_parameter">
+            <field name="key">ai.j.google.api.key</field>
+            <field name="value"></field>
+        </record>
+        
+        <!-- Google Calendar API 設定 -->
+        <record id="ai_j_google_calendar_enabled" model="ir.config_parameter">
+            <field name="key">ai.j.google.calendar.enabled</field>
+            <field name="value">True</field>
+        </record>
+        
+        <!-- 雲端算力啟用設定 -->
+        <record id="ai_j_cloud_compute_enabled" model="ir.config_parameter">
+            <field name="key">ai.j.cloud.compute.enabled</field>
+            <field name="value">True</field>
+        </record>
+        
+        <!-- 時空系統版本 -->
+        <record id="spatiotemporal_system_version" model="ir.config_parameter">
+            <field name="key">spatiotemporal.system.version</field>
+            <field name="value">1.0.0</field>
+        </record>
+        
+        <!-- 時空系統路徑 -->
+        <record id="spatiotemporal_system_path" model="ir.config_parameter">
+            <field name="key">spatiotemporal.system.path</field>
+            <field name="value">C:\wuchang V5.1.0\spatiotemporal_system</field>
+        </record>
+        
+        <!-- AI 小 J 時空能力清單 -->
+        <record id="ai_j_spatiotemporal_capabilities" model="ir.config_parameter">
+            <field name="key">ai.j.spatiotemporal.capabilities</field>
+            <field name="value">時空事件管理,時間空間建議,排程優化,活動模式分析,空間使用率預測,社區服務管理</field>
+        </record>
+        
+    </data>
+</odoo>

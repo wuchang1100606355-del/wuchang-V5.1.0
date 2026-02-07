@@ -1,0 +1,18 @@
+# Security Policy of Wuchang.Life
+# ==================================================================
+# DEFINITION:
+# Security here is defined as "Protection of Human Fairness", not just code integrity.
+# 
+# REPORTING:
+# If you find a bug, fix it yourself or tell us politely.
+# If you attempt to exploit it, the Quantum Black Hole will erase you.
+#
+# CONTACT:
+# Contact: mailto:juers@wuchang.life
+# Preferred-Languages: zh-TW, en-US
+#
+# POLICY:
+# https://wuchang.life/wuchang_rules.html
+#
+# CANONICAL:
+# https://wuchang.life/.well-known/security.txt

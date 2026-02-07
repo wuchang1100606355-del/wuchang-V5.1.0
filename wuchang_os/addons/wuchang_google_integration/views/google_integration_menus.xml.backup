@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Google Workspace 整合主選單 -->
+    <menuitem id="menu_google_integration_root"
+              name="Google Workspace"
+              sequence="50"
+              groups="group_google_integration_user"/>
+
+    <!-- Google Meet 子選單 -->
+    <menuitem id="menu_google_meet"
+              name="Google Meet 會議"
+              parent="menu_google_integration_root"
+              action="action_google_meet"
+              sequence="10"
+              groups="group_google_integration_user"/>
+
+    <!-- Google 表單子選單 -->
+    <menuitem id="menu_google_form"
+              name="Google 表單"
+              parent="menu_google_integration_root"
+              action="action_google_form"
+              sequence="20"
+              groups="group_google_integration_user"/>
+
+    <!-- AI 公文生成子選單 -->
+    <menuitem id="menu_google_document_ai"
+              name="AI 公文生成"
+              parent="menu_google_integration_root"
+              action="action_google_document_ai"
+              sequence="30"
+              groups="group_google_integration_user"/>
+
+    <!-- Google Drive 子選單 -->
+    <menuitem id="menu_google_drive"
+              name="Google Drive 檔案"
+              parent="menu_google_integration_root"
+              action="action_google_drive_file"
+              sequence="40"
+              groups="group_google_integration_user"/>
+
+    <!-- 公文範本子選單 -->
+    <menuitem id="menu_document_template"
+              name="公文範本"
+              parent="menu_google_integration_root"
+              action="action_document_template"
+              sequence="50"
+              groups="group_google_integration_admin"/>
+
+    <!-- Google Workspace 設定（僅管理員） -->
+    <menuitem id="menu_google_integration_settings"
+              name="設定"
+              parent="menu_google_integration_root"
+              sequence="90"
+              groups="group_google_integration_admin"/>
+</odoo>

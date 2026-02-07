@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-01-12T00:43:21.442415",
+  "local_ip": "192.168.50.249",
+  "devices": {
+    "192.168.50.1": {
+      "ip": "192.168.50.1",
+      "mac": "60-cf-84-37-74-28",
+      "hostname": "RT-BE86U-7428.wuchang.life",
+      "vendor": "Unknown",
+      "open_ports": [
+        "HTTP(80)"
+      ],
+      "type": "LAN Device"
+    },
+    "192.168.50.84": {
+      "ip": "192.168.50.84",
+      "mac": "d4-d8-53-5f-6b-df",
+      "hostname": "LUNGsMSI.wuchang.life",
+      "vendor": "Unknown",
+      "open_ports": [
+        "SSH(22)",
+        "HTTP(80)",
+        "HTTPS(443)",
+        "Odoo(8069)"
+      ],
+      "type": "LAN Device"
+    },
+    "192.168.50.88": {
+      "ip": "192.168.50.88",
+      "mac": "c6-fd-8d-1a-63-d0",
+      "hostname": "POS-PC.wuchang.life",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "192.168.50.128": {
+      "ip": "192.168.50.128",
+      "mac": "80-38-fb-88-b5-8f",
+      "hostname": "Unknown",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "192.168.50.255": {
+      "ip": "192.168.50.255",
+      "mac": "ff-ff-ff-ff-ff-ff",
+      "hostname": "Unknown",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "172.19.229.214": {
+      "ip": "172.19.229.214",
+      "mac": "00-15-5d-12-eb-e8",
+      "hostname": "Unknown",
+      "vendor": "Microsoft/Xbox",
+      "open_ports": [
+        "HTTP(80)",
+        "HTTPS(443)",
+        "Odoo(8069)"
+      ],
+      "type": "LAN Device"
+    },
+    "172.19.239.255": {
+      "ip": "172.19.239.255",
+      "mac": "ff-ff-ff-ff-ff-ff",
+      "hostname": "Unknown",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    }
+  }
+}

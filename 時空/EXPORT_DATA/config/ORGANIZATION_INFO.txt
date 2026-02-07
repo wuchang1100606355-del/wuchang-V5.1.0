@@ -1,0 +1,216 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║         新北市三重區五常社區發展協會 - 組織信息確認                       ║
+║                                                                            ║
+║         Wuchang Community Development Association                          ║
+║         Sanchong District, New Taipei City                                 ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+【組織基本資訊】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+組織中文名稱:    新北市三重區五常社區發展協會
+組織英文名稱:    Wuchang Community Development Association
+                 Sanchong District, New Taipei City
+
+組織類型:        社團法人 (Nonprofit Association)
+立案機關:        新北市政府 (New Taipei City Government)
+立案字號:        新北市社區補字1100606355號
+立案日期:        1997-10-26
+立案狀態:        已驗證 ✓
+
+所在地區:        新北市三重區
+
+服務范圍:        新北市三重區三里（共3里）
+  ├─ 五常里 (Wuchang Li)
+  ├─ 五順里 (Wushun Li)
+  └─ 仁忠里 (Renzhong Li)
+
+內政部立案:      是 ✓ （已驗證）
+免稅資格:        是 ✓
+
+【管理團隊】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+創始人:          江政隆
+身分證字號:      F1247717117
+職務:            超級管理員 (Super Admin)
+聯絡信箱:        admin@wuchang.life
+授權狀態:        已授權 ✓
+
+【系統與服務資訊】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+網域名稱:         wuchang.life
+管理員帳號:       admin@wuchang.life
+Google 專案 ID:   my-j-483304
+
+【Google Workspace for Nonprofits】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Workspace 版本:   Google Workspace Business Standard
+方案成本:         FREE (Google for Nonprofits)
+狀態:             ✅ 已啟用並驗證
+啟用日期:         2026-01-08
+
+已啟用的服務:
+  ✅ Gmail (admin@wuchang.life)
+  ✅ Google Drive (無限儲存空間)
+  ✅ Google Docs (文件共享編輯)
+  ✅ Google Sheets (試算表)
+  ✅ Google Calendar (日程管理)
+  ✅ Google Meet (視訊會議)
+  ✅ Google Chat (即時通訊)
+  ✅ Google Groups (郵件列表)
+  ✅ Google Admin Console (組織管理)
+
+【五常 AI 系統】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+系統名稱:        Wuchang OS v5.1.0
+系統路徑:        C:\wuchang V5.1.0
+部署環境:        Docker Compose + Google Cloud Platform
+AI 模式:         Local Ollama (優先) / Vertex AI (備用)
+
+核心功能:
+  🤖 小j AI 助手 (Vertex AI Gemini)
+  🌐 瀏覽器代理 (Web Browsing Agent)
+  🎨 圖像生成 (Vertex AI Imagen)
+  📁 多媒體管理 (文件/圖片/音訊/影片)
+  📧 Google Workspace APIs 整合
+
+【成本效益分析】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+年度成本節省:
+  • Google Workspace Business Standard (1使用者): $144/年
+  • Google Drive 無限儲存: $240/年
+  • Google Ad Grants: $120,000/年 (廣告額度)
+  • 其他 Google Cloud 服務: $1,200/年
+  
+  ────────────────────────────────
+  總計年度節省: $121,584 USD (~$3,800,000 TWD)
+
+【關鍵資源】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 文件與指南:
+  • config/NONPROFIT_WORKSPACE_ACTIVE.md       - Workspace 啟用確認
+  • config/ORGANIZATION_AUTHORIZATION.md       - 組織授權書
+  • config/ORGANIZATION_INFO.txt               - 組織信息確認
+  • docs/MULTIMEDIA_AI_FEATURES.md             - 多媒體與 AI 功能
+  • docs/GOOGLE_NONPROFIT_SETUP.md             - Nonprofit 設定指南
+  • docs/AI_BROWSER_AGENT_USAGE.md             - 瀏覽器代理使用
+
+🛠️ 系統工具:
+  • tools/local_root_control_gui.ps1           - 控制台 (GUI)
+  • tools/local_root_control.ps1               - 控制台 (文字)
+
+📍 配置位置:
+  • config/gcp/littlej-sa.json                 - Google 服務帳戶金鑰
+  • docker-compose.yml                         - 容器配置
+  • uploads/                                   - 多媒體檔案目錄
+
+【支援與聯絡】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Google Workspace 支援:        https://support.google.com/a
+Nonprofit 專案支援:           nonprofits@google.com
+Google Cloud 支援:            https://cloud.google.com/support
+五常系統技術支援:             admin@wuchang.life
+
+【五常 AI 系統啟動】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+啟動控制台:
+  powershell.exe -NoLogo -ExecutionPolicy Bypass `
+    -File "C:\wuchang V5.1.0\tools\local_root_control_gui.ps1"
+
+系統將啟動以下界面:
+  ✓ 系統控制面板 (Start/Stop/Parameters/Logs)
+  ✓ AI 聊天助手 (小j AI)
+  ✓ 網頁瀏覽代理 (Web Browser Agent)
+  ✓ 多媒體上傳功能 (檔案/資料夾)
+  ✓ AI 圖像生成 (Vertex AI Imagen)
+  ✓ Google Workspace APIs 整合
+
+【確認事項】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ 組織名稱: 新北市三重區五常社區發展協會
+✓ 服務范圍: 五常里、五順里、仁忠里 (3里)
+✓ 網域: wuchang.life
+✓ 管理員帳號: admin@wuchang.life
+✓ 創始人: 江政隆 F1247717117
+✓ Nonprofit 資格已驗證
+✓ Workspace 已啟用並正常運作
+✓ 五常 AI 系統已部署
+✓ 所有 API 已配置完成
+✓ 組織參數已設定
+
+【設定時間戳記】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+首次設定:    2026-01-08 14:25:01 (UTC+8)
+服務區域更新: 2026-01-08 14:26:58 (UTC+8)
+驗證狀態:    ✅ 已確認
+有效期限:    永久（或至組織終止為止）
+
+【Odoo 系統參數清單】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+組織相關參數:
+wuchang.organization.name = 新北市三重區五常社區發展協會
+wuchang.organization.full_name = Wuchang Community Development Association, Sanchong District, New Taipei City
+wuchang.organization.address = 新北市三重區
+wuchang.organization.districts = 五常里、五順里、仁忠里
+wuchang.organization.district_1 = 五常里
+wuchang.organization.district_2 = 五順里
+wuchang.organization.district_3 = 仁忠里
+wuchang.organization.service_area = 新北市三重區（五常里、五順里、仁忠里）
+wuchang.organization.founder = 江政隆 F1247717117
+
+政府立案相關參數:
+wuchang.organization.government = 新北市政府
+wuchang.organization.legal_status = 社團法人
+wuchang.organization.registration_number = 新北市社區補字1100606355號
+wuchang.organization.registration_date = 1997-10-26
+wuchang.organization.registration_status = verified
+
+Google Workspace 相關參數:
+wuchang.google.nonprofit_verified = true
+wuchang.google.nonprofit_admin = admin@wuchang.life
+wuchang.google.workspace_domain = wuchang.life
+wuchang.google.workspace_edition = business_standard
+wuchang.google.nonprofit_status = active
+
+AI 系統相關參數:
+wuchang.ai_mode = local_ollama
+wuchang.llm_base_url = http://192.168.50.1:11434
+wuchang.cloud_approved = true
+wuchang.google.project_id = my-j-483304
+wuchang.google.location = us-central1
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║  新北市三重區五常社區發展協會已正式啟用 Google Workspace for Nonprofits  ║
+║                                                                            ║
+║  服務范圍: 五常里、五順里、仁忠里                                        ║
+║  管理員: admin@wuchang.life | 創始人: 江政隆 F1247717117                ║
+║                                                                            ║
+║  年度成本節省: $121,584 USD (~$3,800,000 TWD)                           ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+最後更新: 2026-01-08 14:26:58
+Powered by 小j AI 🤖 | Wuchang OS v5.1.0 | Google for Nonprofits ☁️
+
+
+---
+### 🔐 創世者不可更改時空戳記 (Creator's Immutable Spatiotemporal Timestamp)
+> 此文件包含真實開發歷程與核心技術架構，由自然人創世者親自研發與驗證。
+> *   **唯一研發者 (Sole Developer/Inventor)**: 江政隆 (Juers)
+> *   **國籍與身分證號 (Nationality & ID)**: 中華民國台灣 F124771717
+> *   **通訊地址 (Address)**: 新北市三重區仁義街161號1樓
+> *   **載體註記 (Carrier Note)**: 法人載體待定 (Legal Entity TBD) - 保留選擇權
+> *   **生成時間 (Generated At)**: 2026-02-04 10:04:16
+---

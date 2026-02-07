@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 專利紀錄: 整合式物業管理系統 -->
+        <record id="patent_integrated_property_system" model="wuchang.property.patent">
+            <field name="name">整合式物業管理系統</field>
+            <field name="patent_number">113206785</field>
+            <field name="patent_type">utility</field>
+            <field name="applicant">新北市三重區五常社區發展協會 (TBD)</field>
+            <field name="description">
+                本新型專利涉及一種整合式物業管理系統，旨在解決傳統物業管理中資訊不透明、流程斷裂等問題。
+                
+                核心架構 (詳見 docs/PATENT_113206785_ARCHITECTURE.md):
+                1. 安全管理系統 (System 100): 整合臉部辨識、無人保全與菁英保全網路。
+                2. 社區支援和電子商務平台 (System 200): 包含區塊鏈交易與社區互動介面。
+                3. 商業營運和物業管理整合系統 (System 300): 整合外部商家與資料分析。
+            </field>
+            <field name="state">active</field>
+        </record>
+    </data>
+</odoo>

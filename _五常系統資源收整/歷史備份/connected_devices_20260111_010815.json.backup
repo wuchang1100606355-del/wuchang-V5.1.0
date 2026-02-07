@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-01-11T01:08:15.154616",
+  "local_ip": "192.168.50.249",
+  "devices": {
+    "192.168.50.1": {
+      "ip": "192.168.50.1",
+      "mac": "60-cf-84-37-74-28",
+      "hostname": "RT-BE86U-7428.wuchang.life",
+      "vendor": "Unknown",
+      "open_ports": [
+        "HTTP(80)"
+      ],
+      "type": "LAN Device"
+    },
+    "192.168.50.5": {
+      "ip": "192.168.50.5",
+      "mac": "f2-c2-31-7d-ef-08",
+      "hostname": "Unknown",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "192.168.50.84": {
+      "ip": "192.168.50.84",
+      "mac": "d4-d8-53-5f-6b-df",
+      "hostname": "LUNGsMSI.wuchang.life",
+      "vendor": "Unknown",
+      "open_ports": [
+        "SSH(22)",
+        "HTTP(80)",
+        "HTTPS(443)",
+        "HTTP-Alt(8080)",
+        "Odoo(8069)"
+      ],
+      "type": "LAN Device"
+    },
+    "192.168.50.88": {
+      "ip": "192.168.50.88",
+      "mac": "c6-fd-8d-1a-63-d0",
+      "hostname": "POS-PC.wuchang.life",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "192.168.50.128": {
+      "ip": "192.168.50.128",
+      "mac": "80-38-fb-88-b5-8f",
+      "hostname": "Unknown",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "192.168.50.141": {
+      "ip": "192.168.50.141",
+      "mac": "1c-3e-84-67-c0-16",
+      "hostname": "Unknown",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "192.168.50.180": {
+      "ip": "192.168.50.180",
+      "mac": "40-2a-8f-a6-8d-22",
+      "hostname": "DZPRINTER.wuchang.life",
+      "vendor": "Unknown",
+      "open_ports": [
+        "HTTP(80)"
+      ],
+      "type": "LAN Device"
+    },
+    "192.168.50.255": {
+      "ip": "192.168.50.255",
+      "mac": "ff-ff-ff-ff-ff-ff",
+      "hostname": "Unknown",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "172.19.228.100": {
+      "ip": "172.19.228.100",
+      "mac": "00-15-5d-99-a9-dd",
+      "hostname": "Unknown",
+      "vendor": "Microsoft/Xbox",
+      "open_ports": [],
+      "type": "LAN Device"
+    },
+    "172.19.239.255": {
+      "ip": "172.19.239.255",
+      "mac": "ff-ff-ff-ff-ff-ff",
+      "hostname": "Unknown",
+      "vendor": "Unknown",
+      "open_ports": [],
+      "type": "LAN Device"
+    }
+  }
+}

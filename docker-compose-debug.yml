@@ -1,0 +1,14 @@
+services:
+  wuchang-tunnel:
+    image: alpine:latest
+    container_name: wuchang-tunnel
+    restart: no
+    command: ls -lR /etc/cloudflared
+    volumes:
+      - ./config/cloudflared:/etc/cloudflared
+    networks:
+      - wuchangv510_default
+
+networks:
+  wuchangv510_default:
+    external: true

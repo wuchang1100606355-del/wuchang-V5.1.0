@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="resident_portal_home" name="Resident Portal Home">
+        <t t-call="website.layout">
+            <!-- Hide Standard Header/Footer for App-like experience -->
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            
+            <div id="wrap" class="o_portal_wrap" style="background-color: #f8f9fa; min-height: 100vh;">
+                <link rel="stylesheet" href="/wuchang_design_system/static/src/css/resident_portal.css"/>
+                <div id="resident_portal" class="container-fluid p-0 pb-5 mb-5">
+                    <!-- 1. Header Card -->
+                    <div class="portal-header p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1 text-white">
+                                    <t t-if="unit and unit.community_id">
+                                        <t t-esc="unit.community_id.name"/>
+                                    </t>
+                                    <t t-else="">五常社區</t>
+                                </h4>
+                                <div class="d-flex align-items-center text-white-50">
+                                    <span class="badge badge-light text-dark mr-2" style="font-size: 0.9rem;">
+                                        <t t-if="unit"><t t-esc="unit.name"/></t>
+                                        <t t-else="">未綁定戶別</t>
+                                    </span>
+                                    <small><t t-esc="partner.name"/></small>
+                                </div>
+                            </div>
+                            <div class="text-right text-white">
+                                    <i class="fa fa-bell-o fa-2x"></i>
+                            </div>
+                        </div>
+                        <!-- Stats / Alerts -->
+                        <div class="mt-4 row text-center text-white">
+                            <div class="col-6 border-right border-white-50">
+                                <small class="text-white-50">管理費</small>
+                                <div class="font-weight-bold h5 mb-0">已繳清</div>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-white-50">未領包裹</small>
+                                <div class="font-weight-bold h5 mb-0">0 件</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Quick Actions Grid -->
+                    <div class="portal-grid p-3 mt-n3">
+                        <div class="card border-0 shadow-sm rounded-lg">
+                            <div class="card-body p-3">
+                                <div class="row text-center">
+                                    <!-- Row 1 -->
+                                    <div class="col-4 mb-3">
+                                        <a href="/web#action=wuchang_property_toolkits.action_property_complaint" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-wrench fa-2x text-primary"></i>
+                                            </div>
+                                            <small>報修申請</small>
+                                        </a>
+                                    </div>
+                                    <div class="col-4 mb-3">
+                                        <a href="#" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-cube fa-2x text-warning"></i>
+                                            </div>
+                                            <small>我的包裹</small>
+                                        </a>
+                                    </div>
+                                        <div class="col-4 mb-3">
+                                        <a href="#" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-bullhorn fa-2x text-danger"></i>
+                                            </div>
+                                            <small>社區公告</small>
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Row 2 -->
+                                    <div class="col-4 mb-3">
+                                            <a href="/community/wish-tree" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-tree fa-2x text-success"></i>
+                                            </div>
+                                            <small>許願樹</small>
+                                        </a>
+                                    </div>
+                                    <div class="col-4 mb-3">
+                                            <a href="/resident/wallet" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-credit-card fa-2x text-info"></i>
+                                            </div>
+                                            <small>我的錢包</small>
+                                        </a>
+                                    </div>
+                                        <div class="col-4 mb-3">
+                                            <a href="#" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-calendar-check-o fa-2x text-secondary"></i>
+                                            </div>
+                                            <small>公設預約</small>
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Row 3 -->
+                                    <div class="col-4 mb-3">
+                                            <a href="/web#action=wuchang_google_integration.action_google_home" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-google fa-2x text-primary"></i>
+                                            </div>
+                                            <small>Google Home</small>
+                                        </a>
+                                    </div>
+                                        <div class="col-4 mb-3">
+                                            <a href="#" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-envelope-o fa-2x text-dark"></i>
+                                            </div>
+                                            <small>意見箱</small>
+                                        </a>
+                                    </div>
+                                        <div class="col-4 mb-3">
+                                            <a href="#" class="text-decoration-none text-dark">
+                                            <div class="icon-box mb-2">
+                                                <i class="fa fa-phone fa-2x text-success"></i>
+                                            </div>
+                                            <small>聯絡中心</small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Information Feed -->
+                    <div class="portal-feed px-3">
+                        <h5 class="mb-3 font-weight-bold text-dark pl-1">最新動態</h5>
+                        <t t-foreach="announcements" t-as="news">
+                            <div class="card mb-3 border-0 bg-white shadow-sm">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="card-title mb-1 text-truncate font-weight-bold text-dark"><t t-esc="news.name"/></h6>
+                                        <small class="text-muted"><t t-esc="news.date_published"/></small>
+                                    </div>
+                                    <p class="card-text text-muted small mb-0 mt-1">
+                                        <t t-if="news.content">
+                                            <t t-esc="news.content[:50] + '...' if news.content and len(news.content) > 50 else news.content"/>
+                                        </t>
+                                    </p>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-if="not announcements">
+                            <div class="text-center text-muted py-5">
+                                <i class="fa fa-check-circle-o fa-3x mb-3 text-black-50"></i>
+                                <div>目前沒有最新公告</div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                
+                <!-- 4. Sticky Bottom Navigation -->
+                <div class="fixed-bottom bg-white border-top shadow-lg d-flex justify-content-around py-2" style="z-index: 1000;">
+                    <a href="/resident/home" class="text-center text-primary text-decoration-none">
+                        <i class="fa fa-home fa-lg"></i>
+                        <div style="font-size: 10px; margin-top: 4px;">首頁</div>
+                    </a>
+                    <a href="#" class="text-center text-secondary text-decoration-none">
+                            <i class="fa fa-th-large fa-lg"></i>
+                        <div style="font-size: 10px; margin-top: 4px;">服務</div>
+                    </a>
+                    <a href="#" class="text-center text-secondary text-decoration-none">
+                            <i class="fa fa-comment-o fa-lg"></i>
+                        <div style="font-size: 10px; margin-top: 4px;">訊息</div>
+                    </a>
+                    <a href="/my/home" class="text-center text-secondary text-decoration-none">
+                            <i class="fa fa-user-o fa-lg"></i>
+                        <div style="font-size: 10px; margin-top: 4px;">我的</div>
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="resident_wallet_page" name="Resident Wallet &amp; Accounting">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            
+            <div id="wrap" class="o_portal_wrap" style="background-color: #f8f9fa; min-height: 100vh;">
+                <link rel="stylesheet" href="/wuchang_design_system/static/src/css/resident_portal.css"/>
+                
+                <!-- Header -->
+                <div class="portal-header p-4 pb-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="/resident/home" class="text-white">
+                            <i class="fa fa-arrow-left fa-lg"></i>
+                        </a>
+                        <h5 class="text-white mb-0">會計小幫手</h5>
+                        <div style="width: 20px;"></div>
+                    </div>
+                    
+                    <div class="text-center text-white mt-4">
+                        <small class="text-white-50">本月支出</small>
+                        <h2 class="font-weight-bold mb-0">
+                            $<t t-esc="'{:,}'.format(int(total_expense))"/>
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="container-fluid mt-n4 px-3">
+                    
+                    <!-- Tools Card -->
+                    <div class="card border-0 shadow-sm rounded-lg mb-3">
+                        <div class="card-body p-3">
+                            <div class="row text-center">
+                                <div class="col-6 border-right">
+                                    <a href="#" class="text-decoration-none text-dark">
+                                        <i class="fa fa-qrcode fa-2x text-primary mb-2"></i>
+                                        <div class="small">手機條碼</div>
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="#" class="text-decoration-none text-dark">
+                                        <i class="fa fa-camera fa-2x text-success mb-2"></i>
+                                        <div class="small">掃描發票</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice List -->
+                    <h6 class="text-muted ml-1 mb-2">近期消費</h6>
+                    <div class="list-group shadow-sm rounded-lg overflow-hidden mb-5">
+                        <t t-foreach="invoices" t-as="inv">
+                            <div class="list-group-item border-0 border-bottom d-flex justify-content-between align-items-center p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="mr-3 text-center" style="width: 40px;">
+                                        <div class="bg-light rounded-circle p-2">
+                                            <t t-if="inv.category == 'food'">
+                                                <i class="fa fa-cutlery text-warning"></i>
+                                            </t>
+                                            <t t-elif="inv.category == 'transport'">
+                                                <i class="fa fa-bus text-info"></i>
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-shopping-bag text-secondary"></i>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="font-weight-bold text-dark"><t t-esc="inv.seller_name or '未知商家'"/></div>
+                                        <small class="text-muted"><t t-esc="inv.date"/></small>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-weight-bold">-$<t t-esc="'{:,}'.format(int(inv.amount))"/></div>
+                                    <t t-if="inv.lottery_result == 'won'">
+                                        <small class="text-danger font-weight-bold">中獎!</small>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-if="not invoices">
+                            <div class="list-group-item text-center p-5 text-muted">
+                                <i class="fa fa-inbox fa-3x mb-3 text-black-50"></i>
+                                <p>目前沒有發票紀錄</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- Bottom Nav (Reuse) -->
+                <div class="fixed-bottom bg-white border-top py-2 safe-area-bottom shadow-lg">
+                    <div class="row no-gutters text-center">
+                        <div class="col">
+                            <a href="/resident/home" class="d-block text-secondary text-decoration-none">
+                                <i class="fa fa-home fa-lg mb-1"></i>
+                                <div style="font-size: 0.7rem;">首頁</div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/community/wish-tree" class="d-block text-secondary text-decoration-none">
+                                <i class="fa fa-tree fa-lg mb-1"></i>
+                                <div style="font-size: 0.7rem;">許願樹</div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/resident/wallet" class="d-block text-primary text-decoration-none">
+                                <i class="fa fa-credit-card fa-lg mb-1"></i>
+                                <div style="font-size: 0.7rem;">錢包</div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="#" class="d-block text-secondary text-decoration-none">
+                                <i class="fa fa-user fa-lg mb-1"></i>
+                                <div style="font-size: 0.7rem;">我的</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

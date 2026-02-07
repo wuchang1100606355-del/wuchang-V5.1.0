@@ -1,0 +1,525 @@
+# Caddyfile for Wuchang OS
+
+{
+    # 全域設定（可選）
+    # debug
+}
+
+# 根域與應用入口
+wuchang.life, app.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "no-referrer-when-downgrade"
+        -Server
+    }
+    @root path /
+    redir @root /pos 301
+    @pos path /pos
+    redir @pos /pos_simulator 302
+    @ad path /ad
+    redir @ad /pos_simulator?view=ad 302
+    @menu path /menu
+    redir @menu /pos_simulator?view=menu 302
+    # handle_path /ops* {
+    #     reverse_proxy uptime-kuma:3001
+    # }
+    # handle_path /portainer* {
+    #     reverse_proxy portainer:9000
+    # }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+wuchang.global, app.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "no-referrer-when-downgrade"
+        -Server
+    }
+    @root path /
+    redir @root /pos 301
+    @pos path /pos
+    redir @pos /pos_simulator 302
+    @ad path /ad
+    redir @ad /pos_simulator?view=ad 302
+    @menu path /menu
+    redir @menu /pos_simulator?view=menu 302
+    # handle_path /ops* {
+    #     reverse_proxy uptime-kuma:3001
+    # }
+    # handle_path /portainer* {
+    #     reverse_proxy portainer:9000
+    # }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+status.wuchang.life, monitor.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy uptime-kuma:3001
+}
+
+status.wuchang.global, monitor.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy uptime-kuma:3001
+}
+
+# Open WebUI（AI 控台）
+ai.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy open-webui:8080
+}
+
+ai.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy open-webui:8080
+}
+
+# LLM API Endpoint (Ollama)
+llm.wuchang.life, llm.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        Access-Control-Allow-Headers "*"
+    }
+    respond /health 200
+    reverse_proxy ollama:11434
+}
+
+# ASR Endpoint (Whisper)
+asr.wuchang.life, asr.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy wyoming-whisper:10300
+}
+
+# TTS Endpoint (Piper)
+tts.wuchang.life, tts.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy wyoming-piper:10200
+}
+
+legacy.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    @root path /
+    redir @root /pos 302
+    @pos path /pos
+    redir @pos /pos_simulator?store=聊國咖啡重新總店 302
+    reverse_proxy wuchang-web:8069
+}
+
+pos.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    @root path /
+    redir @root /pos 302
+    @pos path /pos
+    redir @pos /pos_simulator?store=聊國咖啡仁義分店 302
+    reverse_proxy wuchang-web:8069
+}
+
+
+
+odoo.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+odoo.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+# UI 子域名（登入與前台）
+ui.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    @root path /
+    redir @root /web/login 302
+    reverse_proxy wuchang-web:8069
+}
+
+ui.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    @root path /
+    redir @root /web/login 302
+    reverse_proxy wuchang-web:8069
+}
+
+# 智能管家子域名（小j）
+butler.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+        X-Platform "butler"
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+butler.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+        X-Platform "butler"
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+staff.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+staff.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072 {
+        transport http {
+            read_timeout 90s
+            write_timeout 90s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+    respond /health 200
+    reverse_proxy wuchang-web:8069 {
+        transport http {
+            read_timeout 60s
+            write_timeout 60s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+}
+
+admin.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072 {
+        transport http {
+            read_timeout 90s
+            write_timeout 90s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+    respond /health 200
+    reverse_proxy wuchang-web:8069 {
+        transport http {
+            read_timeout 60s
+            write_timeout 60s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+}
+
+admin.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072 {
+        transport http {
+            read_timeout 90s
+            write_timeout 90s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+    respond /health 200
+    reverse_proxy wuchang-web:8069 {
+        transport http {
+            read_timeout 60s
+            write_timeout 60s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+}
+
+# 咖啡館子域名（POS 首頁）
+cafe.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072 {
+        transport http {
+            read_timeout 90s
+            write_timeout 90s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+    respond /health 200
+    @root path /
+    redir @root /pos 302
+    @pos path /pos
+    redir @pos /pos_simulator 302
+    reverse_proxy wuchang-web:8069
+}
+
+cafe.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    @root path /
+    redir @root /pos 302
+    @pos path /pos
+    redir @pos /pos_simulator 302
+    reverse_proxy wuchang-web:8069
+}
+
+bp.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069 {
+        transport http {
+            read_timeout 60s
+            write_timeout 60s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+}
+
+bp.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072 {
+        transport http {
+            read_timeout 90s
+            write_timeout 90s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+    respond /health 200
+    reverse_proxy wuchang-web:8069 {
+        transport http {
+            read_timeout 60s
+            write_timeout 60s
+            dial_timeout 10s
+            keepalive 30s
+        }
+    }
+}
+
+pos.bp.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @root path /
+    redir @root /pos 302
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+pos.bp.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @root path /
+    redir @root /pos 302
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+verify.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+verify.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+# Win-VM (Shop/Windows)
+shop.wuchang.life, win.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy host.docker.internal:8082
+}
+
+shop.wuchang.global, win.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy host.docker.internal:8082
+}
+
+# Odoo-VM (Direct VM Access)
+vm-odoo.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy host.docker.internal:8001
+}
+
+vm-odoo.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy host.docker.internal:8001
+}

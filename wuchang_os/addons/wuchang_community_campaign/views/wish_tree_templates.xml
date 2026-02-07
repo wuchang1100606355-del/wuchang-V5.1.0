@@ -1,0 +1,99 @@
+<odoo>
+  <template id="wish_tree_page" name="Community Wish Tree">
+    <t t-call="website.layout">
+      <div id="wrap" class="wish-tree-wrapper">
+        <section class="hero-section">
+          <div class="container text-center">
+            <h1 class="display-3 text-gradient mb-3">社區願望樹</h1>
+            <p class="lead text-white-50 mb-5">每一個微小的願望，都是改變社區的力量</p>
+            <div class="glowing-orb"></div>
+          </div>
+        </section>
+        <div class="container main-content">
+          <t t-foreach="campaigns" t-as="campaign">
+            <div class="row justify-content-center mb-5">
+              <div class="col-md-10">
+                <div class="card glass-card funding-card p-4">
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <h2 t-field="campaign.name" class="campaign-title"/>
+                      <p t-field="campaign.description" class="campaign-desc"/>
+                    </div>
+                    <div class="col-md-4 text-center">
+                      <div class="funding-status">
+                        <span class="d-block text-muted">目前資金</span>
+                        <span class="h2 currency-val" t-esc="campaign.current_amount"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="progress mt-3" style="height: 10px;">
+                    <div class="progress-bar gradient-bar" role="progressbar" t-att-style="'width: %s%%' % campaign.progress" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="wish-wall-header text-center mb-4">
+              <h3>住戶心聲</h3>
+              <button type="button" class="btn btn-primary btn-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#wishModal">
+                我要許願
+              </button>
+            </div>
+            <div class="row wish-grid" id="wishGrid">
+              <t t-foreach="campaign.wish_ids" t-as="wish">
+                <div class="col-md-4 col-sm-6 mb-4">
+                  <div t-attf-class="card wish-card h-100 theme-#{wish.color_theme}" t-att-data-id="wish.id">
+                    <div class="card-body d-flex flex-column">
+                      <h5 class="card-title" t-field="wish.name"/>
+                      <p class="card-text flex-grow-1" t-field="wish.description"/>
+                      <div class="wish-footer mt-3 d-flex justify-content-between align-items-center">
+                        <small class="text-white-50" t-field="wish.user_id.name"/>
+                        <button class="btn btn-sm btn-outline-light vote-btn" t-att-data-wish-id="wish.id">
+                          <span class="vote-count" t-esc="wish.vote_count"/>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </t>
+            </div>
+          </t>
+        </div>
+        <div class="modal fade" id="wishModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-modal">
+              <div class="modal-header border-0">
+                <h5 class="modal-title">許下您的願望</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="/community/wish/submit" method="post">
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">標題</label>
+                    <input class="form-control glass-input" name="title" required/>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">描述</label>
+                    <textarea class="form-control glass-input" name="description" rows="3"></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">主題色</label>
+                    <select class="form-select glass-input" name="color_theme">
+                      <option value="green">Green</option>
+                      <option value="blue">Blue</option>
+                      <option value="gold">Gold</option>
+                      <option value="pink">Pink</option>
+                    </select>
+                  </div>
+                  <input type="hidden" name="campaign_id" t-att-value="campaigns and campaigns[0].id or 0"/>
+                </div>
+                <div class="modal-footer border-0">
+                  <button type="submit" class="btn btn-primary btn-pill btn-glow">送出願望</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>

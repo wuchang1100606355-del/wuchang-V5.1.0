@@ -1,0 +1,221 @@
+<odoo>
+  <template id="voice_chat_page" name="自然語音對話">
+    <t t-call="website.layout">
+      <t t-call="wuchang_core.guardian_avatar_assets"/>
+      <div class="container my-5">
+        <h1 class="text-center mb-5">自然語音對話</h1>
+        
+        <div class="row align-items-center">
+            <!-- Avatar Column -->
+            <div class="col-md-4 text-center mb-4 mb-md-0">
+                <div style="width: 200px; height: 240px; margin: 0 auto;">
+                    <t t-call="wuchang_core.guardian_avatar_svg"/>
+                </div>
+                <div class="mt-3 fw-bold fs-4" style="color: #666;">小j</div>
+            </div>
+            
+            <!-- Chat/Bubble Column -->
+            <div class="col-md-8">
+                <div id="replyContainer" style="opacity: 0; transition: opacity 0.5s ease;">
+                    <div class="comic-bubble bubble-left">
+                        <div id="reply" class="comic-text">
+                            <!-- Response will appear here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <div class="mt-4 p-4 bg-light rounded shadow-sm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">你的話語：</label>
+                        <textarea id="recognized" class="form-control" rows="2" placeholder="正在聆聽..."></textarea>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button id="btnStart" class="btn btn-primary">
+                            <i class="fa fa-microphone"></i> 開始說話
+                        </button>
+                        <button id="btnStop" class="btn btn-secondary">停止</button>
+                        <button id="btnSend" class="btn btn-dark">
+                            <i class="fa fa-paper-plane"></i> 送出
+                        </button>
+                    </div>
+
+                    <hr/>
+                    
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <span class="text-muted small">語音合成：</span>
+                        <button id="btnSpeak" class="btn btn-success btn-sm">播報</button>
+                        <button id="btnSing" class="btn btn-warning btn-sm">唱出來</button>
+                        <select id="voiceSelect" class="form-select form-select-sm d-inline-block w-auto"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      </div>
+      <script type="text/javascript">
+        <![CDATA[
+        (function(){
+          var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          var rec = SpeechRecognition ? new SpeechRecognition() : null;
+          var recognizing = false;
+          var recognized = document.getElementById("recognized");
+          var reply = document.getElementById("reply");
+          var replyContainer = document.getElementById("replyContainer");
+          var btnStart = document.getElementById("btnStart");
+          var btnStop = document.getElementById("btnStop");
+          var btnSend = document.getElementById("btnSend");
+          var btnSpeak = document.getElementById("btnSpeak");
+          var btnSing = document.getElementById("btnSing");
+          var voiceSelect = document.getElementById("voiceSelect");
+
+          // Initial greeting
+          setTimeout(function(){
+            reply.textContent = "你好！我是小j，很高興見到你。我們來聊聊天吧！";
+            replyContainer.style.opacity = "1";
+          }, 500);
+
+          function loadVoices(){
+            var voices = window.speechSynthesis.getVoices();
+            voiceSelect.innerHTML = "";
+            for (var i=0;i<voices.length;i++){
+              var v = voices[i];
+              var opt = document.createElement("option");
+              opt.value = v.name;
+              opt.textContent = v.name + " (" + v.lang + ")";
+              voiceSelect.appendChild(opt);
+            }
+          }
+          if (window.speechSynthesis){
+            loadVoices();
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+          }
+
+          if (rec){
+            rec.lang = "zh-TW";
+            rec.continuous = false;
+            rec.interimResults = false;
+            rec.onresult = function(e){
+              try {
+                var t = e.results[0][0].transcript || "";
+                recognized.value = t;
+                // Auto send if confident? For now let user click send or implement auto-send later
+              } catch(_){}
+            };
+            rec.onend = function(){ 
+                recognizing = false; 
+                btnStart.classList.remove("btn-danger");
+                btnStart.classList.add("btn-primary");
+                btnStart.innerHTML = "<i class=\"fa fa-microphone\"></i> 開始說話";
+            };
+          }
+
+          btnStart.addEventListener("click", function(){
+            if (!rec) { alert("瀏覽器不支援語音辨識"); return; }
+            if (!recognizing){ 
+                try { 
+                    rec.start(); 
+                    recognizing = true; 
+                    btnStart.classList.remove("btn-primary");
+                    btnStart.classList.add("btn-danger");
+                    btnStart.textContent = "聆聽中...";
+                } catch(_){ recognizing = false; } 
+            }
+          });
+          btnStop.addEventListener("click", function(){
+            if (rec && recognizing){ try { rec.stop(); recognizing = false; } catch(_){} }
+          });
+          btnSend.addEventListener("click", function(){
+            var text = (recognized.value || "").trim();
+            if (!text) { return; }
+            
+            // Show loading state in bubble
+            reply.innerHTML = "<span class=\"text-muted\">思考中...</span>";
+            replyContainer.style.opacity = "1";
+
+            try {
+              fetch("/wuchang/conversation/log", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: text, role: "user", page: "voice" })
+              });
+            } catch(_){}
+            
+            fetch("/wuchang/llm/generate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ prompt: text })
+            }).then(function(r){ return r.json(); })
+              .then(function(j){
+                try {
+                  var t = (((j || {}).candidates || [])[0] || {}).content || {};
+                  var p = ((t.parts || [])[0] || {}).text || "";
+                  reply.textContent = p || "";
+                  if (p) {
+                    try {
+                      fetch("/wuchang/conversation/log", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ text: p, role: "assistant", page: "voice" })
+                      });
+                    } catch(_){}
+                  }
+                } catch(_){
+                  reply.textContent = "解析失敗";
+                }
+              }).catch(function(_){
+                reply.textContent = "連線失敗";
+              });
+          });
+          btnSpeak.addEventListener("click", function(){
+            var text = reply.textContent || "";
+            if (!text || !window.speechSynthesis) { return; }
+            try { window.speechSynthesis.cancel(); } catch(_){}
+            var u = new SpeechSynthesisUtterance(text);
+            var targetName = voiceSelect.value || "";
+            var voices = window.speechSynthesis.getVoices();
+            for (var i=0;i<voices.length;i++){
+              if (voices[i].name === targetName){ u.voice = voices[i]; break; }
+            }
+            u.lang = "zh-TW";
+            window.speechSynthesis.speak(u);
+          });
+          btnSing.addEventListener("click", function(){
+            var text = reply.textContent || "";
+            if (!text) { return; }
+            var AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) { return; }
+            var ctx = new AC();
+            try { if (ctx.state === "suspended") { ctx.resume(); } } catch(_){}
+            var base = [261.63,293.66,329.63,349.23,392.00,440.00,493.88,523.25];
+            var arr = (text || "").replace(/[^\w\u4e00-\u9fa5]+/g," ").trim().split(/\s+/);
+            if (!arr.length) { return; }
+            var tempo = 120;
+            var beat = 60/tempo;
+            var dur = beat*0.5;
+            var start = ctx.currentTime + 0.05;
+            for (var i=0;i<Math.min(arr.length,80);i++){
+              var s = arr[i] || "";
+              var code = s && s.length ? s.charCodeAt(0) : 0;
+              var idx = code % base.length;
+              var f = base[idx];
+              var osc = ctx.createOscillator();
+              var g = ctx.createGain();
+              osc.type = "sine";
+              g.gain.setValueAtTime(0.0, start + i*dur);
+              g.gain.linearRampToValueAtTime(0.25, start + i*dur + 0.02);
+              g.gain.linearRampToValueAtTime(0.0, start + i*dur + dur);
+              osc.frequency.setValueAtTime(f, start + i*dur);
+              osc.connect(g);
+              g.connect(ctx.destination);
+              osc.start(start + i*dur);
+              osc.stop(start + i*dur + dur);
+            }
+          });
+        })();
+        ]]>
+      </script>
+    </t>
+  </template>
+</odoo>

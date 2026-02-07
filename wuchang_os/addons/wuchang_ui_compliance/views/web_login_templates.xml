@@ -1,0 +1,10 @@
+<odoo>
+    <template id="login_layout_inherit_wuchang_compliance"
+              inherit_id="wuchang_design_system.login_layout_inherit_wuchang">
+        <xpath expr="//style" position="replace">
+            <style>
+            </style>
+        </xpath>
+    </template>
+</odoo>
+

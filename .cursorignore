@@ -1,0 +1,174 @@
+# Cursor 忽略檔案
+# 排除不需要索引的目錄和檔案
+
+# 依賴和建置目錄
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虛擬環境
+venv/
+.venv/
+env/
+ENV/
+.ENV
+
+# IDE 和編輯器
+.vscode/
+.idea/
+.vs/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 測試和覆蓋率
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# 日誌和快取
+logs/
+log/
+*.log
+tmp/
+temp/
+cache/
+.cache/
+
+# 備份和舊檔案
+backup/
+backups/
+*.backup
+old/
+archive/
+archived/
+deprecated/
+legacy/
+
+# 資料和媒體
+test_data/
+test_files/
+sample_data/
+examples/
+demos/
+media/
+uploads/
+downloads/
+exports/
+imports/
+data/raw/
+data/processed/
+data/cache/
+
+# 文件資源
+docs/images/
+docs/assets/
+static/vendor/
+static/lib/
+static/node_modules/
+
+# 專案特定
+wuchang-V5.1.0/
+.wuchang_ui/
+map_cache/
+migration_pack/
+association_operational_files/backup/
+association_operational_files/old/
+
+# Git
+.git/
+.gitignore
+
+# 其他
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# 根目錄下的非 Python 文件
+# 注意：重要配置文件（如 pyrightconfig.json, package.json）不會被排除
+*.html
+*.md
+*.json
+*.txt
+*.log
+*.ps1
+*.bat
+*.sh
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+*.xlsx
+*.vsix
+*.css
+*.js
+*.ts
+*.xml
+*.yaml
+*.yml
+*.toml
+*.ini
+*.cfg
+*.conf
+*.config
+*.lock
+
+# 大型目錄（已在 pyrightconfig.json 中排除，但也要在 cursorignore 中排除）
+USB_DRIVE/
+USB_DRIVE_NEW/
+backups/
+migration_pack/
+wuchang-V5.1.0/
+preview/
+reports/
+notifications/
+decision_logs/
+router_certificates/
+platform-tools/
+vpn_automation/
+tools/
+src/
+memory_store/
+workspace/
+vm_deploy/
+workshop_deploy/
+downloads/
+logs/
+docs/
+config/
+static/
+media/
+uploads/
+exports/
+imports/
+data/
+association_operational_files/
+map_cache/
+.wuchang_ui/
+五常社區服務系統/
+time_logic_system/

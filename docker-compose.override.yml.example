@@ -1,0 +1,8 @@
+services:
+  wuchang-web:
+    environment:
+      # Point ADC to the mounted Service Account key
+      - GOOGLE_APPLICATION_CREDENTIALS=/mnt/jules-config/gcp-sa.json
+      # Optional explicit project/location for libraries that read these
+      - GOOGLE_CLOUD_PROJECT=my-j-483304
+      - VERTEXAI_LOCATION=us-central1

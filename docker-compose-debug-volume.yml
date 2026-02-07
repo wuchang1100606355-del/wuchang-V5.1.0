@@ -1,0 +1,18 @@
+services:
+  debug-volume:
+    image: alpine:latest
+    container_name: debug-volume
+    restart: no
+    command: ls -lR /etc/cloudflared
+    volumes:
+      - wuchang_cloudflared_config:/etc/cloudflared
+    networks:
+      - wuchangv510_default
+
+networks:
+  wuchangv510_default:
+    external: true
+
+volumes:
+  wuchang_cloudflared_config:
+    external: true

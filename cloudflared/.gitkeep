@@ -1,0 +1,5 @@
+# Cloudflare Tunnel 配置目錄
+
+此目錄用於存放 Cloudflare Tunnel 相關配置檔案：
+- `config.yml` - Tunnel 配置檔案
+- `credentials.json` - Tunnel 憑證檔案

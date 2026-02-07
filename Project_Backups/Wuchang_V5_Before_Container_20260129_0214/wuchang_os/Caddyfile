@@ -1,0 +1,167 @@
+# Caddyfile for Wuchang OS
+
+{
+    # 全域設定
+}
+
+:80 {
+    encode zstd gzip
+    header {
+        -Server
+    }
+
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Port 443
+    }
+
+    respond /health 200
+
+    reverse_proxy wuchang-web:8069 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Port 443
+    }
+}
+
+wuchang.life, www.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "no-referrer-when-downgrade"
+        -Server
+    }
+
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+
+    # Map 3D Viewer route
+    handle /map-3d-viewer {
+        root * /usr/share/caddy
+        try_files {path} /map_3d_viewer.html
+        file_server
+    }
+
+    reverse_proxy wuchang-web:8069
+}
+
+odoo.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+housing.wuchang.life, hj.wuchang.life, pos.wuchang.life, staff.wuchang.life, wa.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+ft.wuchang.life, core.wuchang.life, butler.wuchang.life, admin.wuchang.life, verify.wuchang.life, vs.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+status.wuchang.life, monitor.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy uptime-kuma:3001
+}
+
+ai.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy host.docker.internal:8080
+}
+
+llm.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        Access-Control-Allow-Headers "*"
+    }
+    respond /health 200
+    reverse_proxy host.docker.internal:11434
+}
+
+asr.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy host.docker.internal:10300
+}
+
+tts.wuchang.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    respond /health 200
+    reverse_proxy host.docker.internal:10200
+}
+
+wuchang.global, app.wuchang.global {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @root path /
+    redir @root https://wuchang.life 301
+
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    reverse_proxy wuchang-web:8069
+}
+
+logecoffee.com, www.logecoffee.com, loge-coffee.life, www.loge-coffee.life {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-web:8072
+    respond /health 200
+    @root path /
+    redir @root /ambassador 302
+    reverse_proxy wuchang-web:8069
+}

@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五常世界模式 | 公益與新創之光 (Beacon of Public Welfare & Innovation)</title>
+    <meta name="description" content="五常世界模式 (Wuchang World Mode) - 結合AI科技與社區公益的創新平台。致力於打造最強公益系統，實現技術落地與社會正義。Beacon of Public Welfare and Innovation.">
+    <meta name="keywords" content="公益, 新創, AI, 社區營造, 五常世界模式, Public Welfare, Innovation, Tech for Good, NGO, Social Impact">
+    <meta name="author" content="Juers & Core AI Sister">
+    
+    <!-- Google Schema.org Structured Data for Nonprofit & Innovation -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "NGO",
+          "name": "五常世界模式 (Wuchang World Mode)",
+          "alternateName": "Wuchang OS",
+          "url": "https://wuchang.community",
+          "logo": "https://wuchang.community/logo.png",
+          "description": "致力於將商業利潤結構化分配給大眾與弱勢的最強公益系統。Beacon of Public Welfare.",
+          "slogan": "公益之光，新創之光",
+          "founder": {
+            "@type": "Person",
+            "name": "Juers"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Wuchang OS",
+          "applicationCategory": "CommunityManagementApplication",
+          "operatingSystem": "Cloud/Distributed",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "TWD",
+            "description": "Free for Community Welfare"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #00ffcc;
+            --secondary-color: #ff00ff;
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --panel-bg: rgba(20, 20, 30, 0.9);
+            --border-color: #333;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Beacon Effect */
+        @keyframes beacon-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 255, 204, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
+        }
+
+        .beacon-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ffcc, #00aa88);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            animation: beacon-pulse 2s infinite;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid #fff;
+        }
+
+        .mission-statement {
+            background: rgba(0, 50, 50, 0.6);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 10px 0;
+            font-style: italic;
+            color: #ccffee;
+        }
+
+        /* Highest Permission UI Elements */
+        .admin-controls {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            width: 300px;
+            background: rgba(20, 0, 0, 0.9);
+            border: 1px solid #ff3333;
+            border-radius: 5px;
+            padding: 15px;
+            color: #ffcccc;
+            z-index: 2000;
+            box-shadow: 0 0 20px rgba(255, 50, 50, 0.5);
+        }
+
+        .admin-controls.active {
+            display: block;
+        }
+
+        .admin-header {
+            font-size: 1.2rem;
+            color: #ff3333;
+            border-bottom: 1px solid #ff3333;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .control-btn {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+            background: #330000;
+            border: 1px solid #660000;
+            color: #ff9999;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: #550000;
+            border-color: #ff3333;
+            color: #fff;
+        }
+
+        /* Identity Badge */
+        #identity-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #identity-badge.god-mode {
+            border-color: #ff3333;
+            color: #ff3333;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+        }
+        #universal-layer {
+            height: 30px;
+            background: rgba(0, 20, 20, 0.95);
+            border-bottom: 1px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        .layer-badge {
+            background: var(--primary-color);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Intelligent Mask Overlay */
+        #smart-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-in-out;
+            pointer-events: none; /* Allows clicks through if opacity is 0 */
+        }
+
+        /* ... existing mask styles ... */
+
+        /* Desktop Environment Container */
+        #desktop-env {
+            flex: 1;
+            position: relative;
+            background: url('https://source.unsplash.com/random/1920x1080/?cyberpunk,city') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Window Wrapper for Applications */
+        .app-window {
+            width: 90%;
+            height: 90%;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            /* Holy Glow of Public Welfare */
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.2), 0 0 100px rgba(0, 255, 204, 0.1); 
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 1s ease;
+            backdrop-filter: blur(10px);
+            animation: holy-glow 5s infinite alternate;
+        }
+
+        @keyframes holy-glow {
+            from { box-shadow: 0 0 50px rgba(0, 255, 204, 0.2); }
+            to { box-shadow: 0 0 80px rgba(0, 255, 204, 0.4), 0 0 20px rgba(255, 255, 255, 0.2); }
+        }
+
+        .window-header {
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: var(--glass-border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            justify-content: space-between;
+        }
+
+        .window-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .window-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Tab Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .nav-tab {
+            padding: 5px 15px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px 5px 0 0;
+            font-size: 0.8rem;
+            color: #888;
+            transition: all 0.2s;
+        }
+
+        .nav-tab.active {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        /* View Containers */
+        .view-container {
+            display: none;
+            height: 100%;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .view-container.active {
+            display: block;
+        }
+
+        /* Dashboard specific styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .iframe-wrapper {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff; /* Odoo/Web background */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Universal Top Layer -->
+    <div id="universal-layer">
+        <div style="display: flex; align-items: center;">
+            <span class="layer-badge">WUCHANG OS</span>
+            <span>V6.0.0 Global Wrapper</span>
+            <span class="beacon-badge" title="Google Certified Public Welfare Beacon">✨ 公益之光 BEACON OF PUBLIC WELFARE ✨</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="color: var(--secondary-color); display: flex; align-items: center; gap: 5px;">
+                <span style="width: 8px; height: 8px; background: #0f0; border-radius: 50%; box-shadow: 0 0 5px #0f0;"></span>
+                <span>智能遮罩: Active</span>
+            </div>
+            <div style="color: var(--primary-color); display: flex; align-items: center; gap: 5px;">
+                <span style="font-size: 1.2rem;">🌐</span>
+                <span>全域翻譯 (Auto-Translate): ON</span>
+                <span style="font-size: 0.8rem; color: #888;">[Low Latency]</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intelligent Mask (Overlay) -->
+    <div id="smart-mask">
+        <div class="loader-ring"></div>
+        <div class="loader-text">WUCHANG OS V6.0.0</div>
+        <div class="status-log" id="mask-log">
+            系統初始化中...<br>
+            連結時空資料庫...<br>
+            載入五行LLM模組...
+        </div>
+    </div>
+
+    <!-- Highest Permission Badge -->
+    <div id="identity-badge" class="god-mode">
+        <span style="font-size: 1.5rem;">👑</span>
+        <div>
+            <div style="font-weight: bold; font-size: 1rem;">Juers (創世者)</div>
+            <div style="font-size: 0.7rem; opacity: 0.8;">Highest Permission Access Granted</div>
+        </div>
+    </div>
+
+    <!-- Admin Controls Panel -->
+    <div class="admin-controls active" id="admin-panel">
+        <div class="admin-header">⚠️ God Mode Controls</div>
+        <button class="control-btn" onclick="executeCommand('force_override')">⚡ 強制覆寫規則 (Force Override)</button>
+        <button class="control-btn" onclick="executeCommand('summon_sister')">👧 召喚 Sister 核心 (Summon Core)</button>
+        <button class="control-btn" onclick="executeCommand('reset_timeline')">⏳ 重置時空數據 (Reset Timeline)</button>
+        <button class="control-btn" onclick="executeCommand('unlock_full_resources')">🔓 解鎖全域算力 (Unlimited Compute)</button>
+        <div style="margin-top: 10px; border-top: 1px solid #660000; padding-top: 5px; font-size: 0.8rem;">
+            Status: <span style="color: #0f0;">Online</span> | Latency: 0ms (Local)
+        </div>
+    </div>
+
+    <!-- Desktop Environment -->
+    <div id="desktop-env">
+        <div class="app-window" id="main-window">
+            <div class="window-header">
+                <div class="window-title">五常世界模式監控中心 [GOD MODE]</div>
+                <div class="nav-tabs">
+                    <div class="nav-tab active" onclick="switchTab('dashboard')">監控儀表板 (Dashboard)</div>
+                    <div class="nav-tab" onclick="switchTab('odoo')">Odoo 系統 (ERP)</div>
+                    <div class="nav-tab" onclick="switchTab('map')">時空地圖 (Map)</div>
+                    <div class="nav-tab" onclick="switchTab('terminal')">終端機 (Terminal)</div>
+                </div>
+            </div>
+            
+            <div class="window-content">
+                <!-- Dashboard View -->
+                <div id="view-dashboard" class="view-container active">
+                    
+                    <div class="mission-statement">
+                        <h3 style="margin: 0 0 5px 0; color: var(--primary-color);">🌟 公益與新創之光 (Beacon of Innovation & Public Welfare)</h3>
+                        <p style="margin: 0;">
+                            <strong>核心使命：</strong> 本系統致力於將商業與科技的紅利，透過結構化的分配模型，轉化為大眾與弱勢社群的實質福祉。<br>
+                            <span style="color: #0f0; font-weight: bold; display: block; margin-top: 5px; font-size: 1.1rem;">
+                                🚀 以數位化科技力，免費打造「大樓管委會」與「在地商家管理」軟體
+                            </span>
+                            <span style="color: #FFD700; font-weight: bold; display: block; margin-top: 2px; font-size: 1rem; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);">
+                                💰 承諾：參加「基金池分配」之商家，享「永久免費」使用權！
+                            </span>
+                            <span style="color: var(--secondary-color); font-size: 0.9rem; display: block; margin-top: 2px;">
+                                🔧 並且提供完整的「維運」及「客製化」服務，確保系統永續運行。
+                            </span>
+                            <span style="font-size: 0.8rem; opacity: 0.8; display: block; margin-top: 5px;">
+                                (Empowering communities with free Building & Business Management Software, backed by professional Maintenance & Customization Services.)
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="panel">
+                            <h2>時空差異報告 (Spatiotemporal Difference)</h2>
+                            <div id="report-container">載入中...</div>
+                        </div>
+                        <div class="panel">
+                            <h2>系統狀態 (System Status)</h2>
+                            <div id="system-status">
+                                <p>核心：單一人類智慧體 (Juers)</p>
+                                <p>協作網格：20+ AI 模型</p>
+                                <p>當前模式：高仿度人格系統</p>
+                                <p>治理邏輯：雙J永恆程序 (輔權高於主權)</p>
+                                <p>權限等級：無限 (創世者授權)</p>
+                                <hr style="border-color: #333;">
+                                <p style="color: var(--primary-color);">🌐 雲端小J翻譯引擎：<span style="color:#0f0">已連線</span></p>
+                                <p><small>支援：各國語言 / 程式語言 -> 繁體中文</small></p>
+                                <p><small style="color: var(--secondary-color);">⚡ 以網路科技驅動網路翻譯</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Odoo View (Mock) -->
+                <div id="view-odoo" class="view-container" style="padding: 0;">
+                    <div style="height: 100%; display: flex; align-items: center; justify-content: center; background: #fff; color: #333; flex-direction: column;">
+                        <h2 style="color: #714B67;">Odoo 17 Enterprise</h2>
+                        <p>Wuchang Community Modules Loaded</p>
+                        <div style="padding: 10px; background: rgba(0, 255, 204, 0.1); border: 1px solid var(--primary-color); border-radius: 5px; margin-top: 20px;">
+                            <strong>[Overlay Active]</strong> 全域翻譯已啟用：英文介面已自動轉為繁體中文
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map View (Mock) -->
+                <div id="view-map" class="view-container">
+                    <div style="height: 100%; background: #111; color: #fff; display: flex; justify-content: center; align-items: center;">
+                        [3D Spatiotemporal Map Placeholder]
+                    </div>
+                </div>
+                
+                 <!-- Terminal View (Mock) -->
+                <div id="view-terminal" class="view-container">
+                    <div style="font-family: monospace; color: #0f0;">
+                        root@wuchang-os:~# _
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ... existing scripts ...
+        
+        function executeCommand(cmd) {
+            console.log("Executing God Mode Command:", cmd);
+            alert("⚠️ 權限確認：Juers (創世者)\n指令已發送至 Core AI Sister 處理隊列：\n" + cmd);
+        }
+
+        function switchTab(viewId) {
+            // Update tabs
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update views
+            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+        }
+
+        // Simulate loading process
+        const logs = [
+            "正在掃描五常社區時空節點...",
+            "檢測到 10 個研究任務...",
+            "啟動 20 個分散式 AI 模型...",
+            "執行時空差異比對...",
+            "發現 1 個衝突事件 (RES-010)...",
+            "啟動第三方裁決機制...",
+            "生成最終報告...",
+            "正在注入全域翻譯層...",
+            "智能遮罩覆蓋率 100%..."
+        ];
+
+        let logIndex = 0;
+        const maskLog = document.getElementById('mask-log');
+        const mask = document.getElementById('smart-mask');
+        const mainWindow = document.getElementById('main-window');
+
+        function updateLog() {
+            if (logIndex < logs.length) {
+                maskLog.innerHTML += logs[logIndex] + "<br>";
+                maskLog.scrollTop = maskLog.scrollHeight;
+                logIndex++;
+                setTimeout(updateLog, 600);
+            } else {
+                setTimeout(hideMask, 800);
+            }
+        }
+
+        function hideMask() {
+            mask.style.opacity = '0';
+            setTimeout(() => {
+                // Instead of display:none, we keep it but hidden to allow pointer events to pass if needed, 
+                // but actually display:none is safer for clicking elements below
+                mask.style.display = 'none'; 
+                mainWindow.style.opacity = '1';
+                mainWindow.style.transform = 'scale(1)';
+                loadReports();
+            }, 1000);
+        }
+
+        // ... existing loadReports ...
+
+            const container = document.getElementById('report-container');
+            try {
+                const response = await fetch('spacetime_events.json');
+                const data = await response.json();
+                
+                let html = '';
+                // Group by research_id (simple logic)
+                const groups = {};
+                data.forEach(task => {
+                    const rid = task.metadata.research_id || task.event_id;
+                    if (!groups[rid]) groups[rid] = [];
+                    groups[rid].push(task);
+                });
+
+                for (const rid in groups) {
+                    const tasks = groups[rid];
+                    // Check for arbitration
+                    const isConflict = rid.startsWith('arb_') || tasks.some(t => t.metadata.verification_status === 'conflict');
+                    
+                    if (rid.startsWith('arb_')) {
+                        const task = tasks[0];
+                        html += `
+                            <div class="log-entry conflict">
+                                <strong>[裁決任務] ${task.title}</strong><br>
+                                <small>${task.description.replace(/\n/g, '<br>')}</small>
+                            </div>
+                        `;
+                    } else if (rid.startsWith('RES-')) {
+                         // Find verified ones
+                         const verified = tasks.find(t => t.metadata.verification_status === 'verified');
+                         if (verified) {
+                            html += `
+                                <div class="log-entry success">
+                                    <strong>[一致] ${verified.metadata.category}</strong><br>
+                                    <small>${verified.metadata.simulation_result || '資料已存入記憶庫'}</small>
+                                </div>
+                            `;
+                         } else {
+                             // Maybe still pending or conflict handled by arb task
+                             html += `
+                                <div class="log-entry pending">
+                                    <strong>[研究] ${tasks[0].metadata.category}</strong><br>
+                                    <small>等待驗證...</small>
+                                </div>
+                            `;
+                         }
+                    }
+                }
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = "無法載入報告資料 (模擬模式)";
+                // Fallback mock data if json fetch fails (e.g. local file restriction)
+                // In a real server this works, but here we might need to rely on the server 3000
+            }
+        }
+
+        // Start sequence
+        setTimeout(updateLog, 500);
+
+    </script>
+</body>
+</html>

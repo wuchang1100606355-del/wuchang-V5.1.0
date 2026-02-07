@@ -1,0 +1,17 @@
+<odoo>
+  <template id="record_hall_page" name="五常紀錄館">
+    <t t-call="website.layout">
+      <div class="container">
+        <section class="my-5">
+          <h1>五常紀錄館</h1>
+          <p>彙整五常社群與公司重要紀錄、資料與連結。</p>
+          <ul>
+            <li>制度與流程</li>
+            <li>專案與里程碑</li>
+            <li>公開發布與知識集合</li>
+          </ul>
+        </section>
+      </div>
+    </t>
+  </template>
+</odoo>

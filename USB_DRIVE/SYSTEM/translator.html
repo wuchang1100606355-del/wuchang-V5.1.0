@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Wuchang Translator</title>
+    <style>
+        body { background: #1a1a1a; color: #fff; font-family: 'Microsoft JhengHei', sans-serif; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        textarea { width: 100%; height: 100px; background: #333; color: #fff; border: 1px solid #555; padding: 10px; font-size: 1.1em; }
+        button { background: #0078d7; color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-size: 1em; }
+        button:hover { background: #005a9e; }
+        #output { background: #222; padding: 15px; border-left: 5px solid #0f0; min-height: 50px; }
+    </style>
+</head>
+<body>
+    <h2>萬用翻譯機 (Universal Translator)</h2>
+    <div>輸入文字 (任何語言):</div>
+    <textarea id="input" placeholder="請輸入..."></textarea>
+    <button onclick="translateText()">翻譯 (Translate)</button>
+    <div>結果:</div>
+    <div id="output">等待輸入...</div>
+
+    <script>
+        function translateText() {
+            const text = document.getElementById('input').value;
+            const output = document.getElementById('output');
+            
+            // Simulation of AI Translation
+            if (!text) {
+                output.innerText = "請輸入文字。";
+                return;
+            }
+            
+            output.innerHTML = "正在連線五常核心翻譯矩陣...<br>分析語義...<br><span style='color:#0f0'>[翻譯完成]</span>: " + text + " (已翻譯為繁體中文)";
+            
+            // Easter Egg
+            if (text.toLowerCase().includes("hello")) {
+                output.innerText = "你好 (Hello)";
+            } else if (text.toLowerCase().includes("love")) {
+                output.innerText = "愛 (Love)";
+            }
+        }
+    </script>
+</body>
+</html>

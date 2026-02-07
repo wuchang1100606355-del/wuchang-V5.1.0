@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_wuchang_root" name="Wuchang OS" sequence="1" web_icon="wuchang_core,static/description/icon.png"/>
+        <menuitem id="menu_finance" name="Financial Engine" parent="menu_wuchang_root" sequence="10"/>
+        <menuitem id="menu_wish_tree" name="Wish Tree" parent="menu_wuchang_root" sequence="20"/>
+        <menuitem id="menu_smart_life" name="Smart Life" parent="menu_wuchang_root" sequence="30"/>
+        <menuitem id="menu_wuchang_ai_root" name="AI Center" parent="menu_wuchang_root" sequence="40"/>
+    </data>
+</odoo>

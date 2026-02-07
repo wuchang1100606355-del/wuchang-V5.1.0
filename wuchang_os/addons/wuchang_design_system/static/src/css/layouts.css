@@ -1,0 +1,6 @@
+.whc-hero { border-radius: var(--whc-radius); overflow: hidden; position: relative; }
+.whc-hero .whc-hero-banner { width: 100%; height: 240px; object-fit: cover; }
+.whc-hero .whc-hero-caption { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; }
+.whc-hero .whc-hero-chip { display: inline-block; background: rgba(0,0,0,.45); color: #fff; padding: 8px 14px; border-radius: 18px; font-weight: 600; letter-spacing: 1px; }
+.whc-hero .whc-hero-sub { margin-top: 6px; font-size: 12px; color: rgba(255,255,255,.8); }
+

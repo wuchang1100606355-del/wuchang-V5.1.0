@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五常 LIFE | 社區自治 OS</title>
+    <!-- 引入 Google Fonts 作為備用 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Markdown Parser for AI responses -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        /* 定義本地字體，如果失敗則使用 Google Fonts */
+        @font-face {
+            font-family: 'LocalNotoSansTC';
+            font-style: normal;
+            font-weight: 100 900;
+            src: url('./fonts/NotoSansTC-VariableFont_wght.ttf') format('truetype');
+        }
+
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-gold: #ffd700;
+            --neon-green: #0aff0a;
+            --glass-bg: rgba(16, 24, 39, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: #050505;
+            background-image:
+                radial-gradient(circle at 50% 50%, #1a2a4a 0%, #000000 100%);
+            color: #e2e8f0;
+            /* 優先使用 Noto Sans TC */
+            font-family: 'LocalNotoSansTC', 'Noto Sans TC', 'Inter', 'Segoe UI', 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 賽博龐克數字字體 */
+        .font-cyber {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* 玻璃擬態 (Glassmorphism) */
+        .glass-panel {
+            background: var(--glass-bg);
+            /* backdrop-filter: blur(6px); */
+            -webkit-/* backdrop-filter: blur(6px); */
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        /* 呼吸燈效果 */
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px var(--neon-blue);
+                border-color: var(--neon-blue);
+            }
+
+            50% {
+                box-shadow: 0 0 20px var(--neon-blue), 0 0 10px var(--neon-blue) inset;
+                border-color: #fff;
+            }
+        }
+
+        @keyframes pulse-gold {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px var(--neon-gold);
+                border-color: var(--neon-gold);
+            }
+
+            50% {
+                box-shadow: 0 0 20px var(--neon-gold);
+                border-color: #fff;
+            }
+        }
+
+        /* 背景網格 */
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        /* 數據流動畫 */
+        .data-stream {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            opacity: 0;
+            /* animation: stream */ linear infinite;
+        }
+
+        @keyframes stream {
+            0% {
+                left: -20%;
+                width: 10%;
+            }
+
+            50% {
+                width: 30%;
+                opacity: 1;
+            }
+
+            100% {
+                left: 120%;
+                width: 10%;
+                opacity: 0;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-blue);
+        }
+
+        /* AI Response Markdown Styles */
+        .prose h1,
+        .prose h2,
+        .prose h3 {
+            color: var(--neon-blue);
+            font-family: 'LocalNotoSansTC', 'Noto Sans TC', sans-serif;
+            margin-top: 0.5em;
+            margin-bottom: 0.2em;
+        }
+
+        .prose p {
+            margin-bottom: 0.5em;
+            color: #cbd5e1;
+        }
+
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.2em;
+            color: #94a3b8;
+        }
+
+        .prose strong {
+            color: var(--neon-gold);
+        }
+
+        .prose ol {
+            list-style-type: decimal;
+            padding-left: 1.2em;
+            color: #94a3b8;
+        }
+        
+        /* Voice Animation */
+        .mic-active {
+            animation: pulse-red 1.5s infinite;
+            background-color: rgba(220, 38, 38, 0.8) !important;
+            border-color: #f87171 !important;
+        }
+        
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col relative">
+
+    <!-- 背景網格 -->
+    <div class="grid-bg"></div>
+    <div class="data-stream" style="top: 15%; animation-duration: 4s;"></div>
+    <div class="data-stream"
+        style="top: 45%; animation-duration: 2.5s; background: linear-gradient(90deg, transparent, var(--neon-gold), transparent);">
+    </div>
+    <div class="data-stream" style="top: 85%; animation-duration: 5s;"></div>
+
+    <!-- 頂部導航 -->
+    <header class="w-full glass-panel p-4 flex justify-between items-center z-10 border-b border-gray-700">
+        <div class="flex items-center gap-3">
+            <div
+                class="w-10 h-10 border-2 border-cyan-400 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(0,243,255,0.5)]">
+                <span class="font-cyber text-cyan-400 text-xl">W</span>
+            </div>
+            <div>
+                <h1 class="font-cyber text-xl tracking-wider text-white">五常 OS</h1>
+                <p class="text-xs text-gray-400">社區自治作業系統 v1.0 | <span class="text-green-400">● 系統正常</span></p>
+            </div>
+        </div>
+        <div class="flex gap-6 text-sm font-cyber">
+            <div class="text-right cursor-pointer hover:text-cyan-400 transition" onclick="toggleChat()">
+                <div class="text-gray-400">AI 助理狀態</div>
+                <div class="text-cyan-300 flex items-center justify-end gap-2">
+                    WUCHANG.AI <span
+                        class="text-[10px] bg-cyan-900 px-1 rounded border border-cyan-500">ONLINE</span>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-gray-400">公共基金池</div>
+                <div class="text-yellow-400 text-lg glow">$ 3,452,100</div>
+            </div>
+            <div class="text-right border-l border-gray-700 pl-4 ml-2">
+                <div class="text-gray-400">管理員</div>
+                <div class="text-white">Jules (AI Admin)</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主體內容 -->
+    <main class="flex-1 flex p-6 gap-6 overflow-hidden relative z-0">
+
+        <!-- 左側：AI 狀態監控 (資料流) -->
+        <aside class="w-1/4 flex flex-col gap-4 z-10">
+            <!-- AI 狀態 -->
+            <div class="glass-panel rounded-xl p-5 flex-1 flex flex-col">
+                <h2 class="font-cyber text-cyan-400 text-lg mb-4 border-b border-gray-700 pb-2">AI STATUS</h2>
+                <div class="space-y-4 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">核心邏輯層</span>
+                        <span
+                            class="px-2 py-1 bg-green-900/50 text-green-400 rounded border border-green-800 text-xs">運作中</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">情感模組</span>
+                        <span
+                            class="px-2 py-1 bg-blue-900/50 text-blue-400 rounded border border-blue-800 text-xs">學習中</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">幻覺監控</span>
+                        <span
+                            class="px-2 py-1 bg-purple-900/50 text-purple-400 rounded border border-purple-800 text-xs">已鎖定</span>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-gray-400 text-xs mb-2">算力負載指標</h3>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 45%"></div>
+                    </div>
+                </div>
+
+                <!-- 系統事件 Log -->
+                <div class="mt-auto pt-4">
+                    <h3 class="font-cyber text-xs text-gray-500 mb-2">EVENT LOG</h3>
+                    <div class="h-32 overflow-y-auto text-xs font-mono space-y-2 pr-2" id="log-container">
+                        <div class="text-gray-400"><span class="text-cyan-500">[10:42:01]</span> 連結建立請求確認...</div>
+                        <div class="text-gray-400"><span class="text-green-500">[10:41:55]</span> 住戶 M-03 完成打卡</div>
+                        <div class="text-gray-400"><span class="text-purple-500">[10:41:30]</span>
+                            異常訊號排除 (HASH_A92B)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 治理掃描儀 (Gemini Powered) -->
+            <div
+                class="glass-panel rounded-xl p-5 h-1/3 relative overflow-hidden group hover:border-cyan-500/50 transition-colors flex flex-col">
+                <div
+                    class="absolute -right-6 -top-6 w-24 h-24 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/20 transition-all">
+                </div>
+                <h2 class="font-cyber text-white text-lg mb-2">GOV. SCANNER</h2>
+                <p class="text-gray-400 text-sm mb-2">AI 輔助社區治理掃描</p>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="text-3xl font-bold text-cyan-400">3</div>
+                    <div class="text-xs text-gray-400">待處理<br />社區提案</div>
+                </div>
+                <div class="mt-auto">
+                    <button
+                        class="w-full py-2 bg-cyan-900/30 border border-cyan-500/30 hover:bg-cyan-500/20 hover:border-cyan-400 text-cyan-300 text-xs rounded transition-all flex items-center justify-center gap-2 group-hover:shadow-[0_0_10px_rgba(0,243,255,0.3)]">
+                        <span>啟動治理掃描程序</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中間：3D 拓樸視覺化 (核心區) -->
+        <section
+            class="flex-1 glass-panel rounded-xl relative overflow-hidden flex flex-col justify-center items-center group">
+            <div class="absolute top-4 left-4 z-10">
+                <h2 class="font-cyber text-xl text-white">LIVE TOPOLOGY</h2>
+                <p class="text-xs text-gray-400">即時社區連結 / 節點事件</p>
+            </div>
+
+            <div
+                class="w-full h-full absolute top-0 left-0 opacity-60 group-hover:opacity-80 transition-opacity duration-1000">
+                <div class="absolute top-1/2 left-1/2 w-64 h-64 border border-cyan-500/20 rounded-full -translate-x-1/2 -translate-y-1/2 flex justify-center items-center "
+                    style="animation-duration: 20s;">
+                    <div class="w-48 h-48 border border-dashed border-cyan-500/30 rounded-full"></div>
+                </div>
+                <div
+                    class="absolute top-1/3 left-1/4 w-2 h-2 bg-yellow-400 rounded-full shadow-[0_0_15px_yellow] ">
+                </div>
+                <div
+                    class="absolute bottom-1/3 right-1/3 w-3 h-3 bg-red-500 rounded-full shadow-[0_0_20px_red] ">
+                </div>
+                <div class="absolute top-2/3 left-2/3 w-2 h-2 bg-green-400 rounded-full shadow-[0_0_10px_lime]"></div>
+
+                <svg class="absolute top-0 left-0 w-full h-full pointer-events-none">
+                    <path d="M 200 300 Q 400 100 600 400 T 900 300" stroke="rgba(0, 243, 255, 0.4)" stroke-width="1"
+                        fill="none" stroke-dasharray="5,5">
+                        <!-- <animate attributeName="stroke-dashoffset" from="100" to="0" dur="5s"
+                            repeatCount="indefinite" /> -->
+                    </path>
+                </svg>
+            </div>
+
+            <div class="z-10 text-center pointer-events-none">
+                <div
+                    class="text-6xl font-cyber font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 tracking-widest opacity-80">
+                    五常</div>
+                <div class="text-sm text-gray-400 mt-2 tracking-[0.5em]">COMMUNITY OS</div>
+            </div>
+            <img id="ad-machine" src="./floorplan.jpg" alt="廣告機版面"
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl object-cover border border-cyan-500/30 z-10 opacity-50 hover:opacity-100 transition-opacity duration-500" />
+            <div class="absolute top-4 left-4 z-20 flex items-center gap-2" style="top: 80px;">
+                <input id="local-img" type="file" accept="image/*" class="hidden" />
+                <label for="local-img" class="px-3 py-1 rounded bg-yellow-600 text-white text-xs cursor-pointer hover:bg-yellow-500">上傳本地圖片</label>
+            </div>
+        </section>
+
+        <!-- 右側：經濟與連結狀態 -->
+        <aside class="w-1/4 flex flex-col gap-4 z-10">
+            <!-- 基金池 -->
+            <div class="glass-panel rounded-xl p-5 flex flex-col gap-4 border-t-2 border-t-yellow-500/50">
+                <div class="flex justify-between items-start">
+                    <h2 class="font-cyber text-yellow-400 text-lg">FUND POOL</h2>
+                    <span class="text-xs bg-yellow-900/40 text-yellow-200 px-2 py-1 rounded">T-1 結算</span>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-400 mb-1">
+                            <span>緊急修繕金 (45%)</span>
+                            <span>$ 1,553,445</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-1">
+                            <div class="bg-yellow-500 h-1 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-400 mb-1">
+                            <span>發展基金 (20%)</span>
+                            <span>$ 690,420</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-1">
+                            <div class="bg-green-500 h-1 rounded-full" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    <a href="http://localhost:8069/pos/web" target="_blank" rel="noopener"
+                        class="block mt-2 text-center text-xs px-2 py-1 rounded border border-yellow-400/40 text-yellow-300 hover:bg-yellow-900/20">進入仁義店
+                        POS</a>
+                </div>
+            </div>
+
+            <!-- 連結店鋪 狀態 -->
+            <div class="glass-panel rounded-xl p-5 flex-1">
+                <h2 class="font-cyber text-white text-lg mb-4">HUB STATUS</h2>
+
+                <div class="space-y-4">
+                    <a href="http://localhost:8069/pos/web" target="_blank" rel="noopener"
+                        class="block p-3 bg-gray-800/50 rounded border border-gray-700/50 hover:border-cyan-500/50 hover:bg-gray-800/70 cursor-pointer">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-bold text-white">仁義店</span>
+                            <span class="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_5px_lime]"></span>
+                        </div>
+                        <div class="text-xs text-gray-400">今日公益單：<span class="text-white">128</span> 筆</div>
+                    </a>
+
+                    <a href="http://localhost:8069/web#action=point_of_sale.action_pos_config" target="_blank"
+                        rel="noopener"
+                        class="block p-3 bg-gray-800/50 rounded border border-gray-700/50 hover:border-cyan-500/50 hover:bg-gray-800/70 cursor-pointer">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-bold text-white">創辦人燃料店</span>
+                            <span class="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_5px_lime]"></span>
+                        </div>
+                        <div class="text-xs text-gray-400">本月注資：<span class="text-white">$ 50,000</span></div>
+                    </a>
+                </div>
+
+                <div class="mt-6 p-3 border border-dashed border-gray-600 rounded text-center">
+                    <p class="text-xs text-gray-500 mb-1">社區貢獻者獎勵</p>
+                    <p class="text-xl font-mono text-white">$ 0</p>
+                    <p class="text-[10px] text-green-400 mt-1">▲ 本月累積速度提升</p>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Floating Chat Button (AI Secretary) -->
+    <button id="chat-toggle"
+        class="fixed bottom-6 right-6 w-14 h-14 bg-cyan-600 hover:bg-cyan-500 text-white rounded-full shadow-[0_0_20px_rgba(0,243,255,0.6)] flex items-center justify-center transition-all z-50 border border-cyan-400">
+        <span class="text-2xl">💬</span>
+    </button>
+
+    <!-- Chat Panel with Voice -->
+    <div id="chat-panel" class="fixed bottom-24 right-6 w-80 h-96 glass-panel rounded-xl p-4 border border-gray-700 text-sm hidden z-50 flex flex-col">
+        <div class="flex justify-between items-center mb-2 border-b border-gray-700 pb-2">
+            <div class="font-cyber text-cyan-400 flex items-center gap-2">
+                <span>WUCHANG.AI</span>
+                <span id="voice-status" class="w-2 h-2 bg-gray-500 rounded-full"></span>
+            </div>
+            <button onclick="toggleChat()" class="text-gray-400 hover:text-white">✕</button>
+        </div>
+        
+        <div id="chat-log" class="flex-1 overflow-y-auto text-xs text-gray-300 space-y-2 mb-2 p-1">
+            <div class="text-cyan-400">System: 語音模組已就緒 (支援手機/電腦)。</div>
+        </div>
+        
+        <div class="mt-auto flex gap-2 items-center">
+            <button id="mic-btn" class="p-2 bg-gray-800 text-gray-400 rounded-full border border-gray-600 hover:text-white hover:border-white transition-all" title="按住說話 (或點擊切換)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
+                  <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0v5zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3z"/>
+                </svg>
+            </button>
+            <input id="chat-input" class="flex-1 bg-gray-900 border border-gray-700 rounded px-2 py-2 text-xs focus:outline-none focus:border-cyan-500"
+                placeholder="輸入訊息..." />
+            <button id="chat-send" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // --- UI Logic ---
+        function toggleChat() {
+            const panel = document.getElementById('chat-panel');
+            if (!panel) return;
+            panel.classList.toggle('hidden');
+        }
+
+        function appendLog(text, sender = 'You') {
+            const log = document.getElementById('chat-log');
+            if (!log) return;
+            
+            const div = document.createElement('div');
+            div.className = sender === 'You' ? 'text-right text-white' : 'text-left text-cyan-300';
+            div.innerHTML = `<span class="opacity-70 text-[10px]">${sender}</span>: <span class="bg-gray-800/50 px-2 py-1 rounded inline-block">${text}</span>`;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function sendChat() {
+            const input = document.getElementById('chat-input');
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+            
+            appendLog(text, 'You');
+            input.value = '';
+            
+            // TODO: Connect to backend AI
+            setTimeout(() => {
+                const response = "收到，我正在處理您的請求。"; // Mock response
+                appendLog(response, 'AI');
+                speak(response);
+            }, 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const sendBtn = document.getElementById('chat-send');
+            const input = document.getElementById('chat-input');
+            
+            if (sendBtn) sendBtn.addEventListener('click', sendChat);
+            if (input) {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') sendChat();
+                });
+            }
+            
+            // Image Upload Preview
+            const imgInput = document.getElementById('local-img');
+            const adImg = document.getElementById('ad-machine');
+            if(imgInput && adImg) {
+                imgInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if(file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            adImg.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            initVoice();
+        });
+
+        // --- Voice Logic (Speech-to-Text & Text-to-Speech) ---
+        let recognition;
+        let isListening = false;
+        
+        function initVoice() {
+            // Check browser support
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                console.warn('Speech recognition not supported in this browser.');
+                return;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'zh-TW';
+            recognition.continuous = false; // Stop after one sentence for simplicity
+            recognition.interimResults = false;
+
+            const micBtn = document.getElementById('mic-btn');
+            const voiceStatus = document.getElementById('voice-status');
+
+            recognition.onstart = function() {
+                isListening = true;
+                micBtn.classList.add('mic-active');
+                if(voiceStatus) voiceStatus.classList.replace('bg-gray-500', 'bg-red-500');
+            };
+
+            recognition.onend = function() {
+                isListening = false;
+                micBtn.classList.remove('mic-active');
+                if(voiceStatus) voiceStatus.classList.replace('bg-red-500', 'bg-gray-500');
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                const input = document.getElementById('chat-input');
+                if(input) {
+                    input.value = transcript;
+                    sendChat(); // Auto send after speaking
+                }
+            };
+            
+            // Toggle Mic
+            micBtn.addEventListener('click', () => {
+                if(isListening) {
+                    recognition.stop();
+                } else {
+                    recognition.start();
+                }
+            });
+        }
+        
+        function speak(text) {
+            if (!('speechSynthesis' in window)) return;
+            
+            // Cancel previous speech
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            
+            // Try to select a Chinese voice
+            const voices = window.speechSynthesis.getVoices();
+            const zhVoice = voices.find(v => v.lang.includes('zh') || v.lang.includes('TW'));
+            if(zhVoice) utterance.voice = zhVoice;
+            
+            window.speechSynthesis.speak(utterance);
+        }
+        
+        // Ensure voices are loaded (Chrome quirk)
+        window.speechSynthesis.onvoiceschanged = () => {
+             // Voices loaded
+        };
+    </script>
+</body>
+</html>
+

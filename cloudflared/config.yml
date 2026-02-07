@@ -1,0 +1,29 @@
+# Cloudflare Tunnel 配置檔案
+# 用於設定外網訪問路由
+
+tunnel: wuchang-tunnel
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  # 首頁（主域名）
+  - hostname: www.wuchang.life
+    service: http://caddy:80
+  
+  # Odoo ERP 系統
+  - hostname: app.wuchang.org.tw
+    service: http://wuchang-web:8069
+  
+  # AI 介面
+  - hostname: ai.wuchang.org.tw
+    service: http://open-webui:8080
+  
+  # 容器管理（Portainer）
+  - hostname: admin.wuchang.org.tw
+    service: http://portainer:9000
+  
+  # 系統監控（Uptime Kuma）
+  - hostname: monitor.wuchang.org.tw
+    service: http://uptime-kuma:3001
+  
+  # 預設路由（所有未匹配的請求）
+  - service: http_status:404

@@ -1,0 +1,82 @@
+<odoo>
+    <!-- 建立三方協作空間 -->
+    <record id="wuchang_three_party_space" model="wuchang.collab.space">
+        <field name="name">三方線上會議空間</field>
+        <field name="space_type">community_gm</field>
+        <field name="owner_id" ref="base.partner_admin"/>
+        <field name="active">True</field>
+    </record>
+
+    <!-- 建立三位人類參與者占位 -->
+    <record id="participant_human_1" model="res.partner">
+        <field name="name">人類參與者一</field>
+    </record>
+    <record id="participant_human_2" model="res.partner">
+        <field name="name">人類參與者二</field>
+    </record>
+    <record id="participant_human_3" model="res.partner">
+        <field name="name">人類參與者三</field>
+    </record>
+
+    <!-- 建立三位AI代理 -->
+    <record id="agent_ai_1" model="wuchang.ai.agent">
+        <field name="name">AI代理一</field>
+        <field name="agent_type">meeting</field>
+        <field name="role_type">connector</field>
+        <field name="capabilities">議程協助, 摘要, 行動項整理</field>
+    </record>
+    <record id="agent_ai_2" model="wuchang.ai.agent">
+        <field name="name">AI代理二</field>
+        <field name="agent_type">finance</field>
+        <field name="role_type">steward</field>
+        <field name="capabilities">成本分析, 策略建議</field>
+    </record>
+    <record id="agent_ai_3" model="wuchang.ai.agent">
+        <field name="name">AI代理三</field>
+        <field name="agent_type">ops</field>
+        <field name="role_type">steward</field>
+        <field name="capabilities">任務追蹤, 通知</field>
+    </record>
+
+    <record id="agent_time_governor" model="wuchang.ai.agent">
+        <field name="name">時間治理組</field>
+        <field name="agent_type">time</field>
+        <field name="role_type">steward</field>
+        <field name="capabilities">時程規劃, 閒置監控, 截止提醒</field>
+    </record>
+    <record id="agent_event_governor" model="wuchang.ai.agent">
+        <field name="name">事件治理組</field>
+        <field name="agent_type">event</field>
+        <field name="role_type">connector</field>
+        <field name="capabilities">事件蒐集, 分流, 通知與追蹤</field>
+    </record>
+
+    <record id="agent_satellite_research" model="wuchang.ai.agent">
+        <field name="name">衛星AI・研究</field>
+        <field name="agent_type">satellite</field>
+        <field name="role_type">connector</field>
+        <field name="capabilities">證據蒐集, 引用整理, 來源校驗</field>
+    </record>
+    <record id="agent_satellite_struct" model="wuchang.ai.agent">
+        <field name="name">衛星AI・結構</field>
+        <field name="agent_type">satellite</field>
+        <field name="role_type">steward</field>
+        <field name="capabilities">大綱生成, 驗收指標, 結構化輸出</field>
+    </record>
+    <record id="agent_satellite_critic" model="wuchang.ai.agent">
+        <field name="name">衛星AI・批判</field>
+        <field name="agent_type">satellite</field>
+        <field name="role_type">sentinel</field>
+        <field name="capabilities">反例檢查, 風險評估, 邊界與止損</field>
+    </record>
+
+    <!-- 建立會議（預設空間與參與者） -->
+    <record id="wuchang_three_party_meeting" model="wuchang.ai.meeting">
+        <field name="name">三方會議</field>
+        <field name="space_id" ref="wuchang_three_party_space"/>
+        <field name="human_ids" eval="[(6,0,[ref('participant_human_1'), ref('participant_human_2'), ref('participant_human_3')])]"/>
+        <field name="ai_agent_ids" eval="[(6,0,[ref('agent_ai_1'), ref('agent_ai_2'), ref('agent_ai_3'), ref('agent_time_governor'), ref('agent_event_governor'), ref('agent_satellite_research'), ref('agent_satellite_struct'), ref('agent_satellite_critic')])]"/>
+        <field name="state">planned</field>
+        <field name="final_decision_holder_id" ref="base.partner_admin"/>
+    </record>
+</odoo>

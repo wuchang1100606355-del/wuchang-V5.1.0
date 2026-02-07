@@ -1,0 +1,297 @@
+# ASUS 路由器伺服器憑證獲取和配置指南
+
+**配置時間**: 2026-01-07  
+**路由器型號**: RT-BE86U-7428  
+**路由器 IP**: 192.168.50.1  
+**系統版本**: Wuchang OS V5.1.0  
+**AI 身份**: Little J (小j)
+
+---
+
+## 📋 概述
+
+ASUS 路由器提供伺服器憑證下載功能，可用於配置路由器的 HTTPS 訪問。證書下載需要從路由器管理界面進行，需要認證。
+
+---
+
+## 🔍 發現的問題
+
+### 直接 URL 訪問結果
+
+**URL**: `http://www.asusrouter.com/cert_key.tar`
+
+**結果**: 
+- 返回 HTML 重定向頁面
+- 內容: `<HTML><HEAD><script>window.top.location.href='/Main_Login.asp';</script></HEAD></HTML>`
+- **說明**: 證書下載需要先登入路由器管理界面
+
+---
+
+## 📥 正確的證書獲取方式
+
+### 方法 1: 通過路由器管理界面（推薦）
+
+**步驟**:
+
+1. **訪問路由器管理界面**
+   ```
+   http://192.168.50.1
+   ```
+
+2. **登入路由器**
+   - 輸入管理員帳號和密碼
+   - 默認帳號: `admin` / 密碼: (路由器背面標籤)
+
+3. **進入憑證設定**
+   - 導航: `系統管理` → `系統設定` → `憑證設定`
+   - 或直接訪問: `http://192.168.50.1/Advanced_ASUSDDNS_Content.asp` (可能需要調整)
+
+4. **下載伺服器憑證**
+   - 點擊「下載伺服器憑證」或類似按鈕
+   - 文件將下載為 `cert_key.tar`
+
+5. **保存證書文件**
+   - 將下載的文件保存到: `router_certificates/cert_key.tar`
+   - 解壓證書文件
+
+### 方法 2: 使用認證會話下載
+
+如果需要自動化下載，需要:
+
+1. **獲取認證 Cookie**
+   - 先訪問登入頁面獲取 Session
+   - 使用認證後的 Cookie 訪問證書下載 URL
+
+2. **下載證書**
+   ```python
+   import requests
+   
+   session = requests.Session()
+   # 登入獲取 Cookie
+   session.post('http://192.168.50.1/login.cgi', data={'username': 'admin', 'password': '...'})
+   # 下載證書
+   response = session.get('http://192.168.50.1/cert_key.tar')
+   ```
+
+---
+
+## 📦 證書文件結構
+
+下載的 `cert_key.tar` 通常包含:
+
+- `server.crt` - 伺服器證書 (PEM 格式)
+- `server.key` - 私鑰文件 (PEM 格式)
+- `ca.crt` - CA 證書（如適用）
+- 其他相關文件
+
+---
+
+## 🔧 證書配置選項
+
+### 選項 1: Caddy 自動 HTTPS（推薦，當前方案）
+
+**優點**:
+- ✅ 自動管理證書
+- ✅ 自動續期
+- ✅ 無需手動配置
+- ✅ 使用 Let's Encrypt 受信任證書
+
+**當前狀態**: ✅ **已啟用**
+
+Caddy 已配置自動 HTTPS，通過 Cloudflare 隧道提供外網訪問，無需配置路由器證書。
+
+### 選項 2: 使用路由器證書（僅本地訪問）
+
+如果需要為路由器管理界面配置 HTTPS:
+
+**配置步驟**:
+
+1. **下載並解壓證書**
+   ```bash
+   # 解壓證書
+   tar -xf router_certificates/cert_key.tar -C router_certificates/
+   ```
+
+2. **上傳到路由器**
+   - 登入路由器管理界面
+   - 進入: `系統管理` → `系統設定` → `憑證設定`
+   - 上傳 `server.crt` 和 `server.key`
+   - 啟用 HTTPS 訪問
+
+3. **訪問路由器 HTTPS**
+   ```
+   https://192.168.50.1
+   ```
+
+**注意**: 
+- ⚠️ 路由器默認證書通常是自簽名證書
+- ⚠️ 瀏覽器會顯示安全警告
+- ⚠️ 需要手動信任證書
+
+### 選項 3: 整合到 Caddy（不推薦）
+
+如果要在 Caddy 中使用路由器證書:
+
+```caddyfile
+router.wuchang.life {
+    tls /etc/caddy/router_certificates/server.crt /etc/caddy/router_certificates/server.key
+    
+    reverse_proxy 192.168.50.1:443 {
+        header_up Host {host}
+    }
+}
+```
+
+**不推薦原因**:
+- 路由器證書是自簽名證書
+- Caddy 自動 HTTPS 更安全可靠
+- 增加維護複雜度
+
+---
+
+## 🌐 與 Wuchang OS 集成
+
+### 當前配置
+
+**SSL/TLS 方案**: Caddy 自動 HTTPS + Cloudflare 隧道
+
+**優點**:
+- ✅ 無需配置路由器證書
+- ✅ 自動 SSL/TLS 加密
+- ✅ 外網訪問通過 Cloudflare 隧道
+- ✅ 證書自動續期
+
+**路由器角色**:
+- 作為網絡閘道和中繼節點
+- 不需要直接提供 HTTPS 服務
+- 本地訪問使用 HTTP 即可
+
+### 證書查詢 API
+
+已創建證書查詢 API:
+
+**端點**: `GET /api/router/certificate/info`
+
+**功能**: 查詢路由器證書配置信息
+
+**響應**:
+```json
+{
+  "router_ip": "192.168.50.1",
+  "router_model": "RT-BE86U-7428",
+  "certificate_endpoints": {
+    "download_url": "http://www.asusrouter.com/cert_key.tar",
+    "local_url": "http://192.168.50.1/cert_key.tar",
+    "admin_path": "系統管理 → 系統設定 → 憑證設定"
+  },
+  "current_config": {
+    "method": "caddy_auto_https",
+    "status": "active"
+  }
+}
+```
+
+---
+
+## 🔒 安全建議
+
+### 推薦配置
+
+**使用 Caddy 自動 HTTPS**:
+- 當前已配置，無需額外操作
+- 通過 Cloudflare 隧道提供外網 HTTPS
+- 使用受信任的 CA 簽發證書
+
+### 如果必須使用路由器 HTTPS
+
+1. **下載證書**: 從路由器管理界面下載
+2. **檢查證書**: 確認證書有效期和簽發者
+3. **上傳到路由器**: 通過管理界面上傳
+4. **測試訪問**: 驗證 HTTPS 訪問正常
+5. **處理瀏覽器警告**: 手動信任自簽名證書
+
+---
+
+## 📄 證書文件處理
+
+### 解壓證書
+
+```bash
+# 下載後解壓
+tar -xf router_certificates/cert_key.tar -C router_certificates/
+
+# 查看內容
+ls -la router_certificates/
+```
+
+### 證書文件位置
+
+- **下載目錄**: `router_certificates/`
+- **證書文件**: `router_certificates/server.crt`
+- **私鑰文件**: `router_certificates/server.key`
+- **CA 證書**: `router_certificates/ca.crt` (如適用)
+
+### 驗證證書
+
+```bash
+# 查看證書內容
+openssl x509 -in router_certificates/server.crt -text -noout
+
+# 查看私鑰
+openssl rsa -in router_certificates/server.key -text -noout
+```
+
+---
+
+## ✅ 配置檢查清單
+
+- ✅ 證書下載說明已準備
+- ✅ 證書配置 API 已創建
+- ✅ Caddy 自動 HTTPS 已配置（推薦方案）
+- ⏳ 需要從路由器管理界面手動下載證書（如需要）
+
+---
+
+## 💡 建議
+
+### 當前系統配置
+
+**推薦**: **繼續使用 Caddy 自動 HTTPS**
+
+**原因**:
+- ✅ 已配置並運行正常
+- ✅ 無需額外維護
+- ✅ 使用受信任證書
+- ✅ 自動續期
+
+### 如果確實需要路由器 HTTPS
+
+1. **手動下載**: 從路由器管理界面下載證書
+2. **解壓文件**: 提取證書和私鑰
+3. **上傳到路由器**: 通過管理界面上傳
+4. **啟用 HTTPS**: 在路由器設置中啟用
+5. **測試訪問**: 驗證 HTTPS 功能
+
+---
+
+## 🔄 後續操作
+
+1. **如果需要路由器 HTTPS**:
+   - 訪問 `http://192.168.50.1`
+   - 登入管理界面
+   - 下載並配置證書
+
+2. **如果使用當前方案**:
+   - 無需額外操作
+   - Caddy 自動 HTTPS 已配置
+   - 外網訪問通過 Cloudflare 隧道
+
+---
+
+**配置指南創建時間**: 2026-01-07  
+**系統版本**: Wuchang OS V5.1.0  
+**AI 身份**: Little J (小j)
+
+---
+
+*「路由器證書配置指南已準備。當前系統使用 Caddy 自動 HTTPS，無需配置路由器證書。」* ✨

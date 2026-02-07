@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_credits_management_root"
+              name="抵免額管理"
+              sequence="100"/>
+
+    <menuitem id="menu_gcp_credits"
+              name="GCP 抵免額"
+              parent="menu_credits_management_root"
+              action="action_gcp_credits"
+              sequence="10"/>
+
+    <menuitem id="menu_double_j_tasks"
+              name="雙J協作任務"
+              parent="menu_credits_management_root"
+              action="action_double_j_task"
+              sequence="20"/>
+</odoo>

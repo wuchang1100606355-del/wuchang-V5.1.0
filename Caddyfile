@@ -1,0 +1,80 @@
+# Caddyfile for Wuchang OS
+# 確保對外門戶一次開齊，完美整合首頁與 POS
+
+{
+    # 全域設定：關閉自動 HTTPS (由 Cloudflare Tunnel 處理 SSL)
+    auto_https off
+}
+
+:80 {
+    encode zstd gzip
+    header {
+        -Server
+    }
+
+    # --- 1. 首頁 (The Beacon) ---
+    # 攔截根路徑，導向靜態首頁 (wuchang-web)
+    handle / {
+        reverse_proxy wuchang-web:3000
+    }
+    handle /index.html {
+        reverse_proxy wuchang-web:3000
+    }
+
+    # --- 3. 視覺模組 (The Eye) ---
+    handle /earth-3d-viewer* {
+        reverse_proxy wuchang-visual:8080
+    }
+    handle /api/spatial* {
+        reverse_proxy wuchang-visual:8080
+    }
+
+    # --- 2. POS 系統 (The System) ---
+    # Odoo Longpolling (即時通訊)
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-pos:8072 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Port 443
+    }
+
+    # 預設：所有其他請求 (如 /web, /base, /assets) 全部交給 POS
+    reverse_proxy wuchang-pos:8069 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Port 443
+    }
+}
+
+:443 {
+    encode zstd gzip
+    header {
+        -Server
+    }
+
+    # --- 1. 首頁 (The Beacon) ---
+    handle / {
+        reverse_proxy wuchang-web:3000
+    }
+    handle /index.html {
+        reverse_proxy wuchang-web:3000
+    }
+
+    # --- 3. 視覺模組 (The Eye) ---
+    handle /earth-3d-viewer* {
+        reverse_proxy wuchang-visual:8080
+    }
+    handle /api/spatial* {
+        reverse_proxy wuchang-visual:8080
+    }
+
+    # --- 2. POS 系統 (The System) ---
+    @bus path /longpolling*
+    reverse_proxy @bus wuchang-pos:8072 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Port 443
+    }
+
+    reverse_proxy wuchang-pos:8069 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Port 443
+    }
+}

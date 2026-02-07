@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Wuchang Community Spacetime Map (Core System)</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; background-color: #000; color: #0f0; font-family: 'Courier New', monospace; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 20, 0, 0.8);
+            padding: 15px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            pointer-events: none; /* Let clicks pass through to map where possible */
+        }
+        h1 { margin: 0 0 10px 0; font-size: 18px; text-shadow: 0 0 5px #0f0; }
+        .stat-line { margin: 5px 0; font-size: 14px; }
+        #event-log {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            pointer-events: auto;
+        }
+        .event-item {
+            border-left: 2px solid #0f0;
+            padding-left: 5px;
+            margin-bottom: 5px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .mapboxgl-popup-content {
+            background: rgba(0, 20, 0, 0.9) !important;
+            border: 1px solid #0f0 !important;
+            color: #0f0 !important;
+            font-family: 'Courier New', monospace !important;
+        }
+        .mapboxgl-popup-tip {
+            border-top-color: #0f0 !important;
+        }
+        #time-slider-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+            right: 50px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+        }
+        #time-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            background: #0f0;
+            height: 2px;
+            outline: none;
+        }
+        #time-display {
+            color: #0f0;
+            margin-left: 15px;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="ui-layer">
+        <h1>CORE SYSTEM: WUCHANG MAP</h1>
+        <div class="stat-line">STATUS: <span id="status">SCANNING...</span></div>
+        <div class="stat-line">EVENTS: <span id="event-count">0</span></div>
+        <div class="stat-line">COORDINATES: <span id="coords">--</span></div>
+        <div id="event-log"></div>
+    </div>
+    
+    <div id="time-slider-container">
+        <input type="range" id="time-slider" min="0" max="100" value="100">
+        <div id="time-display">LIVE</div>
+    </div>
+
+    <script>
+        // Configuration
+        const WUCHANG_CENTER = [121.498, 25.080]; // Approximate center from GeoJSON
+        const API_URL = 'http://localhost:5500';
+        
+        // Initialize Map
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json', // Dark sci-fi style
+            center: WUCHANG_CENTER,
+            zoom: 15,
+            pitch: 60, // 3D perspective
+            bearing: -17.6,
+            antialias: true
+        });
+
+        // Add 3D Building Layer (standard OSM buildings)
+        map.on('load', () => {
+            document.getElementById('status').innerText = "ONLINE";
+            
+            // 1. Add Wuchang Community Boundary (GeoJSON)
+            // We fetch the local file (assuming it's served by the http server)
+            // Note: Since we are running this via http-server in the root, we can access config/wuchang_community_boundary.geojson
+            map.addSource('wuchang-boundary', {
+                type: 'geojson',
+                data: 'config/wuchang_community_boundary.geojson'
+            });
+
+            // Add fill layer with extrusion for 3D effect
+            map.addLayer({
+                'id': 'wuchang-fill-extrusion',
+                'type': 'fill-extrusion',
+                'source': 'wuchang-boundary',
+                'paint': {
+                    'fill-extrusion-color': '#00ff00',
+                    'fill-extrusion-height': 20, // 20 meters high "fence"
+                    'fill-extrusion-base': 0,
+                    'fill-extrusion-opacity': 0.3
+                }
+            });
+
+            // 1. Add Glow Layer (Bottom)
+            map.addLayer({
+                'id': 'wuchang-line-glow',
+                'type': 'line',
+                'source': 'wuchang-boundary',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#00FFFF', // Cyan glow
+                    'line-width': 15,
+                    'line-blur': 3, // Simulate glow
+                    'line-opacity': 0.6
+                }
+            });
+
+            // 2. Add Core Layer (Top)
+            map.addLayer({
+                'id': 'wuchang-line-core',
+                'type': 'line',
+                'source': 'wuchang-boundary',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#FFFFFF', // White core
+                    'line-width': 4
+                }
+            });
+
+            // 2. Fetch and Display Spacetime Events
+            fetchEvents();
+            
+            // Set up polling
+            setInterval(fetchEvents, 5000);
+        });
+
+        // Event Fetching Logic
+        async function fetchEvents() {
+            try {
+                // Try fetching the static JSON file first (Direct Core Mapping)
+                const response = await fetch('spacetime_events.json');
+                if (!response.ok) throw new Error("File not found");
+                const events = await response.json();
+                
+                updateEventMarkers(events);
+                updateUI(events);
+                document.getElementById('status').innerText = "ONLINE (CORE MAPPED)";
+                document.getElementById('status').style.color = "#0f0";
+            } catch (e) {
+                console.warn("Failed to fetch events.json, retrying API...", e);
+                // Fallback to API if needed (or just show error)
+                 document.getElementById('status').innerText = "OFFLINE";
+                 document.getElementById('status').style.color = "red";
+            }
+        }
+
+        const markers = [];
+
+        function updateEventMarkers(events) {
+            // Clear old markers
+            markers.forEach(m => m.remove());
+            markers.length = 0;
+
+            events.forEach(event => {
+                let lng, lat;
+                
+                // Use actual coordinates if available
+                if (event.coordinates && event.coordinates.length >= 2) {
+                    lng = event.coordinates[0];
+                    lat = event.coordinates[1];
+                } else {
+                    // Fallback to center
+                    lng = WUCHANG_CENTER[0];
+                    lat = WUCHANG_CENTER[1];
+                }
+
+                // Determine Color based on Category
+                let color = '#0f0'; // Default Green
+                const cat = event.metadata ? event.metadata.category : '';
+                if (cat === 'Demographics') color = '#00ffff'; // Cyan
+                if (cat === 'Business') color = '#ffff00'; // Yellow
+                if (cat === 'Traffic') color = '#ffa500'; // Orange
+                if (cat === 'UrbanPlanning') color = '#ff00ff'; // Magenta
+
+                // Create Marker Element
+                const el = document.createElement('div');
+                el.style.width = '24px';
+                el.style.height = '24px';
+                el.style.backgroundColor = color;
+                el.style.borderRadius = '50%';
+                el.style.boxShadow = `0 0 15px ${color}`;
+                el.style.cursor = 'pointer';
+                el.style.border = '2px solid #fff';
+
+                // Popup Content
+                const metadataHtml = event.metadata ? 
+                    `<hr style="border-color:${color}">
+                     <p><strong>Model:</strong> ${event.metadata.assigned_model || 'N/A'}</p>
+                     <p><strong>Status:</strong> ${event.metadata.computation_status || 'Unknown'}</p>
+                     <p><strong>Node:</strong> ${event.metadata.replication_node || 'N/A'}</p>` 
+                    : '';
+
+                // Add to Map
+                const marker = new maplibregl.Marker(el)
+                    .setLngLat([lng, lat])
+                    .setPopup(new maplibregl.Popup({ offset: 25 })
+                        .setHTML(`<h3 style="color:${color}">${event.title}</h3>
+                                  <p>${event.description}</p>
+                                  <p>Time: ${event.start_time}</p>
+                                  ${metadataHtml}`))
+                    .addTo(map);
+                
+                markers.push(marker);
+            });
+        }
+
+        function updateUI(events) {
+            document.getElementById('event-count').innerText = events.length;
+            const log = document.getElementById('event-log');
+            log.innerHTML = '';
+            events.slice(0, 10).forEach(e => {
+                const div = document.createElement('div');
+                div.className = 'event-item';
+                div.innerText = `[${e.start_time.substring(11, 16)}] ${e.title}`;
+                log.appendChild(div);
+            });
+        }
+
+        // Coordinate display
+        map.on('mousemove', (e) => {
+            document.getElementById('coords').innerText = 
+                `${e.lngLat.lat.toFixed(4)}, ${e.lngLat.lng.toFixed(4)}`;
+        });
+
+    </script>
+</body>
+</html>
