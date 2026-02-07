@@ -40,6 +40,7 @@ Thumbs.db
 # Project specific
 *.log
 *.tmp
+workspace_temp/
 
 # Certificates (sensitive - do not commit)
 certs/
