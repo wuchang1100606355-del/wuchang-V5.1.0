@@ -138,8 +138,8 @@ function Invoke-WorkspaceCommand {
     
     # 安全性警告
     Write-Host ""
-    Write-Host "警告: 即將執行命令" -ForegroundColor Yellow
-    Write-Host "命令: $command" -ForegroundColor Yellow
+    Write-Host "警告: 即將執行命令" -ForegroundColor $Colors.Warning
+    Write-Host "命令: $command" -ForegroundColor $Colors.Warning
     $confirm = Read-Host "確認執行此命令? (y/n)"
     if ($confirm -ne 'y' -and $confirm -ne 'Y') {
         Write-Host "已取消執行" -ForegroundColor $Colors.Warning
