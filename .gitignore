@@ -48,3 +48,6 @@ certs/
 *.crt
 *.cert
 cert_key.tar
+
+# Cloud agent task logs (runtime data)
+cloud_agent_tasks.json
