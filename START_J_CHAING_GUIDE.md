@@ -136,8 +136,7 @@ powershell -ExecutionPolicy Bypass -File ".\start_j_chaing.ps1"
   - `status` - 查看狀態
   - `menu` - 顯示互動式選單（預設）
 
-- `-AutoApprove`: 自動認可變更，無需手動確認
-- `-DelegateToCloud`: 保留供未來使用
+- `-AutoApprove`: 自動認可變更，無需手動確認。適用於自動化工作流程和 CI/CD 整合。
 
 ## 系統需求 (Requirements)
 

@@ -5,9 +5,11 @@
 
 param(
     [string]$Action = "menu",
-    [switch]$AutoApprove,
-    [switch]$DelegateToCloud
+    [switch]$AutoApprove
 )
+
+# Script version constant
+$SCRIPT_VERSION = "5.1.0"
 
 # 設定控制台編碼為 UTF-8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -26,7 +28,7 @@ function Write-ColorOutput {
 function Show-Header {
     Clear-Host
     Write-ColorOutput "========================================" "Cyan"
-    Write-ColorOutput "   五常互動工作區 v5.1.0" "Cyan"
+    Write-ColorOutput "   五常互動工作區 v$SCRIPT_VERSION" "Cyan"
     Write-ColorOutput "   Wu Chang Interactive Workspace" "Cyan"
     Write-ColorOutput "========================================" "Cyan"
     Write-Host ""
@@ -120,15 +122,64 @@ function Execute-CustomCommand {
     
     Write-ColorOutput "`n=== 執行命令 ===" "Green"
     
+    # 定義允許的命令白名單
+    $allowedCommands = @(
+        "git",
+        "python",
+        "pwsh",
+        "powershell",
+        "node",
+        "npm",
+        "pip",
+        "dotnet",
+        "docker",
+        "ls",
+        "dir",
+        "cat",
+        "type",
+        "echo",
+        "cd"
+    )
+    
     if (-not $Command) {
         Write-ColorOutput "請輸入要執行的命令:" "Yellow"
+        Write-ColorOutput "（支援的命令: git, python, node, npm, pip, ls, cat, echo, 等）" "Gray"
         $Command = Read-Host
     }
     
     if ($Command) {
+        # 提取命令的第一個單詞（實際命令名稱）
+        $commandName = ($Command -split '\s+')[0]
+        
+        # 驗證命令是否在白名單中
+        $isAllowed = $false
+        foreach ($allowed in $allowedCommands) {
+            if ($commandName -like "*$allowed*" -or $commandName -eq $allowed) {
+                $isAllowed = $true
+                break
+            }
+        }
+        
+        if (-not $isAllowed) {
+            Write-ColorOutput "✗ 不允許執行的命令: $commandName" "Red"
+            Write-ColorOutput "僅允許執行以下類型的命令: $($allowedCommands -join ', ')" "Yellow"
+            return $false
+        }
+        
         Write-ColorOutput "執行: $Command" "Cyan"
         try {
-            Invoke-Expression $Command
+            # 使用 &（調用運算符）而不是 Invoke-Expression 更安全
+            # 將命令拆分為命令和參數
+            $parts = $Command -split '\s+', 2
+            $cmd = $parts[0]
+            $args = if ($parts.Count -gt 1) { $parts[1] } else { "" }
+            
+            if ($args) {
+                & $cmd $args.Split(' ')
+            } else {
+                & $cmd
+            }
+            
             Write-ColorOutput "`n✓ 命令執行完成" "Green"
             return $true
         } catch {
@@ -143,6 +194,10 @@ function Execute-CustomCommand {
 
 # 認可變更
 function Approve-Changes {
+    param(
+        [switch]$AutoApprove
+    )
+    
     Write-ColorOutput "`n=== 認可變更 ===" "Green"
     
     # 顯示當前變更
@@ -163,6 +218,8 @@ function Approve-Changes {
             Write-ColorOutput "✗ 已取消認可" "Red"
             return $false
         }
+    } else {
+        Write-ColorOutput "`n[自動認可模式] 自動認可所有變更" "Yellow"
     }
     
     # 添加所有變更
@@ -170,10 +227,14 @@ function Approve-Changes {
     git add -A
     
     # 提交變更
-    Write-ColorOutput "請輸入提交訊息 (或按 Enter 使用預設訊息):" "Yellow"
-    $commitMessage = Read-Host
-    if (-not $commitMessage) {
-        $commitMessage = "Update: Interactive workspace changes"
+    if (-not $AutoApprove) {
+        Write-ColorOutput "請輸入提交訊息 (或按 Enter 使用預設訊息):" "Yellow"
+        $commitMessage = Read-Host
+        if (-not $commitMessage) {
+            $commitMessage = "Update: Interactive workspace changes"
+        }
+    } else {
+        $commitMessage = "Update: Interactive workspace changes (auto-approved)"
     }
     
     git commit -m $commitMessage
@@ -226,10 +287,14 @@ function Delegate-ToCloudAgent {
 
 # 認可變更並委派
 function Approve-AndDelegate {
+    param(
+        [switch]$AutoApprove
+    )
+    
     Write-ColorOutput "`n=== 認可變更並委派至雲端 ===" "Green"
     
-    # 先認可變更
-    $approved = Approve-Changes
+    # 先認可變更，傳遞 AutoApprove 參數
+    $approved = Approve-Changes -AutoApprove:$AutoApprove
     
     if ($approved) {
         # 然後委派到雲端
@@ -294,7 +359,7 @@ function Main {
         }
         "approve" {
             Show-Header
-            Approve-Changes
+            Approve-Changes -AutoApprove:$AutoApprove
             Read-Host "`n按 Enter 鍵繼續..."
             return
         }
@@ -306,7 +371,7 @@ function Main {
         }
         "both" {
             Show-Header
-            Approve-AndDelegate
+            Approve-AndDelegate -AutoApprove:$AutoApprove
             Read-Host "`n按 Enter 鍵繼續..."
             return
         }
