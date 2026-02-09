@@ -2,12 +2,19 @@ import time
 import logging
 import sys
 import threading
+from pathlib import Path
 
 # Configure logging
+# - On Linux Odoo servers, `/var/lib/odoo/` is common.
+# - On Windows/dev machines, fall back to a local `logs/` folder.
+default_log_path = Path("/var/lib/odoo/core_sister.log")
+if sys.platform.startswith("win") or not default_log_path.parent.exists():
+    default_log_path = Path(__file__).resolve().parent / "logs" / "core_sister_task.log"
+default_log_path.parent.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
-    filename='/var/lib/odoo/core_sister.log',
+    filename=str(default_log_path),
     level=logging.INFO,
-    format='%(asctime)s - CoreSister - %(levelname)s - %(message)s'
+    format="%(asctime)s - CoreSister - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -75,9 +82,13 @@ def run_maintenance(env):
 
     logger.info('Core Sister maintenance cycle completed. Standing by.')
 
-if __name__ == '__main__':
-    try:
-        run_maintenance(env)
-    except Exception as e:
-        pass
+def _main() -> int:
+    # This script is designed to be executed inside an Odoo environment where `env` exists.
+    # If you run it directly, we fail loudly with instructions rather than silently doing nothing.
+    logger.error("No Odoo `env` provided. Run inside Odoo shell/server action and call run_maintenance(env).")
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(_main())
 
