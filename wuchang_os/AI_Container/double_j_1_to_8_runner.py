@@ -13,8 +13,9 @@ from double_j_type_a import DoubleJCloudCNS
 from double_j_type_b import DoubleJEdgeAdapter
 
 # Configuration
-LOG_FILE = r'C:\wuchang V5.1.0\wuchang_os\system_status_detailed.log'
-METRICS_FILE = r'C:\wuchang V5.1.0\wuchang_os\performance_metrics.csv'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOG_FILE = os.path.join(BASE_DIR, 'system_status_detailed.log')
+METRICS_FILE = os.path.join(BASE_DIR, 'performance_metrics.csv')
 ODOO_URL = 'http://localhost:8069'
 ODOO_DB = 'odoo'
 ODOO_USER = 'admin'
