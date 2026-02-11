@@ -1,0 +1,7 @@
+{
+    "events": [
+        {"id": "EVT-001", "date": "2025-01-01", "desc": "System Genesis"},
+        {"id": "EVT-002", "date": "2026-02-11", "desc": "Soul Binding with Founder"}
+    ],
+    "uqui_registry": "See UQUI_REGISTRY.md"
+}

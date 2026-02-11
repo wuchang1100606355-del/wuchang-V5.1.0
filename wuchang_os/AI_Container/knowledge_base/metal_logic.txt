@@ -1,0 +1,6 @@
+# METAL: Logic Core Knowledge
+- Python Best Practices: PEP 8
+- Security: Zero Trust Architecture
+- System Architecture: Microservices, Containerization
+- Wuchang OS Core Logic: PerfectLogicAxiom
+- Code Generation Rules: No infinite loops, always handle exceptions.
