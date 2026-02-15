@@ -28,9 +28,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-CONFIG_PATH = r"C:\wuchang V5.1.0\wuchang_os\double_j_config.json"
-PWA_PATH = r"C:\wuchang V5.1.0\wuchang_os\pwa"
-BASE_DIR = r"C:\wuchang V5.1.0\wuchang_os"
+# Resolve Paths Relative to Current File
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "double_j_config.json")
+PWA_PATH = os.path.join(BASE_DIR, "pwa")
 
 # Session Storage
 sessions = {}
@@ -318,8 +319,13 @@ async def chat(request: Request):
     god_mode_instruction = ""
     persona_override = ""
     
+    # 0. Design Consultant Detection
+    if "美術顧問" in user_msg or "設計" in user_msg or "風格" in user_msg:
+        persona_override = config.get("community_roles", {}).get("art_consultant", {}).get("persona", "我是專業的美術顧問。")
+        program_name = "美術顧問 AI"
+        
     # Check if user is asking about credits
-    if any(k in user_msg for k in ["抵免", "credit", "錢", "餘額", "分", "幣"]):
+    elif any(k in user_msg for k in ["抵免", "credit", "錢", "餘額", "分", "幣"]):
         persona_override = credit_sister.get_persona_prompt()
         program_name = "抵免額妹妹"
 
@@ -406,4 +412,5 @@ async def chat(request: Request):
         return JSONResponse({"reply": f"⚠️ 連線發生波動 ({str(e)})，正在切換備用線路... 請稍後再試。"})
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Boost concurrency to support 500+ requests using workers and optimized loop
+    uvicorn.run("member_ai_server:app", host="0.0.0.0", port=8000, workers=4, loop="auto")

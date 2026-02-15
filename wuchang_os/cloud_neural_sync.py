@@ -12,10 +12,20 @@ class CloudNeuralSync:
     這是「最高級配備」的關鍵一環，確保 AI 的「靈魂」備份且可跨裝置存取。
     """
     
-    def __init__(self, local_base=r"C:\wuchang V5.1.0\wuchang_os", cloud_base=r"J:\共用雲端硬碟\五常雲端空間\Wuchang_System_Backup"):
-        self.local_base = local_base
-        self.cloud_base = cloud_base
-        self.log_dir = os.path.join(local_base, "logs")
+    def __init__(self, local_base=None, cloud_base=None):
+        if local_base is None:
+            self.local_base = os.path.dirname(os.path.abspath(__file__))
+        else:
+            self.local_base = local_base
+            
+        if cloud_base is None:
+            # Fallback to a 'backup' directory in the parent folder if J: is missing
+            parent_dir = os.path.dirname(self.local_base)
+            self.cloud_base = os.path.join(parent_dir, "Wuchang_System_Backup")
+        else:
+            self.cloud_base = cloud_base
+
+        self.log_dir = os.path.join(self.local_base, "logs")
         self.ensure_dirs()
         
     def ensure_dirs(self):

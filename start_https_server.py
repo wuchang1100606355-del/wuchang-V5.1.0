@@ -71,9 +71,8 @@ class WuchangHandler(http.server.SimpleHTTPRequestHandler):
              self.send_response(200)
              self.send_header('Content-type', 'application/json')
              self.end_headers()
-             self.end_headers()
              self.wfile.write(json.dumps({"command": grid_state.world_state}).encode())
-        elif self.path == '/api/config':
+        elif self.path in ['/api/config', '/api/config/']:
              self.send_response(200)
              self.send_header('Content-type', 'application/json')
              self.end_headers()
@@ -83,6 +82,7 @@ class WuchangHandler(http.server.SimpleHTTPRequestHandler):
                  self.wfile.write(json.dumps(config).encode())
              except Exception as e:
                  self.wfile.write(json.dumps({"error": str(e)}).encode())
+             return # Explicitly return after handling
         else:
             return super().do_GET()
 

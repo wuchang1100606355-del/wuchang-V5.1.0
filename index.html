@@ -411,38 +411,35 @@
 
                 <!-- Art Studio View -->
                 <div id="view-art-studio" class="view-container">
-                    <div style="text-align: center; padding: 40px; max-width: 800px; margin: 0 auto;">
-                        <span style="font-size: 4rem; display: block; margin-bottom: 20px;">🎨</span>
-                        <h2 style="color: #f093fb; font-size: 2rem;">美術顧問工作室 (Art Studio)</h2>
-                        <p style="font-size: 1.2rem; color: #ccc;">您好，我是您的專屬美術 AI 顧問。請選擇您想要生成的設計風格，我將為您進行即時運算。</p>
-                        
-                        <div class="art-grid">
-                            <div class="art-option" onclick="selectArt('cyberpunk')">
-                                <span class="art-icon">🌃</span>
-                                <h3>賽博龐克 (Cyberpunk)</h3>
-                                <p>霓虹光影、高科技、未來都市感</p>
+                    <div class="studio-layout" style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; height: 100%; padding: 20px;">
+                        <div class="studio-main" style="background: rgba(0,0,0,0.4); border-radius: 10px; padding: 20px; display: flex; flex-direction: column;">
+                            <h2 style="color: #f093fb; margin-top: 0;">🎨 美術顧問工作室 (Art Studio)</h2>
+                            <p style="color: #ccc; margin-bottom: 20px;">我是您的專屬美術 AI 顧問。我能為您提供設計提案、排版建議，甚至直接產出 CSS/SVG 視覺組件。</p>
+                            
+                            <div class="art-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                                <div class="art-option" onclick="selectArt('cyberpunk')">🌃 賽博龐克</div>
+                                <div class="art-option" onclick="selectArt('watercolor')">🖌️ 水彩藝術</div>
+                                <div class="art-option" onclick="selectArt('minimalist')">⬜ 現代極簡</div>
+                                <div class="art-option" onclick="selectArt('pixel')">👾 像素風格</div>
                             </div>
-                            <div class="art-option" onclick="selectArt('watercolor')">
-                                <span class="art-icon">🖌️</span>
-                                <h3>水彩藝術 (Watercolor)</h3>
-                                <p>柔和暈染、透明感、優雅藝術氣息</p>
-                            </div>
-                            <div class="art-option" onclick="selectArt('minimalist')">
-                                <span class="art-icon">⬜</span>
-                                <h3>現代極簡 (Minimalist)</h3>
-                                <p>乾淨線條、留白大氣、專業形象</p>
-                            </div>
-                            <div class="art-option" onclick="selectArt('pixel')">
-                                <span class="art-icon">👾</span>
-                                <h3>像素風格 (Pixel Art)</h3>
-                                <p>復古電玩、趣味互動、數位懷舊</p>
+
+                            <div id="art-output-area" style="flex-grow: 1; border: 1px solid #444; border-radius: 8px; background: #111; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                <div id="art-placeholder" style="text-align: center; color: #555;">
+                                    <span style="font-size: 3rem; display: block;">✨</span>
+                                    <p>請選擇風格或在右側輸入指令...</p>
+                                </div>
+                                <div id="art-rendering" style="width: 100%; height: 100%; display: none;"></div>
                             </div>
                         </div>
 
-                        <div id="art-output" style="margin-top: 40px; border: 1px dashed #555; padding: 30px; display: none; background: rgba(0,0,0,0.3); border-radius: 10px;">
-                            <h3 id="art-status" style="color: var(--primary-color);">正在生成設計...</h3>
-                            <div id="art-preview" style="width: 100%; height: 250px; background: #222; margin-top: 20px; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
-                                <!-- Preview content will go here -->
+                        <div class="studio-sidebar" style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; display: flex; flex-direction: column;">
+                            <h4 style="margin: 0 0 10px 0; color: #f093fb;">🗨️ 設計諮詢</h4>
+                            <div id="art-chat-history" style="flex-grow: 1; overflow-y: auto; font-size: 0.9rem; margin-bottom: 10px; color: #ddd;">
+                                <div class="msg ai">您好！今天的五常社區需要什麼樣的視覺火花？</div>
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" id="art-input" placeholder="輸入設計指令..." style="flex-grow: 1; background: #222; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 4px;">
+                                <button onclick="sendArtCommand()" style="background: #f093fb; color: #000; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">發送</button>
                             </div>
                         </div>
                     </div>
@@ -480,12 +477,15 @@
                     document.head.appendChild(script);
                     mapInitialized = true;
                 } else {
-                    document.getElementById('osm-map').innerHTML = `
-                        <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; color: #fff; padding: 20px; text-align: center;">
-                            <p>尚未偵測到 Google Maps API 金鑰，無法啟動高彩地圖。</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=25.0864,121.4948" target="_blank" class="btn-sub">在地圖外部查看五常公園</a>
-                        </div>
-                    `;
+                    const osmMapDiv = document.getElementById('osm-map');
+                    if (osmMapDiv) {
+                        osmMapDiv.innerHTML = `
+                            <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; color: #fff; padding: 20px; text-align: center;">
+                                <p>尚未偵測到 Google Maps API 金鑰，無法啟動高彩地圖。</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=25.0864,121.4948" target="_blank" style="display:inline-block; padding:10px 20px; background:var(--primary-color); color:#000; text-decoration:none; border-radius:4px; font-weight:bold; margin-top:10px;">在地圖外部查看五常公園</a>
+                            </div>
+                        `;
+                    }
                 }
             } catch (e) {
                 console.error("Map Init Error:", e);
@@ -494,7 +494,8 @@
 
         window.renderGoogleMap = function() {
             const renyi = { lat: 25.0864, lng: 121.4948 };
-
+            if (typeof google === 'undefined') return;
+            
             gMap = new google.maps.Map(document.getElementById("osm-map"), {
                 zoom: 18,
                 center: renyi,
@@ -524,12 +525,10 @@
 
         // --- Tab Switching ---
         window.switchTab = function(viewId) {
-            // Update tabs
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             const clickedTab = document.querySelector(`.nav-tab[onclick*="${viewId}"]`);
             if(clickedTab) clickedTab.classList.add('active');
             
-            // Update views
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
             document.getElementById('view-' + viewId).classList.add('active');
 
@@ -539,38 +538,60 @@
         };
 
         // --- Art Studio Logic ---
-        window.selectArt = function(style) {
-            document.querySelectorAll('.art-option').forEach(o => o.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
+        window.sendArtCommand = async function(preset) {
+            const input = document.getElementById('art-input');
+            const msg = preset || input.value.trim();
+            if(!msg) return;
             
-            const output = document.getElementById('art-output');
-            const status = document.getElementById('art-status');
-            const preview = document.getElementById('art-preview');
+            if(!preset) input.value = '';
             
-            output.style.display = 'block';
-            status.innerText = `⏳ 正在運算 ${style} 風格模型...`;
-            preview.innerHTML = '<div class="loader-ring" style="width: 30px; height: 30px; border-width: 2px;"></div>';
+            const history = document.getElementById('art-chat-history');
+            if(history) {
+                history.innerHTML += `<div class="msg user" style="margin-top:10px; color:#f093fb;">> ${msg}</div>`;
+                history.scrollTop = history.scrollHeight;
+            }
             
-            // Simulate generation
-            setTimeout(() => {
-                status.innerHTML = `✅ ${style} 風格概念圖 (Concept Generated)`;
-                status.style.color = '#0f0';
+            const placeholder = document.getElementById('art-placeholder');
+            const rendering = document.getElementById('art-rendering');
+            if(placeholder) placeholder.style.display = 'none';
+            if(rendering) {
+                rendering.style.display = 'flex';
+                rendering.innerHTML = '<div class="loader-ring" style="width: 30px; height: 30px; border: 2px solid #f093fb; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>';
+            }
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ message: `【美術顧問模式】指令：${msg}` })
+                });
+                const data = await response.json();
                 
-                let colorStyle = '';
-                if(style === 'cyberpunk') colorStyle = 'background: linear-gradient(45deg, #000, #222); border: 2px solid #0ff; box-shadow: 0 0 20px #0ff;';
-                if(style === 'watercolor') colorStyle = 'background: linear-gradient(135deg, #fff, #e6e6fa); border: 2px solid #add8e6;';
-                if(style === 'minimalist') colorStyle = 'background: #fff; border: 1px solid #ccc;';
-                if(style === 'pixel') colorStyle = 'background: #333; border: 4px dashed #f0f; image-rendering: pixelated;';
-
-                preview.innerHTML = `
-                    <div style="width: 80%; height: 80%; ${colorStyle} display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 8px;">
-                        <div style="padding: 20px; color: ${style === 'minimalist' || style === 'watercolor' ? '#333' : '#fff'};">
-                            <h3>[ ${style.toUpperCase()} RENDERING ]</h3>
-                            <p>五常社區首頁視覺提案</p>
+                if(history) {
+                    history.innerHTML += `<div class="msg ai" style="margin-top:10px; color:#ddd; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px;">${data.reply}</div>`;
+                    history.scrollTop = history.scrollHeight;
+                }
+                
+                if(rendering) {
+                    rendering.innerHTML = `
+                        <div style="width:90%; height:90%; background: linear-gradient(135deg, #1a1a1a 0%, #333 100%); border: 1px solid #f093fb; border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative;">
+                            <div style="text-align: center; color: #fff; padding: 20px;">
+                                <h2 style="color: #f093fb;">[ AI DESIGN CONCEPT ]</h2>
+                                <p>${msg.substring(0, 30)}...</p>
+                                <small style="color: #888;">美術顧問已根據您的指令完成運算與審核</small>
+                            </div>
+                            <div style="position: absolute; bottom: 10px; right: 10px; font-size: 0.7rem; color: #444;">ID: ART-${Date.now()}</div>
                         </div>
-                    </div>
-                `;
-            }, 1500);
+                    `;
+                }
+            } catch (e) {
+                if(history) history.innerHTML += `<div class="msg error" style="color:red; margin-top:5px;">❌ 連線失敗：${e}</div>`;
+                if(rendering) rendering.innerHTML = '<p style="color:red;">無法連線至 AI 創意核心 (Port 8000)</p>';
+            }
+        };
+
+        window.selectArt = function(style) {
+            sendArtCommand(`生成 ${style} 風格的五常社區首頁視覺提案`);
         };
 
         // --- Boot Sequence Animation ---
@@ -593,8 +614,10 @@
             if (logIndex < logs.length) {
                 const div = document.createElement('div');
                 div.innerText = logs[logIndex];
-                maskLog.appendChild(div);
-                maskLog.scrollTop = maskLog.scrollHeight;
+                if(maskLog) {
+                    maskLog.appendChild(div);
+                    maskLog.scrollTop = maskLog.scrollHeight;
+                }
                 logIndex++;
                 setTimeout(updateLog, 400);
             } else {
@@ -603,11 +626,13 @@
         }
 
         function hideMask() {
-            mask.style.opacity = '0';
+            if(mask) mask.style.opacity = '0';
             setTimeout(() => {
-                mask.style.display = 'none'; 
-                mainWindow.style.opacity = '1';
-                mainWindow.style.transform = 'scale(1)';
+                if(mask) mask.style.display = 'none'; 
+                if(mainWindow) {
+                    mainWindow.style.opacity = '1';
+                    mainWindow.style.transform = 'scale(1)';
+                }
             }, 1000);
         }
 

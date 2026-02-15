@@ -14,11 +14,15 @@ class SelfEvolutionCore:
     3. 動態調整 System Prompts (模擬 Prompt Engineering 自動化)。
     """
     
-    def __init__(self, base_dir=r"C:\wuchang V5.1.0\wuchang_os"):
-        self.base_dir = base_dir
-        self.time_stream_path = os.path.join(base_dir, "time_stream", "time_transmission_log.jsonl")
-        self.wisdom_path = os.path.join(base_dir, "system_wisdom.json")
-        self.config_path = os.path.join(base_dir, "double_j_config.json")
+    def __init__(self, base_dir=None):
+        if base_dir is None:
+            self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        else:
+            self.base_dir = base_dir
+            
+        self.time_stream_path = os.path.join(self.base_dir, "time_stream", "time_transmission_log.jsonl")
+        self.wisdom_path = os.path.join(self.base_dir, "system_wisdom.json")
+        self.config_path = os.path.join(self.base_dir, "double_j_config.json")
         
     def analyze_failures(self):
         """找出最近的失敗並提出改善建議"""
