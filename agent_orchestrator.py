@@ -147,16 +147,24 @@ def main():
     
     threads = []
     
-    # Implant AI1 first
-    ai1 = QuantumPuppet(1, "Neural-Core-LLM", is_ai1=True)
+    # Implant AI1 (Sister Core)
+    ai1 = QuantumPuppet(1, "Neural-Sister-Core", is_ai1=True)
     ai1.daemon = True
     ai1.start()
     threads.append(ai1)
-    print("  + AI1-Local-LLM [Neural-Core] Implanted & Activated.")
+    print("  + AI1-Sister-Core [Resident] Activated.")
+    time.sleep(1)
+
+    # Implant AI2 (Spacetime Warden)
+    ai2 = QuantumPuppet(2, "Spacetime-Warden", is_ai1=True) # Both are high-level
+    ai2.daemon = True
+    ai2.start()
+    threads.append(ai2)
+    print("  + AI2-Spacetime-Warden [Resident] Activated.")
     time.sleep(1)
 
     # Spawn other puppets
-    for i in range(1, AGENT_COUNT):
+    for i in range(2, AGENT_COUNT):
         role = ROLES[i % len(ROLES)]
         puppet = QuantumPuppet(i + 1, role)
         puppet.daemon = True
@@ -165,7 +173,7 @@ def main():
         print(f"  + Puppet-{i+1:02d} [{role}] Activated.")
         time.sleep(0.2) 
 
-    print("★ 所有傀儡與神經核心已連線。正在執行量子協作...")
+    print("★ 雙重 AI 常駐與量子傀儡已全員就位。正在啟動時空編碼規則同步...")
     
     try:
         while True:
