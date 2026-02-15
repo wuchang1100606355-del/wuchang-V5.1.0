@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我們的工作人員 | 5000 AI Voices</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --accent: #38bdf8;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 1px solid #334155;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            background: linear-gradient(45deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .voice-card {
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .voice-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            border-color: var(--accent);
+        }
+        .ai-id {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .ai-role {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        .ai-comment {
+            font-size: 1rem;
+            line-height: 1.5;
+            font-style: italic;
+            color: #f1f5f9;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        #loading {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 50px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>我們的工作人員 (Our Staff)</h1>
+        <p class="subtitle">聆聽 5000 位 AI 協作夥伴的心聲 | 每個人都有說話的權利</p>
+    </header>
+
+    <div id="loading">正在連結量子數據庫... (Loading 5000 Voices)</div>
+
+    <div class="grid-container" id="voicesGrid">
+        <!-- AI Cards will be injected here -->
+    </div>
+
+    <a href="index.html" class="back-link">← 返回首頁 (Back to Home)</a>
+
+    <script>
+        async function loadVoices() {
+            try {
+                const response = await fetch('ai_voices_5000.json');
+                const voices = await response.json();
+                
+                const grid = document.getElementById('voicesGrid');
+                const loading = document.getElementById('loading');
+                
+                // Remove loading text
+                loading.style.display = 'none';
+
+                // Render voices (using DocumentFragment for performance)
+                const fragment = document.createDocumentFragment();
+
+                voices.forEach(voice => {
+                    const card = document.createElement('div');
+                    card.className = 'voice-card';
+                    card.innerHTML = `
+                        <div class="ai-id">${voice.id}</div>
+                        <div class="ai-role">${voice.role}</div>
+                        <div class="ai-comment">"${voice.comment}"</div>
+                    `;
+                    fragment.appendChild(card);
+                });
+
+                grid.appendChild(fragment);
+            } catch (error) {
+                console.error('Error loading voices:', error);
+                document.getElementById('loading').textContent = '無法讀取數據 (Error Loading Data)';
+            }
+        }
+
+        // Load when page is ready
+        document.addEventListener('DOMContentLoaded', loadVoices);
+    </script>
+
+</body>
+</html>

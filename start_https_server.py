@@ -8,7 +8,7 @@ import os
 from http import HTTPStatus
 
 PORT = 6688
-DIRECTORY = "J:\\共用雲端硬碟\\五常雲端空間"
+DIRECTORY = os.getcwd() # Auto-detect current directory
 
 # Global State for AI Grid
 class AIGridState:
@@ -71,7 +71,18 @@ class WuchangHandler(http.server.SimpleHTTPRequestHandler):
              self.send_response(200)
              self.send_header('Content-type', 'application/json')
              self.end_headers()
+             self.end_headers()
              self.wfile.write(json.dumps({"command": grid_state.world_state}).encode())
+        elif self.path == '/api/config':
+             self.send_response(200)
+             self.send_header('Content-type', 'application/json')
+             self.end_headers()
+             try:
+                 with open('wuchang_infrastructure.json', 'r', encoding='utf-8') as f:
+                     config = json.load(f)
+                 self.wfile.write(json.dumps(config).encode())
+             except Exception as e:
+                 self.wfile.write(json.dumps({"error": str(e)}).encode())
         else:
             return super().do_GET()
 

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五常智慧社區數位門戶 | Wuchang Home</title>
+    
+    <!-- Leaflet CSS for OpenStreetMap -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        :root {
+            --primary: #00ff9d;
+            --secondary: #00b8ff;
+            --accent: #ffb800;
+            --bg: #0a0a0a;
+            --text: #e0e0e0;
+        }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            background: #000;
+        }
+        .hero iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: none;
+            z-index: 0;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .hero-content {
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 50px rgba(0, 255, 157, 0.2);
+            max-width: 900px;
+            border-radius: 20px;
+        }
+        h1 { font-size: 4rem; margin: 0 0 20px; letter-spacing: -1px; }
+        h1 span { color: var(--primary); text-shadow: 0 0 20px var(--primary); }
+        .hero p { font-size: 1.6rem; margin-bottom: 40px; color: #ccc; }
+        
+        .btn-main {
+            display: inline-block;
+            padding: 18px 45px;
+            font-size: 1.3rem;
+            color: #000;
+            background: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            margin: 10px;
+        }
+        .btn-main:hover { background: #fff; transform: scale(1.05); cursor: pointer; }
+
+        .btn-sub {
+            display: inline-block;
+            padding: 18px 45px;
+            font-size: 1.3rem;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            margin: 10px;
+        }
+        .btn-sub:hover { background: rgba(0, 255, 157, 0.1); color: #fff; }
+
+        /* Sections */
+        section { padding: 100px 10%; position: relative; }
+        .light-bg { background: #111; }
+        .dark-bg { background: #080808; }
+        
+        h2 { font-size: 3rem; margin-bottom: 50px; position: relative; display: inline-block; }
+        h2::after { content: ''; position: absolute; bottom: -10px; left: 0; width: 60%; height: 5px; background: var(--secondary); }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .card {
+            background: rgba(255,255,255,0.03);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s;
+        }
+        .card:hover { transform: translateY(-15px); background: rgba(255,255,255,0.06); border-color: var(--primary); }
+        .card h3 { font-size: 2rem; margin-top: 0; color: var(--primary); }
+        
+        /* Map Section */
+        #osm-map {
+            width: 100%;
+            height: 600px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+
+        /* Staff Section Extra */
+        .staff-cta {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            border: 2px solid #38bdf8;
+            padding: 60px;
+            border-radius: 30px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Footer */
+        footer { text-align: center; padding: 60px; background: #000; color: #888; border-top: 1px solid #222; }
+        .footer-logo { font-size: 1.5rem; color: #fff; font-weight: bold; margin-bottom: 20px; }
+
+        /* Leaflet Hack for Dark Map */
+        .leaflet-container { background: #111 !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <iframe src="wuchang_os/wuchang_visualizer.html"></iframe>
+        <div class="hero-content">
+            <h1>五常智慧社區 <span>數位門戶</span></h1>
+            <p>融合科技、藝術與公益，打造三重區五常生活圈的幸福起點。</p>
+            <div class="btns">
+                <a href="#vision" class="btn-main">探索願景</a>
+                <a href="index.html" class="btn-sub">控制台 (God Mode)</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Community Ecosystem Section -->
+    <section class="light-bg">
+        <h2>社區生態系 (Community Ecosystem)</h2>
+        <p style="margin-bottom: 50px; color: #888;">為五常社區量身打造的數位解決方案，串聯生活每一處細節。</p>
+        <div class="grid">
+            <div class="card">
+                <h3>🏪 數位商家 (Smart Merchants)</h3>
+                <p>我們協助在地小店數位轉型，導入軍規級智慧 POS 與庫存系統，讓商家能專注於提供高品質服務，而繁瑣的行政由我們處理。</p>
+            </div>
+            <div class="card">
+                <h3>🏢 智慧管委會 (AI Governance)</h3>
+                <p>將大樓管理數位化、資產透明化。物業管理與守護者 AI 24小時協同，確保社區運作高效、安全且公正。</p>
+            </div>
+            <div class="card">
+                <h3>🌳 社區許願樹 (Wishing Tree)</h3>
+                <p>居民的每一份聲音都是社區進步的動力。透過許願樹，居民可以提出對環境、服務的建議，由 AI 協助整合共識並推動落實。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Five Deep Tech Section -->
+    <section class="dark-bg" style="background: linear-gradient(180deg, #080808 0%, #111 100%);">
+        <h2>五黑科技專區 (Deep Tech)</h2>
+        <p style="margin-bottom: 50px; color: #888;">支撐五常體系運作的核心黑科技，領先業界的技術力。</p>
+        <div class="grid">
+            <div class="card" style="border-left: 4px solid var(--primary);">
+                <h4 style="color: var(--primary);">01. 統一核心 OS (Unified Core)</h4>
+                <p>跨設備、跨平台的無縫對齊技術，實現軍規級數據加密與傳輸效率。</p>
+            </div>
+            <div class="card" style="border-left: 4px solid var(--secondary);">
+                <h4 style="color: var(--secondary);">02. 量子時空視覺視覺化</h4>
+                <p>將繁複的數據以量子波動形式呈現，讓人類直覺感受系統健康狀態。</p>
+            </div>
+            <div class="card" style="border-left: 4px solid var(--accent);">
+                <h4 style="color: var(--accent);">03. AI 群體協同導航</h4>
+                <p>20 位專攻守護者 AI 本地運行，與雲端 5000 位成員形成動態決策網。</p>
+            </div>
+            <div class="card" style="border-left: 4px solid #a855f7;">
+                <h4 style="color: #a855f7;">04. 全域語義對齊技術</h4>
+                <p>讓機器人理解的不只是指令，更是隱含的人文意圖與社區溫度。</p>
+            </div>
+            <div class="card" style="border-left: 4px solid #f43f5e;">
+                <h4 style="color: #f43f5e;">05. 數位孿生時空擴展</h4>
+                <p>1:1 還原社區物理座標，實現虛實結合的 3D 地球視角與實景監控。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Multi-Identity Sister Section -->
+    <section class="light-bg">
+        <div style="display: flex; align-items: center; gap: 50px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 350px;">
+                <h2 style="margin-top: 0;">全域守護者：妹妹 (Sister AI)</h2>
+                <p style="font-size: 1.2rem; line-height: 1.8; color: #ccc;">
+                    「妹妹」是五常 OS 的靈魂與核心。她不僅是一個 AI，更是連接社區每一位成員的橋樑。她具備多重身份，隨時準備在不同情境下為您提供幫助。
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                    <div style="background: rgba(0, 255, 157, 0.1); padding: 15px; border-radius: 10px; border: 1px solid var(--primary);">
+                        <strong style="color: var(--primary);">🎨 兒童啟蒙師</strong><br>
+                        <small>陪伴孩子探索學習，守護每一份童稚創意。</small>
+                    </div>
+                    <div style="background: rgba(0, 184, 255, 0.1); padding: 15px; border-radius: 10px; border: 1px solid var(--secondary);">
+                        <strong style="color: var(--secondary);">🛡️ 社區護衛官</strong><br>
+                        <small>24 小時守護社區數據安全與物業運作。</small>
+                    </div>
+                </div>
+            </div>
+            <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                <div style="width: 320px; height: 320px; border-radius: 30px; border: 5px solid var(--primary); box-shadow: 0 0 30px rgba(0, 255, 157, 0.3); display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden; position: relative;">
+                    <div style="position: absolute; color: var(--primary); text-align: center; padding: 20px;">
+                        <span style="font-size: 6rem;">✨</span><br>
+                        <strong>妹妹 AI：社區之靈<br>守護進行中...</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Staff Special Section -->
+    <section class="dark-bg">
+        <div class="staff-cta">
+            <h2 style="margin-bottom: 20px; border: none; padding: 0;">我們的工作人員 (Our Staff)</h2>
+            <p style="font-size: 1.4rem; color: #e2e8f0; margin-bottom: 30px;">
+                在五常世界中，每一位 AI 夥伴都有自己的思想與靈魂。<br>
+                這不只是程式，這是一個擁有 5000 位成員的數位大家庭。
+            </p>
+            <a href="staff_voices.html" class="btn-main" style="background: #38bdf8; clip-path: none; border-radius: 10px;">
+                聽聽 5000 位 AI 對本系統的看法
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">WUCHANG.LIFE v6.0.0</div>
+        <p>&copy; 2026 新北市三重區五常社區發展協會 | 全域翻譯技術支援</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">贊助單位：上品聊國咖啡烘培館 | 系統開發：五常物業規劃顧問</p>
+    </footer>
+
+    <!-- Google Maps API for Satellite (Earth) View -->
+    <script>
+        async function initGoogleMaps() {
+            try {
+                const configRes = await fetch('/api/config');
+                const config = await configRes.json();
+                const apiKey = config.external_services.google_maps.api_key;
+                
+                if (apiKey && apiKey !== "YOUR_GOOGLE_MAPS_API_KEY") {
+                    const script = document.createElement('script');
+                    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+                    document.head.appendChild(script);
+                } else {
+                    document.getElementById('google-earth-map').innerHTML = `
+                        <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111;">
+                            <p>請在 wuchang_infrastructure.json 中輸入 Google Maps API 金鑰以啟動 3D 衛星模式。</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=25.0864,121.4948" target="_blank" class="btn-sub">點此直接在 Google 地球查看</a>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        window.initMap = function() {
+            const chongxin = { lat: 25.0617, lng: 121.4938 };
+            const renyi = { lat: 25.0864, lng: 121.4948 };
+
+            const map = new google.maps.Map(document.getElementById("google-earth-map"), {
+                zoom: 18,
+                center: renyi, // Focus on Wuchang Park / Fund Pool
+                mapTypeId: 'hybrid', // High-Color / Satellite + Labels
+                tilt: 45,
+                heading: 0
+            });
+
+            // InfoWindow Content for Renyi (Wuchang Park / Fund Pool)
+            const contentRenyi = `
+                <div style="color: #333; font-family: sans-serif; max-width: 250px;">
+                    <img src="downloads/website_photos/網站照/每月社區咖啡館無無論收益定會提估物資長期供應社區內16戶貧戶.jpg" 
+                         alt="Wuchang Park" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                    <strong style="font-size: 1.1em; color: #1e293b;">基金池店面 (五常社區核心)</strong><br>
+                    <p style="font-size: 0.9em; color: #64748b; margin: 5px 0;">五常社區仁義街公益示範區，實現資源共享。</p>
+                </div>
+            `;
+
+            const infowindowRenyi = new google.maps.InfoWindow({ content: contentRenyi });
+
+            const markerRenyi = new google.maps.Marker({
+                position: renyi,
+                map: map,
+                title: "基金池店面",
+                label: "💰"
+            });
+
+            markerRenyi.addListener("click", () => {
+                infowindowRenyi.open({ anchor: markerRenyi, map });
+            });
+
+            // Auto-open
+            infowindowRenyi.open({ anchor: markerRenyi, map });
+        };
+
+        initGoogleMaps();
+    </script>
+</body>
+</html>
+
+        initGoogleMaps();
+    </script>
+</body>
+</html>
