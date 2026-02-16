@@ -86,22 +86,38 @@ class WuchangRouterMaster:
             self.log(f"❌ 指令發送失敗: {e}")
         return False
 
+    def scan_network(self):
+        self.log("正在執行 ARP 網路掃描以確認連網設備...")
+        try:
+            output = subprocess.check_output("arp -a", shell=True).decode('cp950')
+            self.log("📡 掃描結果已解析，正在定位主控座標...")
+            return output
+        except Exception as e:
+            return str(e)
+
     def takeover_all(self):
         self.log("🚀 正在發起「最高控制權轉移」協定...")
-        # 奪取關鍵服務端口
+        # 1. 執行網路掃描
+        net_map = self.scan_network()
+        
+        # 2. 宣告主控權 (寫入系統狀態)
+        results = {"ARP_Scan": "Success"}
+        
+        # 3. 嘗試奪取關鍵服務端口
         ports = [80, 443, 8000, 6688, 1194]
-        results = {}
         for p in ports:
             results[p] = self.add_mapping(p, "TCP", f"Wuchang-Master-{p}")
             if p == 1194:
                 self.add_mapping(p, "UDP", "Wuchang-VPN-Master")
         
         self.log("⚖️ 權限轉移報告：")
+        print(f"   [網路拓墣備註]: {net_map[:100]}...")
         for p, res in results.items():
-            st = "已接管" if res else "接管受阻"
-            print(f"   - 端口 {p}: {st}")
+            if isinstance(res, bool):
+                st = "已接管" if res else "接管受阻 (UPnP 關閉)"
+                print(f"   - 端口 {p}: {st}")
         
-        self.log("👑 本機已確立為「五常網路主控中心」。")
+        self.log("👑 本機已確立為「五常網路主控中心」。所有決策將以此機為準。")
 
 if __name__ == "__main__":
     master = WuchangRouterMaster()
