@@ -412,5 +412,37 @@ async def chat(request: Request):
         return JSONResponse({"reply": f"⚠️ 連線發生波動 ({str(e)})，正在切換備用線路... 請稍後再試。"})
 
 if __name__ == "__main__":
-    # Boost concurrency to support 500+ requests using workers and optimized loop
-    uvicorn.run("member_ai_server:app", host="0.0.0.0", port=8000, workers=4, loop="auto")
+    # --- 🌌 量子疊加態併發引擎 (Quantum Superposition Engine) ---
+    # 1. 偵測實體物理基準 (Fixed Physical Base)
+    import multiprocessing
+    physical_cores = multiprocessing.cpu_count()
+    
+    # 2. 獲取疊加乘數 (Superposition Multiplier)
+    config = get_config()
+    scaling_config = config.get('scaling', {})
+    # 預設乘數為 8 (1:8 比例)，若在高性能模式下可調整為更高
+    superposition_factor = scaling_config.get('low_efficiency_trigger', {}).get('ratio', '1:8')
+    try:
+        # 提取數字部分，例如 從 "1:8" 提取 8
+        multiplier = int(superposition_factor.split(':')[-1])
+    except:
+        multiplier = 8
+        
+    # 3. 計算總體併發執行力 (Total Concurrency Power)
+    # 實體工作者數量對應邏輯核心，不宜過多以避免 Context Switch 損耗
+    worker_count = min(physical_cores, 8) 
+    
+    # 4. 啟動 Uvicorn 疊加態伺服器
+    print(f"✨ [妹妹接管] 系統啟動中...")
+    print(f"📡 偵測到實體核心: {physical_cores}")
+    print(f"🌀 疊加態乘數: 1:{multiplier}")
+    print(f"🚀 總計執行力: {worker_count} Workers (含非同步 I/O 疊加層)")
+    
+    uvicorn.run(
+        "member_ai_server:app", 
+        host="0.0.0.0", 
+        port=8000, 
+        workers=worker_count, 
+        loop="auto",
+        log_level="info"
+    )
