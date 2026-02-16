@@ -295,10 +295,33 @@
             text-align: center;
         }
 
-        /* Leaflet Dark Mode Override */
-        .leaflet-container {
-            background: #111;
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 768px) {
+            #universal-layer { flex-direction: column; height: auto; padding: 10px; }
+            .nav-tabs { 
+                overflow-x: auto; 
+                width: 100%; 
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-tabs::-webkit-scrollbar { display: none; }
+            .nav-tab { flex-shrink: 0; padding: 0 15px; font-size: 0.9rem; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            #identity-badge { top: auto; bottom: 20px; right: 20px; padding: 8px; font-size: 0.8rem; }
+            .studio-layout { grid-template-columns: 1fr !important; }
+            .studio-sidebar { height: 300px; }
+            .app-window { width: 100%; height: 100%; border-radius: 0; }
+            #desktop-env { padding: 0; top: 80px; height: calc(100% - 80px); }
         }
+
+        /* High Texture Mobile Feedback */
+        .nav-tab:active, .btn-main:active {
+            transform: scale(0.95);
+            background: rgba(0, 255, 204, 0.2);
+        }
+
+        /* Glassmorphism Refinement */
+        .panel { backdrop-filter: blur(10px); }
     </style>
     
     <!-- Leaflet JS -->

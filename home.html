@@ -152,6 +152,45 @@
             transition: 0.3s;
         }
         .btn-join-nav:hover { background: #fff; box-shadow: 0 0 15px var(--primary); }
+        /* Mobile Responsive Tweaks */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .navbar { padding: 0 15px; }
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 70%;
+                height: calc(100vh - 70px);
+                background: rgba(10, 10, 10, 0.95);
+                flex-direction: column;
+                padding: 40px 20px;
+                transition: 0.4s;
+                backdrop-filter: blur(20px);
+                border-left: 1px solid var(--primary);
+            }
+            .nav-links.active { right: 0; }
+            .hamburger { display: block !important; }
+            .grid { grid-template-columns: 1fr; }
+            .hero-content { padding: 30px 20px; margin: 0 15px; }
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background: var(--primary);
+            margin: 5px;
+            transition: 0.3s;
+        }
+
+        /* Glassmorphism Enhancements */
+        .card { backdrop-filter: blur(5px); }
     </style>
 </head>
 <body>
@@ -159,14 +198,29 @@
     <!-- Sticky Navbar -->
     <nav class="navbar">
         <div class="nav-logo">WUCHANG.LIFE</div>
-        <div class="nav-links">
-            <a href="#vision" class="nav-link">探索願景</a>
-            <a href="#ecosystem" class="nav-link">社區生態</a>
-            <a href="#tech" class="nav-link">黑科技</a>
-            <a href="staff_voices.html" class="nav-link">AI 夥伴</a>
+        
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="#vision" class="nav-link" onclick="toggleMenu()">探索願景</a>
+            <a href="#ecosystem" class="nav-link" onclick="toggleMenu()">社區生態</a>
+            <a href="#tech" class="nav-link" onclick="toggleMenu()">黑科技</a>
+            <a href="staff_voices.html" class="nav-link" onclick="toggleMenu()">AI 夥伴</a>
             <a href="http://localhost:8000" class="btn-join-nav">加入會員 (FREE)</a>
         </div>
     </nav>
+
+    <script>
+        function toggleMenu() {
+            if(window.innerWidth <= 768) {
+                document.getElementById('navLinks').classList.toggle('active');
+            }
+        }
+    </script>
 
     <!-- Hero Section -->
     <div class="hero">
@@ -364,12 +418,6 @@
             infowindowRenyi.open({ anchor: markerRenyi, map });
         };
 
-        initGoogleMaps();
-    </script>
-</body>
-</html>
-
-        initGoogleMaps();
     </script>
 </body>
 </html>

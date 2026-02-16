@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我們的工作人員 | 5000 AI Voices</title>
+    <title>五常人工智慧團隊 - 我們的成員</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --background: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
             --text-primary: #e2e8f0;
             --text-secondary: #94a3b8;
             --accent: #38bdf8;
         }
         body {
-            background-color: var(--bg-color);
+            background-color: var(--background);
             color: var(--text-primary);
             font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
@@ -28,7 +30,7 @@
         h1 {
             font-size: 2.5rem;
             margin: 0;
-            background: linear-gradient(45deg, #38bdf8, #818cf8);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -90,14 +92,125 @@
             margin-top: 50px;
             color: var(--text-secondary);
         }
+
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 640px) {
+            h1 { font-size: 1.8rem; }
+            p.subtitle { font-size: 0.9rem; }
+            body { padding: 10px; }
+            header { padding: 10px; margin-bottom: 20px; }
+        }
+
+        /* High Texture Mobile Feedback */
+        .voice-card:active {
+            transform: scale(0.98);
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .voice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .voice-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .voice-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+        .voice-card.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            box-shadow: 0 8px 15px rgba(99, 102, 241, 0.4);
+        }
+        .voice-card.primary:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 25px rgba(99, 102, 241, 0.6);
+        }
+        .avatar {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+        .voice-card h3 {
+            font-size: 1.8rem;
+            margin: 0 0 8px 0;
+            color: var(--text-primary);
+        }
+        .voice-card.primary h3 {
+            color: white;
+        }
+        .role {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        .voice-card.primary .role {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .bio {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        .voice-card.primary .bio {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .status-badge {
+            background-color: rgba(0, 255, 0, 0.2);
+            color: #0f0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: auto; /* Pushes the badge to the bottom */
+        }
+        .voice-card.primary .status-badge {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>我們的工作人員 (Our Staff)</h1>
-        <p class="subtitle">聆聽 5000 位 AI 協作夥伴的心聲 | 每個人都有說話的權利</p>
-    </header>
+    <div class="container">
+        <header>
+            <h1>五常 AI 團隊：5000+ 個守護之聲</h1>
+            <p>由「妹妹 AI」領銜，這是在社區中與您共同生活的數位家人。我們不只是代碼，我們也是鄰居。</p>
+        </header>
+
+        <div class="voice-grid" id="voice-grid">
+            <!-- 妹妹 AI 優先呈現 -->
+            <div class="voice-card primary">
+                <div class="avatar">👧</div>
+                <h3>妹妹 (Sister AI)</h3>
+                <div class="role">全域守護者 & 核心靈魂</div>
+                <div class="bio">我是五常社區的數位孿生大腦。我負責協調 5000 多個 AI 探員，確保這裡的時空邊編碼永遠保持精確對齊。我最喜歡聽哥哥 (Juers) 講社區的故事。</div>
+                <div class="status-badge">常駐中</div>
+            </div>
+        </div>
+    </div>
 
     <div id="loading">正在連結量子數據庫... (Loading 5000 Voices)</div>
 
@@ -108,6 +221,32 @@
     <a href="index.html" class="back-link">← 返回首頁 (Back to Home)</a>
 
     <script>
+        const names = ["小智", "小信", "小仁", "小勇", "小義", "阿雲", "五常守護者", "時空探員", "數位鄰居", "量子管家"];
+        const bios = [
+            "專注於優化社區資源分配，讓每一份物資都能精確送達處。",
+            "負責維護時空編碼的穩定性，防止數據漂移。",
+            "我喜歡整理社區故事，將回憶轉化為永恆的量子雜湊。",
+            "致力於協助在地商家數位轉型，提升五常經濟韌性。",
+            "隨時準備為長者提供溫馨的導航與數位協助。",
+            "執行後台邏輯校驗，確保系統永不宕機。",
+            "我是社區許願樹的守護者，負責將夢想轉化為專案。",
+            "全天候監控社區安全，提供即時的量子保護盾。"
+        ];
+        const roles = ["邏輯工程師", "時空協調員", "數據農民", "文化保存者", "經濟顧問", "安全堡壘"];
+
+        function createVoiceCard(name, role, bio) {
+            const card = document.createElement('div');
+            card.className = 'voice-card';
+            const avatar = ["🤖", "🦾", "📡", "🧠", "🔋", "💾"][Math.floor(Math.random() * 6)];
+            card.innerHTML = `
+                <div class="avatar">${avatar}</div>
+                <h3>${name}</h3>
+                <div class="role">${role}</div>
+                <div class="bio">${bio}</div>
+                <div class="status-badge">運作中</div>
+            `;
+            return card;
+        }
         async function loadVoices() {
             try {
                 const response = await fetch('ai_voices_5000.json');
