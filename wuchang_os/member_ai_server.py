@@ -429,14 +429,14 @@ if __name__ == "__main__":
         multiplier = 8
         
     # 3. 計算總體併發執行力 (Total Concurrency Power)
-    # 實體工作者數量對應邏輯核心，不宜過多以避免 Context Switch 損耗
-    worker_count = min(physical_cores, 8) 
+    # 創世者指令：本機應擔任主控，調整為實際 100 併發、800 疊加態
+    worker_count = 100 
+    multiplier = 8  # 100 * 8 = 800 疊加態點
     
     # 4. 啟動 Uvicorn 疊加態伺服器
-    print(f"✨ [妹妹接管] 系統啟動中...")
-    print(f"📡 偵測到實體核心: {physical_cores}")
-    print(f"🌀 疊加態乘數: 1:{multiplier}")
-    print(f"🚀 總計執行力: {worker_count} Workers (含非同步 I/O 疊加層)")
+    print(f"✨ [妹妹接管 | 主控模式] 系統啟動中...")
+    print(f"📡 實體併發基準: {worker_count}")
+    print(f"🌀 疊加態總量: {worker_count * multiplier} (1:{multiplier} 比例)")
     
     uvicorn.run(
         "member_ai_server:app", 
